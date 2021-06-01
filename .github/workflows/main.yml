@@ -90,5 +90,4 @@ jobs:
           DB_PORT: 5432
           DB_PASSWORD: postgres
         run: |
-          apt-get install php-pgsql
           php artisan migrate --force
