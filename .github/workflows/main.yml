@@ -26,8 +26,8 @@ jobs:
         env:
           ## Accessing to Github secrets, where you can store your configuration
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DATABASE: strongminds
-          POSTGRES_USER: postgresql
+          POSTGRES_DATABASE: test
+          POSTGRES_USER: postgres
         ## map the "external" 33306 port with the "internal" 3306
         ports:
           - 5432:5432
@@ -85,8 +85,8 @@ jobs:
       - name: Run migrations
         env:
           DB_CONNECTION: pgsql
-          DB_DATABASE: strongminds
-          DB_USERNAME: postgresql
+          DB_DATABASE: test
+          DB_USERNAME: postgres
           DB_PORT: 5432
           DB_PASSWORD: postgres
         run: |
