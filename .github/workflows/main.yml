@@ -88,6 +88,6 @@ jobs:
           DB_DATABASE: strongminds
           DB_USERNAME: postgresql
           DB_PORT: 5432
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_PASSWORD: postgres
         run: |
           php artisan migrate --force
