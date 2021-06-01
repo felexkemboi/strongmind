@@ -84,10 +84,11 @@ jobs:
 
       - name: Run migrations
         env:
-          DB_CONNECTION: psql
+          DB_CONNECTION: pgsql
           DB_DATABASE: strongminds
           DB_USERNAME: postgresql
           DB_PORT: 5432
           DB_PASSWORD: postgres
         run: |
+          apt-get install php-pgsql
           php artisan migrate --force
