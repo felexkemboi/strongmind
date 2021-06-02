@@ -17,8 +17,13 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->foreignId('office_id')->constrained();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->dateTime('last_login')->nullable();
+            $table->unsignedTinyInteger('is_admin')->default(0);
+            $table->unsignedTinyInteger('active')->default(0);
+            $table->unsignedTinyInteger('approved')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });
