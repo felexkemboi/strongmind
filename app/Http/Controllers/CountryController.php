@@ -37,8 +37,7 @@ class CountryController extends Controller
      */
     public function activeCountries(): JsonResponse
     {
-        $countries = Country::query()->select(['id', 'name', 'dialing_code','active'])
-            ->where('active', 1)
+        $countries = Country::query()->active()->select(['id', 'name', 'dialing_code','active'])
             ->get();
         return $this->commonResponse(true, 'success', CountryResource::collection($countries), Response::HTTP_OK);
     }

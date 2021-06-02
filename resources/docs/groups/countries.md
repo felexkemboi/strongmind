@@ -3165,7 +3165,7 @@ curl -X PUT \
     -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"country_id":9}'
+    -d '{"country_id":17}'
 
 ```
 
@@ -3181,7 +3181,7 @@ let headers = {
 };
 
 let body = {
-    "country_id": 9
+    "country_id": 17
 }
 
 fetch(url, {
@@ -3202,7 +3202,7 @@ $response = $client->put(
             'Accept' => 'application/json',
         ],
         'json' => [
-            'country_id' => 9,
+            'country_id' => 17,
         ],
     ]
 );
@@ -3216,7 +3216,7 @@ import json
 
 url = 'http://localhost:8000/api/country/update'
 payload = {
-    "country_id": 9
+    "country_id": 17
 }
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_KEY}',
