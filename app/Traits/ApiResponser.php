@@ -13,8 +13,8 @@ trait ApiResponser
      * Build  response
      * //     *
      * @param boolean $status
-     * @param string|array|null $message
-     * @param array|string|null $result
+     * @param string|array|mixed|null $message
+     * @param array|string|mixed|null $result
      * @param  $code
      * @return JsonResponse
      */

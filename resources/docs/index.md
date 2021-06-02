@@ -34,12 +34,12 @@ You can switch the language used with the tabs at the top right (or from the nav
 
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
 <script>
-    var baseUrl = "http://strong-minds.io";
+    var baseUrl = "http://localhost:8000";
 </script>
 <script src="js/tryitout-2.7.3.js"></script>
 
 > Base URL
 
 ```yaml
-http://strong-minds.io
+http://localhost:8000
 ```

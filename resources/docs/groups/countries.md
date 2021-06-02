@@ -1,84 +1,22 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>StrongMinds</title>
+# Countries
+APIs for managing countries
 
-    <link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
+## All Countries
 
-        <link rel="stylesheet" href="css/style.css" media="screen" />
-        <link rel="stylesheet" href="css/print.css" media="print" />
-        <script src="js/all.js"></script>
 
-        <link rel="stylesheet" href="css/highlight-darcula.css" media="" />
-        <script src="js/highlight.pack.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
 
-</head>
 
-<body class="" data-languages="[&quot;bash&quot;,&quot;javascript&quot;,&quot;php&quot;,&quot;python&quot;]">
-<a href="#" id="nav-button">
-      <span>
-        NAV
-            <img src="images/navbar.png" alt="-image" class=""/>
-      </span>
-</a>
-<div class="tocify-wrapper">
-                <div class="lang-selector">
-                            <a href="#" data-language-name="bash">bash</a>
-                            <a href="#" data-language-name="javascript">javascript</a>
-                            <a href="#" data-language-name="php">php</a>
-                            <a href="#" data-language-name="python">python</a>
-                    </div>
-        <div class="search">
-        <input type="text" class="search" id="input-search" placeholder="Search">
-    </div>
-    <ul class="search-results"></ul>
+> Example request:
 
-    <ul id="toc">
-    </ul>
-
-            <ul class="toc-footer" id="toc-footer">
-                            <li><a href="./collection.json">View Postman collection</a></li>
-                            <li><a href="./openapi.yaml">View OpenAPI (Swagger) spec</a></li>
-                            <li><a href='http://github.com/knuckleswtf/scribe'>Documentation powered by Scribe ✍</a></li>
-                    </ul>
-            <ul class="toc-footer" id="last-updated">
-            <li>Last updated: June 2 2021</li>
-        </ul>
-</div>
-<div class="page-wrapper">
-    <div class="dark-box"></div>
-    <div class="content">
-        <h1>Introduction</h1>
-<p>StrongMinds API</p>
-<p>This documentation aims to provide all the information you need to work with our API.</p>
-<aside>As you scroll, you'll see code examples for working with the API in different programming languages in the dark area to the right (or as part of the content on mobile).
-You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).</aside>
-<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
-<script>
-    var baseUrl = "http://localhost:8000";
-</script>
-<script src="js/tryitout-2.7.3.js"></script>
-<blockquote>
-<p>Base URL</p>
-</blockquote>
-<pre><code class="language-yaml">http://localhost:8000</code></pre><h1>Authenticating requests</h1>
-<p>To authenticate requests, include an <strong><code>Authorization</code></strong> header with the value <strong><code>"Bearer {YOUR_AUTH_KEY}"</code></strong>.</p>
-<p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the documentation below.</p>
-<p>You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.</p><h1>Countries</h1>
-<p>APIs for managing countries</p>
-<h2>All Countries</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X GET \
+```bash
+curl -X GET \
     -G "http://localhost:8000/api/country/all" \
     -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
-<pre><code class="language-javascript">const url = new URL(
+    -H "Accept: application/json"
+```
+
+```javascript
+const url = new URL(
     "http://localhost:8000/api/country/all"
 );
 
@@ -87,23 +25,30 @@ let headers = {
     "Accept": "application/json",
 };
 
+
 fetch(url, {
     method: "GET",
     headers,
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
+}).then(response => response.json());
+```
+
+```php
+
 $client = new \GuzzleHttp\Client();
-$response = $client-&gt;get(
+$response = $client->get(
     'http://localhost:8000/api/country/all',
     [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
+        'headers' => [
+            'Accept' => 'application/json',
         ],
     ]
 );
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+```python
+import requests
 import json
 
 url = 'http://localhost:8000/api/country/all'
@@ -113,11 +58,14 @@ headers = {
 }
 
 response = requests.request('GET', url, headers=headers)
-response.json()</code></pre>
-<blockquote>
-<p>Example response (200):</p>
-</blockquote>
-<pre><code class="language-json">{
+response.json()
+```
+
+
+> Example response (200):
+
+```json
+{
     "success": true,
     "message": "success",
     "result": [
@@ -1604,7 +1552,8 @@ response.json()</code></pre>
             "active": 1
         }
     ]
-}</code></pre>
+}
+```
 <div id="execution-results-GETapi-country-all" hidden>
     <blockquote>Received response<span id="execution-response-status-GETapi-country-all"></span>:</blockquote>
     <pre class="json"><code id="execution-response-content-GETapi-country-all"></code></pre>
@@ -1625,15 +1574,24 @@ response.json()</code></pre>
  <b><code>api/country/all</code></b>
 </p>
 </form>
-<h2>All Active Countries</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X GET \
+
+
+## All Active Countries
+
+
+
+
+> Example request:
+
+```bash
+curl -X GET \
     -G "http://localhost:8000/api/country/active" \
     -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
-<pre><code class="language-javascript">const url = new URL(
+    -H "Accept: application/json"
+```
+
+```javascript
+const url = new URL(
     "http://localhost:8000/api/country/active"
 );
 
@@ -1642,23 +1600,30 @@ let headers = {
     "Accept": "application/json",
 };
 
+
 fetch(url, {
     method: "GET",
     headers,
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
+}).then(response => response.json());
+```
+
+```php
+
 $client = new \GuzzleHttp\Client();
-$response = $client-&gt;get(
+$response = $client->get(
     'http://localhost:8000/api/country/active',
     [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
+        'headers' => [
+            'Accept' => 'application/json',
         ],
     ]
 );
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+```python
+import requests
 import json
 
 url = 'http://localhost:8000/api/country/active'
@@ -1668,11 +1633,14 @@ headers = {
 }
 
 response = requests.request('GET', url, headers=headers)
-response.json()</code></pre>
-<blockquote>
-<p>Example response (200):</p>
-</blockquote>
-<pre><code class="language-json">{
+response.json()
+```
+
+
+> Example response (200):
+
+```json
+{
     "success": true,
     "message": "success",
     "result": [
@@ -3159,7 +3127,8 @@ response.json()</code></pre>
             "active": 1
         }
     ]
-}</code></pre>
+}
+```
 <div id="execution-results-GETapi-country-active" hidden>
     <blockquote>Received response<span id="execution-response-status-GETapi-country-active"></span>:</blockquote>
     <pre class="json"><code id="execution-response-content-GETapi-country-active"></code></pre>
@@ -3180,19 +3149,28 @@ response.json()</code></pre>
  <b><code>api/country/active</code></b>
 </p>
 </form>
-<h2>Activate or deactivate country</h2>
-<p><small class="badge badge-darkred">requires authentication</small></p>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X PUT \
+
+
+## Activate or deactivate country
+
+<small class="badge badge-darkred">requires authentication</small>
+
+
+
+> Example request:
+
+```bash
+curl -X PUT \
     "http://localhost:8000/api/country/update" \
     -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -d '{"country_id":9}'
-</code></pre>
-<pre><code class="language-javascript">const url = new URL(
+
+```
+
+```javascript
+const url = new URL(
     "http://localhost:8000/api/country/update"
 );
 
@@ -3210,24 +3188,30 @@ fetch(url, {
     method: "PUT",
     headers,
     body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
+}).then(response => response.json());
+```
+
+```php
+
 $client = new \GuzzleHttp\Client();
-$response = $client-&gt;put(
+$response = $client->put(
     'http://localhost:8000/api/country/update',
     [
-        'headers' =&gt; [
-            'Authorization' =&gt; 'Bearer {YOUR_AUTH_KEY}',
-            'Accept' =&gt; 'application/json',
+        'headers' => [
+            'Authorization' => 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' => 'application/json',
         ],
-        'json' =&gt; [
-            'country_id' =&gt; 9,
+        'json' => [
+            'country_id' => 9,
         ],
     ]
 );
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+```python
+import requests
 import json
 
 url = 'http://localhost:8000/api/country/update'
@@ -3241,7 +3225,10 @@ headers = {
 }
 
 response = requests.request('PUT', url, headers=headers, json=payload)
-response.json()</code></pre>
+response.json()
+```
+
+
 <div id="execution-results-PUTapi-country-update" hidden>
     <blockquote>Received response<span id="execution-response-status-PUTapi-country-update"></span>:</blockquote>
     <pre class="json"><code id="execution-response-content-PUTapi-country-update"></code></pre>
@@ -3273,21 +3260,6 @@ County ID .
 </p>
 
 </form>
-    </div>
-    <div class="dark-box">
-                    <div class="lang-selector">
-                                    <a href="#" data-language-name="bash">bash</a>
-                                    <a href="#" data-language-name="javascript">javascript</a>
-                                    <a href="#" data-language-name="php">php</a>
-                                    <a href="#" data-language-name="python">python</a>
-                            </div>
-            </div>
-</div>
-<script>
-    $(function () {
-        var languages = ["bash","javascript","php","python"];
-        setupLanguages(languages);
-    });
-</script>
-</body>
-</html>
+
+
+
