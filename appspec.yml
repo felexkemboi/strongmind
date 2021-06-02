@@ -1,0 +1,21 @@
+# Ref: https://dev.to/bassel_alannan/deploying-nodejs-application-on-amazon-ec2-using-aws-codepipeline-17hg
+version: 0.0
+os: linux
+files:
+  - source: ./
+    destination: /opt/bitnami/projects/appapi
+    overwrite: true
+permissions:
+  - object: /var/www
+    pattern: "**"
+    owner: bitnami
+    group: bitnami
+hooks:
+  BeforeInstall:
+    - location: scripts/BeforeInstallHook.sh
+      timeout: 180
+      runas: bitnami
+  AfterInstall:
+    - location: scripts/AfterInstallHook.sh
+      timeout: 180
+      runas: bitnami
