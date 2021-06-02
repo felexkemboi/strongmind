@@ -18,7 +18,7 @@ class CreateCountriesTable extends Migration
             $table->string('name');
             $table->string('dialing_code');
             $table->string('capital');
-            $table->boolean('active')->default(1);
+            $table->unsignedTinyInteger('active')->default(1);
             $table->timestamps();
         });
     }
