@@ -1,22 +1,84 @@
-# Countries
-APIs for managing countries
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>StrongMinds</title>
 
-## All Countries
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
 
+        <link rel="stylesheet" href="{{ asset("vendor/scribe/css/style.css") }}" media="screen" />
+        <link rel="stylesheet" href="{{ asset("vendor/scribe/css/print.css") }}" media="print" />
+        <script src="{{ asset("vendor/scribe/js/all.js") }}"></script>
 
+        <link rel="stylesheet" href="{{ asset("vendor/scribe/css/highlight-darcula.css") }}" media="" />
+        <script src="{{ asset("vendor/scribe/js/highlight.pack.js") }}"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 
+</head>
 
-> Example request:
+<body class="" data-languages="[&quot;bash&quot;,&quot;javascript&quot;,&quot;php&quot;,&quot;python&quot;]">
+<a href="#" id="nav-button">
+      <span>
+        NAV
+            <img src="{{ asset("vendor/scribe/images/navbar.png") }}" alt="-image" class=""/>
+      </span>
+</a>
+<div class="tocify-wrapper">
+                <div class="lang-selector">
+                            <a href="#" data-language-name="bash">bash</a>
+                            <a href="#" data-language-name="javascript">javascript</a>
+                            <a href="#" data-language-name="php">php</a>
+                            <a href="#" data-language-name="python">python</a>
+                    </div>
+        <div class="search">
+        <input type="text" class="search" id="input-search" placeholder="Search">
+    </div>
+    <ul class="search-results"></ul>
 
-```bash
-curl -X GET \
+    <ul id="toc">
+    </ul>
+
+            <ul class="toc-footer" id="toc-footer">
+                            <li><a href="{{ route("scribe.postman") }}">View Postman collection</a></li>
+                            <li><a href="{{ route("scribe.openapi") }}">View OpenAPI (Swagger) spec</a></li>
+                            <li><a href='http://github.com/knuckleswtf/scribe'>Documentation powered by Scribe ✍</a></li>
+                    </ul>
+            <ul class="toc-footer" id="last-updated">
+            <li>Last updated: June 9 2021</li>
+        </ul>
+</div>
+<div class="page-wrapper">
+    <div class="dark-box"></div>
+    <div class="content">
+        <h1>Introduction</h1>
+<p>StrongMinds API</p>
+<p>This documentation aims to provide all the information you need to work with our API.</p>
+<aside>As you scroll, you'll see code examples for working with the API in different programming languages in the dark area to the right (or as part of the content on mobile).
+You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).</aside>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+<script>
+    var baseUrl = "http://localhost:8000";
+</script>
+<script src="{{ asset("vendor/scribe/js/tryitout-2.7.7.js") }}"></script>
+<blockquote>
+<p>Base URL</p>
+</blockquote>
+<pre><code class="language-yaml">http://localhost:8000</code></pre><h1>Authenticating requests</h1>
+<p>Authenticate requests to this API's endpoints by sending an <strong><code>Authorization</code></strong> header with the value <strong><code>"Bearer {YOUR_AUTH_KEY}"</code></strong>.</p>
+<p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the documentation below.</p>
+<p>You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.</p><h1>Countries</h1>
+<p>APIs for managing countries</p>
+<h2>All Countries</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
     -G "http://localhost:8000/api/country/all" \
     -H "Content-Type: application/json" \
-    -H "Accept: application/json"
-```
-
-```javascript
-const url = new URL(
+    -H "Accept: application/json"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/country/all"
 );
 
@@ -25,30 +87,23 @@ let headers = {
     "Accept": "application/json",
 };
 
-
 fetch(url, {
     method: "GET",
     headers,
-}).then(response => response.json());
-```
-
-```php
-
+}).then(response =&gt; response.json());</code></pre>
+<pre><code class="language-php">
 $client = new \GuzzleHttp\Client();
-$response = $client->get(
+$response = $client-&gt;get(
     'http://localhost:8000/api/country/all',
     [
-        'headers' => [
-            'Accept' => 'application/json',
+        'headers' =&gt; [
+            'Accept' =&gt; 'application/json',
         ],
     ]
 );
-$body = $response->getBody();
-print_r(json_decode((string) $body));
-```
-
-```python
-import requests
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre>
+<pre><code class="language-python">import requests
 import json
 
 url = 'http://localhost:8000/api/country/all'
@@ -58,14 +113,11 @@ headers = {
 }
 
 response = requests.request('GET', url, headers=headers)
-response.json()
-```
-
-
-> Example response (200):
-
-```json
-{
+response.json()</code></pre>
+<blockquote>
+<p>Example response (200):</p>
+</blockquote>
+<pre><code class="language-json">{
     "success": true,
     "message": "success",
     "result": [
@@ -1552,8 +1604,7 @@ response.json()
             "active": 1
         }
     ]
-}
-```
+}</code></pre>
 <div id="execution-results-GETapi-country-all" hidden>
     <blockquote>Received response<span id="execution-response-status-GETapi-country-all"></span>:</blockquote>
     <pre class="json"><code id="execution-response-content-GETapi-country-all"></code></pre>
@@ -1574,24 +1625,15 @@ response.json()
  <b><code>api/country/all</code></b>
 </p>
 </form>
-
-
-## All Active Countries
-
-
-
-
-> Example request:
-
-```bash
-curl -X GET \
+<h2>All Active Countries</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
     -G "http://localhost:8000/api/country/active" \
     -H "Content-Type: application/json" \
-    -H "Accept: application/json"
-```
-
-```javascript
-const url = new URL(
+    -H "Accept: application/json"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/country/active"
 );
 
@@ -1600,30 +1642,23 @@ let headers = {
     "Accept": "application/json",
 };
 
-
 fetch(url, {
     method: "GET",
     headers,
-}).then(response => response.json());
-```
-
-```php
-
+}).then(response =&gt; response.json());</code></pre>
+<pre><code class="language-php">
 $client = new \GuzzleHttp\Client();
-$response = $client->get(
+$response = $client-&gt;get(
     'http://localhost:8000/api/country/active',
     [
-        'headers' => [
-            'Accept' => 'application/json',
+        'headers' =&gt; [
+            'Accept' =&gt; 'application/json',
         ],
     ]
 );
-$body = $response->getBody();
-print_r(json_decode((string) $body));
-```
-
-```python
-import requests
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre>
+<pre><code class="language-python">import requests
 import json
 
 url = 'http://localhost:8000/api/country/active'
@@ -1633,14 +1668,11 @@ headers = {
 }
 
 response = requests.request('GET', url, headers=headers)
-response.json()
-```
-
-
-> Example response (200):
-
-```json
-{
+response.json()</code></pre>
+<blockquote>
+<p>Example response (200):</p>
+</blockquote>
+<pre><code class="language-json">{
     "success": true,
     "message": "success",
     "result": [
@@ -3127,8 +3159,7 @@ response.json()
             "active": 1
         }
     ]
-}
-```
+}</code></pre>
 <div id="execution-results-GETapi-country-active" hidden>
     <blockquote>Received response<span id="execution-response-status-GETapi-country-active"></span>:</blockquote>
     <pre class="json"><code id="execution-response-content-GETapi-country-active"></code></pre>
@@ -3149,28 +3180,19 @@ response.json()
  <b><code>api/country/active</code></b>
 </p>
 </form>
-
-
-## Activate or deactivate country
-
-<small class="badge badge-darkred">requires authentication</small>
-
-
-
-> Example request:
-
-```bash
-curl -X PUT \
+<h2>Activate or deactivate country</h2>
+<p><small class="badge badge-darkred">requires authentication</small></p>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X PUT \
     "http://localhost:8000/api/country/update" \
     -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -d '{"country_id":19}'
-
-```
-
-```javascript
-const url = new URL(
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/country/update"
 );
 
@@ -3188,30 +3210,24 @@ fetch(url, {
     method: "PUT",
     headers,
     body: JSON.stringify(body),
-}).then(response => response.json());
-```
-
-```php
-
+}).then(response =&gt; response.json());</code></pre>
+<pre><code class="language-php">
 $client = new \GuzzleHttp\Client();
-$response = $client->put(
+$response = $client-&gt;put(
     'http://localhost:8000/api/country/update',
     [
-        'headers' => [
-            'Authorization' => 'Bearer {YOUR_AUTH_KEY}',
-            'Accept' => 'application/json',
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' =&gt; 'application/json',
         ],
-        'json' => [
-            'country_id' => 19,
+        'json' =&gt; [
+            'country_id' =&gt; 19,
         ],
     ]
 );
-$body = $response->getBody();
-print_r(json_decode((string) $body));
-```
-
-```python
-import requests
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre>
+<pre><code class="language-python">import requests
 import json
 
 url = 'http://localhost:8000/api/country/update'
@@ -3225,10 +3241,7 @@ headers = {
 }
 
 response = requests.request('PUT', url, headers=headers, json=payload)
-response.json()
-```
-
-
+response.json()</code></pre>
 <div id="execution-results-PUTapi-country-update" hidden>
     <blockquote>Received response<span id="execution-response-status-PUTapi-country-update"></span>:</blockquote>
     <pre class="json"><code id="execution-response-content-PUTapi-country-update"></code></pre>
@@ -3259,7 +3272,318 @@ response.json()
 County ID .
 </p>
 
+</form><h1>Offices</h1>
+<p>APIs for managing offices</p>
+<h2>All offices</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "http://localhost:8000/api/office/all" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/office/all"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre>
+<pre><code class="language-php">
+$client = new \GuzzleHttp\Client();
+$response = $client-&gt;get(
+    'http://localhost:8000/api/office/all',
+    [
+        'headers' =&gt; [
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre>
+<pre><code class="language-python">import requests
+import json
+
+url = 'http://localhost:8000/api/office/all'
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('GET', url, headers=headers)
+response.json()</code></pre>
+<blockquote>
+<p>Example response (200):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "success": true,
+    "message": "success",
+    "result": [
+        {
+            "id": 2,
+            "country_id": 100,
+            "country": "Iceland",
+            "name": "nemo",
+            "member_count": 0,
+            "active": 0,
+            "created_at": "2021-06-09"
+        },
+        {
+            "id": 1,
+            "country_id": 2,
+            "country": "Aland Islands",
+            "name": "Tutu",
+            "member_count": 0,
+            "active": 1,
+            "created_at": "2021-06-09"
+        }
+    ]
+}</code></pre>
+<div id="execution-results-GETapi-office-all" hidden>
+    <blockquote>Received response<span id="execution-response-status-GETapi-office-all"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-office-all"></code></pre>
+</div>
+<div id="execution-error-GETapi-office-all" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-office-all"></code></pre>
+</div>
+<form id="form-GETapi-office-all" data-method="GET" data-path="api/office/all" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('GETapi-office-all', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-GETapi-office-all" onclick="tryItOut('GETapi-office-all');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-GETapi-office-all" onclick="cancelTryOut('GETapi-office-all');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-GETapi-office-all" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-green">GET</small>
+ <b><code>api/office/all</code></b>
+</p>
 </form>
+<h2>create office</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "http://localhost:8000/api/office/create" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -d '{"country_id":11,"name":"dolor"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/office/create"
+);
 
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
 
+let body = {
+    "country_id": 11,
+    "name": "dolor"
+}
 
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre>
+<pre><code class="language-php">
+$client = new \GuzzleHttp\Client();
+$response = $client-&gt;post(
+    'http://localhost:8000/api/office/create',
+    [
+        'headers' =&gt; [
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'country_id' =&gt; 11,
+            'name' =&gt; 'dolor',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre>
+<pre><code class="language-python">import requests
+import json
+
+url = 'http://localhost:8000/api/office/create'
+payload = {
+    "country_id": 11,
+    "name": "dolor"
+}
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre>
+<div id="execution-results-POSTapi-office-create" hidden>
+    <blockquote>Received response<span id="execution-response-status-POSTapi-office-create"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-office-create"></code></pre>
+</div>
+<div id="execution-error-POSTapi-office-create" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-office-create"></code></pre>
+</div>
+<form id="form-POSTapi-office-create" data-method="POST" data-path="api/office/create" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('POSTapi-office-create', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-POSTapi-office-create" onclick="tryItOut('POSTapi-office-create');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-POSTapi-office-create" onclick="cancelTryOut('POSTapi-office-create');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-POSTapi-office-create" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-black">POST</small>
+ <b><code>api/office/create</code></b>
+</p>
+<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+<p>
+<b><code>country_id</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+<input type="number" name="country_id" data-endpoint="POSTapi-office-create" data-component="body"  hidden>
+<br>
+County ID .
+</p>
+<p>
+<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="name" data-endpoint="POSTapi-office-create" data-component="body" required  hidden>
+<br>
+Office Name .
+</p>
+
+</form>
+<h2>update office</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X PUT \
+    "http://localhost:8000/api/office/update/1" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -d '{"country_id":1,"name":"quae","active":1}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/office/update/1"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "country_id": 1,
+    "name": "quae",
+    "active": 1
+}
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre>
+<pre><code class="language-php">
+$client = new \GuzzleHttp\Client();
+$response = $client-&gt;put(
+    'http://localhost:8000/api/office/update/1',
+    [
+        'headers' =&gt; [
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'country_id' =&gt; 1,
+            'name' =&gt; 'quae',
+            'active' =&gt; 1,
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre>
+<pre><code class="language-python">import requests
+import json
+
+url = 'http://localhost:8000/api/office/update/1'
+payload = {
+    "country_id": 1,
+    "name": "quae",
+    "active": 1
+}
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('PUT', url, headers=headers, json=payload)
+response.json()</code></pre>
+<div id="execution-results-PUTapi-office-update--id-" hidden>
+    <blockquote>Received response<span id="execution-response-status-PUTapi-office-update--id-"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-office-update--id-"></code></pre>
+</div>
+<div id="execution-error-PUTapi-office-update--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-office-update--id-"></code></pre>
+</div>
+<form id="form-PUTapi-office-update--id-" data-method="PUT" data-path="api/office/update/{id}" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-office-update--id-', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-PUTapi-office-update--id-" onclick="tryItOut('PUTapi-office-update--id-');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-PUTapi-office-update--id-" onclick="cancelTryOut('PUTapi-office-update--id-');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-PUTapi-office-update--id-" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-darkblue">PUT</small>
+ <b><code>api/office/update/{id}</code></b>
+</p>
+<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+<p>
+<b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<input type="number" name="id" data-endpoint="PUTapi-office-update--id-" data-component="url" required  hidden>
+<br>
+The ID of the office.
+</p>
+<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+<p>
+<b><code>country_id</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+<input type="number" name="country_id" data-endpoint="PUTapi-office-update--id-" data-component="body"  hidden>
+<br>
+County ID .
+</p>
+<p>
+<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="name" data-endpoint="PUTapi-office-update--id-" data-component="body" required  hidden>
+<br>
+Office Name .
+</p>
+<p>
+<b><code>active</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+<input type="number" name="active" data-endpoint="PUTapi-office-update--id-" data-component="body"  hidden>
+<br>
+Active Status .
+</p>
+
+</form>
+    </div>
+    <div class="dark-box">
+                    <div class="lang-selector">
+                                    <a href="#" data-language-name="bash">bash</a>
+                                    <a href="#" data-language-name="javascript">javascript</a>
+                                    <a href="#" data-language-name="php">php</a>
+                                    <a href="#" data-language-name="python">python</a>
+                            </div>
+            </div>
+</div>
+<script>
+    $(function () {
+        var languages = ["bash","javascript","php","python"];
+        setupLanguages(languages);
+    });
+</script>
+</body>
+</html>
