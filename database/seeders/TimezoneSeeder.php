@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Country;
 use App\Models\Timezone;
 use File;
 use Illuminate\Database\Seeder;
@@ -20,7 +19,7 @@ class TimezoneSeeder extends Seeder
         DB::table('timezones')->delete();
         $json = File::get("database/data/timezones.json");
         $data = json_decode($json);
-        foreach ($data as $key=>$obj) {
+        foreach ($data as $key => $obj) {
             Timezone::create(array(
                 'name' => $key,
                 'utc' => $obj,
