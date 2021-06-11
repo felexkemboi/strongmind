@@ -124,7 +124,7 @@ curl -X POST \
     "http://localhost:8000/api/office/create" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"country_id":11,"name":"dolor"}'
+    -d '{"country_id":3,"name":"nam"}'
 
 ```
 
@@ -139,8 +139,8 @@ let headers = {
 };
 
 let body = {
-    "country_id": 11,
-    "name": "dolor"
+    "country_id": 3,
+    "name": "nam"
 }
 
 fetch(url, {
@@ -160,8 +160,8 @@ $response = $client->post(
             'Accept' => 'application/json',
         ],
         'json' => [
-            'country_id' => 11,
-            'name' => 'dolor',
+            'country_id' => 3,
+            'name' => 'nam',
         ],
     ]
 );
@@ -175,8 +175,8 @@ import json
 
 url = 'http://localhost:8000/api/office/create'
 payload = {
-    "country_id": 11,
-    "name": "dolor"
+    "country_id": 3,
+    "name": "nam"
 }
 headers = {
   'Content-Type': 'application/json',
@@ -236,7 +236,7 @@ curl -X PUT \
     "http://localhost:8000/api/office/update/1" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"country_id":1,"name":"quae","active":1}'
+    -d '{"country_id":14,"name":"omnis","active":1}'
 
 ```
 
@@ -251,8 +251,8 @@ let headers = {
 };
 
 let body = {
-    "country_id": 1,
-    "name": "quae",
+    "country_id": 14,
+    "name": "omnis",
     "active": 1
 }
 
@@ -273,8 +273,8 @@ $response = $client->put(
             'Accept' => 'application/json',
         ],
         'json' => [
-            'country_id' => 1,
-            'name' => 'quae',
+            'country_id' => 14,
+            'name' => 'omnis',
             'active' => 1,
         ],
     ]
@@ -289,8 +289,8 @@ import json
 
 url = 'http://localhost:8000/api/office/update/1'
 payload = {
-    "country_id": 1,
-    "name": "quae",
+    "country_id": 14,
+    "name": "omnis",
     "active": 1
 }
 headers = {
