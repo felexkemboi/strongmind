@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\OfficeController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TimezoneController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,9 +24,25 @@ Route::prefix('country')->group(function (){
     Route::get('active',[CountryController::class,'activeCountries']);
     Route::put('update',[CountryController::class,'toggleStatus'])->middleware('auth:sanctum');
 });
+Route::prefix('timezone')->group(function (){
+    Route::get('all',[TimezoneController::class,'all']);
+    Route::get('active',[TimezoneController::class,'activeTimezones']);
+});
 Route::prefix('office')->group(function () {
     Route::get('all', [OfficeController::class,'all']);
     Route::post('create', [OfficeController::class,'create']);
     Route::put('update/{id}', [OfficeController::class,'update']);
 });
+//Roles and permissions
+Route::prefix('permission')->group(function () {
+    Route::get('all', [PermissionController::class,'index']);
+    Route::post('create', [PermissionController::class,'create']);
+});
+Route::prefix('role')->group(function () {
+    Route::get('all', [RoleController::class,'index']);
+    Route::post('create', [RoleController::class,'create']);
+    Route::post('assign-permissions', [RoleController::class,'assignPermissionToRole']);
+//    Route::put('update/{id}', [RoleController::class,'update']);
+});
+
 

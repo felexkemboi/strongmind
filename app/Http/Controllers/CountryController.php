@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Class CountryController
  * @package App\Http\Controllers
- * @group Countries
+ * @group Shared
  * APIs for managing countries
  */
 class CountryController extends Controller
