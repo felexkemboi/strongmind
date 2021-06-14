@@ -16,7 +16,7 @@ class TimezoneSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('timezones')->delete();
+        DB::table('timezones')->truncate();
         $json = File::get("database/data/timezones.json");
         $data = json_decode($json);
         foreach ($data as $key => $obj) {
