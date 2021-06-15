@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('country')->group(function (){
     Route::get('all',[CountryController::class,'all']);
     Route::get('active',[CountryController::class,'activeCountries']);
-    Route::put('update',[CountryController::class,'toggleStatus'])->middleware('auth:sanctum');
+    Route::put('update',[CountryController::class,'toggleStatus']);
 });
 Route::prefix('timezone')->group(function (){
     Route::get('all',[TimezoneController::class,'all']);
