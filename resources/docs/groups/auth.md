@@ -10,14 +10,14 @@ APIs for roles and permissions
 
 ```bash
 curl -X GET \
-    -G "http://localhost:8000/api/permission/all" \
+    -G "https://api.strongminds.made.ke/api/permission/all" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
 ```
 
 ```javascript
 const url = new URL(
-    "http://localhost:8000/api/permission/all"
+    "https://api.strongminds.made.ke/api/permission/all"
 );
 
 let headers = {
@@ -36,7 +36,7 @@ fetch(url, {
 
 $client = new \GuzzleHttp\Client();
 $response = $client->get(
-    'http://localhost:8000/api/permission/all',
+    'https://api.strongminds.made.ke/api/permission/all',
     [
         'headers' => [
             'Accept' => 'application/json',
@@ -51,7 +51,7 @@ print_r(json_decode((string) $body));
 import requests
 import json
 
-url = 'http://localhost:8000/api/permission/all'
+url = 'https://api.strongminds.made.ke/api/permission/all'
 headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json'
@@ -117,16 +117,16 @@ response.json()
 
 ```bash
 curl -X POST \
-    "http://localhost:8000/api/permission/create" \
+    "https://api.strongminds.made.ke/api/permission/create" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"slug":"et","title":"enim","module":"tempore"}'
+    -d '{"slug":"iste","title":"quia","module":"aliquid"}'
 
 ```
 
 ```javascript
 const url = new URL(
-    "http://localhost:8000/api/permission/create"
+    "https://api.strongminds.made.ke/api/permission/create"
 );
 
 let headers = {
@@ -135,9 +135,9 @@ let headers = {
 };
 
 let body = {
-    "slug": "et",
-    "title": "enim",
-    "module": "tempore"
+    "slug": "iste",
+    "title": "quia",
+    "module": "aliquid"
 }
 
 fetch(url, {
@@ -151,15 +151,15 @@ fetch(url, {
 
 $client = new \GuzzleHttp\Client();
 $response = $client->post(
-    'http://localhost:8000/api/permission/create',
+    'https://api.strongminds.made.ke/api/permission/create',
     [
         'headers' => [
             'Accept' => 'application/json',
         ],
         'json' => [
-            'slug' => 'et',
-            'title' => 'enim',
-            'module' => 'tempore',
+            'slug' => 'iste',
+            'title' => 'quia',
+            'module' => 'aliquid',
         ],
     ]
 );
@@ -171,11 +171,11 @@ print_r(json_decode((string) $body));
 import requests
 import json
 
-url = 'http://localhost:8000/api/permission/create'
+url = 'https://api.strongminds.made.ke/api/permission/create'
 payload = {
-    "slug": "et",
-    "title": "enim",
-    "module": "tempore"
+    "slug": "iste",
+    "title": "quia",
+    "module": "aliquid"
 }
 headers = {
   'Content-Type': 'application/json',
@@ -238,14 +238,14 @@ Module Name e.g user.
 
 ```bash
 curl -X GET \
-    -G "http://localhost:8000/api/role/all" \
+    -G "https://api.strongminds.made.ke/api/role/all" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
 ```
 
 ```javascript
 const url = new URL(
-    "http://localhost:8000/api/role/all"
+    "https://api.strongminds.made.ke/api/role/all"
 );
 
 let headers = {
@@ -264,7 +264,7 @@ fetch(url, {
 
 $client = new \GuzzleHttp\Client();
 $response = $client->get(
-    'http://localhost:8000/api/role/all',
+    'https://api.strongminds.made.ke/api/role/all',
     [
         'headers' => [
             'Accept' => 'application/json',
@@ -279,7 +279,7 @@ print_r(json_decode((string) $body));
 import requests
 import json
 
-url = 'http://localhost:8000/api/role/all'
+url = 'https://api.strongminds.made.ke/api/role/all'
 headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json'
@@ -336,16 +336,16 @@ response.json()
 
 ```bash
 curl -X POST \
-    "http://localhost:8000/api/role/create" \
+    "https://api.strongminds.made.ke/api/role/create" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"slug":"nesciunt","title":"aliquid"}'
+    -d '{"slug":"ipsum","title":"est"}'
 
 ```
 
 ```javascript
 const url = new URL(
-    "http://localhost:8000/api/role/create"
+    "https://api.strongminds.made.ke/api/role/create"
 );
 
 let headers = {
@@ -354,8 +354,8 @@ let headers = {
 };
 
 let body = {
-    "slug": "nesciunt",
-    "title": "aliquid"
+    "slug": "ipsum",
+    "title": "est"
 }
 
 fetch(url, {
@@ -369,14 +369,14 @@ fetch(url, {
 
 $client = new \GuzzleHttp\Client();
 $response = $client->post(
-    'http://localhost:8000/api/role/create',
+    'https://api.strongminds.made.ke/api/role/create',
     [
         'headers' => [
             'Accept' => 'application/json',
         ],
         'json' => [
-            'slug' => 'nesciunt',
-            'title' => 'aliquid',
+            'slug' => 'ipsum',
+            'title' => 'est',
         ],
     ]
 );
@@ -388,10 +388,10 @@ print_r(json_decode((string) $body));
 import requests
 import json
 
-url = 'http://localhost:8000/api/role/create'
+url = 'https://api.strongminds.made.ke/api/role/create'
 payload = {
-    "slug": "nesciunt",
-    "title": "aliquid"
+    "slug": "ipsum",
+    "title": "est"
 }
 headers = {
   'Content-Type': 'application/json',
@@ -448,16 +448,16 @@ Title. Example Administrator
 
 ```bash
 curl -X POST \
-    "http://localhost:8000/api/role/assign-permissions" \
+    "https://api.strongminds.made.ke/api/role/assign-permissions" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"role_id":15,"permissions":[13,15]}'
+    -d '{"role_id":9,"permissions":[1,15]}'
 
 ```
 
 ```javascript
 const url = new URL(
-    "http://localhost:8000/api/role/assign-permissions"
+    "https://api.strongminds.made.ke/api/role/assign-permissions"
 );
 
 let headers = {
@@ -466,9 +466,9 @@ let headers = {
 };
 
 let body = {
-    "role_id": 15,
+    "role_id": 9,
     "permissions": [
-        13,
+        1,
         15
     ]
 }
@@ -484,15 +484,15 @@ fetch(url, {
 
 $client = new \GuzzleHttp\Client();
 $response = $client->post(
-    'http://localhost:8000/api/role/assign-permissions',
+    'https://api.strongminds.made.ke/api/role/assign-permissions',
     [
         'headers' => [
             'Accept' => 'application/json',
         ],
         'json' => [
-            'role_id' => 15,
+            'role_id' => 9,
             'permissions' => [
-                13,
+                1,
                 15,
             ],
         ],
@@ -506,11 +506,11 @@ print_r(json_decode((string) $body));
 import requests
 import json
 
-url = 'http://localhost:8000/api/role/assign-permissions'
+url = 'https://api.strongminds.made.ke/api/role/assign-permissions'
 payload = {
-    "role_id": 15,
+    "role_id": 9,
     "permissions": [
-        13,
+        1,
         15
     ]
 }
