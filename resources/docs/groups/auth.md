@@ -120,7 +120,7 @@ curl -X POST \
     "https://api.strongminds.made.ke/api/permission/create" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"slug":"iste","title":"quia","module":"aliquid"}'
+    -d '{"slug":"vel","title":"ipsa","module":"repellat"}'
 
 ```
 
@@ -135,9 +135,9 @@ let headers = {
 };
 
 let body = {
-    "slug": "iste",
-    "title": "quia",
-    "module": "aliquid"
+    "slug": "vel",
+    "title": "ipsa",
+    "module": "repellat"
 }
 
 fetch(url, {
@@ -157,9 +157,9 @@ $response = $client->post(
             'Accept' => 'application/json',
         ],
         'json' => [
-            'slug' => 'iste',
-            'title' => 'quia',
-            'module' => 'aliquid',
+            'slug' => 'vel',
+            'title' => 'ipsa',
+            'module' => 'repellat',
         ],
     ]
 );
@@ -173,9 +173,9 @@ import json
 
 url = 'https://api.strongminds.made.ke/api/permission/create'
 payload = {
-    "slug": "iste",
-    "title": "quia",
-    "module": "aliquid"
+    "slug": "vel",
+    "title": "ipsa",
+    "module": "repellat"
 }
 headers = {
   'Content-Type': 'application/json',
@@ -298,9 +298,22 @@ response.json()
     "message": "success",
     "result": [
         {
+            "role_id": 3,
+            "name": "Business Developer",
+            "role_code": "BD",
+            "description": "Business Developer"
+        },
+        {
+            "role_id": 2,
+            "name": "Business Executive",
+            "role_code": null,
+            "description": null
+        },
+        {
             "role_id": 1,
-            "slug": "admin",
-            "title": "Administrator"
+            "name": "Administrator",
+            "role_code": null,
+            "description": null
         }
     ]
 }
@@ -339,7 +352,7 @@ curl -X POST \
     "https://api.strongminds.made.ke/api/role/create" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"slug":"ipsum","title":"est"}'
+    -d '{"name":"totam","role_code":"laudantium","description":"facere","access_permissions":[18,5]}'
 
 ```
 
@@ -354,8 +367,13 @@ let headers = {
 };
 
 let body = {
-    "slug": "ipsum",
-    "title": "est"
+    "name": "totam",
+    "role_code": "laudantium",
+    "description": "facere",
+    "access_permissions": [
+        18,
+        5
+    ]
 }
 
 fetch(url, {
@@ -375,8 +393,13 @@ $response = $client->post(
             'Accept' => 'application/json',
         ],
         'json' => [
-            'slug' => 'ipsum',
-            'title' => 'est',
+            'name' => 'totam',
+            'role_code' => 'laudantium',
+            'description' => 'facere',
+            'access_permissions' => [
+                18,
+                5,
+            ],
         ],
     ]
 );
@@ -390,8 +413,13 @@ import json
 
 url = 'https://api.strongminds.made.ke/api/role/create'
 payload = {
-    "slug": "ipsum",
-    "title": "est"
+    "name": "totam",
+    "role_code": "laudantium",
+    "description": "facere",
+    "access_permissions": [
+        18,
+        5
+    ]
 }
 headers = {
   'Content-Type': 'application/json',
@@ -424,136 +452,27 @@ response.json()
 </p>
 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
 <p>
-<b><code>slug</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="slug" data-endpoint="POSTapi-role-create" data-component="body" required  hidden>
+<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="name" data-endpoint="POSTapi-role-create" data-component="body" required  hidden>
 <br>
 Role Name. Example admin
 </p>
 <p>
-<b><code>title</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="title" data-endpoint="POSTapi-role-create" data-component="body" required  hidden>
+<b><code>role_code</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="role_code" data-endpoint="POSTapi-role-create" data-component="body" required  hidden>
 <br>
-Title. Example Administrator
+Code. Example Administrator
 </p>
-
-</form>
-
-
-## Assign Permissions to role
-
-
-
-
-> Example request:
-
-```bash
-curl -X POST \
-    "https://api.strongminds.made.ke/api/role/assign-permissions" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json" \
-    -d '{"role_id":9,"permissions":[1,15]}'
-
-```
-
-```javascript
-const url = new URL(
-    "https://api.strongminds.made.ke/api/role/assign-permissions"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-let body = {
-    "role_id": 9,
-    "permissions": [
-        1,
-        15
-    ]
-}
-
-fetch(url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(body),
-}).then(response => response.json());
-```
-
-```php
-
-$client = new \GuzzleHttp\Client();
-$response = $client->post(
-    'https://api.strongminds.made.ke/api/role/assign-permissions',
-    [
-        'headers' => [
-            'Accept' => 'application/json',
-        ],
-        'json' => [
-            'role_id' => 9,
-            'permissions' => [
-                1,
-                15,
-            ],
-        ],
-    ]
-);
-$body = $response->getBody();
-print_r(json_decode((string) $body));
-```
-
-```python
-import requests
-import json
-
-url = 'https://api.strongminds.made.ke/api/role/assign-permissions'
-payload = {
-    "role_id": 9,
-    "permissions": [
-        1,
-        15
-    ]
-}
-headers = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json'
-}
-
-response = requests.request('POST', url, headers=headers, json=payload)
-response.json()
-```
-
-
-<div id="execution-results-POSTapi-role-assign-permissions" hidden>
-    <blockquote>Received response<span id="execution-response-status-POSTapi-role-assign-permissions"></span>:</blockquote>
-    <pre class="json"><code id="execution-response-content-POSTapi-role-assign-permissions"></code></pre>
-</div>
-<div id="execution-error-POSTapi-role-assign-permissions" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-POSTapi-role-assign-permissions"></code></pre>
-</div>
-<form id="form-POSTapi-role-assign-permissions" data-method="POST" data-path="api/role/assign-permissions" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('POSTapi-role-assign-permissions', this);">
-<h3>
-    Request&nbsp;&nbsp;&nbsp;
-        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-POSTapi-role-assign-permissions" onclick="tryItOut('POSTapi-role-assign-permissions');">Try it out ⚡</button>
-    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-POSTapi-role-assign-permissions" onclick="cancelTryOut('POSTapi-role-assign-permissions');" hidden>Cancel</button>&nbsp;&nbsp;
-    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-POSTapi-role-assign-permissions" hidden>Send Request 💥</button>
-    </h3>
 <p>
-<small class="badge badge-black">POST</small>
- <b><code>api/role/assign-permissions</code></b>
-</p>
-<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-<p>
-<b><code>role_id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
-<input type="number" name="role_id" data-endpoint="POSTapi-role-assign-permissions" data-component="body" required  hidden>
+<b><code>description</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+<input type="text" name="description" data-endpoint="POSTapi-role-create" data-component="body"  hidden>
 <br>
-Role ID. Example 1
+Description. Example This is Administrator
 </p>
 <p>
-<b><code>permissions</code></b>&nbsp;&nbsp;<small>integer[]</small>  &nbsp;
-<input type="number" name="permissions.0" data-endpoint="POSTapi-role-assign-permissions" data-component="body" required  hidden>
-<input type="number" name="permissions.1" data-endpoint="POSTapi-role-assign-permissions" data-component="body" hidden>
+<b><code>access_permissions</code></b>&nbsp;&nbsp;<small>integer[]</small>  &nbsp;
+<input type="number" name="access_permissions.0" data-endpoint="POSTapi-role-create" data-component="body" required  hidden>
+<input type="number" name="access_permissions.1" data-endpoint="POSTapi-role-create" data-component="body" hidden>
 <br>
 Permission IDs. Example [1,2]
 </p>

@@ -3145,7 +3145,7 @@ curl -X PUT \
     "https://api.strongminds.made.ke/api/country/update" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"country_id":7}'
+    -d '{"country_id":6}'
 
 ```
 
@@ -3160,7 +3160,7 @@ let headers = {
 };
 
 let body = {
-    "country_id": 7
+    "country_id": 6
 }
 
 fetch(url, {
@@ -3180,7 +3180,7 @@ $response = $client->put(
             'Accept' => 'application/json',
         ],
         'json' => [
-            'country_id' => 7,
+            'country_id' => 6,
         ],
     ]
 );
@@ -3194,7 +3194,7 @@ import json
 
 url = 'https://api.strongminds.made.ke/api/country/update'
 payload = {
-    "country_id": 7
+    "country_id": 6
 }
 headers = {
   'Content-Type': 'application/json',

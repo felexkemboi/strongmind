@@ -124,7 +124,7 @@ curl -X POST \
     "https://api.strongminds.made.ke/api/office/create" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"country_id":15,"name":"molestiae"}'
+    -d '{"country_id":1,"name":"quod"}'
 
 ```
 
@@ -139,8 +139,8 @@ let headers = {
 };
 
 let body = {
-    "country_id": 15,
-    "name": "molestiae"
+    "country_id": 1,
+    "name": "quod"
 }
 
 fetch(url, {
@@ -160,8 +160,8 @@ $response = $client->post(
             'Accept' => 'application/json',
         ],
         'json' => [
-            'country_id' => 15,
-            'name' => 'molestiae',
+            'country_id' => 1,
+            'name' => 'quod',
         ],
     ]
 );
@@ -175,8 +175,8 @@ import json
 
 url = 'https://api.strongminds.made.ke/api/office/create'
 payload = {
-    "country_id": 15,
-    "name": "molestiae"
+    "country_id": 1,
+    "name": "quod"
 }
 headers = {
   'Content-Type': 'application/json',
@@ -236,7 +236,7 @@ curl -X PUT \
     "https://api.strongminds.made.ke/api/office/update/1" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"country_id":18,"name":"sed","active":1}'
+    -d '{"country_id":11,"name":"laborum","active":1}'
 
 ```
 
@@ -251,8 +251,8 @@ let headers = {
 };
 
 let body = {
-    "country_id": 18,
-    "name": "sed",
+    "country_id": 11,
+    "name": "laborum",
     "active": 1
 }
 
@@ -273,8 +273,8 @@ $response = $client->put(
             'Accept' => 'application/json',
         ],
         'json' => [
-            'country_id' => 18,
-            'name' => 'sed',
+            'country_id' => 11,
+            'name' => 'laborum',
             'active' => 1,
         ],
     ]
@@ -289,8 +289,8 @@ import json
 
 url = 'https://api.strongminds.made.ke/api/office/update/1'
 payload = {
-    "country_id": 18,
-    "name": "sed",
+    "country_id": 11,
+    "name": "laborum",
     "active": 1
 }
 headers = {

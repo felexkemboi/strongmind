@@ -36,7 +36,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 <script>
     var baseUrl = "https://api.strongminds.made.ke";
 </script>
-<script src="js/tryitout-2.7.7.js"></script>
+<script src="js/tryitout-2.7.9.js"></script>
 
 > Base URL
 
