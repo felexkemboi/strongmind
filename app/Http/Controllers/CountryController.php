@@ -51,7 +51,7 @@ class CountryController extends Controller
     public function toggleStatus(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'country_id' => 'nullable',
+            'country_id' => 'required|integer',
         ]);
         if ($validator->fails()) {
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);

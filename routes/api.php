@@ -41,7 +41,6 @@ Route::prefix('permission')->group(function () {
 Route::prefix('role')->group(function () {
     Route::get('all', [RoleController::class,'index']);
     Route::post('create', [RoleController::class,'create']);
-    Route::post('assign-permissions', [RoleController::class,'assignPermissionToRole']);
 //    Route::put('update/{id}', [RoleController::class,'update']);
 });
 

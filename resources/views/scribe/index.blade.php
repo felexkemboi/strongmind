@@ -46,7 +46,7 @@
                             <li><a href='http://github.com/knuckleswtf/scribe'>Documentation powered by Scribe ✍</a></li>
                     </ul>
             <ul class="toc-footer" id="last-updated">
-            <li>Last updated: June 11 2021</li>
+            <li>Last updated: June 16 2021</li>
         </ul>
 </div>
 <div class="page-wrapper">
@@ -59,13 +59,13 @@
 You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).</aside>
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
 <script>
-    var baseUrl = "http://localhost:8000";
+    var baseUrl = "https://api.strongminds.made.ke";
 </script>
-<script src="{{ asset("vendor/scribe/js/tryitout-2.7.7.js") }}"></script>
+<script src="{{ asset("vendor/scribe/js/tryitout-2.7.9.js") }}"></script>
 <blockquote>
 <p>Base URL</p>
 </blockquote>
-<pre><code class="language-yaml">http://localhost:8000</code></pre><h1>Authenticating requests</h1>
+<pre><code class="language-yaml">https://api.strongminds.made.ke</code></pre><h1>Authenticating requests</h1>
 <p>To authenticate requests, include an <strong><code>Authorization</code></strong> header with the value <strong><code>"Bearer {YOUR_AUTH_KEY}"</code></strong>.</p>
 <p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the documentation below.</p>
 <p>You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.</p><h1>Auth</h1>
@@ -75,11 +75,11 @@ You can switch the language used with the tabs at the top right (or from the nav
 <p>Example request:</p>
 </blockquote>
 <pre><code class="language-bash">curl -X GET \
-    -G "http://localhost:8000/api/permission/all" \
+    -G "https://api.strongminds.made.ke/api/permission/all" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"</code></pre>
 <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/permission/all"
+    "https://api.strongminds.made.ke/api/permission/all"
 );
 
 let headers = {
@@ -94,7 +94,7 @@ fetch(url, {
 <pre><code class="language-php">
 $client = new \GuzzleHttp\Client();
 $response = $client-&gt;get(
-    'http://localhost:8000/api/permission/all',
+    'https://api.strongminds.made.ke/api/permission/all',
     [
         'headers' =&gt; [
             'Accept' =&gt; 'application/json',
@@ -106,7 +106,7 @@ print_r(json_decode((string) $body));</code></pre>
 <pre><code class="language-python">import requests
 import json
 
-url = 'http://localhost:8000/api/permission/all'
+url = 'https://api.strongminds.made.ke/api/permission/all'
 headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json'
@@ -162,13 +162,13 @@ response.json()</code></pre>
 <p>Example request:</p>
 </blockquote>
 <pre><code class="language-bash">curl -X POST \
-    "http://localhost:8000/api/permission/create" \
+    "https://api.strongminds.made.ke/api/permission/create" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"slug":"et","title":"enim","module":"tempore"}'
+    -d '{"slug":"vel","title":"ipsa","module":"repellat"}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/permission/create"
+    "https://api.strongminds.made.ke/api/permission/create"
 );
 
 let headers = {
@@ -177,9 +177,9 @@ let headers = {
 };
 
 let body = {
-    "slug": "et",
-    "title": "enim",
-    "module": "tempore"
+    "slug": "vel",
+    "title": "ipsa",
+    "module": "repellat"
 }
 
 fetch(url, {
@@ -190,15 +190,15 @@ fetch(url, {
 <pre><code class="language-php">
 $client = new \GuzzleHttp\Client();
 $response = $client-&gt;post(
-    'http://localhost:8000/api/permission/create',
+    'https://api.strongminds.made.ke/api/permission/create',
     [
         'headers' =&gt; [
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'slug' =&gt; 'et',
-            'title' =&gt; 'enim',
-            'module' =&gt; 'tempore',
+            'slug' =&gt; 'vel',
+            'title' =&gt; 'ipsa',
+            'module' =&gt; 'repellat',
         ],
     ]
 );
@@ -207,11 +207,11 @@ print_r(json_decode((string) $body));</code></pre>
 <pre><code class="language-python">import requests
 import json
 
-url = 'http://localhost:8000/api/permission/create'
+url = 'https://api.strongminds.made.ke/api/permission/create'
 payload = {
-    "slug": "et",
-    "title": "enim",
-    "module": "tempore"
+    "slug": "vel",
+    "title": "ipsa",
+    "module": "repellat"
 }
 headers = {
   'Content-Type': 'application/json',
@@ -265,11 +265,11 @@ Module Name e.g user.
 <p>Example request:</p>
 </blockquote>
 <pre><code class="language-bash">curl -X GET \
-    -G "http://localhost:8000/api/role/all" \
+    -G "https://api.strongminds.made.ke/api/role/all" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"</code></pre>
 <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/role/all"
+    "https://api.strongminds.made.ke/api/role/all"
 );
 
 let headers = {
@@ -284,7 +284,7 @@ fetch(url, {
 <pre><code class="language-php">
 $client = new \GuzzleHttp\Client();
 $response = $client-&gt;get(
-    'http://localhost:8000/api/role/all',
+    'https://api.strongminds.made.ke/api/role/all',
     [
         'headers' =&gt; [
             'Accept' =&gt; 'application/json',
@@ -296,7 +296,7 @@ print_r(json_decode((string) $body));</code></pre>
 <pre><code class="language-python">import requests
 import json
 
-url = 'http://localhost:8000/api/role/all'
+url = 'https://api.strongminds.made.ke/api/role/all'
 headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json'
@@ -312,9 +312,22 @@ response.json()</code></pre>
     "message": "success",
     "result": [
         {
+            "role_id": 3,
+            "name": "Business Developer",
+            "role_code": "BD",
+            "description": "Business Developer"
+        },
+        {
+            "role_id": 2,
+            "name": "Business Executive",
+            "role_code": null,
+            "description": null
+        },
+        {
             "role_id": 1,
-            "slug": "admin",
-            "title": "Administrator"
+            "name": "Administrator",
+            "role_code": null,
+            "description": null
         }
     ]
 }</code></pre>
@@ -343,13 +356,13 @@ response.json()</code></pre>
 <p>Example request:</p>
 </blockquote>
 <pre><code class="language-bash">curl -X POST \
-    "http://localhost:8000/api/role/create" \
+    "https://api.strongminds.made.ke/api/role/create" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"slug":"nesciunt","title":"aliquid"}'
+    -d '{"name":"totam","role_code":"laudantium","description":"facere","access_permissions":[18,5]}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/role/create"
+    "https://api.strongminds.made.ke/api/role/create"
 );
 
 let headers = {
@@ -358,8 +371,13 @@ let headers = {
 };
 
 let body = {
-    "slug": "nesciunt",
-    "title": "aliquid"
+    "name": "totam",
+    "role_code": "laudantium",
+    "description": "facere",
+    "access_permissions": [
+        18,
+        5
+    ]
 }
 
 fetch(url, {
@@ -370,14 +388,19 @@ fetch(url, {
 <pre><code class="language-php">
 $client = new \GuzzleHttp\Client();
 $response = $client-&gt;post(
-    'http://localhost:8000/api/role/create',
+    'https://api.strongminds.made.ke/api/role/create',
     [
         'headers' =&gt; [
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'slug' =&gt; 'nesciunt',
-            'title' =&gt; 'aliquid',
+            'name' =&gt; 'totam',
+            'role_code' =&gt; 'laudantium',
+            'description' =&gt; 'facere',
+            'access_permissions' =&gt; [
+                18,
+                5,
+            ],
         ],
     ]
 );
@@ -386,10 +409,15 @@ print_r(json_decode((string) $body));</code></pre>
 <pre><code class="language-python">import requests
 import json
 
-url = 'http://localhost:8000/api/role/create'
+url = 'https://api.strongminds.made.ke/api/role/create'
 payload = {
-    "slug": "nesciunt",
-    "title": "aliquid"
+    "name": "totam",
+    "role_code": "laudantium",
+    "description": "facere",
+    "access_permissions": [
+        18,
+        5
+    ]
 }
 headers = {
   'Content-Type': 'application/json',
@@ -419,118 +447,27 @@ response.json()</code></pre>
 </p>
 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
 <p>
-<b><code>slug</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="slug" data-endpoint="POSTapi-role-create" data-component="body" required  hidden>
+<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="name" data-endpoint="POSTapi-role-create" data-component="body" required  hidden>
 <br>
 Role Name. Example admin
 </p>
 <p>
-<b><code>title</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="title" data-endpoint="POSTapi-role-create" data-component="body" required  hidden>
+<b><code>role_code</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="role_code" data-endpoint="POSTapi-role-create" data-component="body" required  hidden>
 <br>
-Title. Example Administrator
+Code. Example Administrator
 </p>
-
-</form>
-<h2>Assign Permissions to role</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X POST \
-    "http://localhost:8000/api/role/assign-permissions" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json" \
-    -d '{"role_id":15,"permissions":[13,15]}'
-</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/role/assign-permissions"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-let body = {
-    "role_id": 15,
-    "permissions": [
-        13,
-        15
-    ]
-}
-
-fetch(url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
-$client = new \GuzzleHttp\Client();
-$response = $client-&gt;post(
-    'http://localhost:8000/api/role/assign-permissions',
-    [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
-        ],
-        'json' =&gt; [
-            'role_id' =&gt; 15,
-            'permissions' =&gt; [
-                13,
-                15,
-            ],
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
-import json
-
-url = 'http://localhost:8000/api/role/assign-permissions'
-payload = {
-    "role_id": 15,
-    "permissions": [
-        13,
-        15
-    ]
-}
-headers = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json'
-}
-
-response = requests.request('POST', url, headers=headers, json=payload)
-response.json()</code></pre>
-<div id="execution-results-POSTapi-role-assign-permissions" hidden>
-    <blockquote>Received response<span id="execution-response-status-POSTapi-role-assign-permissions"></span>:</blockquote>
-    <pre class="json"><code id="execution-response-content-POSTapi-role-assign-permissions"></code></pre>
-</div>
-<div id="execution-error-POSTapi-role-assign-permissions" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-POSTapi-role-assign-permissions"></code></pre>
-</div>
-<form id="form-POSTapi-role-assign-permissions" data-method="POST" data-path="api/role/assign-permissions" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('POSTapi-role-assign-permissions', this);">
-<h3>
-    Request&nbsp;&nbsp;&nbsp;
-        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-POSTapi-role-assign-permissions" onclick="tryItOut('POSTapi-role-assign-permissions');">Try it out ⚡</button>
-    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-POSTapi-role-assign-permissions" onclick="cancelTryOut('POSTapi-role-assign-permissions');" hidden>Cancel</button>&nbsp;&nbsp;
-    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-POSTapi-role-assign-permissions" hidden>Send Request 💥</button>
-    </h3>
 <p>
-<small class="badge badge-black">POST</small>
- <b><code>api/role/assign-permissions</code></b>
-</p>
-<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-<p>
-<b><code>role_id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
-<input type="number" name="role_id" data-endpoint="POSTapi-role-assign-permissions" data-component="body" required  hidden>
+<b><code>description</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+<input type="text" name="description" data-endpoint="POSTapi-role-create" data-component="body"  hidden>
 <br>
-Role ID. Example 1
+Description. Example This is Administrator
 </p>
 <p>
-<b><code>permissions</code></b>&nbsp;&nbsp;<small>integer[]</small>  &nbsp;
-<input type="number" name="permissions.0" data-endpoint="POSTapi-role-assign-permissions" data-component="body" required  hidden>
-<input type="number" name="permissions.1" data-endpoint="POSTapi-role-assign-permissions" data-component="body" hidden>
+<b><code>access_permissions</code></b>&nbsp;&nbsp;<small>integer[]</small>  &nbsp;
+<input type="number" name="access_permissions.0" data-endpoint="POSTapi-role-create" data-component="body" required  hidden>
+<input type="number" name="access_permissions.1" data-endpoint="POSTapi-role-create" data-component="body" hidden>
 <br>
 Permission IDs. Example [1,2]
 </p>
@@ -542,11 +479,11 @@ Permission IDs. Example [1,2]
 <p>Example request:</p>
 </blockquote>
 <pre><code class="language-bash">curl -X GET \
-    -G "http://localhost:8000/api/office/all" \
+    -G "https://api.strongminds.made.ke/api/office/all" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"</code></pre>
 <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/office/all"
+    "https://api.strongminds.made.ke/api/office/all"
 );
 
 let headers = {
@@ -561,7 +498,7 @@ fetch(url, {
 <pre><code class="language-php">
 $client = new \GuzzleHttp\Client();
 $response = $client-&gt;get(
-    'http://localhost:8000/api/office/all',
+    'https://api.strongminds.made.ke/api/office/all',
     [
         'headers' =&gt; [
             'Accept' =&gt; 'application/json',
@@ -573,7 +510,7 @@ print_r(json_decode((string) $body));</code></pre>
 <pre><code class="language-python">import requests
 import json
 
-url = 'http://localhost:8000/api/office/all'
+url = 'https://api.strongminds.made.ke/api/office/all'
 headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json'
@@ -633,13 +570,13 @@ response.json()</code></pre>
 <p>Example request:</p>
 </blockquote>
 <pre><code class="language-bash">curl -X POST \
-    "http://localhost:8000/api/office/create" \
+    "https://api.strongminds.made.ke/api/office/create" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"country_id":3,"name":"nam"}'
+    -d '{"country_id":1,"name":"quod"}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/office/create"
+    "https://api.strongminds.made.ke/api/office/create"
 );
 
 let headers = {
@@ -648,8 +585,8 @@ let headers = {
 };
 
 let body = {
-    "country_id": 3,
-    "name": "nam"
+    "country_id": 1,
+    "name": "quod"
 }
 
 fetch(url, {
@@ -660,14 +597,14 @@ fetch(url, {
 <pre><code class="language-php">
 $client = new \GuzzleHttp\Client();
 $response = $client-&gt;post(
-    'http://localhost:8000/api/office/create',
+    'https://api.strongminds.made.ke/api/office/create',
     [
         'headers' =&gt; [
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'country_id' =&gt; 3,
-            'name' =&gt; 'nam',
+            'country_id' =&gt; 1,
+            'name' =&gt; 'quod',
         ],
     ]
 );
@@ -676,10 +613,10 @@ print_r(json_decode((string) $body));</code></pre>
 <pre><code class="language-python">import requests
 import json
 
-url = 'http://localhost:8000/api/office/create'
+url = 'https://api.strongminds.made.ke/api/office/create'
 payload = {
-    "country_id": 3,
-    "name": "nam"
+    "country_id": 1,
+    "name": "quod"
 }
 headers = {
   'Content-Type': 'application/json',
@@ -727,13 +664,13 @@ Office Name .
 <p>Example request:</p>
 </blockquote>
 <pre><code class="language-bash">curl -X PUT \
-    "http://localhost:8000/api/office/update/1" \
+    "https://api.strongminds.made.ke/api/office/update/1" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"country_id":14,"name":"omnis","active":1}'
+    -d '{"country_id":11,"name":"laborum","active":1}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/office/update/1"
+    "https://api.strongminds.made.ke/api/office/update/1"
 );
 
 let headers = {
@@ -742,8 +679,8 @@ let headers = {
 };
 
 let body = {
-    "country_id": 14,
-    "name": "omnis",
+    "country_id": 11,
+    "name": "laborum",
     "active": 1
 }
 
@@ -755,14 +692,14 @@ fetch(url, {
 <pre><code class="language-php">
 $client = new \GuzzleHttp\Client();
 $response = $client-&gt;put(
-    'http://localhost:8000/api/office/update/1',
+    'https://api.strongminds.made.ke/api/office/update/1',
     [
         'headers' =&gt; [
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'country_id' =&gt; 14,
-            'name' =&gt; 'omnis',
+            'country_id' =&gt; 11,
+            'name' =&gt; 'laborum',
             'active' =&gt; 1,
         ],
     ]
@@ -772,10 +709,10 @@ print_r(json_decode((string) $body));</code></pre>
 <pre><code class="language-python">import requests
 import json
 
-url = 'http://localhost:8000/api/office/update/1'
+url = 'https://api.strongminds.made.ke/api/office/update/1'
 payload = {
-    "country_id": 14,
-    "name": "omnis",
+    "country_id": 11,
+    "name": "laborum",
     "active": 1
 }
 headers = {
@@ -838,11 +775,11 @@ Active Status .
 <p>Example request:</p>
 </blockquote>
 <pre><code class="language-bash">curl -X GET \
-    -G "http://localhost:8000/api/country/all" \
+    -G "https://api.strongminds.made.ke/api/country/all" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"</code></pre>
 <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/country/all"
+    "https://api.strongminds.made.ke/api/country/all"
 );
 
 let headers = {
@@ -857,7 +794,7 @@ fetch(url, {
 <pre><code class="language-php">
 $client = new \GuzzleHttp\Client();
 $response = $client-&gt;get(
-    'http://localhost:8000/api/country/all',
+    'https://api.strongminds.made.ke/api/country/all',
     [
         'headers' =&gt; [
             'Accept' =&gt; 'application/json',
@@ -869,7 +806,7 @@ print_r(json_decode((string) $body));</code></pre>
 <pre><code class="language-python">import requests
 import json
 
-url = 'http://localhost:8000/api/country/all'
+url = 'https://api.strongminds.made.ke/api/country/all'
 headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json'
@@ -884,24 +821,6 @@ response.json()</code></pre>
     "success": true,
     "message": "success",
     "result": [
-        {
-            "country_id": 1,
-            "name": "Afghanistan",
-            "dialing_code": "93",
-            "active": 1
-        },
-        {
-            "country_id": 2,
-            "name": "Aland Islands",
-            "dialing_code": "+358-18",
-            "active": 1
-        },
-        {
-            "country_id": 3,
-            "name": "Albania",
-            "dialing_code": "355",
-            "active": 1
-        },
         {
             "country_id": 4,
             "name": "Algeria",
@@ -1483,6 +1402,12 @@ response.json()</code></pre>
             "name": "Iceland",
             "dialing_code": "354",
             "active": 1
+        },
+        {
+            "country_id": 3,
+            "name": "Albania",
+            "dialing_code": "355",
+            "active": 0
         },
         {
             "country_id": 101,
@@ -2365,6 +2290,18 @@ response.json()</code></pre>
             "name": "Zimbabwe",
             "dialing_code": "263",
             "active": 1
+        },
+        {
+            "country_id": 1,
+            "name": "Afghanistan",
+            "dialing_code": "93",
+            "active": 0
+        },
+        {
+            "country_id": 2,
+            "name": "Aland Islands",
+            "dialing_code": "+358-18",
+            "active": 0
         }
     ]
 }</code></pre>
@@ -2393,11 +2330,11 @@ response.json()</code></pre>
 <p>Example request:</p>
 </blockquote>
 <pre><code class="language-bash">curl -X GET \
-    -G "http://localhost:8000/api/country/active" \
+    -G "https://api.strongminds.made.ke/api/country/active" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"</code></pre>
 <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/country/active"
+    "https://api.strongminds.made.ke/api/country/active"
 );
 
 let headers = {
@@ -2412,7 +2349,7 @@ fetch(url, {
 <pre><code class="language-php">
 $client = new \GuzzleHttp\Client();
 $response = $client-&gt;get(
-    'http://localhost:8000/api/country/active',
+    'https://api.strongminds.made.ke/api/country/active',
     [
         'headers' =&gt; [
             'Accept' =&gt; 'application/json',
@@ -2424,7 +2361,7 @@ print_r(json_decode((string) $body));</code></pre>
 <pre><code class="language-python">import requests
 import json
 
-url = 'http://localhost:8000/api/country/active'
+url = 'https://api.strongminds.made.ke/api/country/active'
 headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json'
@@ -2439,24 +2376,6 @@ response.json()</code></pre>
     "success": true,
     "message": "success",
     "result": [
-        {
-            "country_id": 1,
-            "name": "Afghanistan",
-            "dialing_code": "93",
-            "active": 1
-        },
-        {
-            "country_id": 2,
-            "name": "Aland Islands",
-            "dialing_code": "+358-18",
-            "active": 1
-        },
-        {
-            "country_id": 3,
-            "name": "Albania",
-            "dialing_code": "355",
-            "active": 1
-        },
         {
             "country_id": 4,
             "name": "Algeria",
@@ -3944,29 +3863,26 @@ response.json()</code></pre>
 </p>
 </form>
 <h2>Activate or deactivate country</h2>
-<p><small class="badge badge-darkred">requires authentication</small></p>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
 <pre><code class="language-bash">curl -X PUT \
-    "http://localhost:8000/api/country/update" \
-    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    "https://api.strongminds.made.ke/api/country/update" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"country_id":12}'
+    -d '{"country_id":6}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/country/update"
+    "https://api.strongminds.made.ke/api/country/update"
 );
 
 let headers = {
-    "Authorization": "Bearer {YOUR_AUTH_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
 
 let body = {
-    "country_id": 12
+    "country_id": 6
 }
 
 fetch(url, {
@@ -3977,14 +3893,13 @@ fetch(url, {
 <pre><code class="language-php">
 $client = new \GuzzleHttp\Client();
 $response = $client-&gt;put(
-    'http://localhost:8000/api/country/update',
+    'https://api.strongminds.made.ke/api/country/update',
     [
         'headers' =&gt; [
-            'Authorization' =&gt; 'Bearer {YOUR_AUTH_KEY}',
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'country_id' =&gt; 12,
+            'country_id' =&gt; 6,
         ],
     ]
 );
@@ -3993,12 +3908,11 @@ print_r(json_decode((string) $body));</code></pre>
 <pre><code class="language-python">import requests
 import json
 
-url = 'http://localhost:8000/api/country/update'
+url = 'https://api.strongminds.made.ke/api/country/update'
 payload = {
-    "country_id": 12
+    "country_id": 6
 }
 headers = {
-  'Authorization': 'Bearer {YOUR_AUTH_KEY}',
   'Content-Type': 'application/json',
   'Accept': 'application/json'
 }
@@ -4013,7 +3927,7 @@ response.json()</code></pre>
     <blockquote>Request failed with error:</blockquote>
     <pre><code id="execution-error-message-PUTapi-country-update"></code></pre>
 </div>
-<form id="form-PUTapi-country-update" data-method="PUT" data-path="api/country/update" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-country-update', this);">
+<form id="form-PUTapi-country-update" data-method="PUT" data-path="api/country/update" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-country-update', this);">
 <h3>
     Request&nbsp;&nbsp;&nbsp;
         <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-PUTapi-country-update" onclick="tryItOut('PUTapi-country-update');">Try it out ⚡</button>
@@ -4023,9 +3937,6 @@ response.json()</code></pre>
 <p>
 <small class="badge badge-darkblue">PUT</small>
  <b><code>api/country/update</code></b>
-</p>
-<p>
-<label id="auth-PUTapi-country-update" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="PUTapi-country-update" data-component="header"></label>
 </p>
 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
 <p>
@@ -4041,11 +3952,11 @@ County ID .
 <p>Example request:</p>
 </blockquote>
 <pre><code class="language-bash">curl -X GET \
-    -G "http://localhost:8000/api/timezone/all" \
+    -G "https://api.strongminds.made.ke/api/timezone/all" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"</code></pre>
 <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/timezone/all"
+    "https://api.strongminds.made.ke/api/timezone/all"
 );
 
 let headers = {
@@ -4060,7 +3971,7 @@ fetch(url, {
 <pre><code class="language-php">
 $client = new \GuzzleHttp\Client();
 $response = $client-&gt;get(
-    'http://localhost:8000/api/timezone/all',
+    'https://api.strongminds.made.ke/api/timezone/all',
     [
         'headers' =&gt; [
             'Accept' =&gt; 'application/json',
@@ -4072,7 +3983,7 @@ print_r(json_decode((string) $body));</code></pre>
 <pre><code class="language-python">import requests
 import json
 
-url = 'http://localhost:8000/api/timezone/all'
+url = 'https://api.strongminds.made.ke/api/timezone/all'
 headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json'
@@ -5638,11 +5549,11 @@ response.json()</code></pre>
 <p>Example request:</p>
 </blockquote>
 <pre><code class="language-bash">curl -X GET \
-    -G "http://localhost:8000/api/timezone/active" \
+    -G "https://api.strongminds.made.ke/api/timezone/active" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"</code></pre>
 <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/timezone/active"
+    "https://api.strongminds.made.ke/api/timezone/active"
 );
 
 let headers = {
@@ -5657,7 +5568,7 @@ fetch(url, {
 <pre><code class="language-php">
 $client = new \GuzzleHttp\Client();
 $response = $client-&gt;get(
-    'http://localhost:8000/api/timezone/active',
+    'https://api.strongminds.made.ke/api/timezone/active',
     [
         'headers' =&gt; [
             'Accept' =&gt; 'application/json',
@@ -5669,7 +5580,7 @@ print_r(json_decode((string) $body));</code></pre>
 <pre><code class="language-python">import requests
 import json
 
-url = 'http://localhost:8000/api/timezone/active'
+url = 'https://api.strongminds.made.ke/api/timezone/active'
 headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json'
@@ -5684,24 +5595,6 @@ response.json()</code></pre>
     "success": true,
     "message": "success",
     "result": [
-        {
-            "timezone_id": 1,
-            "name": "Afghanistan",
-            "utc": null,
-            "active": 1
-        },
-        {
-            "timezone_id": 2,
-            "name": "Aland Islands",
-            "utc": null,
-            "active": 1
-        },
-        {
-            "timezone_id": 3,
-            "name": "Albania",
-            "utc": null,
-            "active": 1
-        },
         {
             "timezone_id": 4,
             "name": "Algeria",

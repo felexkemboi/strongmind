@@ -10,14 +10,14 @@ APIs for managing offices
 
 ```bash
 curl -X GET \
-    -G "http://localhost:8000/api/office/all" \
+    -G "https://api.strongminds.made.ke/api/office/all" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
 ```
 
 ```javascript
 const url = new URL(
-    "http://localhost:8000/api/office/all"
+    "https://api.strongminds.made.ke/api/office/all"
 );
 
 let headers = {
@@ -36,7 +36,7 @@ fetch(url, {
 
 $client = new \GuzzleHttp\Client();
 $response = $client->get(
-    'http://localhost:8000/api/office/all',
+    'https://api.strongminds.made.ke/api/office/all',
     [
         'headers' => [
             'Accept' => 'application/json',
@@ -51,7 +51,7 @@ print_r(json_decode((string) $body));
 import requests
 import json
 
-url = 'http://localhost:8000/api/office/all'
+url = 'https://api.strongminds.made.ke/api/office/all'
 headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json'
@@ -121,16 +121,16 @@ response.json()
 
 ```bash
 curl -X POST \
-    "http://localhost:8000/api/office/create" \
+    "https://api.strongminds.made.ke/api/office/create" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"country_id":3,"name":"nam"}'
+    -d '{"country_id":1,"name":"quod"}'
 
 ```
 
 ```javascript
 const url = new URL(
-    "http://localhost:8000/api/office/create"
+    "https://api.strongminds.made.ke/api/office/create"
 );
 
 let headers = {
@@ -139,8 +139,8 @@ let headers = {
 };
 
 let body = {
-    "country_id": 3,
-    "name": "nam"
+    "country_id": 1,
+    "name": "quod"
 }
 
 fetch(url, {
@@ -154,14 +154,14 @@ fetch(url, {
 
 $client = new \GuzzleHttp\Client();
 $response = $client->post(
-    'http://localhost:8000/api/office/create',
+    'https://api.strongminds.made.ke/api/office/create',
     [
         'headers' => [
             'Accept' => 'application/json',
         ],
         'json' => [
-            'country_id' => 3,
-            'name' => 'nam',
+            'country_id' => 1,
+            'name' => 'quod',
         ],
     ]
 );
@@ -173,10 +173,10 @@ print_r(json_decode((string) $body));
 import requests
 import json
 
-url = 'http://localhost:8000/api/office/create'
+url = 'https://api.strongminds.made.ke/api/office/create'
 payload = {
-    "country_id": 3,
-    "name": "nam"
+    "country_id": 1,
+    "name": "quod"
 }
 headers = {
   'Content-Type': 'application/json',
@@ -233,16 +233,16 @@ Office Name .
 
 ```bash
 curl -X PUT \
-    "http://localhost:8000/api/office/update/1" \
+    "https://api.strongminds.made.ke/api/office/update/1" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"country_id":14,"name":"omnis","active":1}'
+    -d '{"country_id":11,"name":"laborum","active":1}'
 
 ```
 
 ```javascript
 const url = new URL(
-    "http://localhost:8000/api/office/update/1"
+    "https://api.strongminds.made.ke/api/office/update/1"
 );
 
 let headers = {
@@ -251,8 +251,8 @@ let headers = {
 };
 
 let body = {
-    "country_id": 14,
-    "name": "omnis",
+    "country_id": 11,
+    "name": "laborum",
     "active": 1
 }
 
@@ -267,14 +267,14 @@ fetch(url, {
 
 $client = new \GuzzleHttp\Client();
 $response = $client->put(
-    'http://localhost:8000/api/office/update/1',
+    'https://api.strongminds.made.ke/api/office/update/1',
     [
         'headers' => [
             'Accept' => 'application/json',
         ],
         'json' => [
-            'country_id' => 14,
-            'name' => 'omnis',
+            'country_id' => 11,
+            'name' => 'laborum',
             'active' => 1,
         ],
     ]
@@ -287,10 +287,10 @@ print_r(json_decode((string) $body));
 import requests
 import json
 
-url = 'http://localhost:8000/api/office/update/1'
+url = 'https://api.strongminds.made.ke/api/office/update/1'
 payload = {
-    "country_id": 14,
-    "name": "omnis",
+    "country_id": 11,
+    "name": "laborum",
     "active": 1
 }
 headers = {

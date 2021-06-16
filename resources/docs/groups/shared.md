@@ -10,14 +10,14 @@ APIs for managing countries
 
 ```bash
 curl -X GET \
-    -G "http://localhost:8000/api/country/all" \
+    -G "https://api.strongminds.made.ke/api/country/all" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
 ```
 
 ```javascript
 const url = new URL(
-    "http://localhost:8000/api/country/all"
+    "https://api.strongminds.made.ke/api/country/all"
 );
 
 let headers = {
@@ -36,7 +36,7 @@ fetch(url, {
 
 $client = new \GuzzleHttp\Client();
 $response = $client->get(
-    'http://localhost:8000/api/country/all',
+    'https://api.strongminds.made.ke/api/country/all',
     [
         'headers' => [
             'Accept' => 'application/json',
@@ -51,7 +51,7 @@ print_r(json_decode((string) $body));
 import requests
 import json
 
-url = 'http://localhost:8000/api/country/all'
+url = 'https://api.strongminds.made.ke/api/country/all'
 headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json'
@@ -69,24 +69,6 @@ response.json()
     "success": true,
     "message": "success",
     "result": [
-        {
-            "country_id": 1,
-            "name": "Afghanistan",
-            "dialing_code": "93",
-            "active": 1
-        },
-        {
-            "country_id": 2,
-            "name": "Aland Islands",
-            "dialing_code": "+358-18",
-            "active": 1
-        },
-        {
-            "country_id": 3,
-            "name": "Albania",
-            "dialing_code": "355",
-            "active": 1
-        },
         {
             "country_id": 4,
             "name": "Algeria",
@@ -668,6 +650,12 @@ response.json()
             "name": "Iceland",
             "dialing_code": "354",
             "active": 1
+        },
+        {
+            "country_id": 3,
+            "name": "Albania",
+            "dialing_code": "355",
+            "active": 0
         },
         {
             "country_id": 101,
@@ -1550,6 +1538,18 @@ response.json()
             "name": "Zimbabwe",
             "dialing_code": "263",
             "active": 1
+        },
+        {
+            "country_id": 1,
+            "name": "Afghanistan",
+            "dialing_code": "93",
+            "active": 0
+        },
+        {
+            "country_id": 2,
+            "name": "Aland Islands",
+            "dialing_code": "+358-18",
+            "active": 0
         }
     ]
 }
@@ -1585,14 +1585,14 @@ response.json()
 
 ```bash
 curl -X GET \
-    -G "http://localhost:8000/api/country/active" \
+    -G "https://api.strongminds.made.ke/api/country/active" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
 ```
 
 ```javascript
 const url = new URL(
-    "http://localhost:8000/api/country/active"
+    "https://api.strongminds.made.ke/api/country/active"
 );
 
 let headers = {
@@ -1611,7 +1611,7 @@ fetch(url, {
 
 $client = new \GuzzleHttp\Client();
 $response = $client->get(
-    'http://localhost:8000/api/country/active',
+    'https://api.strongminds.made.ke/api/country/active',
     [
         'headers' => [
             'Accept' => 'application/json',
@@ -1626,7 +1626,7 @@ print_r(json_decode((string) $body));
 import requests
 import json
 
-url = 'http://localhost:8000/api/country/active'
+url = 'https://api.strongminds.made.ke/api/country/active'
 headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json'
@@ -1644,24 +1644,6 @@ response.json()
     "success": true,
     "message": "success",
     "result": [
-        {
-            "country_id": 1,
-            "name": "Afghanistan",
-            "dialing_code": "93",
-            "active": 1
-        },
-        {
-            "country_id": 2,
-            "name": "Aland Islands",
-            "dialing_code": "+358-18",
-            "active": 1
-        },
-        {
-            "country_id": 3,
-            "name": "Albania",
-            "dialing_code": "355",
-            "active": 1
-        },
         {
             "country_id": 4,
             "name": "Algeria",
@@ -3153,7 +3135,6 @@ response.json()
 
 ## Activate or deactivate country
 
-<small class="badge badge-darkred">requires authentication</small>
 
 
 
@@ -3161,27 +3142,25 @@ response.json()
 
 ```bash
 curl -X PUT \
-    "http://localhost:8000/api/country/update" \
-    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    "https://api.strongminds.made.ke/api/country/update" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"country_id":12}'
+    -d '{"country_id":6}'
 
 ```
 
 ```javascript
 const url = new URL(
-    "http://localhost:8000/api/country/update"
+    "https://api.strongminds.made.ke/api/country/update"
 );
 
 let headers = {
-    "Authorization": "Bearer {YOUR_AUTH_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
 
 let body = {
-    "country_id": 12
+    "country_id": 6
 }
 
 fetch(url, {
@@ -3195,14 +3174,13 @@ fetch(url, {
 
 $client = new \GuzzleHttp\Client();
 $response = $client->put(
-    'http://localhost:8000/api/country/update',
+    'https://api.strongminds.made.ke/api/country/update',
     [
         'headers' => [
-            'Authorization' => 'Bearer {YOUR_AUTH_KEY}',
             'Accept' => 'application/json',
         ],
         'json' => [
-            'country_id' => 12,
+            'country_id' => 6,
         ],
     ]
 );
@@ -3214,12 +3192,11 @@ print_r(json_decode((string) $body));
 import requests
 import json
 
-url = 'http://localhost:8000/api/country/update'
+url = 'https://api.strongminds.made.ke/api/country/update'
 payload = {
-    "country_id": 12
+    "country_id": 6
 }
 headers = {
-  'Authorization': 'Bearer {YOUR_AUTH_KEY}',
   'Content-Type': 'application/json',
   'Accept': 'application/json'
 }
@@ -3237,7 +3214,7 @@ response.json()
     <blockquote>Request failed with error:</blockquote>
     <pre><code id="execution-error-message-PUTapi-country-update"></code></pre>
 </div>
-<form id="form-PUTapi-country-update" data-method="PUT" data-path="api/country/update" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-country-update', this);">
+<form id="form-PUTapi-country-update" data-method="PUT" data-path="api/country/update" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-country-update', this);">
 <h3>
     Request&nbsp;&nbsp;&nbsp;
         <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-PUTapi-country-update" onclick="tryItOut('PUTapi-country-update');">Try it out ⚡</button>
@@ -3247,9 +3224,6 @@ response.json()
 <p>
 <small class="badge badge-darkblue">PUT</small>
  <b><code>api/country/update</code></b>
-</p>
-<p>
-<label id="auth-PUTapi-country-update" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="PUTapi-country-update" data-component="header"></label>
 </p>
 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
 <p>
@@ -3271,14 +3245,14 @@ County ID .
 
 ```bash
 curl -X GET \
-    -G "http://localhost:8000/api/timezone/all" \
+    -G "https://api.strongminds.made.ke/api/timezone/all" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
 ```
 
 ```javascript
 const url = new URL(
-    "http://localhost:8000/api/timezone/all"
+    "https://api.strongminds.made.ke/api/timezone/all"
 );
 
 let headers = {
@@ -3297,7 +3271,7 @@ fetch(url, {
 
 $client = new \GuzzleHttp\Client();
 $response = $client->get(
-    'http://localhost:8000/api/timezone/all',
+    'https://api.strongminds.made.ke/api/timezone/all',
     [
         'headers' => [
             'Accept' => 'application/json',
@@ -3312,7 +3286,7 @@ print_r(json_decode((string) $body));
 import requests
 import json
 
-url = 'http://localhost:8000/api/timezone/all'
+url = 'https://api.strongminds.made.ke/api/timezone/all'
 headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json'
@@ -4888,14 +4862,14 @@ response.json()
 
 ```bash
 curl -X GET \
-    -G "http://localhost:8000/api/timezone/active" \
+    -G "https://api.strongminds.made.ke/api/timezone/active" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
 ```
 
 ```javascript
 const url = new URL(
-    "http://localhost:8000/api/timezone/active"
+    "https://api.strongminds.made.ke/api/timezone/active"
 );
 
 let headers = {
@@ -4914,7 +4888,7 @@ fetch(url, {
 
 $client = new \GuzzleHttp\Client();
 $response = $client->get(
-    'http://localhost:8000/api/timezone/active',
+    'https://api.strongminds.made.ke/api/timezone/active',
     [
         'headers' => [
             'Accept' => 'application/json',
@@ -4929,7 +4903,7 @@ print_r(json_decode((string) $body));
 import requests
 import json
 
-url = 'http://localhost:8000/api/timezone/active'
+url = 'https://api.strongminds.made.ke/api/timezone/active'
 headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json'
@@ -4947,24 +4921,6 @@ response.json()
     "success": true,
     "message": "success",
     "result": [
-        {
-            "timezone_id": 1,
-            "name": "Afghanistan",
-            "utc": null,
-            "active": 1
-        },
-        {
-            "timezone_id": 2,
-            "name": "Aland Islands",
-            "utc": null,
-            "active": 1
-        },
-        {
-            "timezone_id": 3,
-            "name": "Albania",
-            "utc": null,
-            "active": 1
-        },
         {
             "timezone_id": 4,
             "name": "Algeria",
