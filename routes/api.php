@@ -5,6 +5,7 @@ use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TimezoneController;
+use App\Http\Controllers\InviteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,8 +41,16 @@ Route::prefix('permission')->group(function () {
 });
 Route::prefix('role')->group(function () {
     Route::get('all', [RoleController::class,'index']);
+    Route::get('view/{id}', [RoleController::class,'showRole']);
     Route::post('create', [RoleController::class,'create']);
-//    Route::put('update/{id}', [RoleController::class,'update']);
+    Route::put('update/{id}', [RoleController::class,'updateRole']);
+    Route::delete('delete/{id}', [RoleController::class,'deleteRole']);
 });
+//teams
+Route::prefix('teams')->group(function () {
+   Route::post('invite', [InviteController::class,'invite']);
+
+});
+
 
 

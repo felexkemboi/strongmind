@@ -46,7 +46,7 @@
                             <li><a href='http://github.com/knuckleswtf/scribe'>Documentation powered by Scribe ✍</a></li>
                     </ul>
             <ul class="toc-footer" id="last-updated">
-            <li>Last updated: June 16 2021</li>
+            <li>Last updated: June 21 2021</li>
         </ul>
 </div>
 <div class="page-wrapper">
@@ -66,7 +66,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 <p>Base URL</p>
 </blockquote>
 <pre><code class="language-yaml">https://api.strongminds.made.ke</code></pre><h1>Authenticating requests</h1>
-<p>To authenticate requests, include an <strong><code>Authorization</code></strong> header with the value <strong><code>"Bearer {YOUR_AUTH_KEY}"</code></strong>.</p>
+<p>This API is authenticated by sending an <strong><code>Authorization</code></strong> header with the value <strong><code>"Bearer {YOUR_AUTH_KEY}"</code></strong>.</p>
 <p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the documentation below.</p>
 <p>You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.</p><h1>Auth</h1>
 <p>APIs for roles and permissions</p>
@@ -165,7 +165,7 @@ response.json()</code></pre>
     "https://api.strongminds.made.ke/api/permission/create" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"slug":"vel","title":"ipsa","module":"repellat"}'
+    -d '{"slug":"enim","title":"eaque","module":"nobis"}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "https://api.strongminds.made.ke/api/permission/create"
@@ -177,9 +177,9 @@ let headers = {
 };
 
 let body = {
-    "slug": "vel",
-    "title": "ipsa",
-    "module": "repellat"
+    "slug": "enim",
+    "title": "eaque",
+    "module": "nobis"
 }
 
 fetch(url, {
@@ -196,9 +196,9 @@ $response = $client-&gt;post(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'slug' =&gt; 'vel',
-            'title' =&gt; 'ipsa',
-            'module' =&gt; 'repellat',
+            'slug' =&gt; 'enim',
+            'title' =&gt; 'eaque',
+            'module' =&gt; 'nobis',
         ],
     ]
 );
@@ -209,9 +209,9 @@ import json
 
 url = 'https://api.strongminds.made.ke/api/permission/create'
 payload = {
-    "slug": "vel",
-    "title": "ipsa",
-    "module": "repellat"
+    "slug": "enim",
+    "title": "eaque",
+    "module": "nobis"
 }
 headers = {
   'Content-Type': 'application/json',
@@ -312,22 +312,64 @@ response.json()</code></pre>
     "message": "success",
     "result": [
         {
+            "role_id": 4,
+            "name": "System Administrator",
+            "role_code": "SAD",
+            "description": "System admin role",
+            "access_permissions": {
+                "admin": [
+                    {
+                        "permission_id": 2,
+                        "slug": "view-office",
+                        "description": "View Office",
+                        "module": "admin"
+                    },
+                    {
+                        "permission_id": 1,
+                        "slug": "create-office",
+                        "description": "Create Office",
+                        "module": "admin"
+                    }
+                ]
+            }
+        },
+        {
             "role_id": 3,
             "name": "Business Developer",
             "role_code": "BD",
-            "description": "Business Developer"
-        },
-        {
-            "role_id": 2,
-            "name": "Business Executive",
-            "role_code": null,
-            "description": null
+            "description": "Business Developer",
+            "access_permissions": {
+                "admin": [
+                    {
+                        "permission_id": 1,
+                        "slug": "create-office",
+                        "description": "Create Office",
+                        "module": "admin"
+                    },
+                    {
+                        "permission_id": 2,
+                        "slug": "view-office",
+                        "description": "View Office",
+                        "module": "admin"
+                    }
+                ]
+            }
         },
         {
             "role_id": 1,
             "name": "Administrator",
-            "role_code": null,
-            "description": null
+            "role_code": "ADM",
+            "description": "Administrator role",
+            "access_permissions": {
+                "admin": [
+                    {
+                        "permission_id": 2,
+                        "slug": "view-office",
+                        "description": "View Office",
+                        "module": "admin"
+                    }
+                ]
+            }
         }
     ]
 }</code></pre>
@@ -351,6 +393,648 @@ response.json()</code></pre>
  <b><code>api/role/all</code></b>
 </p>
 </form>
+<h2>Get Role by Id</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "https://api.strongminds.made.ke/api/role/view/aut" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "https://api.strongminds.made.ke/api/role/view/aut"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre>
+<pre><code class="language-php">
+$client = new \GuzzleHttp\Client();
+$response = $client-&gt;get(
+    'https://api.strongminds.made.ke/api/role/view/aut',
+    [
+        'headers' =&gt; [
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre>
+<pre><code class="language-python">import requests
+import json
+
+url = 'https://api.strongminds.made.ke/api/role/view/aut'
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('GET', url, headers=headers)
+response.json()</code></pre>
+<blockquote>
+<p>Example response (500):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "message": "SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  invalid input syntax for type bigint: \"aut\" (SQL: select * from \"roles\" where \"roles\".\"id\" = aut limit 1)",
+    "exception": "Illuminate\\Database\\QueryException",
+    "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php",
+    "line": 692,
+    "trace": [
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php",
+            "line": 652,
+            "function": "runQueryCallback",
+            "class": "Illuminate\\Database\\Connection",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php",
+            "line": 360,
+            "function": "run",
+            "class": "Illuminate\\Database\\Connection",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php",
+            "line": 2351,
+            "function": "select",
+            "class": "Illuminate\\Database\\Connection",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php",
+            "line": 2339,
+            "function": "runSelect",
+            "class": "Illuminate\\Database\\Query\\Builder",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php",
+            "line": 2905,
+            "function": "Illuminate\\Database\\Query\\{closure}",
+            "class": "Illuminate\\Database\\Query\\Builder",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php",
+            "line": 2340,
+            "function": "onceWithColumns",
+            "class": "Illuminate\\Database\\Query\\Builder",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php",
+            "line": 604,
+            "function": "get",
+            "class": "Illuminate\\Database\\Query\\Builder",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php",
+            "line": 588,
+            "function": "getModels",
+            "class": "Illuminate\\Database\\Eloquent\\Builder",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Concerns\\BuildsQueries.php",
+            "line": 257,
+            "function": "get",
+            "class": "Illuminate\\Database\\Eloquent\\Builder",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php",
+            "line": 392,
+            "function": "first",
+            "class": "Illuminate\\Database\\Eloquent\\Builder",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php",
+            "line": 23,
+            "function": "find",
+            "class": "Illuminate\\Database\\Eloquent\\Builder",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php",
+            "line": 1991,
+            "function": "forwardCallTo",
+            "class": "Illuminate\\Database\\Eloquent\\Model",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php",
+            "line": 2003,
+            "function": "__call",
+            "class": "Illuminate\\Database\\Eloquent\\Model",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\app\\Http\\Controllers\\RoleController.php",
+            "line": 97,
+            "function": "__callStatic",
+            "class": "Illuminate\\Database\\Eloquent\\Model",
+            "type": "::"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php",
+            "line": 54,
+            "function": "showRole",
+            "class": "App\\Http\\Controllers\\RoleController",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php",
+            "line": 45,
+            "function": "callAction",
+            "class": "Illuminate\\Routing\\Controller",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php",
+            "line": 254,
+            "function": "dispatch",
+            "class": "Illuminate\\Routing\\ControllerDispatcher",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php",
+            "line": 197,
+            "function": "runController",
+            "class": "Illuminate\\Routing\\Route",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+            "line": 695,
+            "function": "run",
+            "class": "Illuminate\\Routing\\Route",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 128,
+            "function": "Illuminate\\Routing\\{closure}",
+            "class": "Illuminate\\Routing\\Router",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php",
+            "line": 50,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 167,
+            "function": "handle",
+            "class": "Illuminate\\Routing\\Middleware\\SubstituteBindings",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\ThrottleRequests.php",
+            "line": 127,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\ThrottleRequests.php",
+            "line": 103,
+            "function": "handleRequest",
+            "class": "Illuminate\\Routing\\Middleware\\ThrottleRequests",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\ThrottleRequests.php",
+            "line": 55,
+            "function": "handleRequestUsingNamedLimiter",
+            "class": "Illuminate\\Routing\\Middleware\\ThrottleRequests",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 167,
+            "function": "handle",
+            "class": "Illuminate\\Routing\\Middleware\\ThrottleRequests",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 103,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+            "line": 697,
+            "function": "then",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+            "line": 672,
+            "function": "runRouteWithinStack",
+            "class": "Illuminate\\Routing\\Router",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+            "line": 636,
+            "function": "runRoute",
+            "class": "Illuminate\\Routing\\Router",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
+            "line": 625,
+            "function": "dispatchToRoute",
+            "class": "Illuminate\\Routing\\Router",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php",
+            "line": 166,
+            "function": "dispatch",
+            "class": "Illuminate\\Routing\\Router",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 128,
+            "function": "Illuminate\\Foundation\\Http\\{closure}",
+            "class": "Illuminate\\Foundation\\Http\\Kernel",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\sentry\\sentry-laravel\\src\\Sentry\\Laravel\\Http\\SetRequestIpMiddleware.php",
+            "line": 55,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 167,
+            "function": "handle",
+            "class": "Sentry\\Laravel\\Http\\SetRequestIpMiddleware",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\sentry\\sentry-laravel\\src\\Sentry\\Laravel\\Http\\SetRequestMiddleware.php",
+            "line": 52,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 167,
+            "function": "handle",
+            "class": "Sentry\\Laravel\\Http\\SetRequestMiddleware",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php",
+            "line": 21,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php",
+            "line": 31,
+            "function": "handle",
+            "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 167,
+            "function": "handle",
+            "class": "Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php",
+            "line": 21,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php",
+            "line": 40,
+            "function": "handle",
+            "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 167,
+            "function": "handle",
+            "class": "Illuminate\\Foundation\\Http\\Middleware\\TrimStrings",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php",
+            "line": 27,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 167,
+            "function": "handle",
+            "class": "Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php",
+            "line": 86,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 167,
+            "function": "handle",
+            "class": "Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\fruitcake\\laravel-cors\\src\\HandleCors.php",
+            "line": 52,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 167,
+            "function": "handle",
+            "class": "Fruitcake\\Cors\\HandleCors",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\fideloper\\proxy\\src\\TrustProxies.php",
+            "line": 57,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 167,
+            "function": "handle",
+            "class": "Fideloper\\Proxy\\TrustProxies",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\sentry\\sentry-laravel\\src\\Sentry\\Laravel\\Tracing\\Middleware.php",
+            "line": 53,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 167,
+            "function": "handle",
+            "class": "Sentry\\Laravel\\Tracing\\Middleware",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
+            "line": 103,
+            "function": "Illuminate\\Pipeline\\{closure}",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php",
+            "line": 141,
+            "function": "then",
+            "class": "Illuminate\\Pipeline\\Pipeline",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php",
+            "line": 110,
+            "function": "sendRequestThroughRouter",
+            "class": "Illuminate\\Foundation\\Http\\Kernel",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Extracting\\Strategies\\Responses\\ResponseCalls.php",
+            "line": 324,
+            "function": "handle",
+            "class": "Illuminate\\Foundation\\Http\\Kernel",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Extracting\\Strategies\\Responses\\ResponseCalls.php",
+            "line": 305,
+            "function": "callLaravelOrLumenRoute",
+            "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Extracting\\Strategies\\Responses\\ResponseCalls.php",
+            "line": 76,
+            "function": "makeApiCall",
+            "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Extracting\\Strategies\\Responses\\ResponseCalls.php",
+            "line": 51,
+            "function": "makeResponseCall",
+            "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Extracting\\Strategies\\Responses\\ResponseCalls.php",
+            "line": 41,
+            "function": "makeResponseCallIfEnabledAndNoSuccessResponses",
+            "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Extracting\\Generator.php",
+            "line": 236,
+            "function": "__invoke",
+            "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Extracting\\Generator.php",
+            "line": 172,
+            "function": "iterateThroughStrategies",
+            "class": "Knuckles\\Scribe\\Extracting\\Generator",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Extracting\\Generator.php",
+            "line": 127,
+            "function": "fetchResponses",
+            "class": "Knuckles\\Scribe\\Extracting\\Generator",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Commands\\GenerateDocumentation.php",
+            "line": 119,
+            "function": "processRoute",
+            "class": "Knuckles\\Scribe\\Extracting\\Generator",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Commands\\GenerateDocumentation.php",
+            "line": 73,
+            "function": "processRoutes",
+            "class": "Knuckles\\Scribe\\Commands\\GenerateDocumentation",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php",
+            "line": 36,
+            "function": "handle",
+            "class": "Knuckles\\Scribe\\Commands\\GenerateDocumentation",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php",
+            "line": 40,
+            "function": "Illuminate\\Container\\{closure}",
+            "class": "Illuminate\\Container\\BoundMethod",
+            "type": "::"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php",
+            "line": 93,
+            "function": "unwrapIfClosure",
+            "class": "Illuminate\\Container\\Util",
+            "type": "::"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php",
+            "line": 37,
+            "function": "callBoundMethod",
+            "class": "Illuminate\\Container\\BoundMethod",
+            "type": "::"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php",
+            "line": 651,
+            "function": "call",
+            "class": "Illuminate\\Container\\BoundMethod",
+            "type": "::"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php",
+            "line": 136,
+            "function": "call",
+            "class": "Illuminate\\Container\\Container",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\symfony\\console\\Command\\Command.php",
+            "line": 288,
+            "function": "execute",
+            "class": "Illuminate\\Console\\Command",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php",
+            "line": 121,
+            "function": "run",
+            "class": "Symfony\\Component\\Console\\Command\\Command",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\symfony\\console\\Application.php",
+            "line": 974,
+            "function": "run",
+            "class": "Illuminate\\Console\\Command",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\symfony\\console\\Application.php",
+            "line": 291,
+            "function": "doRunCommand",
+            "class": "Symfony\\Component\\Console\\Application",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\symfony\\console\\Application.php",
+            "line": 167,
+            "function": "doRun",
+            "class": "Symfony\\Component\\Console\\Application",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Application.php",
+            "line": 92,
+            "function": "run",
+            "class": "Symfony\\Component\\Console\\Application",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php",
+            "line": 129,
+            "function": "run",
+            "class": "Illuminate\\Console\\Application",
+            "type": "-&gt;"
+        },
+        {
+            "file": "C:\\laragon\\www\\strong-minds\\artisan",
+            "line": 37,
+            "function": "handle",
+            "class": "Illuminate\\Foundation\\Console\\Kernel",
+            "type": "-&gt;"
+        }
+    ]
+}</code></pre>
+<div id="execution-results-GETapi-role-view--id-" hidden>
+    <blockquote>Received response<span id="execution-response-status-GETapi-role-view--id-"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-role-view--id-"></code></pre>
+</div>
+<div id="execution-error-GETapi-role-view--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-role-view--id-"></code></pre>
+</div>
+<form id="form-GETapi-role-view--id-" data-method="GET" data-path="api/role/view/{id}" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('GETapi-role-view--id-', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-GETapi-role-view--id-" onclick="tryItOut('GETapi-role-view--id-');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-GETapi-role-view--id-" onclick="cancelTryOut('GETapi-role-view--id-');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-GETapi-role-view--id-" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-green">GET</small>
+ <b><code>api/role/view/{id}</code></b>
+</p>
+<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+<p>
+<b><code>id</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="id" data-endpoint="GETapi-role-view--id-" data-component="url" required  hidden>
+<br>
+
+</p>
+</form>
 <h2>Create Role</h2>
 <blockquote>
 <p>Example request:</p>
@@ -359,7 +1043,7 @@ response.json()</code></pre>
     "https://api.strongminds.made.ke/api/role/create" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"totam","role_code":"laudantium","description":"facere","access_permissions":[18,5]}'
+    -d '{"name":"ut","role_code":"officia","description":"eos","access_permissions":[4,11]}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "https://api.strongminds.made.ke/api/role/create"
@@ -371,12 +1055,12 @@ let headers = {
 };
 
 let body = {
-    "name": "totam",
-    "role_code": "laudantium",
-    "description": "facere",
+    "name": "ut",
+    "role_code": "officia",
+    "description": "eos",
     "access_permissions": [
-        18,
-        5
+        4,
+        11
     ]
 }
 
@@ -394,12 +1078,12 @@ $response = $client-&gt;post(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'name' =&gt; 'totam',
-            'role_code' =&gt; 'laudantium',
-            'description' =&gt; 'facere',
+            'name' =&gt; 'ut',
+            'role_code' =&gt; 'officia',
+            'description' =&gt; 'eos',
             'access_permissions' =&gt; [
-                18,
-                5,
+                4,
+                11,
             ],
         ],
     ]
@@ -411,12 +1095,12 @@ import json
 
 url = 'https://api.strongminds.made.ke/api/role/create'
 payload = {
-    "name": "totam",
-    "role_code": "laudantium",
-    "description": "facere",
+    "name": "ut",
+    "role_code": "officia",
+    "description": "eos",
     "access_permissions": [
-        18,
-        5
+        4,
+        11
     ]
 }
 headers = {
@@ -472,6 +1156,270 @@ Description. Example This is Administrator
 Permission IDs. Example [1,2]
 </p>
 
+</form>
+<h2>Update Role</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X PUT \
+    "https://api.strongminds.made.ke/api/role/update/et" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -d '{"name":"neque","role_code":"enim","description":"maiores","access_permissions":[6,14]}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "https://api.strongminds.made.ke/api/role/update/et"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "neque",
+    "role_code": "enim",
+    "description": "maiores",
+    "access_permissions": [
+        6,
+        14
+    ]
+}
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre>
+<pre><code class="language-php">
+$client = new \GuzzleHttp\Client();
+$response = $client-&gt;put(
+    'https://api.strongminds.made.ke/api/role/update/et',
+    [
+        'headers' =&gt; [
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'name' =&gt; 'neque',
+            'role_code' =&gt; 'enim',
+            'description' =&gt; 'maiores',
+            'access_permissions' =&gt; [
+                6,
+                14,
+            ],
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre>
+<pre><code class="language-python">import requests
+import json
+
+url = 'https://api.strongminds.made.ke/api/role/update/et'
+payload = {
+    "name": "neque",
+    "role_code": "enim",
+    "description": "maiores",
+    "access_permissions": [
+        6,
+        14
+    ]
+}
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('PUT', url, headers=headers, json=payload)
+response.json()</code></pre>
+<div id="execution-results-PUTapi-role-update--id-" hidden>
+    <blockquote>Received response<span id="execution-response-status-PUTapi-role-update--id-"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-role-update--id-"></code></pre>
+</div>
+<div id="execution-error-PUTapi-role-update--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-role-update--id-"></code></pre>
+</div>
+<form id="form-PUTapi-role-update--id-" data-method="PUT" data-path="api/role/update/{id}" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-role-update--id-', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-PUTapi-role-update--id-" onclick="tryItOut('PUTapi-role-update--id-');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-PUTapi-role-update--id-" onclick="cancelTryOut('PUTapi-role-update--id-');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-PUTapi-role-update--id-" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-darkblue">PUT</small>
+ <b><code>api/role/update/{id}</code></b>
+</p>
+<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+<p>
+<b><code>id</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="id" data-endpoint="PUTapi-role-update--id-" data-component="url" required  hidden>
+<br>
+
+</p>
+<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+<p>
+<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="name" data-endpoint="PUTapi-role-update--id-" data-component="body" required  hidden>
+<br>
+Role Name. Example admin
+</p>
+<p>
+<b><code>role_code</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="role_code" data-endpoint="PUTapi-role-update--id-" data-component="body" required  hidden>
+<br>
+Code. Example Administrator
+</p>
+<p>
+<b><code>description</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+<input type="text" name="description" data-endpoint="PUTapi-role-update--id-" data-component="body"  hidden>
+<br>
+Description. Example This is Administrator
+</p>
+<p>
+<b><code>access_permissions</code></b>&nbsp;&nbsp;<small>integer[]</small>  &nbsp;
+<input type="number" name="access_permissions.0" data-endpoint="PUTapi-role-update--id-" data-component="body" required  hidden>
+<input type="number" name="access_permissions.1" data-endpoint="PUTapi-role-update--id-" data-component="body" hidden>
+<br>
+Permission IDs. Example [1,2]
+</p>
+
+</form>
+<h2>Delete Role by Id</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X DELETE \
+    "https://api.strongminds.made.ke/api/role/delete/sit" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "https://api.strongminds.made.ke/api/role/delete/sit"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre>
+<pre><code class="language-php">
+$client = new \GuzzleHttp\Client();
+$response = $client-&gt;delete(
+    'https://api.strongminds.made.ke/api/role/delete/sit',
+    [
+        'headers' =&gt; [
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre>
+<pre><code class="language-python">import requests
+import json
+
+url = 'https://api.strongminds.made.ke/api/role/delete/sit'
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('DELETE', url, headers=headers)
+response.json()</code></pre>
+<div id="execution-results-DELETEapi-role-delete--id-" hidden>
+    <blockquote>Received response<span id="execution-response-status-DELETEapi-role-delete--id-"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-role-delete--id-"></code></pre>
+</div>
+<div id="execution-error-DELETEapi-role-delete--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-role-delete--id-"></code></pre>
+</div>
+<form id="form-DELETEapi-role-delete--id-" data-method="DELETE" data-path="api/role/delete/{id}" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('DELETEapi-role-delete--id-', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-DELETEapi-role-delete--id-" onclick="tryItOut('DELETEapi-role-delete--id-');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-DELETEapi-role-delete--id-" onclick="cancelTryOut('DELETEapi-role-delete--id-');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-DELETEapi-role-delete--id-" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-red">DELETE</small>
+ <b><code>api/role/delete/{id}</code></b>
+</p>
+<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+<p>
+<b><code>id</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="id" data-endpoint="DELETEapi-role-delete--id-" data-component="url" required  hidden>
+<br>
+
+</p>
+</form><h1>Endpoints</h1>
+<h2>api/teams/invite</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "https://api.strongminds.made.ke/api/teams/invite" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "https://api.strongminds.made.ke/api/teams/invite"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+}).then(response =&gt; response.json());</code></pre>
+<pre><code class="language-php">
+$client = new \GuzzleHttp\Client();
+$response = $client-&gt;post(
+    'https://api.strongminds.made.ke/api/teams/invite',
+    [
+        'headers' =&gt; [
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre>
+<pre><code class="language-python">import requests
+import json
+
+url = 'https://api.strongminds.made.ke/api/teams/invite'
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers)
+response.json()</code></pre>
+<div id="execution-results-POSTapi-teams-invite" hidden>
+    <blockquote>Received response<span id="execution-response-status-POSTapi-teams-invite"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-teams-invite"></code></pre>
+</div>
+<div id="execution-error-POSTapi-teams-invite" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-teams-invite"></code></pre>
+</div>
+<form id="form-POSTapi-teams-invite" data-method="POST" data-path="api/teams/invite" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('POSTapi-teams-invite', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-POSTapi-teams-invite" onclick="tryItOut('POSTapi-teams-invite');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-POSTapi-teams-invite" onclick="cancelTryOut('POSTapi-teams-invite');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-POSTapi-teams-invite" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-black">POST</small>
+ <b><code>api/teams/invite</code></b>
+</p>
 </form><h1>Offices</h1>
 <p>APIs for managing offices</p>
 <h2>All offices</h2>
@@ -573,7 +1521,7 @@ response.json()</code></pre>
     "https://api.strongminds.made.ke/api/office/create" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"country_id":1,"name":"quod"}'
+    -d '{"country_id":19,"name":"et"}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "https://api.strongminds.made.ke/api/office/create"
@@ -585,8 +1533,8 @@ let headers = {
 };
 
 let body = {
-    "country_id": 1,
-    "name": "quod"
+    "country_id": 19,
+    "name": "et"
 }
 
 fetch(url, {
@@ -603,8 +1551,8 @@ $response = $client-&gt;post(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'country_id' =&gt; 1,
-            'name' =&gt; 'quod',
+            'country_id' =&gt; 19,
+            'name' =&gt; 'et',
         ],
     ]
 );
@@ -615,8 +1563,8 @@ import json
 
 url = 'https://api.strongminds.made.ke/api/office/create'
 payload = {
-    "country_id": 1,
-    "name": "quod"
+    "country_id": 19,
+    "name": "et"
 }
 headers = {
   'Content-Type': 'application/json',
@@ -667,7 +1615,7 @@ Office Name .
     "https://api.strongminds.made.ke/api/office/update/1" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"country_id":11,"name":"laborum","active":1}'
+    -d '{"country_id":9,"name":"nisi","active":1}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "https://api.strongminds.made.ke/api/office/update/1"
@@ -679,8 +1627,8 @@ let headers = {
 };
 
 let body = {
-    "country_id": 11,
-    "name": "laborum",
+    "country_id": 9,
+    "name": "nisi",
     "active": 1
 }
 
@@ -698,8 +1646,8 @@ $response = $client-&gt;put(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'country_id' =&gt; 11,
-            'name' =&gt; 'laborum',
+            'country_id' =&gt; 9,
+            'name' =&gt; 'nisi',
             'active' =&gt; 1,
         ],
     ]
@@ -711,8 +1659,8 @@ import json
 
 url = 'https://api.strongminds.made.ke/api/office/update/1'
 payload = {
-    "country_id": 11,
-    "name": "laborum",
+    "country_id": 9,
+    "name": "nisi",
     "active": 1
 }
 headers = {
@@ -3870,7 +4818,7 @@ response.json()</code></pre>
     "https://api.strongminds.made.ke/api/country/update" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"country_id":6}'
+    -d '{"country_id":1}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "https://api.strongminds.made.ke/api/country/update"
@@ -3882,7 +4830,7 @@ let headers = {
 };
 
 let body = {
-    "country_id": 6
+    "country_id": 1
 }
 
 fetch(url, {
@@ -3899,7 +4847,7 @@ $response = $client-&gt;put(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'country_id' =&gt; 6,
+            'country_id' =&gt; 1,
         ],
     ]
 );
@@ -3910,7 +4858,7 @@ import json
 
 url = 'https://api.strongminds.made.ke/api/country/update'
 payload = {
-    "country_id": 6
+    "country_id": 1
 }
 headers = {
   'Content-Type': 'application/json',
