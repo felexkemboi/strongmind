@@ -58,16 +58,16 @@ class OfficeController extends Controller
             }
         }
     }
+
     /**
-    * update office
-    * @param Request $request
-    * @return JsonResponse
-    * @urlParam  id int required The ID of the office. Example: 1
-    * @bodyParam  country_id integer  County ID .
-    * @bodyParam  name string required Office Name .
-    * @bodyParam  active integer  Active Status . Example: 1 
-    *
-    */
+     * update office
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     * @bodyParam  country_id integer  County ID .
+     * @bodyParam  name string required Office Name .
+     * @bodyParam  active integer  Active Status . Example: 1
+     */
     public function update(Request $request, $id): JsonResponse
     {
         $validator = Validator::make($request->all(), [

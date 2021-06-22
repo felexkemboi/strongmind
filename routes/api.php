@@ -49,10 +49,12 @@ Route::prefix('role')->group(function () {
 //Authentication
 Route::prefix('auth')->group(function () {
     Route::post('login', [LoginController::class,'loginUser']);
+    Route::get('profile', [LoginController::class,'profile'])->middleware('auth:sanctum');
 });
 //teams
 Route::prefix('teams')->group(function () {
-   Route::post('invite', [InviteController::class,'invite']);
+   Route::post('invite', [InviteController::class,'invite'])->middleware('auth:sanctum');
+   Route::post('set-password', [InviteController::class,'setPassword']);
 
 });
 

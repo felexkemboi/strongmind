@@ -55,6 +55,7 @@ return [
     'url' => env('APP_URL', 'http://localhost:8000'),
 
     'asset_url' => env('ASSET_URL', null),
+    'set_password_url' => env('SET_PASSWORD_URL', 'https://admin.datahub-staging.strongminds.org'),
 
     /*
     |--------------------------------------------------------------------------

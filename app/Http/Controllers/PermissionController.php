@@ -27,7 +27,7 @@ class PermissionController extends Controller
      */
     public function index(): JsonResponse
     {
-        $abilities = Bouncer::ability()->all()
+        $abilities = Bouncer::ability()->where('name','<>','*')->get()
             ->transform(function ($item) {
                 return new PermissionResource($item);
             })->groupBy('module_name');

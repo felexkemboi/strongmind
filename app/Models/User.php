@@ -34,6 +34,8 @@ class User extends Authenticatable
         'approved',
         'last_login',
         'office_id',
+        'invite_id',
+        'password',
     ];
 
     /**
