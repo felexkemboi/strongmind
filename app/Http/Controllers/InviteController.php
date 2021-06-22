@@ -11,8 +11,15 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class InviteController
+ * @package App\Http\Controllers
+ * @group Teams
+ * Invite Member
+ */
 class InviteController extends Controller
 {
+
     public function invite(Request $request) : JsonResponse
     {
         try {
