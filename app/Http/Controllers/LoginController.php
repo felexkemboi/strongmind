@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,4 +60,15 @@ class LoginController extends Controller
             }
         }
     }
+    /**
+     * Authenticated user profile
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function profile(): JsonResponse
+    {
+        $user = Auth::user();
+        return $this->commonResponse(true, 'success', new UserResource($user), Response::HTTP_OK);
+    }
+
 }

@@ -30,6 +30,7 @@ class InviteController extends Controller
      * @bodyParam  email string required  Email Address.
      * @bodyParam  role_id integer required Role Id.
      * @bodyParam  office_id integer required Office Id.
+     * @authenticated
      *
      */
     public function invite(Request $request): JsonResponse
@@ -77,12 +78,52 @@ class InviteController extends Controller
                     ]
                 );
 
-                return $this->commonResponse(true, 'email sent successfully!', '', Response::HTTP_CREATED);
+                return $this->commonResponse(true, 'invite sent successfully!', '', Response::HTTP_CREATED);
             } catch (QueryException $ex) {
                 return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
             } catch (Exception $ex) {
                 return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         }
+    }
+    /**
+     * Set Password
+     * @param Request $request
+     * @return JsonResponse
+     * @bodyParam  password string required  Password.
+     * @bodyParam  invite string required Invite Id.
+     *
+     */
+    public function setPassword(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|min:6',
+            'invite' => 'required',
+
+        ]);
+        if ($validator->fails()) {
+            return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } else {
+            try {
+                $user=User::firstWhere('invite_id',$request->invite);
+                if(!$user){
+                    return $this->commonResponse(false, 'Invite ID invalid!', '', Response::HTTP_NOT_FOUND);
+                }
+                else{
+                    $user->update([
+                        'password' => bcrypt($request->password),
+                        'invite_accepted' => 1,
+                        'active'=>1,
+                        'invite_id' => '',
+                    ]);
+                    return $this->commonResponse(true, 'Password set successfully!', '', Response::HTTP_CREATED);
+                }
+            } catch (QueryException $ex) {
+                return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            } catch (Exception $ex) {
+                return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+        }
+
     }
 }
