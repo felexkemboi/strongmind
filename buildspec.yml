@@ -39,6 +39,8 @@ phases:
       - echo MAIL_FROM_NAME=${MAIL_FROM_NAME} >> .env
       - echo SENTRY_LARAVEL_DSN=${SENTRY_LARAVEL_DSN} >> .env
       - echo SENTRY_TRACES_SAMPLE_RATE=${SENTRY_TRACES_SAMPLE_RATE} >> .env
+      - echo POSTMARK_TOKEN=${POSTMARK_TOKEN} >> .env
+      - echo SET_PASSWORD_URL=${SET_PASSWORD_URL} >> .env
 
   build:
     commands:
