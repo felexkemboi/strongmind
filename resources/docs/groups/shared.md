@@ -1,1851 +1,22 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>StrongMinds</title>
+# Shared
+APIs for managing countries
 
-    <link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
+## All Countries
 
-        <link rel="stylesheet" href="{{ asset("vendor/scribe/css/style.css") }}" media="screen" />
-        <link rel="stylesheet" href="{{ asset("vendor/scribe/css/print.css") }}" media="print" />
-        <script src="{{ asset("vendor/scribe/js/all.js") }}"></script>
 
-        <link rel="stylesheet" href="{{ asset("vendor/scribe/css/highlight-darcula.css") }}" media="" />
-        <script src="{{ asset("vendor/scribe/js/highlight.pack.js") }}"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
 
-</head>
 
-<body class="" data-languages="[&quot;bash&quot;,&quot;javascript&quot;,&quot;php&quot;,&quot;python&quot;]">
-<a href="#" id="nav-button">
-      <span>
-        NAV
-            <img src="{{ asset("vendor/scribe/images/navbar.png") }}" alt="-image" class=""/>
-      </span>
-</a>
-<div class="tocify-wrapper">
-                <div class="lang-selector">
-                            <a href="#" data-language-name="bash">bash</a>
-                            <a href="#" data-language-name="javascript">javascript</a>
-                            <a href="#" data-language-name="php">php</a>
-                            <a href="#" data-language-name="python">python</a>
-                    </div>
-        <div class="search">
-        <input type="text" class="search" id="input-search" placeholder="Search">
-    </div>
-    <ul class="search-results"></ul>
+> Example request:
 
-    <ul id="toc">
-    </ul>
-
-            <ul class="toc-footer" id="toc-footer">
-                            <li><a href="{{ route("scribe.postman") }}">View Postman collection</a></li>
-                            <li><a href="{{ route("scribe.openapi") }}">View OpenAPI (Swagger) spec</a></li>
-                            <li><a href='http://github.com/knuckleswtf/scribe'>Documentation powered by Scribe ✍</a></li>
-                    </ul>
-            <ul class="toc-footer" id="last-updated">
-            <li>Last updated: June 22 2021</li>
-        </ul>
-</div>
-<div class="page-wrapper">
-    <div class="dark-box"></div>
-    <div class="content">
-        <h1>Introduction</h1>
-<p>StrongMinds API</p>
-<p>This documentation aims to provide all the information you need to work with our API.</p>
-<aside>As you scroll, you'll see code examples for working with the API in different programming languages in the dark area to the right (or as part of the content on mobile).
-You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).</aside>
-<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
-<script>
-    var baseUrl = "http://localhost:8000";
-</script>
-<script src="{{ asset("vendor/scribe/js/tryitout-2.7.9.js") }}"></script>
-<blockquote>
-<p>Base URL</p>
-</blockquote>
-<pre><code class="language-yaml">http://localhost:8000</code></pre><h1>Authenticating requests</h1>
-<p>To authenticate requests, include an <strong><code>Authorization</code></strong> header with the value <strong><code>"Bearer {YOUR_AUTH_KEY}"</code></strong>.</p>
-<p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the documentation below.</p>
-<p>You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.</p><h1>Auth</h1>
-<p>APIs for roles and permissions</p>
-<h2>All Permissions</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X GET \
-    -G "http://localhost:8000/api/permission/all" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/permission/all"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers,
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
-$client = new \GuzzleHttp\Client();
-$response = $client-&gt;get(
-    'http://localhost:8000/api/permission/all',
-    [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
-import json
-
-url = 'http://localhost:8000/api/permission/all'
-headers = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json'
-}
-
-response = requests.request('GET', url, headers=headers)
-response.json()</code></pre>
-<blockquote>
-<p>Example response (200):</p>
-</blockquote>
-<pre><code class="language-json">{
-    "success": true,
-    "message": "success",
-    "result": {
-        "admin": [
-            {
-                "permission_id": 2,
-                "slug": "view-office",
-                "module": "admin",
-                "title": "View Office"
-            },
-            {
-                "permission_id": 1,
-                "slug": "create-office",
-                "module": "admin",
-                "title": "Create Office"
-            }
-        ],
-        "": [
-            {
-                "permission_id": 3,
-                "slug": "*",
-                "module": null,
-                "title": "Manage everything owned"
-            }
-        ]
-    }
-}</code></pre>
-<div id="execution-results-GETapi-permission-all" hidden>
-    <blockquote>Received response<span id="execution-response-status-GETapi-permission-all"></span>:</blockquote>
-    <pre class="json"><code id="execution-response-content-GETapi-permission-all"></code></pre>
-</div>
-<div id="execution-error-GETapi-permission-all" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-GETapi-permission-all"></code></pre>
-</div>
-<form id="form-GETapi-permission-all" data-method="GET" data-path="api/permission/all" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('GETapi-permission-all', this);">
-<h3>
-    Request&nbsp;&nbsp;&nbsp;
-        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-GETapi-permission-all" onclick="tryItOut('GETapi-permission-all');">Try it out ⚡</button>
-    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-GETapi-permission-all" onclick="cancelTryOut('GETapi-permission-all');" hidden>Cancel</button>&nbsp;&nbsp;
-    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-GETapi-permission-all" hidden>Send Request 💥</button>
-    </h3>
-<p>
-<small class="badge badge-green">GET</small>
- <b><code>api/permission/all</code></b>
-</p>
-</form>
-<h2>Create Permission</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X POST \
-    "http://localhost:8000/api/permission/create" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json" \
-    -d '{"slug":"assumenda","title":"minima","module":"animi"}'
-</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/permission/create"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-let body = {
-    "slug": "assumenda",
-    "title": "minima",
-    "module": "animi"
-}
-
-fetch(url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
-$client = new \GuzzleHttp\Client();
-$response = $client-&gt;post(
-    'http://localhost:8000/api/permission/create',
-    [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
-        ],
-        'json' =&gt; [
-            'slug' =&gt; 'assumenda',
-            'title' =&gt; 'minima',
-            'module' =&gt; 'animi',
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
-import json
-
-url = 'http://localhost:8000/api/permission/create'
-payload = {
-    "slug": "assumenda",
-    "title": "minima",
-    "module": "animi"
-}
-headers = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json'
-}
-
-response = requests.request('POST', url, headers=headers, json=payload)
-response.json()</code></pre>
-<div id="execution-results-POSTapi-permission-create" hidden>
-    <blockquote>Received response<span id="execution-response-status-POSTapi-permission-create"></span>:</blockquote>
-    <pre class="json"><code id="execution-response-content-POSTapi-permission-create"></code></pre>
-</div>
-<div id="execution-error-POSTapi-permission-create" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-POSTapi-permission-create"></code></pre>
-</div>
-<form id="form-POSTapi-permission-create" data-method="POST" data-path="api/permission/create" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('POSTapi-permission-create', this);">
-<h3>
-    Request&nbsp;&nbsp;&nbsp;
-        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-POSTapi-permission-create" onclick="tryItOut('POSTapi-permission-create');">Try it out ⚡</button>
-    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-POSTapi-permission-create" onclick="cancelTryOut('POSTapi-permission-create');" hidden>Cancel</button>&nbsp;&nbsp;
-    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-POSTapi-permission-create" hidden>Send Request 💥</button>
-    </h3>
-<p>
-<small class="badge badge-black">POST</small>
- <b><code>api/permission/create</code></b>
-</p>
-<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-<p>
-<b><code>slug</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="slug" data-endpoint="POSTapi-permission-create" data-component="body" required  hidden>
-<br>
-Permission Name e.g create-office.
-</p>
-<p>
-<b><code>title</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="title" data-endpoint="POSTapi-permission-create" data-component="body" required  hidden>
-<br>
-Title e.g Create Office.
-</p>
-<p>
-<b><code>module</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="module" data-endpoint="POSTapi-permission-create" data-component="body" required  hidden>
-<br>
-Module Name e.g user.
-</p>
-
-</form>
-<h2>All Roles</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X GET \
-    -G "http://localhost:8000/api/role/all" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/role/all"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers,
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
-$client = new \GuzzleHttp\Client();
-$response = $client-&gt;get(
-    'http://localhost:8000/api/role/all',
-    [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
-import json
-
-url = 'http://localhost:8000/api/role/all'
-headers = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json'
-}
-
-response = requests.request('GET', url, headers=headers)
-response.json()</code></pre>
-<blockquote>
-<p>Example response (200):</p>
-</blockquote>
-<pre><code class="language-json">{
-    "success": true,
-    "message": "success",
-    "result": [
-        {
-            "role_id": 4,
-            "name": "System Administrator",
-            "role_code": "SAD",
-            "description": "System admin role",
-            "access_permissions": {
-                "admin": [
-                    {
-                        "permission_id": 2,
-                        "slug": "view-office",
-                        "description": "View Office",
-                        "module": "admin"
-                    },
-                    {
-                        "permission_id": 1,
-                        "slug": "create-office",
-                        "description": "Create Office",
-                        "module": "admin"
-                    }
-                ]
-            }
-        },
-        {
-            "role_id": 3,
-            "name": "Business Developer",
-            "role_code": "BD",
-            "description": "Business Developer",
-            "access_permissions": {
-                "admin": [
-                    {
-                        "permission_id": 1,
-                        "slug": "create-office",
-                        "description": "Create Office",
-                        "module": "admin"
-                    },
-                    {
-                        "permission_id": 2,
-                        "slug": "view-office",
-                        "description": "View Office",
-                        "module": "admin"
-                    }
-                ]
-            }
-        },
-        {
-            "role_id": 1,
-            "name": "Administrator",
-            "role_code": "ADM",
-            "description": "Administrator role",
-            "access_permissions": {
-                "": [
-                    {
-                        "permission_id": 3,
-                        "slug": "*",
-                        "description": "Manage everything owned",
-                        "module": null
-                    }
-                ],
-                "admin": [
-                    {
-                        "permission_id": 2,
-                        "slug": "view-office",
-                        "description": "View Office",
-                        "module": "admin"
-                    }
-                ]
-            }
-        }
-    ]
-}</code></pre>
-<div id="execution-results-GETapi-role-all" hidden>
-    <blockquote>Received response<span id="execution-response-status-GETapi-role-all"></span>:</blockquote>
-    <pre class="json"><code id="execution-response-content-GETapi-role-all"></code></pre>
-</div>
-<div id="execution-error-GETapi-role-all" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-GETapi-role-all"></code></pre>
-</div>
-<form id="form-GETapi-role-all" data-method="GET" data-path="api/role/all" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('GETapi-role-all', this);">
-<h3>
-    Request&nbsp;&nbsp;&nbsp;
-        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-GETapi-role-all" onclick="tryItOut('GETapi-role-all');">Try it out ⚡</button>
-    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-GETapi-role-all" onclick="cancelTryOut('GETapi-role-all');" hidden>Cancel</button>&nbsp;&nbsp;
-    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-GETapi-role-all" hidden>Send Request 💥</button>
-    </h3>
-<p>
-<small class="badge badge-green">GET</small>
- <b><code>api/role/all</code></b>
-</p>
-</form>
-<h2>Get Role by Id</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X GET \
-    -G "http://localhost:8000/api/role/view/officiis" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/role/view/officiis"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers,
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
-$client = new \GuzzleHttp\Client();
-$response = $client-&gt;get(
-    'http://localhost:8000/api/role/view/officiis',
-    [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
-import json
-
-url = 'http://localhost:8000/api/role/view/officiis'
-headers = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json'
-}
-
-response = requests.request('GET', url, headers=headers)
-response.json()</code></pre>
-<blockquote>
-<p>Example response (500):</p>
-</blockquote>
-<pre><code class="language-json">{
-    "message": "SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  invalid input syntax for type bigint: \"officiis\" (SQL: select * from \"roles\" where \"roles\".\"id\" = officiis limit 1)",
-    "exception": "Illuminate\\Database\\QueryException",
-    "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php",
-    "line": 692,
-    "trace": [
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php",
-            "line": 652,
-            "function": "runQueryCallback",
-            "class": "Illuminate\\Database\\Connection",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php",
-            "line": 360,
-            "function": "run",
-            "class": "Illuminate\\Database\\Connection",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php",
-            "line": 2351,
-            "function": "select",
-            "class": "Illuminate\\Database\\Connection",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php",
-            "line": 2339,
-            "function": "runSelect",
-            "class": "Illuminate\\Database\\Query\\Builder",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php",
-            "line": 2905,
-            "function": "Illuminate\\Database\\Query\\{closure}",
-            "class": "Illuminate\\Database\\Query\\Builder",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php",
-            "line": 2340,
-            "function": "onceWithColumns",
-            "class": "Illuminate\\Database\\Query\\Builder",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php",
-            "line": 604,
-            "function": "get",
-            "class": "Illuminate\\Database\\Query\\Builder",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php",
-            "line": 588,
-            "function": "getModels",
-            "class": "Illuminate\\Database\\Eloquent\\Builder",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Concerns\\BuildsQueries.php",
-            "line": 257,
-            "function": "get",
-            "class": "Illuminate\\Database\\Eloquent\\Builder",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php",
-            "line": 392,
-            "function": "first",
-            "class": "Illuminate\\Database\\Eloquent\\Builder",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php",
-            "line": 23,
-            "function": "find",
-            "class": "Illuminate\\Database\\Eloquent\\Builder",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php",
-            "line": 1991,
-            "function": "forwardCallTo",
-            "class": "Illuminate\\Database\\Eloquent\\Model",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php",
-            "line": 2003,
-            "function": "__call",
-            "class": "Illuminate\\Database\\Eloquent\\Model",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\app\\Http\\Controllers\\RoleController.php",
-            "line": 97,
-            "function": "__callStatic",
-            "class": "Illuminate\\Database\\Eloquent\\Model",
-            "type": "::"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php",
-            "line": 54,
-            "function": "showRole",
-            "class": "App\\Http\\Controllers\\RoleController",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php",
-            "line": 45,
-            "function": "callAction",
-            "class": "Illuminate\\Routing\\Controller",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php",
-            "line": 254,
-            "function": "dispatch",
-            "class": "Illuminate\\Routing\\ControllerDispatcher",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php",
-            "line": 197,
-            "function": "runController",
-            "class": "Illuminate\\Routing\\Route",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
-            "line": 695,
-            "function": "run",
-            "class": "Illuminate\\Routing\\Route",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
-            "line": 128,
-            "function": "Illuminate\\Routing\\{closure}",
-            "class": "Illuminate\\Routing\\Router",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php",
-            "line": 50,
-            "function": "Illuminate\\Pipeline\\{closure}",
-            "class": "Illuminate\\Pipeline\\Pipeline",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
-            "line": 167,
-            "function": "handle",
-            "class": "Illuminate\\Routing\\Middleware\\SubstituteBindings",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\ThrottleRequests.php",
-            "line": 127,
-            "function": "Illuminate\\Pipeline\\{closure}",
-            "class": "Illuminate\\Pipeline\\Pipeline",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\ThrottleRequests.php",
-            "line": 103,
-            "function": "handleRequest",
-            "class": "Illuminate\\Routing\\Middleware\\ThrottleRequests",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\ThrottleRequests.php",
-            "line": 55,
-            "function": "handleRequestUsingNamedLimiter",
-            "class": "Illuminate\\Routing\\Middleware\\ThrottleRequests",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
-            "line": 167,
-            "function": "handle",
-            "class": "Illuminate\\Routing\\Middleware\\ThrottleRequests",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
-            "line": 103,
-            "function": "Illuminate\\Pipeline\\{closure}",
-            "class": "Illuminate\\Pipeline\\Pipeline",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
-            "line": 697,
-            "function": "then",
-            "class": "Illuminate\\Pipeline\\Pipeline",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
-            "line": 672,
-            "function": "runRouteWithinStack",
-            "class": "Illuminate\\Routing\\Router",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
-            "line": 636,
-            "function": "runRoute",
-            "class": "Illuminate\\Routing\\Router",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php",
-            "line": 625,
-            "function": "dispatchToRoute",
-            "class": "Illuminate\\Routing\\Router",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php",
-            "line": 166,
-            "function": "dispatch",
-            "class": "Illuminate\\Routing\\Router",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
-            "line": 128,
-            "function": "Illuminate\\Foundation\\Http\\{closure}",
-            "class": "Illuminate\\Foundation\\Http\\Kernel",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\sentry\\sentry-laravel\\src\\Sentry\\Laravel\\Http\\SetRequestIpMiddleware.php",
-            "line": 55,
-            "function": "Illuminate\\Pipeline\\{closure}",
-            "class": "Illuminate\\Pipeline\\Pipeline",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
-            "line": 167,
-            "function": "handle",
-            "class": "Sentry\\Laravel\\Http\\SetRequestIpMiddleware",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\sentry\\sentry-laravel\\src\\Sentry\\Laravel\\Http\\SetRequestMiddleware.php",
-            "line": 52,
-            "function": "Illuminate\\Pipeline\\{closure}",
-            "class": "Illuminate\\Pipeline\\Pipeline",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
-            "line": 167,
-            "function": "handle",
-            "class": "Sentry\\Laravel\\Http\\SetRequestMiddleware",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php",
-            "line": 21,
-            "function": "Illuminate\\Pipeline\\{closure}",
-            "class": "Illuminate\\Pipeline\\Pipeline",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php",
-            "line": 31,
-            "function": "handle",
-            "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
-            "line": 167,
-            "function": "handle",
-            "class": "Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php",
-            "line": 21,
-            "function": "Illuminate\\Pipeline\\{closure}",
-            "class": "Illuminate\\Pipeline\\Pipeline",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php",
-            "line": 40,
-            "function": "handle",
-            "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
-            "line": 167,
-            "function": "handle",
-            "class": "Illuminate\\Foundation\\Http\\Middleware\\TrimStrings",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php",
-            "line": 27,
-            "function": "Illuminate\\Pipeline\\{closure}",
-            "class": "Illuminate\\Pipeline\\Pipeline",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
-            "line": 167,
-            "function": "handle",
-            "class": "Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php",
-            "line": 86,
-            "function": "Illuminate\\Pipeline\\{closure}",
-            "class": "Illuminate\\Pipeline\\Pipeline",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
-            "line": 167,
-            "function": "handle",
-            "class": "Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\fruitcake\\laravel-cors\\src\\HandleCors.php",
-            "line": 52,
-            "function": "Illuminate\\Pipeline\\{closure}",
-            "class": "Illuminate\\Pipeline\\Pipeline",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
-            "line": 167,
-            "function": "handle",
-            "class": "Fruitcake\\Cors\\HandleCors",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\fideloper\\proxy\\src\\TrustProxies.php",
-            "line": 57,
-            "function": "Illuminate\\Pipeline\\{closure}",
-            "class": "Illuminate\\Pipeline\\Pipeline",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
-            "line": 167,
-            "function": "handle",
-            "class": "Fideloper\\Proxy\\TrustProxies",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\sentry\\sentry-laravel\\src\\Sentry\\Laravel\\Tracing\\Middleware.php",
-            "line": 53,
-            "function": "Illuminate\\Pipeline\\{closure}",
-            "class": "Illuminate\\Pipeline\\Pipeline",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
-            "line": 167,
-            "function": "handle",
-            "class": "Sentry\\Laravel\\Tracing\\Middleware",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php",
-            "line": 103,
-            "function": "Illuminate\\Pipeline\\{closure}",
-            "class": "Illuminate\\Pipeline\\Pipeline",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php",
-            "line": 141,
-            "function": "then",
-            "class": "Illuminate\\Pipeline\\Pipeline",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php",
-            "line": 110,
-            "function": "sendRequestThroughRouter",
-            "class": "Illuminate\\Foundation\\Http\\Kernel",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Extracting\\Strategies\\Responses\\ResponseCalls.php",
-            "line": 324,
-            "function": "handle",
-            "class": "Illuminate\\Foundation\\Http\\Kernel",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Extracting\\Strategies\\Responses\\ResponseCalls.php",
-            "line": 305,
-            "function": "callLaravelOrLumenRoute",
-            "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Extracting\\Strategies\\Responses\\ResponseCalls.php",
-            "line": 76,
-            "function": "makeApiCall",
-            "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Extracting\\Strategies\\Responses\\ResponseCalls.php",
-            "line": 51,
-            "function": "makeResponseCall",
-            "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Extracting\\Strategies\\Responses\\ResponseCalls.php",
-            "line": 41,
-            "function": "makeResponseCallIfEnabledAndNoSuccessResponses",
-            "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Extracting\\Generator.php",
-            "line": 236,
-            "function": "__invoke",
-            "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Extracting\\Generator.php",
-            "line": 172,
-            "function": "iterateThroughStrategies",
-            "class": "Knuckles\\Scribe\\Extracting\\Generator",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Extracting\\Generator.php",
-            "line": 127,
-            "function": "fetchResponses",
-            "class": "Knuckles\\Scribe\\Extracting\\Generator",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Commands\\GenerateDocumentation.php",
-            "line": 119,
-            "function": "processRoute",
-            "class": "Knuckles\\Scribe\\Extracting\\Generator",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\knuckleswtf\\scribe\\src\\Commands\\GenerateDocumentation.php",
-            "line": 73,
-            "function": "processRoutes",
-            "class": "Knuckles\\Scribe\\Commands\\GenerateDocumentation",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php",
-            "line": 36,
-            "function": "handle",
-            "class": "Knuckles\\Scribe\\Commands\\GenerateDocumentation",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php",
-            "line": 40,
-            "function": "Illuminate\\Container\\{closure}",
-            "class": "Illuminate\\Container\\BoundMethod",
-            "type": "::"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php",
-            "line": 93,
-            "function": "unwrapIfClosure",
-            "class": "Illuminate\\Container\\Util",
-            "type": "::"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php",
-            "line": 37,
-            "function": "callBoundMethod",
-            "class": "Illuminate\\Container\\BoundMethod",
-            "type": "::"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php",
-            "line": 651,
-            "function": "call",
-            "class": "Illuminate\\Container\\BoundMethod",
-            "type": "::"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php",
-            "line": 136,
-            "function": "call",
-            "class": "Illuminate\\Container\\Container",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\symfony\\console\\Command\\Command.php",
-            "line": 288,
-            "function": "execute",
-            "class": "Illuminate\\Console\\Command",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php",
-            "line": 121,
-            "function": "run",
-            "class": "Symfony\\Component\\Console\\Command\\Command",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\symfony\\console\\Application.php",
-            "line": 974,
-            "function": "run",
-            "class": "Illuminate\\Console\\Command",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\symfony\\console\\Application.php",
-            "line": 291,
-            "function": "doRunCommand",
-            "class": "Symfony\\Component\\Console\\Application",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\symfony\\console\\Application.php",
-            "line": 167,
-            "function": "doRun",
-            "class": "Symfony\\Component\\Console\\Application",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Application.php",
-            "line": 92,
-            "function": "run",
-            "class": "Symfony\\Component\\Console\\Application",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php",
-            "line": 129,
-            "function": "run",
-            "class": "Illuminate\\Console\\Application",
-            "type": "-&gt;"
-        },
-        {
-            "file": "C:\\laragon\\www\\strong-minds\\artisan",
-            "line": 37,
-            "function": "handle",
-            "class": "Illuminate\\Foundation\\Console\\Kernel",
-            "type": "-&gt;"
-        }
-    ]
-}</code></pre>
-<div id="execution-results-GETapi-role-view--id-" hidden>
-    <blockquote>Received response<span id="execution-response-status-GETapi-role-view--id-"></span>:</blockquote>
-    <pre class="json"><code id="execution-response-content-GETapi-role-view--id-"></code></pre>
-</div>
-<div id="execution-error-GETapi-role-view--id-" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-GETapi-role-view--id-"></code></pre>
-</div>
-<form id="form-GETapi-role-view--id-" data-method="GET" data-path="api/role/view/{id}" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('GETapi-role-view--id-', this);">
-<h3>
-    Request&nbsp;&nbsp;&nbsp;
-        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-GETapi-role-view--id-" onclick="tryItOut('GETapi-role-view--id-');">Try it out ⚡</button>
-    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-GETapi-role-view--id-" onclick="cancelTryOut('GETapi-role-view--id-');" hidden>Cancel</button>&nbsp;&nbsp;
-    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-GETapi-role-view--id-" hidden>Send Request 💥</button>
-    </h3>
-<p>
-<small class="badge badge-green">GET</small>
- <b><code>api/role/view/{id}</code></b>
-</p>
-<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
-<p>
-<b><code>id</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="id" data-endpoint="GETapi-role-view--id-" data-component="url" required  hidden>
-<br>
-
-</p>
-</form>
-<h2>Create Role</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X POST \
-    "http://localhost:8000/api/role/create" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json" \
-    -d '{"name":"eos","role_code":"cumque","description":"vero","access_permissions":[20,17]}'
-</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/role/create"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-let body = {
-    "name": "eos",
-    "role_code": "cumque",
-    "description": "vero",
-    "access_permissions": [
-        20,
-        17
-    ]
-}
-
-fetch(url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
-$client = new \GuzzleHttp\Client();
-$response = $client-&gt;post(
-    'http://localhost:8000/api/role/create',
-    [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
-        ],
-        'json' =&gt; [
-            'name' =&gt; 'eos',
-            'role_code' =&gt; 'cumque',
-            'description' =&gt; 'vero',
-            'access_permissions' =&gt; [
-                20,
-                17,
-            ],
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
-import json
-
-url = 'http://localhost:8000/api/role/create'
-payload = {
-    "name": "eos",
-    "role_code": "cumque",
-    "description": "vero",
-    "access_permissions": [
-        20,
-        17
-    ]
-}
-headers = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json'
-}
-
-response = requests.request('POST', url, headers=headers, json=payload)
-response.json()</code></pre>
-<div id="execution-results-POSTapi-role-create" hidden>
-    <blockquote>Received response<span id="execution-response-status-POSTapi-role-create"></span>:</blockquote>
-    <pre class="json"><code id="execution-response-content-POSTapi-role-create"></code></pre>
-</div>
-<div id="execution-error-POSTapi-role-create" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-POSTapi-role-create"></code></pre>
-</div>
-<form id="form-POSTapi-role-create" data-method="POST" data-path="api/role/create" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('POSTapi-role-create', this);">
-<h3>
-    Request&nbsp;&nbsp;&nbsp;
-        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-POSTapi-role-create" onclick="tryItOut('POSTapi-role-create');">Try it out ⚡</button>
-    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-POSTapi-role-create" onclick="cancelTryOut('POSTapi-role-create');" hidden>Cancel</button>&nbsp;&nbsp;
-    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-POSTapi-role-create" hidden>Send Request 💥</button>
-    </h3>
-<p>
-<small class="badge badge-black">POST</small>
- <b><code>api/role/create</code></b>
-</p>
-<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-<p>
-<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="name" data-endpoint="POSTapi-role-create" data-component="body" required  hidden>
-<br>
-Role Name. Example admin
-</p>
-<p>
-<b><code>role_code</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="role_code" data-endpoint="POSTapi-role-create" data-component="body" required  hidden>
-<br>
-Code. Example Administrator
-</p>
-<p>
-<b><code>description</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
-<input type="text" name="description" data-endpoint="POSTapi-role-create" data-component="body"  hidden>
-<br>
-Description. Example This is Administrator
-</p>
-<p>
-<b><code>access_permissions</code></b>&nbsp;&nbsp;<small>integer[]</small>  &nbsp;
-<input type="number" name="access_permissions.0" data-endpoint="POSTapi-role-create" data-component="body" required  hidden>
-<input type="number" name="access_permissions.1" data-endpoint="POSTapi-role-create" data-component="body" hidden>
-<br>
-Permission IDs. Example [1,2]
-</p>
-
-</form>
-<h2>Update Role</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X PUT \
-    "http://localhost:8000/api/role/update/ab" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json" \
-    -d '{"name":"animi","role_code":"est","description":"quas","access_permissions":[15,1]}'
-</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/role/update/ab"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-let body = {
-    "name": "animi",
-    "role_code": "est",
-    "description": "quas",
-    "access_permissions": [
-        15,
-        1
-    ]
-}
-
-fetch(url, {
-    method: "PUT",
-    headers,
-    body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
-$client = new \GuzzleHttp\Client();
-$response = $client-&gt;put(
-    'http://localhost:8000/api/role/update/ab',
-    [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
-        ],
-        'json' =&gt; [
-            'name' =&gt; 'animi',
-            'role_code' =&gt; 'est',
-            'description' =&gt; 'quas',
-            'access_permissions' =&gt; [
-                15,
-                1,
-            ],
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
-import json
-
-url = 'http://localhost:8000/api/role/update/ab'
-payload = {
-    "name": "animi",
-    "role_code": "est",
-    "description": "quas",
-    "access_permissions": [
-        15,
-        1
-    ]
-}
-headers = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json'
-}
-
-response = requests.request('PUT', url, headers=headers, json=payload)
-response.json()</code></pre>
-<div id="execution-results-PUTapi-role-update--id-" hidden>
-    <blockquote>Received response<span id="execution-response-status-PUTapi-role-update--id-"></span>:</blockquote>
-    <pre class="json"><code id="execution-response-content-PUTapi-role-update--id-"></code></pre>
-</div>
-<div id="execution-error-PUTapi-role-update--id-" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-PUTapi-role-update--id-"></code></pre>
-</div>
-<form id="form-PUTapi-role-update--id-" data-method="PUT" data-path="api/role/update/{id}" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-role-update--id-', this);">
-<h3>
-    Request&nbsp;&nbsp;&nbsp;
-        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-PUTapi-role-update--id-" onclick="tryItOut('PUTapi-role-update--id-');">Try it out ⚡</button>
-    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-PUTapi-role-update--id-" onclick="cancelTryOut('PUTapi-role-update--id-');" hidden>Cancel</button>&nbsp;&nbsp;
-    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-PUTapi-role-update--id-" hidden>Send Request 💥</button>
-    </h3>
-<p>
-<small class="badge badge-darkblue">PUT</small>
- <b><code>api/role/update/{id}</code></b>
-</p>
-<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
-<p>
-<b><code>id</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="id" data-endpoint="PUTapi-role-update--id-" data-component="url" required  hidden>
-<br>
-
-</p>
-<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-<p>
-<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="name" data-endpoint="PUTapi-role-update--id-" data-component="body" required  hidden>
-<br>
-Role Name. Example admin
-</p>
-<p>
-<b><code>role_code</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="role_code" data-endpoint="PUTapi-role-update--id-" data-component="body" required  hidden>
-<br>
-Code. Example Administrator
-</p>
-<p>
-<b><code>description</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
-<input type="text" name="description" data-endpoint="PUTapi-role-update--id-" data-component="body"  hidden>
-<br>
-Description. Example This is Administrator
-</p>
-<p>
-<b><code>access_permissions</code></b>&nbsp;&nbsp;<small>integer[]</small>  &nbsp;
-<input type="number" name="access_permissions.0" data-endpoint="PUTapi-role-update--id-" data-component="body" required  hidden>
-<input type="number" name="access_permissions.1" data-endpoint="PUTapi-role-update--id-" data-component="body" hidden>
-<br>
-Permission IDs. Example [1,2]
-</p>
-
-</form>
-<h2>Delete Role by Id</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X DELETE \
-    "http://localhost:8000/api/role/delete/eum" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/role/delete/eum"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "DELETE",
-    headers,
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
-$client = new \GuzzleHttp\Client();
-$response = $client-&gt;delete(
-    'http://localhost:8000/api/role/delete/eum',
-    [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
-import json
-
-url = 'http://localhost:8000/api/role/delete/eum'
-headers = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json'
-}
-
-response = requests.request('DELETE', url, headers=headers)
-response.json()</code></pre>
-<div id="execution-results-DELETEapi-role-delete--id-" hidden>
-    <blockquote>Received response<span id="execution-response-status-DELETEapi-role-delete--id-"></span>:</blockquote>
-    <pre class="json"><code id="execution-response-content-DELETEapi-role-delete--id-"></code></pre>
-</div>
-<div id="execution-error-DELETEapi-role-delete--id-" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-DELETEapi-role-delete--id-"></code></pre>
-</div>
-<form id="form-DELETEapi-role-delete--id-" data-method="DELETE" data-path="api/role/delete/{id}" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('DELETEapi-role-delete--id-', this);">
-<h3>
-    Request&nbsp;&nbsp;&nbsp;
-        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-DELETEapi-role-delete--id-" onclick="tryItOut('DELETEapi-role-delete--id-');">Try it out ⚡</button>
-    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-DELETEapi-role-delete--id-" onclick="cancelTryOut('DELETEapi-role-delete--id-');" hidden>Cancel</button>&nbsp;&nbsp;
-    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-DELETEapi-role-delete--id-" hidden>Send Request 💥</button>
-    </h3>
-<p>
-<small class="badge badge-red">DELETE</small>
- <b><code>api/role/delete/{id}</code></b>
-</p>
-<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
-<p>
-<b><code>id</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="id" data-endpoint="DELETEapi-role-delete--id-" data-component="url" required  hidden>
-<br>
-
-</p>
-</form>
-<h2>Authenticate user</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X POST \
-    "http://localhost:8000/api/auth/login" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json" \
-    -d '{"email":"excepturi","password":"sequi"}'
-</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/auth/login"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-let body = {
-    "email": "excepturi",
-    "password": "sequi"
-}
-
-fetch(url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
-$client = new \GuzzleHttp\Client();
-$response = $client-&gt;post(
-    'http://localhost:8000/api/auth/login',
-    [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
-        ],
-        'json' =&gt; [
-            'email' =&gt; 'excepturi',
-            'password' =&gt; 'sequi',
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
-import json
-
-url = 'http://localhost:8000/api/auth/login'
-payload = {
-    "email": "excepturi",
-    "password": "sequi"
-}
-headers = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json'
-}
-
-response = requests.request('POST', url, headers=headers, json=payload)
-response.json()</code></pre>
-<div id="execution-results-POSTapi-auth-login" hidden>
-    <blockquote>Received response<span id="execution-response-status-POSTapi-auth-login"></span>:</blockquote>
-    <pre class="json"><code id="execution-response-content-POSTapi-auth-login"></code></pre>
-</div>
-<div id="execution-error-POSTapi-auth-login" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-POSTapi-auth-login"></code></pre>
-</div>
-<form id="form-POSTapi-auth-login" data-method="POST" data-path="api/auth/login" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('POSTapi-auth-login', this);">
-<h3>
-    Request&nbsp;&nbsp;&nbsp;
-        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-POSTapi-auth-login" onclick="tryItOut('POSTapi-auth-login');">Try it out ⚡</button>
-    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-POSTapi-auth-login" onclick="cancelTryOut('POSTapi-auth-login');" hidden>Cancel</button>&nbsp;&nbsp;
-    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-POSTapi-auth-login" hidden>Send Request 💥</button>
-    </h3>
-<p>
-<small class="badge badge-black">POST</small>
- <b><code>api/auth/login</code></b>
-</p>
-<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-<p>
-<b><code>email</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="email" data-endpoint="POSTapi-auth-login" data-component="body" required  hidden>
-<br>
-Email Address.
-</p>
-<p>
-<b><code>password</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="password" name="password" data-endpoint="POSTapi-auth-login" data-component="body" required  hidden>
-<br>
-Password.
-</p>
-
-</form><h1>Endpoints</h1>
-<h2>api/teams/invite</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X POST \
-    "http://localhost:8000/api/teams/invite" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/teams/invite"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "POST",
-    headers,
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
-$client = new \GuzzleHttp\Client();
-$response = $client-&gt;post(
-    'http://localhost:8000/api/teams/invite',
-    [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
-import json
-
-url = 'http://localhost:8000/api/teams/invite'
-headers = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json'
-}
-
-response = requests.request('POST', url, headers=headers)
-response.json()</code></pre>
-<div id="execution-results-POSTapi-teams-invite" hidden>
-    <blockquote>Received response<span id="execution-response-status-POSTapi-teams-invite"></span>:</blockquote>
-    <pre class="json"><code id="execution-response-content-POSTapi-teams-invite"></code></pre>
-</div>
-<div id="execution-error-POSTapi-teams-invite" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-POSTapi-teams-invite"></code></pre>
-</div>
-<form id="form-POSTapi-teams-invite" data-method="POST" data-path="api/teams/invite" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('POSTapi-teams-invite', this);">
-<h3>
-    Request&nbsp;&nbsp;&nbsp;
-        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-POSTapi-teams-invite" onclick="tryItOut('POSTapi-teams-invite');">Try it out ⚡</button>
-    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-POSTapi-teams-invite" onclick="cancelTryOut('POSTapi-teams-invite');" hidden>Cancel</button>&nbsp;&nbsp;
-    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-POSTapi-teams-invite" hidden>Send Request 💥</button>
-    </h3>
-<p>
-<small class="badge badge-black">POST</small>
- <b><code>api/teams/invite</code></b>
-</p>
-</form><h1>Offices</h1>
-<p>APIs for managing offices</p>
-<h2>All offices</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X GET \
-    -G "http://localhost:8000/api/office/all" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/office/all"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers,
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
-$client = new \GuzzleHttp\Client();
-$response = $client-&gt;get(
-    'http://localhost:8000/api/office/all',
-    [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
-import json
-
-url = 'http://localhost:8000/api/office/all'
-headers = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json'
-}
-
-response = requests.request('GET', url, headers=headers)
-response.json()</code></pre>
-<blockquote>
-<p>Example response (200):</p>
-</blockquote>
-<pre><code class="language-json">{
-    "success": true,
-    "message": "success",
-    "result": [
-        {
-            "id": 3,
-            "country_id": null,
-            "country": "Global",
-            "name": "Global",
-            "member_count": 1,
-            "active": 1,
-            "created_at": "2021-06-22"
-        },
-        {
-            "id": 2,
-            "country_id": 100,
-            "country": "Iceland",
-            "name": "nemo",
-            "member_count": 0,
-            "active": 0,
-            "created_at": "2021-06-09"
-        },
-        {
-            "id": 1,
-            "country_id": 2,
-            "country": "Aland Islands",
-            "name": "Tutu",
-            "member_count": 0,
-            "active": 1,
-            "created_at": "2021-06-09"
-        }
-    ]
-}</code></pre>
-<div id="execution-results-GETapi-office-all" hidden>
-    <blockquote>Received response<span id="execution-response-status-GETapi-office-all"></span>:</blockquote>
-    <pre class="json"><code id="execution-response-content-GETapi-office-all"></code></pre>
-</div>
-<div id="execution-error-GETapi-office-all" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-GETapi-office-all"></code></pre>
-</div>
-<form id="form-GETapi-office-all" data-method="GET" data-path="api/office/all" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('GETapi-office-all', this);">
-<h3>
-    Request&nbsp;&nbsp;&nbsp;
-        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-GETapi-office-all" onclick="tryItOut('GETapi-office-all');">Try it out ⚡</button>
-    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-GETapi-office-all" onclick="cancelTryOut('GETapi-office-all');" hidden>Cancel</button>&nbsp;&nbsp;
-    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-GETapi-office-all" hidden>Send Request 💥</button>
-    </h3>
-<p>
-<small class="badge badge-green">GET</small>
- <b><code>api/office/all</code></b>
-</p>
-</form>
-<h2>create office</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X POST \
-    "http://localhost:8000/api/office/create" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json" \
-    -d '{"country_id":3,"name":"ea"}'
-</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/office/create"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-let body = {
-    "country_id": 3,
-    "name": "ea"
-}
-
-fetch(url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
-$client = new \GuzzleHttp\Client();
-$response = $client-&gt;post(
-    'http://localhost:8000/api/office/create',
-    [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
-        ],
-        'json' =&gt; [
-            'country_id' =&gt; 3,
-            'name' =&gt; 'ea',
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
-import json
-
-url = 'http://localhost:8000/api/office/create'
-payload = {
-    "country_id": 3,
-    "name": "ea"
-}
-headers = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json'
-}
-
-response = requests.request('POST', url, headers=headers, json=payload)
-response.json()</code></pre>
-<div id="execution-results-POSTapi-office-create" hidden>
-    <blockquote>Received response<span id="execution-response-status-POSTapi-office-create"></span>:</blockquote>
-    <pre class="json"><code id="execution-response-content-POSTapi-office-create"></code></pre>
-</div>
-<div id="execution-error-POSTapi-office-create" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-POSTapi-office-create"></code></pre>
-</div>
-<form id="form-POSTapi-office-create" data-method="POST" data-path="api/office/create" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('POSTapi-office-create', this);">
-<h3>
-    Request&nbsp;&nbsp;&nbsp;
-        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-POSTapi-office-create" onclick="tryItOut('POSTapi-office-create');">Try it out ⚡</button>
-    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-POSTapi-office-create" onclick="cancelTryOut('POSTapi-office-create');" hidden>Cancel</button>&nbsp;&nbsp;
-    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-POSTapi-office-create" hidden>Send Request 💥</button>
-    </h3>
-<p>
-<small class="badge badge-black">POST</small>
- <b><code>api/office/create</code></b>
-</p>
-<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-<p>
-<b><code>country_id</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
-<input type="number" name="country_id" data-endpoint="POSTapi-office-create" data-component="body"  hidden>
-<br>
-County ID .
-</p>
-<p>
-<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="name" data-endpoint="POSTapi-office-create" data-component="body" required  hidden>
-<br>
-Office Name .
-</p>
-
-</form>
-<h2>update office</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X PUT \
-    "http://localhost:8000/api/office/update/1" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json" \
-    -d '{"country_id":13,"name":"labore","active":1}'
-</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/office/update/1"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-let body = {
-    "country_id": 13,
-    "name": "labore",
-    "active": 1
-}
-
-fetch(url, {
-    method: "PUT",
-    headers,
-    body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
-$client = new \GuzzleHttp\Client();
-$response = $client-&gt;put(
-    'http://localhost:8000/api/office/update/1',
-    [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
-        ],
-        'json' =&gt; [
-            'country_id' =&gt; 13,
-            'name' =&gt; 'labore',
-            'active' =&gt; 1,
-        ],
-    ]
-);
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
-import json
-
-url = 'http://localhost:8000/api/office/update/1'
-payload = {
-    "country_id": 13,
-    "name": "labore",
-    "active": 1
-}
-headers = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json'
-}
-
-response = requests.request('PUT', url, headers=headers, json=payload)
-response.json()</code></pre>
-<div id="execution-results-PUTapi-office-update--id-" hidden>
-    <blockquote>Received response<span id="execution-response-status-PUTapi-office-update--id-"></span>:</blockquote>
-    <pre class="json"><code id="execution-response-content-PUTapi-office-update--id-"></code></pre>
-</div>
-<div id="execution-error-PUTapi-office-update--id-" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-PUTapi-office-update--id-"></code></pre>
-</div>
-<form id="form-PUTapi-office-update--id-" data-method="PUT" data-path="api/office/update/{id}" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-office-update--id-', this);">
-<h3>
-    Request&nbsp;&nbsp;&nbsp;
-        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-PUTapi-office-update--id-" onclick="tryItOut('PUTapi-office-update--id-');">Try it out ⚡</button>
-    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-PUTapi-office-update--id-" onclick="cancelTryOut('PUTapi-office-update--id-');" hidden>Cancel</button>&nbsp;&nbsp;
-    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-PUTapi-office-update--id-" hidden>Send Request 💥</button>
-    </h3>
-<p>
-<small class="badge badge-darkblue">PUT</small>
- <b><code>api/office/update/{id}</code></b>
-</p>
-<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
-<p>
-<b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
-<input type="number" name="id" data-endpoint="PUTapi-office-update--id-" data-component="url" required  hidden>
-<br>
-The ID of the office.
-</p>
-<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-<p>
-<b><code>country_id</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
-<input type="number" name="country_id" data-endpoint="PUTapi-office-update--id-" data-component="body"  hidden>
-<br>
-County ID .
-</p>
-<p>
-<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
-<input type="text" name="name" data-endpoint="PUTapi-office-update--id-" data-component="body" required  hidden>
-<br>
-Office Name .
-</p>
-<p>
-<b><code>active</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
-<input type="number" name="active" data-endpoint="PUTapi-office-update--id-" data-component="body"  hidden>
-<br>
-Active Status .
-</p>
-
-</form><h1>Shared</h1>
-<p>APIs for managing countries</p>
-<h2>All Countries</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X GET \
+```bash
+curl -X GET \
     -G "http://localhost:8000/api/country/all" \
     -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
-<pre><code class="language-javascript">const url = new URL(
+    -H "Accept: application/json"
+```
+
+```javascript
+const url = new URL(
     "http://localhost:8000/api/country/all"
 );
 
@@ -1854,23 +25,30 @@ let headers = {
     "Accept": "application/json",
 };
 
+
 fetch(url, {
     method: "GET",
     headers,
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
+}).then(response => response.json());
+```
+
+```php
+
 $client = new \GuzzleHttp\Client();
-$response = $client-&gt;get(
+$response = $client->get(
     'http://localhost:8000/api/country/all',
     [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
+        'headers' => [
+            'Accept' => 'application/json',
         ],
     ]
 );
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+```python
+import requests
 import json
 
 url = 'http://localhost:8000/api/country/all'
@@ -1880,11 +58,14 @@ headers = {
 }
 
 response = requests.request('GET', url, headers=headers)
-response.json()</code></pre>
-<blockquote>
-<p>Example response (200):</p>
-</blockquote>
-<pre><code class="language-json">{
+response.json()
+```
+
+
+> Example response (200):
+
+```json
+{
     "success": true,
     "message": "success",
     "result": [
@@ -3371,7 +1552,8 @@ response.json()</code></pre>
             "active": 1
         }
     ]
-}</code></pre>
+}
+```
 <div id="execution-results-GETapi-country-all" hidden>
     <blockquote>Received response<span id="execution-response-status-GETapi-country-all"></span>:</blockquote>
     <pre class="json"><code id="execution-response-content-GETapi-country-all"></code></pre>
@@ -3392,15 +1574,24 @@ response.json()</code></pre>
  <b><code>api/country/all</code></b>
 </p>
 </form>
-<h2>All Active Countries</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X GET \
+
+
+## All Active Countries
+
+
+
+
+> Example request:
+
+```bash
+curl -X GET \
     -G "http://localhost:8000/api/country/active" \
     -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
-<pre><code class="language-javascript">const url = new URL(
+    -H "Accept: application/json"
+```
+
+```javascript
+const url = new URL(
     "http://localhost:8000/api/country/active"
 );
 
@@ -3409,23 +1600,30 @@ let headers = {
     "Accept": "application/json",
 };
 
+
 fetch(url, {
     method: "GET",
     headers,
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
+}).then(response => response.json());
+```
+
+```php
+
 $client = new \GuzzleHttp\Client();
-$response = $client-&gt;get(
+$response = $client->get(
     'http://localhost:8000/api/country/active',
     [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
+        'headers' => [
+            'Accept' => 'application/json',
         ],
     ]
 );
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+```python
+import requests
 import json
 
 url = 'http://localhost:8000/api/country/active'
@@ -3435,11 +1633,14 @@ headers = {
 }
 
 response = requests.request('GET', url, headers=headers)
-response.json()</code></pre>
-<blockquote>
-<p>Example response (200):</p>
-</blockquote>
-<pre><code class="language-json">{
+response.json()
+```
+
+
+> Example response (200):
+
+```json
+{
     "success": true,
     "message": "success",
     "result": [
@@ -4926,7 +3127,8 @@ response.json()</code></pre>
             "active": 1
         }
     ]
-}</code></pre>
+}
+```
 <div id="execution-results-GETapi-country-active" hidden>
     <blockquote>Received response<span id="execution-response-status-GETapi-country-active"></span>:</blockquote>
     <pre class="json"><code id="execution-response-content-GETapi-country-active"></code></pre>
@@ -4947,17 +3149,26 @@ response.json()</code></pre>
  <b><code>api/country/active</code></b>
 </p>
 </form>
-<h2>Activate or deactivate country</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X PUT \
+
+
+## Activate or deactivate country
+
+
+
+
+> Example request:
+
+```bash
+curl -X PUT \
     "http://localhost:8000/api/country/update" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -d '{"country_id":8}'
-</code></pre>
-<pre><code class="language-javascript">const url = new URL(
+
+```
+
+```javascript
+const url = new URL(
     "http://localhost:8000/api/country/update"
 );
 
@@ -4974,23 +3185,29 @@ fetch(url, {
     method: "PUT",
     headers,
     body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
+}).then(response => response.json());
+```
+
+```php
+
 $client = new \GuzzleHttp\Client();
-$response = $client-&gt;put(
+$response = $client->put(
     'http://localhost:8000/api/country/update',
     [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
+        'headers' => [
+            'Accept' => 'application/json',
         ],
-        'json' =&gt; [
-            'country_id' =&gt; 8,
+        'json' => [
+            'country_id' => 8,
         ],
     ]
 );
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+```python
+import requests
 import json
 
 url = 'http://localhost:8000/api/country/update'
@@ -5003,7 +3220,10 @@ headers = {
 }
 
 response = requests.request('PUT', url, headers=headers, json=payload)
-response.json()</code></pre>
+response.json()
+```
+
+
 <div id="execution-results-PUTapi-country-update" hidden>
     <blockquote>Received response<span id="execution-response-status-PUTapi-country-update"></span>:</blockquote>
     <pre class="json"><code id="execution-response-content-PUTapi-country-update"></code></pre>
@@ -5032,15 +3252,24 @@ County ID .
 </p>
 
 </form>
-<h2>All Timezones</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X GET \
+
+
+## All Timezones
+
+
+
+
+> Example request:
+
+```bash
+curl -X GET \
     -G "http://localhost:8000/api/timezone/all" \
     -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
-<pre><code class="language-javascript">const url = new URL(
+    -H "Accept: application/json"
+```
+
+```javascript
+const url = new URL(
     "http://localhost:8000/api/timezone/all"
 );
 
@@ -5049,23 +3278,30 @@ let headers = {
     "Accept": "application/json",
 };
 
+
 fetch(url, {
     method: "GET",
     headers,
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
+}).then(response => response.json());
+```
+
+```php
+
 $client = new \GuzzleHttp\Client();
-$response = $client-&gt;get(
+$response = $client->get(
     'http://localhost:8000/api/timezone/all',
     [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
+        'headers' => [
+            'Accept' => 'application/json',
         ],
     ]
 );
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+```python
+import requests
 import json
 
 url = 'http://localhost:8000/api/timezone/all'
@@ -5075,11 +3311,14 @@ headers = {
 }
 
 response = requests.request('GET', url, headers=headers)
-response.json()</code></pre>
-<blockquote>
-<p>Example response (200):</p>
-</blockquote>
-<pre><code class="language-json">{
+response.json()
+```
+
+
+> Example response (200):
+
+```json
+{
     "success": true,
     "message": "success",
     "result": [
@@ -6608,7 +4847,8 @@ response.json()</code></pre>
             "active": 1
         }
     ]
-}</code></pre>
+}
+```
 <div id="execution-results-GETapi-timezone-all" hidden>
     <blockquote>Received response<span id="execution-response-status-GETapi-timezone-all"></span>:</blockquote>
     <pre class="json"><code id="execution-response-content-GETapi-timezone-all"></code></pre>
@@ -6629,15 +4869,24 @@ response.json()</code></pre>
  <b><code>api/timezone/all</code></b>
 </p>
 </form>
-<h2>All Active timezones</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X GET \
+
+
+## All Active timezones
+
+
+
+
+> Example request:
+
+```bash
+curl -X GET \
     -G "http://localhost:8000/api/timezone/active" \
     -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
-<pre><code class="language-javascript">const url = new URL(
+    -H "Accept: application/json"
+```
+
+```javascript
+const url = new URL(
     "http://localhost:8000/api/timezone/active"
 );
 
@@ -6646,23 +4895,30 @@ let headers = {
     "Accept": "application/json",
 };
 
+
 fetch(url, {
     method: "GET",
     headers,
-}).then(response =&gt; response.json());</code></pre>
-<pre><code class="language-php">
+}).then(response => response.json());
+```
+
+```php
+
 $client = new \GuzzleHttp\Client();
-$response = $client-&gt;get(
+$response = $client->get(
     'http://localhost:8000/api/timezone/active',
     [
-        'headers' =&gt; [
-            'Accept' =&gt; 'application/json',
+        'headers' => [
+            'Accept' => 'application/json',
         ],
     ]
 );
-$body = $response-&gt;getBody();
-print_r(json_decode((string) $body));</code></pre>
-<pre><code class="language-python">import requests
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+```python
+import requests
 import json
 
 url = 'http://localhost:8000/api/timezone/active'
@@ -6672,11 +4928,14 @@ headers = {
 }
 
 response = requests.request('GET', url, headers=headers)
-response.json()</code></pre>
-<blockquote>
-<p>Example response (200):</p>
-</blockquote>
-<pre><code class="language-json">{
+response.json()
+```
+
+
+> Example response (200):
+
+```json
+{
     "success": true,
     "message": "success",
     "result": [
@@ -8163,7 +6422,8 @@ response.json()</code></pre>
             "active": 1
         }
     ]
-}</code></pre>
+}
+```
 <div id="execution-results-GETapi-timezone-active" hidden>
     <blockquote>Received response<span id="execution-response-status-GETapi-timezone-active"></span>:</blockquote>
     <pre class="json"><code id="execution-response-content-GETapi-timezone-active"></code></pre>
@@ -8184,21 +6444,6 @@ response.json()</code></pre>
  <b><code>api/timezone/active</code></b>
 </p>
 </form>
-    </div>
-    <div class="dark-box">
-                    <div class="lang-selector">
-                                    <a href="#" data-language-name="bash">bash</a>
-                                    <a href="#" data-language-name="javascript">javascript</a>
-                                    <a href="#" data-language-name="php">php</a>
-                                    <a href="#" data-language-name="python">python</a>
-                            </div>
-            </div>
-</div>
-<script>
-    $(function () {
-        var languages = ["bash","javascript","php","python"];
-        setupLanguages(languages);
-    });
-</script>
-</body>
-</html>
+
+
+

@@ -1,12 +1,12 @@
 <?php
 
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TimezoneController;
 use App\Http\Controllers\InviteController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,6 +45,10 @@ Route::prefix('role')->group(function () {
     Route::post('create', [RoleController::class,'create']);
     Route::put('update/{id}', [RoleController::class,'updateRole']);
     Route::delete('delete/{id}', [RoleController::class,'deleteRole']);
+});
+//Authentication
+Route::prefix('auth')->group(function () {
+    Route::post('login', [LoginController::class,'loginUser']);
 });
 //teams
 Route::prefix('teams')->group(function () {

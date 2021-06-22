@@ -20,6 +20,15 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'phone_number',
+        'gender',
+        'invite_accepted',
+        'is_admin',
+        'profile_pic',
+        'timezone_id',
+        'region',
+        'city',
+        'languages',
         'email',
         'active',
         'approved',
@@ -49,5 +58,9 @@ class User extends Authenticatable
     public function office(): BelongsTo
     {
         return $this->belongsTo(Office::class, 'office_id');
+    }
+    public function timezone(): BelongsTo
+    {
+        return $this->belongsTo(Timezone::class, 'timezone_id');
     }
 }
