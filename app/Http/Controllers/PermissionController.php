@@ -41,6 +41,7 @@ class PermissionController extends Controller
      * @bodyParam  slug string required Permission Name e.g create-office.
      * @bodyParam  title string required Title e.g Create Office.
      * @bodyParam  module string required Module Name e.g user.
+     * @hideFromAPIDocumentation
      */
     public function create(Request $request): JsonResponse
     {

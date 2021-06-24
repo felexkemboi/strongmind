@@ -7,6 +7,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TimezoneController;
 use App\Http\Controllers\InviteController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,9 +51,12 @@ Route::prefix('role')->group(function () {
 Route::prefix('auth')->group(function () {
     Route::post('login', [LoginController::class,'loginUser']);
     Route::get('profile', [LoginController::class,'profile'])->middleware('auth:sanctum');
+    Route::put('profile/update', [UserController::class,'updateProfile'])->middleware('auth:sanctum');
+    Route::put('change-password', [UserController::class,'changePassword'])->middleware('auth:sanctum');
 });
 //teams
 Route::prefix('teams')->group(function () {
+   Route::get('all', [UserController::class,'index'])->middleware('auth:sanctum');
    Route::post('invite', [InviteController::class,'invite'])->middleware('auth:sanctum');
    Route::post('set-password', [InviteController::class,'setPassword']);
 
