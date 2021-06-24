@@ -53,6 +53,7 @@ Route::prefix('auth')->group(function () {
     Route::get('profile', [LoginController::class,'profile'])->middleware('auth:sanctum');
     Route::put('profile/update', [UserController::class,'updateProfile'])->middleware('auth:sanctum');
     Route::put('change-password', [UserController::class,'changePassword'])->middleware('auth:sanctum');
+    Route::post('profile/set-photo', [UserController::class,'setPhoto'])->middleware('auth:sanctum');
 });
 //teams
 Route::prefix('teams')->group(function () {
