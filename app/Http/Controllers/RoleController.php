@@ -8,7 +8,6 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -89,10 +88,10 @@ class RoleController extends Controller
 
     /**
      * Get Role by Id
-     * @param $id
+     * @param int $id
      * @return JsonResponse
      */
-    public function showRole($id): JsonResponse
+    public function showRole(int $id): JsonResponse
     {
         $role = Role::find($id);
         if ($role) {
@@ -105,15 +104,15 @@ class RoleController extends Controller
 
     /**
      * Update Role
-     * @param $id
      * @param Request $request
+     * @param int $id
      * @return JsonResponse
      * @bodyParam  name string required Role Name. Example admin
      * @bodyParam  role_code string required Code. Example Administrator
      * @bodyParam  description string  Description. Example This is Administrator
      * @bodyParam  access_permissions integer[] required Permission IDs. Example [1,2]
      */
-    public function updateRole(Request $request, $id): JsonResponse
+    public function updateRole(Request $request, int $id): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -163,10 +162,10 @@ class RoleController extends Controller
 
     /**
      * Delete Role by Id
-     * @param $id
+     * @param int $id
      * @return JsonResponse
      */
-    public function deleteRole($id): JsonResponse
+    public function deleteRole(int $id): JsonResponse
     {
         $role = Role::find($id);
         if ($role) {

@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 class LoginController extends Controller
 {
     /**
-     * Authenticate user
+     * Login User
      * @param Request $request
      * @return JsonResponse
      * @bodyParam  email string required  Email Address.
@@ -61,7 +61,7 @@ class LoginController extends Controller
         }
     }
     /**
-     * Authenticated user profile
+     * User profile
      * @return JsonResponse
      * @authenticated
      */
