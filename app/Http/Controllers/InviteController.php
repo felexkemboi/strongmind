@@ -63,7 +63,7 @@ class InviteController extends Controller
                 );
                 $role=Role::find($request->id);
                 if($role){
-                    \Bouncer::assign($role)->to($user);
+                    $user->assign($role->name);
                 }
                 $action_url=config('app.set_password_url')."?invite=$invite_token";
                 $client = new PostmarkClient(config('postmark.token'));
