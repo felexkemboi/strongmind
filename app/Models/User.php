@@ -25,6 +25,7 @@ class User extends Authenticatable
         'invite_accepted',
         'is_admin',
         'profile_pic',
+        'profile_pic_url',
         'timezone_id',
         'region',
         'city',

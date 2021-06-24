@@ -63,6 +63,7 @@ class OfficeController extends Controller
      * update office
      * @param Request $request
      * @param $id
+     * @urlParam id integer required The ID of the office. Example:1
      * @return JsonResponse
      * @bodyParam  country_id integer  County ID .
      * @bodyParam  name string required Office Name .

@@ -89,6 +89,7 @@ class RoleController extends Controller
     /**
      * Get Role by Id
      * @param int $id
+     * @urlParam id integer required The ID of the role.Example:1
      * @return JsonResponse
      */
     public function showRole(int $id): JsonResponse
@@ -106,6 +107,7 @@ class RoleController extends Controller
      * Update Role
      * @param Request $request
      * @param int $id
+     * @urlParam id integer required The ID of the role. Example:1
      * @return JsonResponse
      * @bodyParam  name string required Role Name. Example admin
      * @bodyParam  role_code string required Code. Example Administrator
@@ -163,6 +165,7 @@ class RoleController extends Controller
     /**
      * Delete Role by Id
      * @param int $id
+     * @urlParam id integer required The ID of the role. Example:1
      * @return JsonResponse
      */
     public function deleteRole(int $id): JsonResponse
