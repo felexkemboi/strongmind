@@ -41,6 +41,11 @@ phases:
       - echo SENTRY_TRACES_SAMPLE_RATE=${SENTRY_TRACES_SAMPLE_RATE} >> .env
       - echo POSTMARK_TOKEN=${POSTMARK_TOKEN} >> .env
       - echo SET_PASSWORD_URL=${SET_PASSWORD_URL} >> .env
+      - echo AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} >> .env
+      - echo AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} >> .env
+      - echo AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} >> .env
+      - echo AWS_BUCKET=${AWS_BUCKET} >> .env
+      - echo AWS_BUCKET_URL=${AWS_BUCKET_URL} >> .env
 
   build:
     commands:
