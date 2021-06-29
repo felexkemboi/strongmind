@@ -26,6 +26,7 @@ class RoleController extends Controller
     /**
      * All Roles
      * @return JsonResponse
+     * @authenticated
      */
     public function index(): JsonResponse
     {
@@ -41,6 +42,7 @@ class RoleController extends Controller
      * @bodyParam  role_code string required Code. Example Administrator
      * @bodyParam  description string  Description. Example This is Administrator
      * @bodyParam  access_permissions integer[] required Permission IDs. Example [1,2]
+     * @authenticated
      */
     public function create(Request $request): JsonResponse
     {
@@ -91,6 +93,7 @@ class RoleController extends Controller
      * @param int $id
      * @urlParam id integer required The ID of the role.Example:1
      * @return JsonResponse
+     * @authenticated
      */
     public function showRole(int $id): JsonResponse
     {
@@ -113,6 +116,7 @@ class RoleController extends Controller
      * @bodyParam  role_code string required Code. Example Administrator
      * @bodyParam  description string  Description. Example This is Administrator
      * @bodyParam  access_permissions integer[] required Permission IDs. Example [1,2]
+     * @authenticated
      */
     public function updateRole(Request $request, int $id): JsonResponse
     {
@@ -167,6 +171,7 @@ class RoleController extends Controller
      * @param int $id
      * @urlParam id integer required The ID of the role. Example:1
      * @return JsonResponse
+     * @authenticated
      */
     public function deleteRole(int $id): JsonResponse
     {

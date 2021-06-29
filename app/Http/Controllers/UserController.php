@@ -39,6 +39,25 @@ class UserController extends Controller
     }
 
     /**
+     * Get User by Id
+     * @group Teams
+     * @param int $id
+     * @urlParam id integer required The ID of the user.Example:1
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function showUser(int $id): JsonResponse
+    {
+        $user = User::find($id);
+        if ($user) {
+            return $this->commonResponse(true, 'success', new UserResource($user), Response::HTTP_OK);
+        } else {
+            return $this->commonResponse(false, 'User not found!', '', Response::HTTP_NOT_FOUND);
+        }
+
+    }
+
+    /**
      * Change a user's password.
      * @group Auth
      * @param Request $request
@@ -74,7 +93,7 @@ class UserController extends Controller
     }
 
     /**
-     * Change a user's profile.
+     * Update user profile.
      * @group Auth
      * @param Request $request
      * @return JsonResponse

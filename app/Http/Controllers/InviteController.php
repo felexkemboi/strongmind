@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -26,7 +27,6 @@ class InviteController extends Controller
      * Invite member
      * @param Request $request
      * @return JsonResponse
-     * @bodyParam  name string required  Name.
      * @bodyParam  email string required  Email Address.
      * @bodyParam  role_id integer required Role Id.
      * @bodyParam  office_id integer required Office Id.
@@ -37,7 +37,6 @@ class InviteController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users',
-            'name' => 'required',
             'role_id' => 'required',
             'office_id' => 'required',
         ]);
@@ -46,33 +45,30 @@ class InviteController extends Controller
         } else {
             try {
                 $email = $request->email;
-                $name = $request->name;
-                $invite_token=hash('sha256',utf8_encode(Str::uuid()));
+                $invite_token = hash('sha256', utf8_encode(Str::uuid()));
                 //Create user
-                $user=User::create(
+                $user = User::create(
                     [
-                        'name'=>$name,
-                        'email'=>$email,
-                        'office_id'=>$request->office_id,
-                        'is_admin'=>0,
-                        'invite_accepted'=>0,
-                        'invite_id'=>$invite_token,
-                        'password'=>bcrypt(Str::random(8)),
-                        'active'=>0,
+                        'email' => $email,
+                        'office_id' => $request->office_id,
+                        'is_admin' => 0,
+                        'invite_accepted' => 0,
+                        'invite_id' => $invite_token,
+                        'password' => bcrypt(Str::random(8)),
+                        'active' => 0,
                     ]
                 );
-                $role=Role::find($request->id);
-                if($role){
+                $role = Role::find($request->role_id);
+                if ($role) {
                     $user->assign($role->name);
                 }
-                $action_url=config('app.set_password_url')."?invite=$invite_token";
+                $action_url = config('app.set_password_url') . "?invite=$invite_token";
                 $client = new PostmarkClient(config('postmark.token'));
                 $client->sendEmailWithTemplate(
                     config('mail.from.address'),
                     $email,
                     'user-invitation',
                     [
-                        'name' => $name,
                         'action_url' => $action_url,
                         'support_email' => config('mail.from.address')
                     ]
@@ -86,6 +82,7 @@ class InviteController extends Controller
             }
         }
     }
+
     /**
      * Set Password
      * @param Request $request
@@ -105,18 +102,22 @@ class InviteController extends Controller
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             try {
-                $user=User::firstWhere('invite_id',$request->invite);
-                if(!$user){
+                $user = User::firstWhere('invite_id', $request->invite);
+                if (!$user) {
                     return $this->commonResponse(false, 'Invite ID invalid!', '', Response::HTTP_NOT_FOUND);
-                }
-                else{
+                } else {
                     $user->update([
                         'password' => bcrypt($request->password),
                         'invite_accepted' => 1,
-                        'active'=>1,
+                        'active' => 1,
                         'invite_id' => '',
                     ]);
-                    return $this->commonResponse(true, 'Password set successfully!', '', Response::HTTP_CREATED);
+                    $user->fresh();
+                    $result = [
+                        'user' => new UserResource($user),
+                        'accessToken' => $user->createToken('strongminds')->plainTextToken,
+                    ];
+                    return $this->commonResponse(true, 'Password set successfully!', $result, Response::HTTP_CREATED);
                 }
             } catch (QueryException $ex) {
                 return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
