@@ -46,6 +46,7 @@ class CountryController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @bodyParam  country_id integer required County ID .
+     * @authenticated
      *
      */
     public function toggleStatus(Request $request): JsonResponse

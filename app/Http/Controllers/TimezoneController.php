@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CountryResource;
 use App\Http\Resources\TimezoneResource;
 use App\Models\Country;
 use App\Models\Timezone;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

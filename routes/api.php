@@ -24,28 +24,28 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('country')->group(function (){
     Route::get('all',[CountryController::class,'all']);
     Route::get('active',[CountryController::class,'activeCountries']);
-    Route::put('update',[CountryController::class,'toggleStatus']);
+    Route::put('update',[CountryController::class,'toggleStatus'])->middleware('auth:sanctum');
 });
 Route::prefix('timezone')->group(function (){
     Route::get('all',[TimezoneController::class,'all']);
     Route::get('active',[TimezoneController::class,'activeTimezones']);
 });
 Route::prefix('office')->group(function () {
-    Route::get('all', [OfficeController::class,'all']);
-    Route::post('create', [OfficeController::class,'create']);
-    Route::put('update/{id}', [OfficeController::class,'update']);
+    Route::get('all', [OfficeController::class,'all'])->middleware('auth:sanctum');
+    Route::post('create', [OfficeController::class,'create'])->middleware('auth:sanctum');
+    Route::put('update/{id}', [OfficeController::class,'update'])->middleware('auth:sanctum');
 });
 //Roles and permissions
 Route::prefix('permission')->group(function () {
-    Route::get('all', [PermissionController::class,'index']);
-    Route::post('create', [PermissionController::class,'create']);
+    Route::get('all', [PermissionController::class,'index'])->middleware('auth:sanctum');
+    Route::post('create', [PermissionController::class,'create'])->middleware('auth:sanctum');
 });
 Route::prefix('role')->group(function () {
-    Route::get('all', [RoleController::class,'index']);
-    Route::get('view/{id}', [RoleController::class,'showRole']);
-    Route::post('create', [RoleController::class,'create']);
-    Route::put('update/{id}', [RoleController::class,'updateRole']);
-    Route::delete('delete/{id}', [RoleController::class,'deleteRole']);
+    Route::get('all', [RoleController::class,'index'])->middleware('auth:sanctum');
+    Route::get('view/{id}', [RoleController::class,'showRole'])->middleware('auth:sanctum');
+    Route::post('create', [RoleController::class,'create'])->middleware('auth:sanctum');
+    Route::put('update/{id}', [RoleController::class,'updateRole'])->middleware('auth:sanctum');
+    Route::delete('delete/{id}', [RoleController::class,'deleteRole'])->middleware('auth:sanctum');
 });
 //Authentication
 Route::prefix('auth')->group(function () {
@@ -58,6 +58,7 @@ Route::prefix('auth')->group(function () {
 //teams
 Route::prefix('teams')->group(function () {
    Route::get('all', [UserController::class,'index'])->middleware('auth:sanctum');
+   Route::get('show/{id}', [UserController::class,'showUser'])->middleware('auth:sanctum');
    Route::post('invite', [InviteController::class,'invite'])->middleware('auth:sanctum');
    Route::post('set-password', [InviteController::class,'setPassword']);
 
