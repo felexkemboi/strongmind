@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\OfficeResource;
 use App\Models\Office;
+use App\Models\User;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -11,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
-
+use Illuminate\Support\Facades\Log;
 /**
  * Class OfficeController
  * @package App\Http\Controllers
@@ -95,5 +96,36 @@ class OfficeController extends Controller
                 return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         }
+    }
+
+    /**
+     * List All Office Users
+     * @param Request $request
+     * @param $id
+     * @urlParam id integer required Office ID . Example:1
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function members( Request $request, $id): JsonResponse
+    {
+        try{
+            $office = Office::find($id);
+            if(!$office){
+                return $this->commonResponse(false,'Office Not Found','',Response::HTTP_NOT_FOUND);
+            }else{
+                $users = User::with('office','timezone')->where('office_id',$office->id)->get();
+                if($users->isEmpty()){
+                    return $this->commonResponse(false,'Office Users Not Found','',Response::HTTP_NOT_FOUND);
+                }else{
+                    return $this->commonResponse(true,'Success',UserResource::collection($users), Response::HTTP_OK);
+                }
+            }
+        }catch(QueryException $exception){
+            return $this->commonResponse(false, $exception->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        catch(Exception $exception){
+            Log::critical('Something went wrong fetching office users. ERROR: '.$exception->getTraceAsString());
+            return $this->commonResponse(false, $exception->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }   
     }
 }

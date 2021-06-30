@@ -34,6 +34,7 @@ Route::prefix('office')->group(function () {
     Route::get('all', [OfficeController::class,'all'])->middleware('auth:sanctum');
     Route::post('create', [OfficeController::class,'create'])->middleware('auth:sanctum');
     Route::put('update/{id}', [OfficeController::class,'update'])->middleware('auth:sanctum');
+    Route::get('/{id}/members',[OfficeController::class,'members'])->middleware('auth:sanctum');
 });
 //Roles and permissions
 Route::prefix('permission')->group(function () {

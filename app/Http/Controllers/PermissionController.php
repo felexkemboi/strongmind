@@ -49,9 +49,9 @@ class PermissionController extends Controller
     public function create(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'slug' => 'required',
-            'module' => 'required',
+            'title'     => 'required',
+            'slug'      => 'required|unique:abilities,slug',
+            'module'    => 'required',
         ]);
         if ($validator->fails()) {
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
