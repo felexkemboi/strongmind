@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Support\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -32,8 +33,8 @@ class PermissionController extends Controller
         $abilities = Bouncer::ability()->where('name', '<>', '*')->get()
             ->transform(function ($item) {
                 return new PermissionResource($item);
-            })->groupBy('module_name')->paginate(10);
-        return $this->commonResponse(true, 'success', $abilities, Response::HTTP_OK);
+            })->groupBy('module_name');
+        return $this->commonResponse(true, 'success', (new Collection($abilities))->paginate(10), Response::HTTP_OK);
 
     }
 
