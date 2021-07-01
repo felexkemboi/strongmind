@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\OfficeResource;
-use App\Models\Office;
-use App\Models\User;
 use Exception;
-use Illuminate\Database\QueryException;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Office;
 use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\OfficeResource;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Log;
 /**
  * Class OfficeController
  * @package App\Http\Controllers
