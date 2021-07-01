@@ -6,7 +6,7 @@ env:
 phases:
   install:
     runtime-versions:
-      php: 7.3
+      php: 8.0
     commands:
       - echo Install composer
       - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
