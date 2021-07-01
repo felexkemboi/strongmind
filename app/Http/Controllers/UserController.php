@@ -35,7 +35,7 @@ class UserController extends Controller
     public function index(): JsonResponse
     {
         $users = User::query()->where('is_admin', '<>', 1)->paginate(10);
-        return $this->commonResponse(true, 'success', UserResource::collection($users), Response::HTTP_OK);
+        return $this->commonResponse(true, 'success', UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
     }
 
     /**
