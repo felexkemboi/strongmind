@@ -8,13 +8,27 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
+use App\Notifications\Passwords\ResetLinkNotification;
 
+/**
+ * Class ResetPasswordController
+ * @package App\Http\Controllers
+ * @group Auth
+ * Reset User Password
+ */
 class ResetPasswordController extends Controller
 {
+    /**
+     * Password Reset Link
+     * @param Request $request
+     * @bodyParam email required . User Email
+     * @return JsonResponse
+     */
     public function index(Request $request): JsonResponse
     {
         $validator = Validator::make(
@@ -41,16 +55,28 @@ class ResetPasswordController extends Controller
                 //Get the token just created above
                 $tokenData = DB::table('password_resets')
                     ->where('email', $email)->first();
+                /*
                 Notification::route('mail', $user->email)
                     ->notify(new ResetLinkNotification($user, $tokenData->token));
+                */
+                $user->notify(new ResetLinkNotification($tokenData->token));
                 return $this->commonResponse(true, 'We have emailed your password reset link!', '', Response::HTTP_CREATED);
 
             } catch (Exception $exception) {
+                Log::critical('Something went wrong sending email to user. ERROR '.$exception->getTraceAsString());
                 return $this->commonResponse(false, 'A Network Error occurred. Please try again.', '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         }
     }
 
+    /**
+     * Reset Password
+     * @param Request $request
+     * @bodyParam  token string required . The User Token
+     * @bodyParam email string required . The User Email
+     * @bodyParam password password required . The New Password
+     * @return JsonResponse
+     */
     public function reset(Request $request): JsonResponse
     {
         $validator = Validator::make(

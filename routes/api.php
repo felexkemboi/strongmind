@@ -9,7 +9,7 @@ use App\Http\Controllers\TimezoneController;
 use App\Http\Controllers\InviteController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ResetPasswordController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -55,6 +55,11 @@ Route::prefix('auth')->group(function () {
     Route::put('profile/update', [UserController::class,'updateProfile'])->middleware('auth:sanctum');
     Route::put('change-password', [UserController::class,'changePassword'])->middleware('auth:sanctum');
     Route::post('profile/set-photo', [UserController::class,'setPhoto'])->middleware('auth:sanctum');
+    //password resets
+    Route::group(['prefix' => 'passwords'], function(){
+        Route::post('/reset-link',[ResetPasswordController::class,'index']);
+        Route::post('/reset',[ResetPasswordController::class,'reset']);
+    });
 });
 //teams
 Route::prefix('teams')->group(function () {
