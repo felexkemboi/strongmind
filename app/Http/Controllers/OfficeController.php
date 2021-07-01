@@ -30,7 +30,7 @@ class OfficeController extends Controller
     {
         $offices = Office::query()->latest()
             ->paginate(10);
-        return $this->commonResponse(true, 'success', OfficeResource::collection($offices), Response::HTTP_OK);
+        return $this->commonResponse(true, 'success', OfficeResource::collection($offices)->response()->getData(true), Response::HTTP_OK);
     }
 
     /**

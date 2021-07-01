@@ -31,7 +31,7 @@ class RoleController extends Controller
     public function index(): JsonResponse
     {
         $roles = Role::latest()->paginate(10);
-        return $this->commonResponse(true, 'success', RoleResource::collection($roles), Response::HTTP_OK);
+        return $this->commonResponse(true, 'success', RoleResource::collection($roles)->response()->getData(true), Response::HTTP_OK);
     }
 
     /**
