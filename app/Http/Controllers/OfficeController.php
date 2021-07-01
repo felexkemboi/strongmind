@@ -28,7 +28,7 @@ class OfficeController extends Controller
     public function all(): JsonResponse
     {
         $offices = Office::query()->latest()
-            ->get();
+            ->paginate(10);
         return $this->commonResponse(true, 'success', OfficeResource::collection($offices), Response::HTTP_OK);
     }
 

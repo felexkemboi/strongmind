@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
+use App\Models\Office;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -113,6 +114,9 @@ class InviteController extends Controller
                         'invite_id' => '',
                     ]);
                     $user->fresh();
+                    $office=Office::firstWhere('id',$user->office_id);
+                    $new_count=($office->member_count)+1;
+                    $office->update(['member_count' => $new_count]);
                     $result = [
                         'user' => new UserResource($user),
                         'accessToken' => $user->createToken('strongminds')->plainTextToken,

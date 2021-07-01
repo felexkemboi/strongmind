@@ -54,7 +54,7 @@ class LoginController extends Controller
                 $user->update(['last_login' => now()]);
                 $result = [
                     'user' => new UserResource($user),
-                    'accessToken' => $user->createToken('strongminds')->plainTextToken,
+                    'accessToken' => $user->createToken('strong-minds')->plainTextToken,
                 ];
                 return $this->commonResponse(true, 'success', $result, Response::HTTP_CREATED);
             }
