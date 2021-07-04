@@ -34,7 +34,8 @@ class PermissionController extends Controller
             ->transform(function ($item) {
                 return new PermissionResource($item);
             })->groupBy('module_name');
-        return $this->commonResponse(true, 'success', (new Collection($abilities))->paginate(10), Response::HTTP_OK);
+        //return $this->commonResponse(true, 'success', (new Collection($abilities))->paginate(10), Response::HTTP_OK);
+        return $this->commonResponse(true, 'success', (new Collection($abilities)), Response::HTTP_OK);
 
     }
 
