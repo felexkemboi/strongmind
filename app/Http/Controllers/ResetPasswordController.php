@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 use App\Notifications\Passwords\ResetLinkNotification;
-
+use Postmark\PostmarkClient;
 /**
  * Class ResetPasswordController
  * @package App\Http\Controllers
@@ -55,11 +55,20 @@ class ResetPasswordController extends Controller
                 //Get the token just created above
                 $tokenData = DB::table('password_resets')
                     ->where('email', $email)->first();
-                /*
-                Notification::route('mail', $user->email)
-                    ->notify(new ResetLinkNotification($user, $tokenData->token));
-                */
-                $user->notify(new ResetLinkNotification($tokenData->token));
+                //$user->notify(new ResetLinkNotification($tokenData->token));
+                $action_url = config('app.reset_password_url') . "?token=$tokenData->token";
+                $mailClient = new PostmarkClient(config('postmark.token'));
+                $mailClient->sendEmailWithTemplate(
+                    config('mail.from.address'),
+                    $email,
+                    'password-reset',
+                    [
+                        'action_url'    => $action_url,
+                        'support_email' => config('mail.from.address'),
+                        'product_name'  => config('app.name')
+                    ]
+                );
+
                 return $this->commonResponse(true, 'We have emailed your password reset link!', '', Response::HTTP_CREATED);
 
             } catch (Exception $exception) {
