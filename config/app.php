@@ -56,6 +56,7 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
     'set_password_url' => env('SET_PASSWORD_URL', null),
+    'reset_password_url' => env('RESET_PASSWORD_URL', null),
 
     /*
     |--------------------------------------------------------------------------

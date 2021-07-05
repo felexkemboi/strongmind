@@ -14,6 +14,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Silber\Bouncer\Database\Role;
@@ -279,6 +280,33 @@ class UserController extends Controller
             } catch (Exception $ex) {
                 return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
+        }
+    }
+
+    /**
+     * Delete User
+     * @group Teams
+     * @param int $id
+     * @urlParam id integer required The ID of the user.Example:1
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function delete(int $id ): JsonResponse
+    {
+        $user = User::find($id);
+        if(!$user){
+            return $this->commonResponse(false,'User Not Found', '', Response::HTTP_NOT_FOUND);
+        }
+        try{
+            if(!$user->delete()){
+                return $this->commonResponse(false,'Failed To Delete User','',Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+            return $this->commonResponse(true,'User Deleted Successfully','', Response::HTTP_OK);
+        }catch (QueryException $exception){
+            return $this->commonResponse(false, $exception->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (Exception $exception){
+            Log::critical('Could not delete user. ERROR: '.$exception->getTraceAsString());
+            return $this->commonResponse(false, $exception->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 }
