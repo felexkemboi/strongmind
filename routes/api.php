@@ -60,6 +60,7 @@ Route::prefix('auth')->group(function () {
 Route::prefix('teams')->group(function () {
    Route::get('all', [UserController::class,'index'])->middleware('auth:sanctum');
    Route::get('show/{id}', [UserController::class,'showUser'])->middleware('auth:sanctum');
+   Route::put('update/{id}', [UserController::class,'updateUser'])->middleware('auth:sanctum');
    Route::post('invite', [InviteController::class,'invite'])->middleware('auth:sanctum');
    Route::post('set-password', [InviteController::class,'setPassword']);
 

@@ -26,8 +26,7 @@ class CountryController extends Controller
      */
     public function all(): JsonResponse
     {
-        $countries = Country::query()->select(['id', 'name', 'dialing_code','active'])
-            ->paginate(10);
+        $countries = Country::paginate(10);
         return $this->commonResponse(true, 'success', CountryResource::collection($countries)->response()->getData(true), Response::HTTP_OK);
     }
 
@@ -37,7 +36,7 @@ class CountryController extends Controller
      */
     public function activeCountries(): JsonResponse
     {
-        $countries = Country::query()->active()->select(['id', 'name', 'dialing_code','active'])->get();
+        $countries = Country::query()->active()->get();
         return $this->commonResponse(true, 'success', CountryResource::collection($countries), Response::HTTP_OK);
     }
     /**
