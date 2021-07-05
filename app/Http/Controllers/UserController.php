@@ -122,55 +122,120 @@ class UserController extends Controller
      * @group Auth
      * @param Request $request
      * @return JsonResponse
-     * @bodyParam  name string required Name
+     * @bodyParam  name string Name
      * @bodyParam  email string required Email Address
      * @bodyParam  phone_number string Phone Number
-     * @bodyParam  office_id integer required Office ID.Example:1
-     * @bodyParam  role_id integer required Role ID.Example:1
      * @bodyParam  timezone_id integer Timezone ID.Example:2
      * @bodyParam  gender string  Gender. Example:male
      * @bodyParam  region string  Region.Example:East Africa
      * @bodyParam  city string  City.Example:Nairobi
-     * @bodyParam  languages string  Languages.Example:English
+     * @bodyParam  languages string[] Languages.Example ["English","French"]
      * @authenticated
      */
     public function updateProfile(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'name' => 'nullable',
             'email' => 'required',
-            'office_id' => 'required',
             'phone_number' => 'nullable',
             'gender' => 'nullable',
-            'region' => 'required',
+            'region' => 'nullable',
             'city' => 'nullable',
-            'languages' => 'nullable',
+            'languages' => 'nullable|array',
             'timezone_id' => 'nullable',
-            'role_id' => 'required',
         ]);
         try {
             if ($validator->fails()) {
                 return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $data = $validator->validated();
-            $office = Office::find($data['office_id']);
-            $timezone = Timezone::find($data['timezone_id']);
-            $role = Role::firstwhere('id', $data['role_id']);
-            if (!$office) {
-                return $this->commonResponse(false, 'Office not found!', '', Response::HTTP_NOT_FOUND);
+            if ($request->has('timezone_id') && $request->filled('timezone_id')) {
+                $timezone = Timezone::find($request->timezone_id);
+                if (!$timezone) {
+                    return $this->commonResponse(false, 'Timezone not found!', '', Response::HTTP_NOT_FOUND);
+                }
             }
-            if (!$timezone) {
-                return $this->commonResponse(false, 'Timezone not found!', '', Response::HTTP_NOT_FOUND);
-            }
-            if (!$role) {
-                return $this->commonResponse(false, 'Role not found!', '', Response::HTTP_NOT_FOUND);
-            }
+           
+          
             auth()->user()->update($data);
             $user = auth()->user()->fresh();
-            //delete existing role
-            DB::table('assigned_roles')->where('entity_id', $user->id)
+            return $this->commonResponse(true, 'Profile updated successfully!', new UserResource($user), Response::HTTP_CREATED);
+        } catch (QueryException $ex) {
+            return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $ex) {
+            return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+    /**
+     * Update member details.
+     * @group Teams
+     * @param Request $request
+     * @param int $id
+     * @urlParam id integer required The User ID. Example:1
+     * @return JsonResponse
+     * @bodyParam  name string Name
+     * @bodyParam  email string required Email Address
+     * @bodyParam  phone_number string Phone Number
+     * @bodyParam  office_id integer Office ID.Example:1
+     * @bodyParam  role_id integer  Role ID.Example:1
+     * @bodyParam  timezone_id integer Timezone ID.Example:2
+     * @bodyParam  gender string  Gender. Example:male
+     * @bodyParam  region string  Region.Example:East Africa
+     * @bodyParam  city string  City.Example:Nairobi
+     * @bodyParam  languages string[] Languages.Example ["English","French"]
+     * @authenticated
+     */
+    public function updateUser(Request $request, $id): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable',
+            'email' => 'required',
+            'office_id' => 'nullable',
+            'phone_number' => 'nullable',
+            'gender' => 'nullable',
+            'region' => 'nullable',
+            'city' => 'nullable',
+            'languages' => 'nullable|array',
+            'timezone_id' => 'nullable',
+            'role_id' => 'nullable',
+        ]);
+        try {
+            if ($validator->fails()) {
+                return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+            $data = $validator->validated();
+            //Get user
+             $user=User::find($id);
+            if (!$user) {
+                return $this->commonResponse(false, 'User not found!', '', Response::HTTP_NOT_FOUND);
+            }
+            if ($request->has('timezone_id') && $request->filled('timezone_id')) {
+                $timezone = Timezone::find($request->timezone_id);
+                if (!$timezone) {
+                    return $this->commonResponse(false, 'Timezone not found!', '', Response::HTTP_NOT_FOUND);
+                }
+            }
+            if ($request->has('office_id') && $request->filled('office_id')) {
+                $office = Office::find($request->office_id);
+                if (!$office) {
+                    return $this->commonResponse(false, 'Office not found!', '', Response::HTTP_NOT_FOUND);
+                }
+            }
+           
+            $user->update($data);
+            $user->fresh();
+            if ($request->has('role_id') && $request->filled('role_id')) {
+                $role = Role::firstwhere('id', $data['role_id']);
+
+                if ($role) {
+                    //delete existing role
+                    DB::table('assigned_roles')->where('entity_id', $user->id)
                 ->delete();
-            $user->assign($role->name);
+                    $user->assign($role->name);
+                }
+            }
+
+         
             return $this->commonResponse(true, 'Profile updated successfully!', new UserResource($user), Response::HTTP_CREATED);
         } catch (QueryException $ex) {
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);

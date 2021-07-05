@@ -21,7 +21,9 @@ class CountrySeeder extends Seeder
             Country::create(array(
                 'name' => $obj->name,
                 'dialing_code' => $obj->phone_code,
-                'capital' => $obj->capital
+                'capital' => $obj->capital,
+                'country_code' => $obj->iso2,
+                'long_code' => $obj->iso3,
             ));
         }
     }
