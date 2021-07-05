@@ -29,13 +29,38 @@ class UserController extends Controller
     /**
      * All Users
      * @group Teams
+     * @queryParam name string Search by name. No-example
+     * @queryParam role integer Filter by role. 1
      * @return JsonResponse
      * @authenticated
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $users = User::query()->where('is_admin', '<>', 1)->paginate(10);
+        $users = User::query();
+        $name=$request->name;
+        $role=$request->role;
+        if ($request->has('name') && $request->filled('name')) {
+            $users->where('name', 'ilike', '%'.$name.'%');
+        }
+        if ($request->has('role') && $request->filled('role')) {
+            $users->whereIn('id', $this->getUserIds($role));
+        }
+
+        $users=$users->where('is_admin', '<>', 1)->paginate(10);
         return $this->commonResponse(true, 'success', UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
+    }
+    /**
+     * Get all user IDs in with a given role
+     */
+    private function getUserIds($roleId)
+    {
+        return DB::table('assigned_roles')
+                ->join('roles', 'roles.id', 'assigned_roles.role_id')
+                ->select('assigned_roles.entity_id as user_id')
+                ->where('assigned_roles.role_id', $roleId)
+                ->get()
+                ->pluck('user_id')
+            ?? [];
     }
 
     /**
@@ -54,7 +79,6 @@ class UserController extends Controller
         } else {
             return $this->commonResponse(false, 'User not found!', '', Response::HTTP_NOT_FOUND);
         }
-
     }
 
     /**
@@ -165,9 +189,11 @@ class UserController extends Controller
     public function setPhoto(Request $request): JsonResponse
     {
         $validator = Validator::make(
-            $request->all(), [
+            $request->all(),
+            [
             'profile_pic' => 'required|image',
-        ]);
+        ]
+        );
         if ($validator->fails()) {
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
@@ -189,6 +215,5 @@ class UserController extends Controller
                 return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         }
-
     }
 }
