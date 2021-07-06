@@ -51,6 +51,7 @@ Route::prefix('role')->group(function () {
 //Authentication
 Route::prefix('auth')->group(function () {
     Route::post('login', [LoginController::class,'loginUser']);
+    Route::post('/logout',[LoginController::class,'logout'])->middleware('auth:sanctum');
     Route::get('profile', [LoginController::class,'profile'])->middleware('auth:sanctum');
     Route::put('profile/update', [UserController::class,'updateProfile'])->middleware('auth:sanctum');
     Route::put('change-password', [UserController::class,'changePassword'])->middleware('auth:sanctum');
