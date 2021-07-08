@@ -32,6 +32,7 @@ class UserController extends Controller
      * @group Teams
      * @queryParam name string Search by name. No-example
      * @queryParam role integer Filter by role. 1
+     * @queryParam sort string Filter either by desc or asc order
      * @return JsonResponse
      * @authenticated
      */
@@ -40,14 +41,24 @@ class UserController extends Controller
         $users = User::query();
         $name=$request->name;
         $role=$request->role;
+        $sort = $request->sort;
+        $sort_params = ['desc','asc'];
         if ($request->has('name') && $request->filled('name')) {
-            $users->where('name', 'ilike', '%'.$name.'%');
+            $users = $users->where('name', 'ilike', '%'.$name.'%');
         }
         if ($request->has('role') && $request->filled('role')) {
-            $users->whereIn('id', $this->getUserIds($role));
+            $users = $users->whereIn('id', $this->getUserIds($role));
         }
-
+        if($request->has('sort') &&  $request->filled('sort')){
+           if(!$this->sort_array($sort, $sort_params)){
+                return $this->commonResponse(false,'Invalid Sort Parameter','',Response::HTTP_UNPROCESSABLE_ENTITY);
+           }
+            $users = $users->orderBy('id',$sort);
+        }
         $users=$users->where('is_admin', '<>', 1)->paginate(10);
+        if($users->isEmpty()){
+            return $this->commonResponse(false,'Users Not Found','',Response::HTTP_NOT_FOUND);
+        }
         return $this->commonResponse(true, 'success', UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
     }
     /**
@@ -155,8 +166,8 @@ class UserController extends Controller
                     return $this->commonResponse(false, 'Timezone not found!', '', Response::HTTP_NOT_FOUND);
                 }
             }
-           
-          
+
+
             auth()->user()->update($data);
             $user = auth()->user()->fresh();
             return $this->commonResponse(true, 'Profile updated successfully!', new UserResource($user), Response::HTTP_CREATED);
@@ -221,7 +232,7 @@ class UserController extends Controller
                     return $this->commonResponse(false, 'Office not found!', '', Response::HTTP_NOT_FOUND);
                 }
             }
-           
+
             $user->update($data);
             $user->fresh();
             if ($request->has('role_id') && $request->filled('role_id')) {
@@ -235,7 +246,7 @@ class UserController extends Controller
                 }
             }
 
-         
+
             return $this->commonResponse(true, 'Profile updated successfully!', new UserResource($user), Response::HTTP_CREATED);
         } catch (QueryException $ex) {
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -308,5 +319,15 @@ class UserController extends Controller
             Log::critical('Could not delete user. ERROR: '.$exception->getTraceAsString());
             return $this->commonResponse(false, $exception->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+    }
+
+    /**
+     * case in-sensitive in_array for the sort parameters(desc, asc)
+     * @param $needle
+     * @param $haystack
+     * @return bool
+     */
+    private function sort_array($needle, $haystack){
+        return in_array(strtolower($needle), array_map('strtolower', $haystack), true);
     }
 }
