@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -86,7 +87,7 @@ class LoginController extends Controller
                 return $this->commonResponse(true,'Logout Successful','',Response::HTTP_OK);
             }
             return $this->commonResponse(true,'Failed to logout','',Response::HTTP_UNPROCESSABLE_ENTITY);
-        }catch (\Exception $exception){
+        }catch (Exception $exception){
             Log::critical('Something went wrong performing the logout action. ERROR '.$exception->getTraceAsString());
             return $this->commonResponse(false, $exception->getMessage(), '', Response::HTTP_INTERNAL_SERVER_ERROR);
         }

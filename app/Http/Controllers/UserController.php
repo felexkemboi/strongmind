@@ -32,6 +32,7 @@ class UserController extends Controller
      * @group Teams
      * @queryParam name string Search by name. No-example
      * @queryParam role integer Filter by role. 1
+     * @param Request $request
      * @queryParam sort string Filter either by desc or asc order
      * @return JsonResponse
      * @authenticated
@@ -39,9 +40,9 @@ class UserController extends Controller
     public function index(Request $request): JsonResponse
     {
         $users = User::query();
-        $name=$request->name;
-        $role=$request->role;
-        $sort = $request->sort;
+        $name=$request->get('name');
+        $role=$request->get('role');
+        $sort = $request->get('sort');
         $sort_params = ['desc','asc'];
         if ($request->has('name') && $request->filled('name')) {
             $users = $users->where('name', 'ilike', '%'.$name.'%');
