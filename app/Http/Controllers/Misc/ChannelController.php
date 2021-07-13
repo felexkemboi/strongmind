@@ -9,7 +9,6 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -78,7 +77,7 @@ class ChannelController extends Controller
      * @bodyParam  name string required Channel Name.
      * @authenticated
      */
-    public function update(Request $request,$id): JsonResponse
+    public function update(Request $request, $id): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -91,7 +90,7 @@ class ChannelController extends Controller
                 if (!$channel) {
                     return $this->commonResponse(false, 'Channel not found!', '', Response::HTTP_NOT_FOUND);
                 } else {
-                    $slug=Str::slug($request->get('name'));
+                    $slug = Str::slug($request->get('name'));
                     $channel->update([
                         'name' => $request->get('name'),
                         'slug' => $slug,
@@ -108,12 +107,20 @@ class ChannelController extends Controller
     }
 
     /**
-     * Delete Channel
+     * Delete Channel by Id
+     * @param int $id
+     * @urlParam id integer required The ID of the channel. Example:1
      * @return JsonResponse
      * @authenticated
      */
-    public function delete()
+    public function delete(int $id): JsonResponse
     {
-
+        $record = Channel::find($id);
+        if ($record) {
+            $record->delete();
+            return $this->commonResponse(true, 'Record deleted!', '', Response::HTTP_OK);
+        } else {
+            return $this->commonResponse(false, 'Record not found!', '', Response::HTTP_NOT_FOUND);
+        }
     }
 }

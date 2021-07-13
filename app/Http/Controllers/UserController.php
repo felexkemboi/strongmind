@@ -31,6 +31,7 @@ class UserController extends Controller
      * @group Teams
      * @queryParam name string Search by name. No-example
      * @queryParam role integer Filter by role. 1
+     * @param Request $request
      * @return JsonResponse
      * @authenticated
      */
@@ -154,8 +155,8 @@ class UserController extends Controller
                     return $this->commonResponse(false, 'Timezone not found!', '', Response::HTTP_NOT_FOUND);
                 }
             }
-           
-          
+
+
             auth()->user()->update($data);
             $user = auth()->user()->fresh();
             return $this->commonResponse(true, 'Profile updated successfully!', new UserResource($user), Response::HTTP_CREATED);
@@ -220,7 +221,7 @@ class UserController extends Controller
                     return $this->commonResponse(false, 'Office not found!', '', Response::HTTP_NOT_FOUND);
                 }
             }
-           
+
             $user->update($data);
             $user->fresh();
             if ($request->has('role_id') && $request->filled('role_id')) {
@@ -234,7 +235,7 @@ class UserController extends Controller
                 }
             }
 
-         
+
             return $this->commonResponse(true, 'Profile updated successfully!', new UserResource($user), Response::HTTP_CREATED);
         } catch (QueryException $ex) {
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);

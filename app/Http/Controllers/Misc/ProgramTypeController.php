@@ -105,8 +105,21 @@ class ProgramTypeController extends Controller
         }
     }
 
-    public function delete()
+    /**
+     * Delete ProgramType by Id
+     * @param int $id
+     * @urlParam id integer required The ID of the ProgramType. Example:1
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function delete(int $id): JsonResponse
     {
-
+        $record = ProgramType::find($id);
+        if ($record) {
+            $record->delete();
+            return $this->commonResponse(true, 'Record deleted!', '', Response::HTTP_OK);
+        } else {
+            return $this->commonResponse(false, 'Record not found!', '', Response::HTTP_NOT_FOUND);
+        }
     }
 }

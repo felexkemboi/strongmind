@@ -67,37 +67,34 @@ Route::prefix('teams')->group(function () {
     Route::put('update/{id}', [UserController::class, 'updateUser'])->middleware('auth:sanctum');
     Route::post('invite', [InviteController::class, 'invite'])->middleware('auth:sanctum');
     Route::post('set-password', [InviteController::class, 'setPassword']);
-
 });
 //status
 Route::prefix('status')->group(function () {
     Route::get('all', [StatusController::class, 'index'])->middleware('auth:sanctum');
     Route::post('create', [StatusController::class, 'create'])->middleware('auth:sanctum');
     Route::put('update/{id}', [StatusController::class, 'update'])->middleware('auth:sanctum');
-
-
+    Route::delete('delete/{id}', [StatusController::class, 'delete'])->middleware('auth:sanctum');
 });
 //channels
 Route::prefix('channels')->group(function () {
     Route::get('all', [ChannelController::class, 'index'])->middleware('auth:sanctum');
     Route::post('create', [ChannelController::class, 'create'])->middleware('auth:sanctum');
     Route::put('update/{id}', [ChannelController::class, 'update'])->middleware('auth:sanctum');
+    Route::delete('delete/{id}', [ChannelController::class, 'delete'])->middleware('auth:sanctum');
 });
 //group types
 Route::prefix('group-types')->group(function () {
     Route::get('all', [GroupTypeController::class, 'index'])->middleware('auth:sanctum');
     Route::post('create', [GroupTypeController::class, 'create'])->middleware('auth:sanctum');
     Route::put('update/{id}', [GroupTypeController::class, 'update'])->middleware('auth:sanctum');
-
-
+    Route::delete('delete/{id}', [GroupTypeController::class, 'delete'])->middleware('auth:sanctum');
 });
 //program types
 Route::prefix('program-types')->group(function () {
     Route::get('all', [ProgramTypeController::class, 'index'])->middleware('auth:sanctum');
     Route::post('create', [ProgramTypeController::class, 'create'])->middleware('auth:sanctum');
     Route::put('update/{id}', [ProgramTypeController::class, 'update'])->middleware('auth:sanctum');
-
-
+    Route::delete('delete/{id}', [ProgramTypeController::class, 'delete'])->middleware('auth:sanctum');
 });
 
 

@@ -101,13 +101,12 @@ class OfficeController extends Controller
 
     /**
      * List All Office Users
-     * @param Request $request
      * @param $id
      * @urlParam id integer required Office ID . Example:1
      * @return JsonResponse
      * @authenticated
      */
-    public function members( Request $request, $id): JsonResponse
+    public function members($id): JsonResponse
     {
         try{
             $office = Office::find($id);
@@ -127,6 +126,6 @@ class OfficeController extends Controller
         catch(Exception $exception){
             Log::critical('Something went wrong fetching office users. ERROR: '.$exception->getTraceAsString());
             return $this->commonResponse(false, $exception->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }   
+        }
     }
 }
