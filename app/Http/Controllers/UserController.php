@@ -14,6 +14,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Silber\Bouncer\Database\Role;
@@ -32,6 +33,7 @@ class UserController extends Controller
      * @queryParam name string Search by name. No-example
      * @queryParam role integer Filter by role. 1
      * @param Request $request
+     * @queryParam sort string Filter either by desc or asc order
      * @return JsonResponse
      * @authenticated
      */
@@ -40,14 +42,24 @@ class UserController extends Controller
         $users = User::query();
         $name=$request->name;
         $role=$request->role;
+        $sort = $request->sort;
+        $sort_params = ['desc','asc'];
         if ($request->has('name') && $request->filled('name')) {
-            $users->where('name', 'ilike', '%'.$name.'%');
+            $users = $users->where('name', 'ilike', '%'.$name.'%');
         }
         if ($request->has('role') && $request->filled('role')) {
-            $users->whereIn('id', $this->getUserIds($role));
+            $users = $users->whereIn('id', $this->getUserIds($role));
         }
-
+        if($request->has('sort') &&  $request->filled('sort')){
+           if(!$this->sort_array($sort, $sort_params)){
+                return $this->commonResponse(false,'Invalid Sort Parameter','',Response::HTTP_UNPROCESSABLE_ENTITY);
+           }
+            $users = $users->orderBy('id',$sort);
+        }
         $users=$users->where('is_admin', '<>', 1)->paginate(10);
+        if($users->isEmpty()){
+            return $this->commonResponse(false,'Users Not Found','',Response::HTTP_NOT_FOUND);
+        }
         return $this->commonResponse(true, 'success', UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
     }
     /**
@@ -281,5 +293,42 @@ class UserController extends Controller
                 return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         }
+    }
+
+    /**
+     * Delete User
+     * @group Teams
+     * @param int $id
+     * @urlParam id integer required The ID of the user.Example:1
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function delete(int $id ): JsonResponse
+    {
+        $user = User::find($id);
+        if(!$user){
+            return $this->commonResponse(false,'User Not Found', '', Response::HTTP_NOT_FOUND);
+        }
+        try{
+            if(!$user->delete()){
+                return $this->commonResponse(false,'Failed To Delete User','',Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+            return $this->commonResponse(true,'User Deleted Successfully','', Response::HTTP_OK);
+        }catch (QueryException $exception){
+            return $this->commonResponse(false, $exception->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (Exception $exception){
+            Log::critical('Could not delete user. ERROR: '.$exception->getTraceAsString());
+            return $this->commonResponse(false, $exception->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    /**
+     * case in-sensitive in_array for the sort parameters(desc, asc)
+     * @param $needle
+     * @param $haystack
+     * @return bool
+     */
+    private function sort_array($needle, $haystack){
+        return in_array(strtolower($needle), array_map('strtolower', $haystack), true);
     }
 }

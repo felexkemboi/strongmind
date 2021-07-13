@@ -13,7 +13,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TimezoneController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ResetPasswordController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -81,6 +81,28 @@ Route::prefix('channels')->group(function () {
     Route::post('create', [ChannelController::class, 'create'])->middleware('auth:sanctum');
     Route::put('update/{id}', [ChannelController::class, 'update'])->middleware('auth:sanctum');
     Route::delete('delete/{id}', [ChannelController::class, 'delete'])->middleware('auth:sanctum');
+=======
+    Route::post('login', [LoginController::class,'loginUser']);
+    Route::post('/logout',[LoginController::class,'logout'])->middleware('auth:sanctum');
+    Route::get('profile', [LoginController::class,'profile'])->middleware('auth:sanctum');
+    Route::put('profile/update', [UserController::class,'updateProfile'])->middleware('auth:sanctum');
+    Route::put('change-password', [UserController::class,'changePassword'])->middleware('auth:sanctum');
+    Route::post('profile/set-photo', [UserController::class,'setPhoto'])->middleware('auth:sanctum');
+    //password resets
+    Route::group(['prefix' => 'passwords'], function(){
+        Route::post('/reset-link',[ResetPasswordController::class,'index']);
+        Route::post('/reset',[ResetPasswordController::class,'reset']);
+    });
+});
+//teams
+Route::prefix('teams')->group(function () {
+   Route::get('all', [UserController::class,'index'])->middleware('auth:sanctum');
+   Route::get('show/{id}', [UserController::class,'showUser'])->middleware('auth:sanctum');
+   Route::put('update/{id}', [UserController::class,'updateUser'])->middleware('auth:sanctum');
+   Route::delete('{id}/delete',[UserController::class,'delete'])->middleware('auth:sanctum');
+   Route::post('invite', [InviteController::class,'invite'])->middleware('auth:sanctum');
+   Route::post('set-password', [InviteController::class,'setPassword']);
+
 });
 //group types
 Route::prefix('group-types')->group(function () {

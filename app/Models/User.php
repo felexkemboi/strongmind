@@ -12,7 +12,8 @@ use Silber\Bouncer\Database\HasRolesAndAbilities;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRolesAndAbilities;
-
+    public const INVITE_ACCEPTED = 1;
+    public const INVITE_NOT_ACCEPTED = 0;
     /**
      * The attributes that are mass assignable.
      *

@@ -30,8 +30,8 @@ class OfficeController extends Controller
     public function all(): JsonResponse
     {
         $offices = Office::query()->latest()
-            ->paginate(10);
-        return $this->commonResponse(true, 'success', OfficeResource::collection($offices)->response()->getData(true), Response::HTTP_OK);
+            ->get();
+        return $this->commonResponse(true, 'success', OfficeResource::collection($offices), Response::HTTP_OK);
     }
 
     /**
@@ -113,11 +113,11 @@ class OfficeController extends Controller
             if(!$office){
                 return $this->commonResponse(false,'Office Not Found','',Response::HTTP_NOT_FOUND);
             }else{
-                $users = User::with('office','timezone')->where('office_id',$office->id)->get();
+                $users = User::with('office','timezone')->where('office_id',$office->id)->paginate(10);
                 if($users->isEmpty()){
                     return $this->commonResponse(false,'Office Users Not Found','',Response::HTTP_NOT_FOUND);
                 }else{
-                    return $this->commonResponse(true,'Success',UserResource::collection($users), Response::HTTP_OK);
+                    return $this->commonResponse(true,'Success',UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
                 }
             }
         }catch(QueryException $exception){
