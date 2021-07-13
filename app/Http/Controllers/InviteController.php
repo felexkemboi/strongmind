@@ -37,7 +37,7 @@ class InviteController extends Controller
     public function invite(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:users',
+            'email.*' => 'required|email|unique:users',
             'role_id' => 'required',
             'office_id' => 'required',
         ]);
@@ -46,15 +46,16 @@ class InviteController extends Controller
         }
 
         try {
-            $email = $request->email;
+            $email = explode(',',$request->email);
             $invite_token = hash('sha256', utf8_encode(Str::uuid()));
             $role = Role::find($request->role_id);
             //if multiple emails are submitted
-            if(count(array($email)) > 1)
+            if(count($email) > 1)
             {
                 $this->sendMultipleInvites($request);
             }else{
                 //Create user for a single email invite
+                $email = $request->email;
                 $user = User::create(
                     [
                         'email' => $email,
@@ -144,7 +145,7 @@ class InviteController extends Controller
      */
     private function sendMultipleInvites(Request $request): void
     {
-        $email = $request->email;
+        $email = explode(',',$request->email);
         $role = Role::find($request->role_id);
         $client = new PostmarkClient(config('postmark.token'));
         foreach($email as $member)
