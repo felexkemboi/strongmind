@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -69,6 +71,26 @@ class LoginController extends Controller
     {
         $user = Auth::user();
         return $this->commonResponse(true, 'success', new UserResource($user), Response::HTTP_OK);
+    }
+
+    /**
+     * Logout User
+     * @group Auth
+     * @param Request $request
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function logout( Request $request): JsonResponse
+    {
+        try{
+            if($request->user()->tokens()->delete()){
+                return $this->commonResponse(true,'Logout Successful','',Response::HTTP_OK);
+            }
+            return $this->commonResponse(true,'Failed to logout','',Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (Exception $exception){
+            Log::critical('Something went wrong performing the logout action. ERROR '.$exception->getTraceAsString());
+            return $this->commonResponse(false, $exception->getMessage(), '', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

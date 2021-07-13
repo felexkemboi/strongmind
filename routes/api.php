@@ -9,6 +9,7 @@ use App\Http\Controllers\Misc\ProgramTypeController;
 use App\Http\Controllers\Misc\StatusController;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TimezoneController;
 use App\Http\Controllers\UserController;
@@ -59,12 +60,18 @@ Route::prefix('auth')->group(function () {
     Route::put('profile/update', [UserController::class, 'updateProfile'])->middleware('auth:sanctum');
     Route::put('change-password', [UserController::class, 'changePassword'])->middleware('auth:sanctum');
     Route::post('profile/set-photo', [UserController::class, 'setPhoto'])->middleware('auth:sanctum');
+    //password resets
+    Route::group(['prefix' => 'passwords'], function () {
+        Route::post('/reset-link', [ResetPasswordController::class, 'index']);
+        Route::post('/reset', [ResetPasswordController::class, 'reset']);
+    });
 });
 //teams
 Route::prefix('teams')->group(function () {
     Route::get('all', [UserController::class, 'index'])->middleware('auth:sanctum');
     Route::get('show/{id}', [UserController::class, 'showUser'])->middleware('auth:sanctum');
     Route::put('update/{id}', [UserController::class, 'updateUser'])->middleware('auth:sanctum');
+    Route::delete('{id}/delete',[UserController::class,'delete'])->middleware('auth:sanctum');
     Route::post('invite', [InviteController::class, 'invite'])->middleware('auth:sanctum');
     Route::post('set-password', [InviteController::class, 'setPassword']);
 });
