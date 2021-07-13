@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Office extends Model
 {
-    protected $guarded=[];
+    protected $guarded = [];
+
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'country_id');

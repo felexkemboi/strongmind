@@ -64,6 +64,7 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Office::class, 'office_id');
     }
+
     public function timezone(): BelongsTo
     {
         return $this->belongsTo(Timezone::class, 'timezone_id');
