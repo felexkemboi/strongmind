@@ -102,7 +102,7 @@ curl -X POST \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"name":"impedit"}'
+    -d '{"name":"dolorum"}'
 
 ```
 
@@ -119,7 +119,7 @@ let headers = {
 };
 
 let body = {
-    "name": "impedit"
+    "name": "dolorum"
 }
 
 fetch(url, {
@@ -141,7 +141,7 @@ $response = $client->post(
             'Access-Control-Allow-Origin' => '*',
         ],
         'json' => [
-            'name' => 'impedit',
+            'name' => 'dolorum',
         ],
     ]
 );
@@ -178,6 +178,109 @@ print_r(json_decode((string) $body));
 <input type="text" name="name" data-endpoint="POSTapi-status-create" data-component="body" required  hidden>
 <br>
 Status Name
+</p>
+
+</form>
+
+
+## Update Status
+
+<small class="badge badge-darkred">requires authentication</small>
+
+
+
+> Example request:
+
+```bash
+curl -X PUT \
+    "http://localhost:8000/api/status/update/1" \
+    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Access-Control-Allow-Origin: *" \
+    -d '{"name":"voluptatem"}'
+
+```
+
+```javascript
+const url = new URL(
+    "http://localhost:8000/api/status/update/1"
+);
+
+let headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+};
+
+let body = {
+    "name": "voluptatem"
+}
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response => response.json());
+```
+
+```php
+
+$client = new \GuzzleHttp\Client();
+$response = $client->put(
+    'http://localhost:8000/api/status/update/1',
+    [
+        'headers' => [
+            'Authorization' => 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' => 'application/json',
+            'Access-Control-Allow-Origin' => '*',
+        ],
+        'json' => [
+            'name' => 'voluptatem',
+        ],
+    ]
+);
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+
+<div id="execution-results-PUTapi-status-update--id-" hidden>
+    <blockquote>Received response<span id="execution-response-status-PUTapi-status-update--id-"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-status-update--id-"></code></pre>
+</div>
+<div id="execution-error-PUTapi-status-update--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-status-update--id-"></code></pre>
+</div>
+<form id="form-PUTapi-status-update--id-" data-method="PUT" data-path="api/status/update/{id}" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json","Access-Control-Allow-Origin":"*"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-status-update--id-', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-PUTapi-status-update--id-" onclick="tryItOut('PUTapi-status-update--id-');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-PUTapi-status-update--id-" onclick="cancelTryOut('PUTapi-status-update--id-');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-PUTapi-status-update--id-" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-darkblue">PUT</small>
+ <b><code>api/status/update/{id}</code></b>
+</p>
+<p>
+<label id="auth-PUTapi-status-update--id-" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="PUTapi-status-update--id-" data-component="header"></label>
+</p>
+<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+<p>
+<b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<input type="number" name="id" data-endpoint="PUTapi-status-update--id-" data-component="url" required  hidden>
+<br>
+The ID of the status.
+</p>
+<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+<p>
+<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="name" data-endpoint="PUTapi-status-update--id-" data-component="body" required  hidden>
+<br>
+Status Name.
 </p>
 
 </form>
@@ -284,7 +387,7 @@ curl -X POST \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"name":"non"}'
+    -d '{"name":"rerum"}'
 
 ```
 
@@ -301,7 +404,7 @@ let headers = {
 };
 
 let body = {
-    "name": "non"
+    "name": "rerum"
 }
 
 fetch(url, {
@@ -323,7 +426,7 @@ $response = $client->post(
             'Access-Control-Allow-Origin' => '*',
         ],
         'json' => [
-            'name' => 'non',
+            'name' => 'rerum',
         ],
     ]
 );
@@ -360,6 +463,109 @@ print_r(json_decode((string) $body));
 <input type="text" name="name" data-endpoint="POSTapi-channels-create" data-component="body" required  hidden>
 <br>
 Channel Name.Example web channel
+</p>
+
+</form>
+
+
+## Update Channel
+
+<small class="badge badge-darkred">requires authentication</small>
+
+
+
+> Example request:
+
+```bash
+curl -X PUT \
+    "http://localhost:8000/api/channels/update/1" \
+    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Access-Control-Allow-Origin: *" \
+    -d '{"name":"ut"}'
+
+```
+
+```javascript
+const url = new URL(
+    "http://localhost:8000/api/channels/update/1"
+);
+
+let headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+};
+
+let body = {
+    "name": "ut"
+}
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response => response.json());
+```
+
+```php
+
+$client = new \GuzzleHttp\Client();
+$response = $client->put(
+    'http://localhost:8000/api/channels/update/1',
+    [
+        'headers' => [
+            'Authorization' => 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' => 'application/json',
+            'Access-Control-Allow-Origin' => '*',
+        ],
+        'json' => [
+            'name' => 'ut',
+        ],
+    ]
+);
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+
+<div id="execution-results-PUTapi-channels-update--id-" hidden>
+    <blockquote>Received response<span id="execution-response-status-PUTapi-channels-update--id-"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-channels-update--id-"></code></pre>
+</div>
+<div id="execution-error-PUTapi-channels-update--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-channels-update--id-"></code></pre>
+</div>
+<form id="form-PUTapi-channels-update--id-" data-method="PUT" data-path="api/channels/update/{id}" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json","Access-Control-Allow-Origin":"*"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-channels-update--id-', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-PUTapi-channels-update--id-" onclick="tryItOut('PUTapi-channels-update--id-');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-PUTapi-channels-update--id-" onclick="cancelTryOut('PUTapi-channels-update--id-');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-PUTapi-channels-update--id-" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-darkblue">PUT</small>
+ <b><code>api/channels/update/{id}</code></b>
+</p>
+<p>
+<label id="auth-PUTapi-channels-update--id-" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="PUTapi-channels-update--id-" data-component="header"></label>
+</p>
+<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+<p>
+<b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<input type="number" name="id" data-endpoint="PUTapi-channels-update--id-" data-component="url" required  hidden>
+<br>
+The ID of the channel.
+</p>
+<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+<p>
+<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="name" data-endpoint="PUTapi-channels-update--id-" data-component="body" required  hidden>
+<br>
+Channel Name.
 </p>
 
 </form>
@@ -466,7 +672,7 @@ curl -X POST \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"name":"debitis"}'
+    -d '{"name":"culpa"}'
 
 ```
 
@@ -483,7 +689,7 @@ let headers = {
 };
 
 let body = {
-    "name": "debitis"
+    "name": "culpa"
 }
 
 fetch(url, {
@@ -505,7 +711,7 @@ $response = $client->post(
             'Access-Control-Allow-Origin' => '*',
         ],
         'json' => [
-            'name' => 'debitis',
+            'name' => 'culpa',
         ],
     ]
 );
@@ -542,6 +748,109 @@ print_r(json_decode((string) $body));
 <input type="text" name="name" data-endpoint="POSTapi-group-types-create" data-component="body" required  hidden>
 <br>
 GroupType Name
+</p>
+
+</form>
+
+
+## Update Group Type
+
+<small class="badge badge-darkred">requires authentication</small>
+
+
+
+> Example request:
+
+```bash
+curl -X PUT \
+    "http://localhost:8000/api/group-types/update/1" \
+    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Access-Control-Allow-Origin: *" \
+    -d '{"name":"fugit"}'
+
+```
+
+```javascript
+const url = new URL(
+    "http://localhost:8000/api/group-types/update/1"
+);
+
+let headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+};
+
+let body = {
+    "name": "fugit"
+}
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response => response.json());
+```
+
+```php
+
+$client = new \GuzzleHttp\Client();
+$response = $client->put(
+    'http://localhost:8000/api/group-types/update/1',
+    [
+        'headers' => [
+            'Authorization' => 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' => 'application/json',
+            'Access-Control-Allow-Origin' => '*',
+        ],
+        'json' => [
+            'name' => 'fugit',
+        ],
+    ]
+);
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+
+<div id="execution-results-PUTapi-group-types-update--id-" hidden>
+    <blockquote>Received response<span id="execution-response-status-PUTapi-group-types-update--id-"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-group-types-update--id-"></code></pre>
+</div>
+<div id="execution-error-PUTapi-group-types-update--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-group-types-update--id-"></code></pre>
+</div>
+<form id="form-PUTapi-group-types-update--id-" data-method="PUT" data-path="api/group-types/update/{id}" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json","Access-Control-Allow-Origin":"*"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-group-types-update--id-', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-PUTapi-group-types-update--id-" onclick="tryItOut('PUTapi-group-types-update--id-');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-PUTapi-group-types-update--id-" onclick="cancelTryOut('PUTapi-group-types-update--id-');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-PUTapi-group-types-update--id-" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-darkblue">PUT</small>
+ <b><code>api/group-types/update/{id}</code></b>
+</p>
+<p>
+<label id="auth-PUTapi-group-types-update--id-" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="PUTapi-group-types-update--id-" data-component="header"></label>
+</p>
+<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+<p>
+<b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<input type="number" name="id" data-endpoint="PUTapi-group-types-update--id-" data-component="url" required  hidden>
+<br>
+The ID of the group type.
+</p>
+<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+<p>
+<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="name" data-endpoint="PUTapi-group-types-update--id-" data-component="body" required  hidden>
+<br>
+GroupType Name.
 </p>
 
 </form>
@@ -648,7 +957,7 @@ curl -X POST \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"name":"laboriosam"}'
+    -d '{"name":"nemo"}'
 
 ```
 
@@ -665,7 +974,7 @@ let headers = {
 };
 
 let body = {
-    "name": "laboriosam"
+    "name": "nemo"
 }
 
 fetch(url, {
@@ -687,7 +996,7 @@ $response = $client->post(
             'Access-Control-Allow-Origin' => '*',
         ],
         'json' => [
-            'name' => 'laboriosam',
+            'name' => 'nemo',
         ],
     ]
 );
@@ -724,6 +1033,109 @@ print_r(json_decode((string) $body));
 <input type="text" name="name" data-endpoint="POSTapi-program-types-create" data-component="body" required  hidden>
 <br>
 ProgramType Name
+</p>
+
+</form>
+
+
+## Update Program Type
+
+<small class="badge badge-darkred">requires authentication</small>
+
+
+
+> Example request:
+
+```bash
+curl -X PUT \
+    "http://localhost:8000/api/program-types/update/1" \
+    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Access-Control-Allow-Origin: *" \
+    -d '{"name":"iure"}'
+
+```
+
+```javascript
+const url = new URL(
+    "http://localhost:8000/api/program-types/update/1"
+);
+
+let headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+};
+
+let body = {
+    "name": "iure"
+}
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response => response.json());
+```
+
+```php
+
+$client = new \GuzzleHttp\Client();
+$response = $client->put(
+    'http://localhost:8000/api/program-types/update/1',
+    [
+        'headers' => [
+            'Authorization' => 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' => 'application/json',
+            'Access-Control-Allow-Origin' => '*',
+        ],
+        'json' => [
+            'name' => 'iure',
+        ],
+    ]
+);
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+
+<div id="execution-results-PUTapi-program-types-update--id-" hidden>
+    <blockquote>Received response<span id="execution-response-status-PUTapi-program-types-update--id-"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-program-types-update--id-"></code></pre>
+</div>
+<div id="execution-error-PUTapi-program-types-update--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-program-types-update--id-"></code></pre>
+</div>
+<form id="form-PUTapi-program-types-update--id-" data-method="PUT" data-path="api/program-types/update/{id}" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json","Access-Control-Allow-Origin":"*"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-program-types-update--id-', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-PUTapi-program-types-update--id-" onclick="tryItOut('PUTapi-program-types-update--id-');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-PUTapi-program-types-update--id-" onclick="cancelTryOut('PUTapi-program-types-update--id-');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-PUTapi-program-types-update--id-" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-darkblue">PUT</small>
+ <b><code>api/program-types/update/{id}</code></b>
+</p>
+<p>
+<label id="auth-PUTapi-program-types-update--id-" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="PUTapi-program-types-update--id-" data-component="header"></label>
+</p>
+<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+<p>
+<b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<input type="number" name="id" data-endpoint="PUTapi-program-types-update--id-" data-component="url" required  hidden>
+<br>
+The ID of the program type.
+</p>
+<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+<p>
+<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="name" data-endpoint="PUTapi-program-types-update--id-" data-component="body" required  hidden>
+<br>
+ProgramType Name.
 </p>
 
 </form>

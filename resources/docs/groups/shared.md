@@ -2330,7 +2330,7 @@ curl -X PUT \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"country_id":13}'
+    -d '{"country_id":17}'
 
 ```
 
@@ -2347,7 +2347,7 @@ let headers = {
 };
 
 let body = {
-    "country_id": 13
+    "country_id": 17
 }
 
 fetch(url, {
@@ -2369,7 +2369,7 @@ $response = $client->put(
             'Access-Control-Allow-Origin' => '*',
         ],
         'json' => [
-            'country_id' => 13,
+            'country_id' => 17,
         ],
     ]
 );

@@ -281,7 +281,7 @@ curl -X POST \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"name":"qui","role_code":"dolores","description":"aut","access_permissions":[8,6]}'
+    -d '{"name":"hic","role_code":"fugiat","description":"similique","access_permissions":[7,14]}'
 
 ```
 
@@ -298,12 +298,12 @@ let headers = {
 };
 
 let body = {
-    "name": "qui",
-    "role_code": "dolores",
-    "description": "aut",
+    "name": "hic",
+    "role_code": "fugiat",
+    "description": "similique",
     "access_permissions": [
-        8,
-        6
+        7,
+        14
     ]
 }
 
@@ -326,12 +326,12 @@ $response = $client->post(
             'Access-Control-Allow-Origin' => '*',
         ],
         'json' => [
-            'name' => 'qui',
-            'role_code' => 'dolores',
-            'description' => 'aut',
+            'name' => 'hic',
+            'role_code' => 'fugiat',
+            'description' => 'similique',
             'access_permissions' => [
-                8,
-                6,
+                7,
+                14,
             ],
         ],
     ]
@@ -408,7 +408,7 @@ curl -X PUT \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"name":"et","role_code":"dicta","description":"est","access_permissions":[5,10]}'
+    -d '{"name":"distinctio","role_code":"nisi","description":"sit","access_permissions":[1,2]}'
 
 ```
 
@@ -425,12 +425,12 @@ let headers = {
 };
 
 let body = {
-    "name": "et",
-    "role_code": "dicta",
-    "description": "est",
+    "name": "distinctio",
+    "role_code": "nisi",
+    "description": "sit",
     "access_permissions": [
-        5,
-        10
+        1,
+        2
     ]
 }
 
@@ -453,12 +453,12 @@ $response = $client->put(
             'Access-Control-Allow-Origin' => '*',
         ],
         'json' => [
-            'name' => 'et',
-            'role_code' => 'dicta',
-            'description' => 'est',
+            'name' => 'distinctio',
+            'role_code' => 'nisi',
+            'description' => 'sit',
             'access_permissions' => [
-                5,
-                10,
+                1,
+                2,
             ],
         ],
     ]
@@ -626,7 +626,7 @@ curl -X POST \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"email":"ducimus","password":"aut"}'
+    -d '{"email":"aut","password":"voluptatem"}'
 
 ```
 
@@ -642,8 +642,8 @@ let headers = {
 };
 
 let body = {
-    "email": "ducimus",
-    "password": "aut"
+    "email": "aut",
+    "password": "voluptatem"
 }
 
 fetch(url, {
@@ -664,8 +664,8 @@ $response = $client->post(
             'Access-Control-Allow-Origin' => '*',
         ],
         'json' => [
-            'email' => 'ducimus',
-            'password' => 'aut',
+            'email' => 'aut',
+            'password' => 'voluptatem',
         ],
     ]
 );
@@ -811,7 +811,7 @@ curl -X PUT \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"name":"sequi","email":"cum","phone_number":"dolores","timezone_id":2,"gender":"male","region":"East Africa","city":"Nairobi","languages":["aspernatur","voluptatem"]}'
+    -d '{"name":"tenetur","email":"quas","phone_number":"sunt","timezone_id":2,"gender":"male","region":"East Africa","city":"Nairobi","languages":["sit","iusto"]}'
 
 ```
 
@@ -828,16 +828,16 @@ let headers = {
 };
 
 let body = {
-    "name": "sequi",
-    "email": "cum",
-    "phone_number": "dolores",
+    "name": "tenetur",
+    "email": "quas",
+    "phone_number": "sunt",
     "timezone_id": 2,
     "gender": "male",
     "region": "East Africa",
     "city": "Nairobi",
     "languages": [
-        "aspernatur",
-        "voluptatem"
+        "sit",
+        "iusto"
     ]
 }
 
@@ -860,16 +860,16 @@ $response = $client->put(
             'Access-Control-Allow-Origin' => '*',
         ],
         'json' => [
-            'name' => 'sequi',
-            'email' => 'cum',
-            'phone_number' => 'dolores',
+            'name' => 'tenetur',
+            'email' => 'quas',
+            'phone_number' => 'sunt',
             'timezone_id' => 2,
             'gender' => 'male',
             'region' => 'East Africa',
             'city' => 'Nairobi',
             'languages' => [
-                'aspernatur',
-                'voluptatem',
+                'sit',
+                'iusto',
             ],
         ],
     ]
@@ -970,7 +970,7 @@ curl -X PUT \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"current_password":"fugit","new_password":"deleniti"}'
+    -d '{"current_password":"autem","new_password":"quos"}'
 
 ```
 
@@ -987,8 +987,8 @@ let headers = {
 };
 
 let body = {
-    "current_password": "fugit",
-    "new_password": "deleniti"
+    "current_password": "autem",
+    "new_password": "quos"
 }
 
 fetch(url, {
@@ -1010,8 +1010,8 @@ $response = $client->put(
             'Access-Control-Allow-Origin' => '*',
         ],
         'json' => [
-            'current_password' => 'fugit',
-            'new_password' => 'deleniti',
+            'current_password' => 'autem',
+            'new_password' => 'quos',
         ],
     ]
 );
@@ -1074,7 +1074,7 @@ curl -X POST \
     -H "Content-Type: multipart/form-data" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -F "profile_pic=@C:\Users\user\AppData\Local\Temp\php8C81.tmp" 
+    -F "profile_pic=@C:\Users\user\AppData\Local\Temp\php3CCE.tmp" 
 ```
 
 ```javascript
@@ -1113,7 +1113,7 @@ $response = $client->post(
         'multipart' => [
             [
                 'name' => 'profile_pic',
-                'contents' => fopen('C:\Users\user\AppData\Local\Temp\php8C81.tmp', 'r')
+                'contents' => fopen('C:\Users\user\AppData\Local\Temp\php3CCE.tmp', 'r')
             ],
         ],
     ]

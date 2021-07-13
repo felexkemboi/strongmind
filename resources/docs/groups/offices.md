@@ -102,7 +102,7 @@ curl -X POST \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"country_id":16,"name":"qui"}'
+    -d '{"country_id":12,"name":"perferendis"}'
 
 ```
 
@@ -119,8 +119,8 @@ let headers = {
 };
 
 let body = {
-    "country_id": 16,
-    "name": "qui"
+    "country_id": 12,
+    "name": "perferendis"
 }
 
 fetch(url, {
@@ -142,8 +142,8 @@ $response = $client->post(
             'Access-Control-Allow-Origin' => '*',
         ],
         'json' => [
-            'country_id' => 16,
-            'name' => 'qui',
+            'country_id' => 12,
+            'name' => 'perferendis',
         ],
     ]
 );
@@ -206,7 +206,7 @@ curl -X PUT \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"country_id":2,"name":"fugit","active":1}'
+    -d '{"country_id":14,"name":"rerum","active":1}'
 
 ```
 
@@ -223,8 +223,8 @@ let headers = {
 };
 
 let body = {
-    "country_id": 2,
-    "name": "fugit",
+    "country_id": 14,
+    "name": "rerum",
     "active": 1
 }
 
@@ -247,8 +247,8 @@ $response = $client->put(
             'Access-Control-Allow-Origin' => '*',
         ],
         'json' => [
-            'country_id' => 2,
-            'name' => 'fugit',
+            'country_id' => 14,
+            'name' => 'rerum',
             'active' => 1,
         ],
     ]

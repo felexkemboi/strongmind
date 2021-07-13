@@ -65,7 +65,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 <p>Base URL</p>
 </blockquote>
 <pre><code class="language-yaml">http://localhost:8000</code></pre><h1>Authenticating requests</h1>
-<p>This API is authenticated by sending an <strong><code>Authorization</code></strong> header with the value <strong><code>"Bearer {YOUR_AUTH_KEY}"</code></strong>.</p>
+<p>Authenticate requests to this API's endpoints by sending an <strong><code>Authorization</code></strong> header with the value <strong><code>"Bearer {YOUR_AUTH_KEY}"</code></strong>.</p>
 <p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the documentation below.</p>
 <p>You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.</p><h1>Auth</h1>
 <p>APIs for roles and permissions</p>
@@ -294,7 +294,7 @@ The ID of the role.
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"name":"qui","role_code":"dolores","description":"aut","access_permissions":[8,6]}'
+    -d '{"name":"hic","role_code":"fugiat","description":"similique","access_permissions":[7,14]}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/role/create"
@@ -308,12 +308,12 @@ let headers = {
 };
 
 let body = {
-    "name": "qui",
-    "role_code": "dolores",
-    "description": "aut",
+    "name": "hic",
+    "role_code": "fugiat",
+    "description": "similique",
     "access_permissions": [
-        8,
-        6
+        7,
+        14
     ]
 }
 
@@ -333,12 +333,12 @@ $response = $client-&gt;post(
             'Access-Control-Allow-Origin' =&gt; '*',
         ],
         'json' =&gt; [
-            'name' =&gt; 'qui',
-            'role_code' =&gt; 'dolores',
-            'description' =&gt; 'aut',
+            'name' =&gt; 'hic',
+            'role_code' =&gt; 'fugiat',
+            'description' =&gt; 'similique',
             'access_permissions' =&gt; [
-                8,
-                6,
+                7,
+                14,
             ],
         ],
     ]
@@ -406,7 +406,7 @@ Permission IDs. Example [1,2]
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"name":"et","role_code":"dicta","description":"est","access_permissions":[5,10]}'
+    -d '{"name":"distinctio","role_code":"nisi","description":"sit","access_permissions":[1,2]}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/role/update/1"
@@ -420,12 +420,12 @@ let headers = {
 };
 
 let body = {
-    "name": "et",
-    "role_code": "dicta",
-    "description": "est",
+    "name": "distinctio",
+    "role_code": "nisi",
+    "description": "sit",
     "access_permissions": [
-        5,
-        10
+        1,
+        2
     ]
 }
 
@@ -445,12 +445,12 @@ $response = $client-&gt;put(
             'Access-Control-Allow-Origin' =&gt; '*',
         ],
         'json' =&gt; [
-            'name' =&gt; 'et',
-            'role_code' =&gt; 'dicta',
-            'description' =&gt; 'est',
+            'name' =&gt; 'distinctio',
+            'role_code' =&gt; 'nisi',
+            'description' =&gt; 'sit',
             'access_permissions' =&gt; [
-                5,
-                10,
+                1,
+                2,
             ],
         ],
     ]
@@ -593,7 +593,7 @@ The ID of the role.
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"email":"ducimus","password":"aut"}'
+    -d '{"email":"aut","password":"voluptatem"}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/auth/login"
@@ -606,8 +606,8 @@ let headers = {
 };
 
 let body = {
-    "email": "ducimus",
-    "password": "aut"
+    "email": "aut",
+    "password": "voluptatem"
 }
 
 fetch(url, {
@@ -625,8 +625,8 @@ $response = $client-&gt;post(
             'Access-Control-Allow-Origin' =&gt; '*',
         ],
         'json' =&gt; [
-            'email' =&gt; 'ducimus',
-            'password' =&gt; 'aut',
+            'email' =&gt; 'aut',
+            'password' =&gt; 'voluptatem',
         ],
     ]
 );
@@ -746,7 +746,7 @@ print_r(json_decode((string) $body));</code></pre>
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"name":"sequi","email":"cum","phone_number":"dolores","timezone_id":2,"gender":"male","region":"East Africa","city":"Nairobi","languages":["aspernatur","voluptatem"]}'
+    -d '{"name":"tenetur","email":"quas","phone_number":"sunt","timezone_id":2,"gender":"male","region":"East Africa","city":"Nairobi","languages":["sit","iusto"]}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/auth/profile/update"
@@ -760,16 +760,16 @@ let headers = {
 };
 
 let body = {
-    "name": "sequi",
-    "email": "cum",
-    "phone_number": "dolores",
+    "name": "tenetur",
+    "email": "quas",
+    "phone_number": "sunt",
     "timezone_id": 2,
     "gender": "male",
     "region": "East Africa",
     "city": "Nairobi",
     "languages": [
-        "aspernatur",
-        "voluptatem"
+        "sit",
+        "iusto"
     ]
 }
 
@@ -789,16 +789,16 @@ $response = $client-&gt;put(
             'Access-Control-Allow-Origin' =&gt; '*',
         ],
         'json' =&gt; [
-            'name' =&gt; 'sequi',
-            'email' =&gt; 'cum',
-            'phone_number' =&gt; 'dolores',
+            'name' =&gt; 'tenetur',
+            'email' =&gt; 'quas',
+            'phone_number' =&gt; 'sunt',
             'timezone_id' =&gt; 2,
             'gender' =&gt; 'male',
             'region' =&gt; 'East Africa',
             'city' =&gt; 'Nairobi',
             'languages' =&gt; [
-                'aspernatur',
-                'voluptatem',
+                'sit',
+                'iusto',
             ],
         ],
     ]
@@ -890,7 +890,7 @@ Languages.Example ["English","French"]
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"current_password":"fugit","new_password":"deleniti"}'
+    -d '{"current_password":"autem","new_password":"quos"}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/auth/change-password"
@@ -904,8 +904,8 @@ let headers = {
 };
 
 let body = {
-    "current_password": "fugit",
-    "new_password": "deleniti"
+    "current_password": "autem",
+    "new_password": "quos"
 }
 
 fetch(url, {
@@ -924,8 +924,8 @@ $response = $client-&gt;put(
             'Access-Control-Allow-Origin' =&gt; '*',
         ],
         'json' =&gt; [
-            'current_password' =&gt; 'fugit',
-            'new_password' =&gt; 'deleniti',
+            'current_password' =&gt; 'autem',
+            'new_password' =&gt; 'quos',
         ],
     ]
 );
@@ -979,7 +979,7 @@ New Password
     -H "Content-Type: multipart/form-data" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -F "profile_pic=@C:\Users\user\AppData\Local\Temp\php8C81.tmp" </code></pre>
+    -F "profile_pic=@C:\Users\user\AppData\Local\Temp\php3CCE.tmp" </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/auth/profile/set-photo"
 );
@@ -1012,7 +1012,7 @@ $response = $client-&gt;post(
         'multipart' =&gt; [
             [
                 'name' =&gt; 'profile_pic',
-                'contents' =&gt; fopen('C:\Users\user\AppData\Local\Temp\php8C81.tmp', 'r')
+                'contents' =&gt; fopen('C:\Users\user\AppData\Local\Temp\php3CCE.tmp', 'r')
             ],
         ],
     ]
@@ -1130,7 +1130,7 @@ print_r(json_decode((string) $body));</code></pre>
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"name":"impedit"}'
+    -d '{"name":"dolorum"}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/status/create"
@@ -1144,7 +1144,7 @@ let headers = {
 };
 
 let body = {
-    "name": "impedit"
+    "name": "dolorum"
 }
 
 fetch(url, {
@@ -1163,7 +1163,7 @@ $response = $client-&gt;post(
             'Access-Control-Allow-Origin' =&gt; '*',
         ],
         'json' =&gt; [
-            'name' =&gt; 'impedit',
+            'name' =&gt; 'dolorum',
         ],
     ]
 );
@@ -1197,6 +1197,94 @@ print_r(json_decode((string) $body));</code></pre>
 <input type="text" name="name" data-endpoint="POSTapi-status-create" data-component="body" required  hidden>
 <br>
 Status Name
+</p>
+
+</form>
+<h2>Update Status</h2>
+<p><small class="badge badge-darkred">requires authentication</small></p>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X PUT \
+    "http://localhost:8000/api/status/update/1" \
+    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Access-Control-Allow-Origin: *" \
+    -d '{"name":"voluptatem"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/status/update/1"
+);
+
+let headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+};
+
+let body = {
+    "name": "voluptatem"
+}
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre>
+<pre><code class="language-php">
+$client = new \GuzzleHttp\Client();
+$response = $client-&gt;put(
+    'http://localhost:8000/api/status/update/1',
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' =&gt; 'application/json',
+            'Access-Control-Allow-Origin' =&gt; '*',
+        ],
+        'json' =&gt; [
+            'name' =&gt; 'voluptatem',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre>
+<div id="execution-results-PUTapi-status-update--id-" hidden>
+    <blockquote>Received response<span id="execution-response-status-PUTapi-status-update--id-"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-status-update--id-"></code></pre>
+</div>
+<div id="execution-error-PUTapi-status-update--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-status-update--id-"></code></pre>
+</div>
+<form id="form-PUTapi-status-update--id-" data-method="PUT" data-path="api/status/update/{id}" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json","Access-Control-Allow-Origin":"*"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-status-update--id-', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-PUTapi-status-update--id-" onclick="tryItOut('PUTapi-status-update--id-');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-PUTapi-status-update--id-" onclick="cancelTryOut('PUTapi-status-update--id-');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-PUTapi-status-update--id-" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-darkblue">PUT</small>
+ <b><code>api/status/update/{id}</code></b>
+</p>
+<p>
+<label id="auth-PUTapi-status-update--id-" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="PUTapi-status-update--id-" data-component="header"></label>
+</p>
+<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+<p>
+<b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<input type="number" name="id" data-endpoint="PUTapi-status-update--id-" data-component="url" required  hidden>
+<br>
+The ID of the status.
+</p>
+<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+<p>
+<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="name" data-endpoint="PUTapi-status-update--id-" data-component="body" required  hidden>
+<br>
+Status Name.
 </p>
 
 </form>
@@ -1280,7 +1368,7 @@ print_r(json_decode((string) $body));</code></pre>
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"name":"non"}'
+    -d '{"name":"rerum"}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/channels/create"
@@ -1294,7 +1382,7 @@ let headers = {
 };
 
 let body = {
-    "name": "non"
+    "name": "rerum"
 }
 
 fetch(url, {
@@ -1313,7 +1401,7 @@ $response = $client-&gt;post(
             'Access-Control-Allow-Origin' =&gt; '*',
         ],
         'json' =&gt; [
-            'name' =&gt; 'non',
+            'name' =&gt; 'rerum',
         ],
     ]
 );
@@ -1347,6 +1435,94 @@ print_r(json_decode((string) $body));</code></pre>
 <input type="text" name="name" data-endpoint="POSTapi-channels-create" data-component="body" required  hidden>
 <br>
 Channel Name.Example web channel
+</p>
+
+</form>
+<h2>Update Channel</h2>
+<p><small class="badge badge-darkred">requires authentication</small></p>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X PUT \
+    "http://localhost:8000/api/channels/update/1" \
+    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Access-Control-Allow-Origin: *" \
+    -d '{"name":"ut"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/channels/update/1"
+);
+
+let headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+};
+
+let body = {
+    "name": "ut"
+}
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre>
+<pre><code class="language-php">
+$client = new \GuzzleHttp\Client();
+$response = $client-&gt;put(
+    'http://localhost:8000/api/channels/update/1',
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' =&gt; 'application/json',
+            'Access-Control-Allow-Origin' =&gt; '*',
+        ],
+        'json' =&gt; [
+            'name' =&gt; 'ut',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre>
+<div id="execution-results-PUTapi-channels-update--id-" hidden>
+    <blockquote>Received response<span id="execution-response-status-PUTapi-channels-update--id-"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-channels-update--id-"></code></pre>
+</div>
+<div id="execution-error-PUTapi-channels-update--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-channels-update--id-"></code></pre>
+</div>
+<form id="form-PUTapi-channels-update--id-" data-method="PUT" data-path="api/channels/update/{id}" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json","Access-Control-Allow-Origin":"*"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-channels-update--id-', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-PUTapi-channels-update--id-" onclick="tryItOut('PUTapi-channels-update--id-');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-PUTapi-channels-update--id-" onclick="cancelTryOut('PUTapi-channels-update--id-');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-PUTapi-channels-update--id-" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-darkblue">PUT</small>
+ <b><code>api/channels/update/{id}</code></b>
+</p>
+<p>
+<label id="auth-PUTapi-channels-update--id-" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="PUTapi-channels-update--id-" data-component="header"></label>
+</p>
+<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+<p>
+<b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<input type="number" name="id" data-endpoint="PUTapi-channels-update--id-" data-component="url" required  hidden>
+<br>
+The ID of the channel.
+</p>
+<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+<p>
+<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="name" data-endpoint="PUTapi-channels-update--id-" data-component="body" required  hidden>
+<br>
+Channel Name.
 </p>
 
 </form>
@@ -1430,7 +1606,7 @@ print_r(json_decode((string) $body));</code></pre>
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"name":"debitis"}'
+    -d '{"name":"culpa"}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/group-types/create"
@@ -1444,7 +1620,7 @@ let headers = {
 };
 
 let body = {
-    "name": "debitis"
+    "name": "culpa"
 }
 
 fetch(url, {
@@ -1463,7 +1639,7 @@ $response = $client-&gt;post(
             'Access-Control-Allow-Origin' =&gt; '*',
         ],
         'json' =&gt; [
-            'name' =&gt; 'debitis',
+            'name' =&gt; 'culpa',
         ],
     ]
 );
@@ -1497,6 +1673,94 @@ print_r(json_decode((string) $body));</code></pre>
 <input type="text" name="name" data-endpoint="POSTapi-group-types-create" data-component="body" required  hidden>
 <br>
 GroupType Name
+</p>
+
+</form>
+<h2>Update Group Type</h2>
+<p><small class="badge badge-darkred">requires authentication</small></p>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X PUT \
+    "http://localhost:8000/api/group-types/update/1" \
+    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Access-Control-Allow-Origin: *" \
+    -d '{"name":"fugit"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/group-types/update/1"
+);
+
+let headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+};
+
+let body = {
+    "name": "fugit"
+}
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre>
+<pre><code class="language-php">
+$client = new \GuzzleHttp\Client();
+$response = $client-&gt;put(
+    'http://localhost:8000/api/group-types/update/1',
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' =&gt; 'application/json',
+            'Access-Control-Allow-Origin' =&gt; '*',
+        ],
+        'json' =&gt; [
+            'name' =&gt; 'fugit',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre>
+<div id="execution-results-PUTapi-group-types-update--id-" hidden>
+    <blockquote>Received response<span id="execution-response-status-PUTapi-group-types-update--id-"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-group-types-update--id-"></code></pre>
+</div>
+<div id="execution-error-PUTapi-group-types-update--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-group-types-update--id-"></code></pre>
+</div>
+<form id="form-PUTapi-group-types-update--id-" data-method="PUT" data-path="api/group-types/update/{id}" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json","Access-Control-Allow-Origin":"*"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-group-types-update--id-', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-PUTapi-group-types-update--id-" onclick="tryItOut('PUTapi-group-types-update--id-');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-PUTapi-group-types-update--id-" onclick="cancelTryOut('PUTapi-group-types-update--id-');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-PUTapi-group-types-update--id-" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-darkblue">PUT</small>
+ <b><code>api/group-types/update/{id}</code></b>
+</p>
+<p>
+<label id="auth-PUTapi-group-types-update--id-" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="PUTapi-group-types-update--id-" data-component="header"></label>
+</p>
+<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+<p>
+<b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<input type="number" name="id" data-endpoint="PUTapi-group-types-update--id-" data-component="url" required  hidden>
+<br>
+The ID of the group type.
+</p>
+<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+<p>
+<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="name" data-endpoint="PUTapi-group-types-update--id-" data-component="body" required  hidden>
+<br>
+GroupType Name.
 </p>
 
 </form>
@@ -1580,7 +1844,7 @@ print_r(json_decode((string) $body));</code></pre>
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"name":"laboriosam"}'
+    -d '{"name":"nemo"}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/program-types/create"
@@ -1594,7 +1858,7 @@ let headers = {
 };
 
 let body = {
-    "name": "laboriosam"
+    "name": "nemo"
 }
 
 fetch(url, {
@@ -1613,7 +1877,7 @@ $response = $client-&gt;post(
             'Access-Control-Allow-Origin' =&gt; '*',
         ],
         'json' =&gt; [
-            'name' =&gt; 'laboriosam',
+            'name' =&gt; 'nemo',
         ],
     ]
 );
@@ -1647,6 +1911,94 @@ print_r(json_decode((string) $body));</code></pre>
 <input type="text" name="name" data-endpoint="POSTapi-program-types-create" data-component="body" required  hidden>
 <br>
 ProgramType Name
+</p>
+
+</form>
+<h2>Update Program Type</h2>
+<p><small class="badge badge-darkred">requires authentication</small></p>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X PUT \
+    "http://localhost:8000/api/program-types/update/1" \
+    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Access-Control-Allow-Origin: *" \
+    -d '{"name":"iure"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/program-types/update/1"
+);
+
+let headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+};
+
+let body = {
+    "name": "iure"
+}
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre>
+<pre><code class="language-php">
+$client = new \GuzzleHttp\Client();
+$response = $client-&gt;put(
+    'http://localhost:8000/api/program-types/update/1',
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' =&gt; 'application/json',
+            'Access-Control-Allow-Origin' =&gt; '*',
+        ],
+        'json' =&gt; [
+            'name' =&gt; 'iure',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre>
+<div id="execution-results-PUTapi-program-types-update--id-" hidden>
+    <blockquote>Received response<span id="execution-response-status-PUTapi-program-types-update--id-"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-program-types-update--id-"></code></pre>
+</div>
+<div id="execution-error-PUTapi-program-types-update--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-program-types-update--id-"></code></pre>
+</div>
+<form id="form-PUTapi-program-types-update--id-" data-method="PUT" data-path="api/program-types/update/{id}" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json","Access-Control-Allow-Origin":"*"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-program-types-update--id-', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-PUTapi-program-types-update--id-" onclick="tryItOut('PUTapi-program-types-update--id-');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-PUTapi-program-types-update--id-" onclick="cancelTryOut('PUTapi-program-types-update--id-');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-PUTapi-program-types-update--id-" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-darkblue">PUT</small>
+ <b><code>api/program-types/update/{id}</code></b>
+</p>
+<p>
+<label id="auth-PUTapi-program-types-update--id-" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="PUTapi-program-types-update--id-" data-component="header"></label>
+</p>
+<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+<p>
+<b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<input type="number" name="id" data-endpoint="PUTapi-program-types-update--id-" data-component="url" required  hidden>
+<br>
+The ID of the program type.
+</p>
+<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+<p>
+<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="name" data-endpoint="PUTapi-program-types-update--id-" data-component="body" required  hidden>
+<br>
+ProgramType Name.
 </p>
 
 </form><h1>Offices</h1>
@@ -1731,7 +2083,7 @@ print_r(json_decode((string) $body));</code></pre>
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"country_id":16,"name":"qui"}'
+    -d '{"country_id":12,"name":"perferendis"}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/office/create"
@@ -1745,8 +2097,8 @@ let headers = {
 };
 
 let body = {
-    "country_id": 16,
-    "name": "qui"
+    "country_id": 12,
+    "name": "perferendis"
 }
 
 fetch(url, {
@@ -1765,8 +2117,8 @@ $response = $client-&gt;post(
             'Access-Control-Allow-Origin' =&gt; '*',
         ],
         'json' =&gt; [
-            'country_id' =&gt; 16,
-            'name' =&gt; 'qui',
+            'country_id' =&gt; 12,
+            'name' =&gt; 'perferendis',
         ],
     ]
 );
@@ -1820,7 +2172,7 @@ Office Name
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"country_id":2,"name":"fugit","active":1}'
+    -d '{"country_id":14,"name":"rerum","active":1}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/office/update/1"
@@ -1834,8 +2186,8 @@ let headers = {
 };
 
 let body = {
-    "country_id": 2,
-    "name": "fugit",
+    "country_id": 14,
+    "name": "rerum",
     "active": 1
 }
 
@@ -1855,8 +2207,8 @@ $response = $client-&gt;put(
             'Access-Control-Allow-Origin' =&gt; '*',
         ],
         'json' =&gt; [
-            'country_id' =&gt; 2,
-            'name' =&gt; 'fugit',
+            'country_id' =&gt; 14,
+            'name' =&gt; 'rerum',
             'active' =&gt; 1,
         ],
     ]
@@ -4281,7 +4633,7 @@ print_r(json_decode((string) $body));</code></pre>
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"country_id":13}'
+    -d '{"country_id":17}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/country/update"
@@ -4295,7 +4647,7 @@ let headers = {
 };
 
 let body = {
-    "country_id": 13
+    "country_id": 17
 }
 
 fetch(url, {
@@ -4314,7 +4666,7 @@ $response = $client-&gt;put(
             'Access-Control-Allow-Origin' =&gt; '*',
         ],
         'json' =&gt; [
-            'country_id' =&gt; 13,
+            'country_id' =&gt; 17,
         ],
     ]
 );
@@ -7494,7 +7846,7 @@ print_r(json_decode((string) $body));</code></pre>
 <p>Example request:</p>
 </blockquote>
 <pre><code class="language-bash">curl -X GET \
-    -G "http://localhost:8000/api/teams/all?role=1" \
+    -G "http://localhost:8000/api/teams/all?role=18" \
     -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
@@ -7504,7 +7856,7 @@ print_r(json_decode((string) $body));</code></pre>
 );
 
 let params = {
-    "role": "1",
+    "role": "18",
 };
 Object.keys(params)
     .forEach(key =&gt; url.searchParams.append(key, params[key]));
@@ -7531,7 +7883,7 @@ $response = $client-&gt;get(
             'Access-Control-Allow-Origin' =&gt; '*',
         ],
         'query' =&gt; [
-            'role'=&gt; '1',
+            'role'=&gt; '18',
         ],
     ]
 );
@@ -7666,7 +8018,7 @@ The ID of the user.
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"name":"soluta","email":"et","phone_number":"sit","office_id":1,"role_id":1,"timezone_id":2,"gender":"male","region":"East Africa","city":"Nairobi","languages":["recusandae","autem"]}'
+    -d '{"name":"id","email":"consequuntur","phone_number":"dignissimos","office_id":1,"role_id":1,"timezone_id":2,"gender":"male","region":"East Africa","city":"Nairobi","languages":["minima","animi"]}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/teams/update/1"
@@ -7680,9 +8032,9 @@ let headers = {
 };
 
 let body = {
-    "name": "soluta",
-    "email": "et",
-    "phone_number": "sit",
+    "name": "id",
+    "email": "consequuntur",
+    "phone_number": "dignissimos",
     "office_id": 1,
     "role_id": 1,
     "timezone_id": 2,
@@ -7690,8 +8042,8 @@ let body = {
     "region": "East Africa",
     "city": "Nairobi",
     "languages": [
-        "recusandae",
-        "autem"
+        "minima",
+        "animi"
     ]
 }
 
@@ -7711,9 +8063,9 @@ $response = $client-&gt;put(
             'Access-Control-Allow-Origin' =&gt; '*',
         ],
         'json' =&gt; [
-            'name' =&gt; 'soluta',
-            'email' =&gt; 'et',
-            'phone_number' =&gt; 'sit',
+            'name' =&gt; 'id',
+            'email' =&gt; 'consequuntur',
+            'phone_number' =&gt; 'dignissimos',
             'office_id' =&gt; 1,
             'role_id' =&gt; 1,
             'timezone_id' =&gt; 2,
@@ -7721,8 +8073,8 @@ $response = $client-&gt;put(
             'region' =&gt; 'East Africa',
             'city' =&gt; 'Nairobi',
             'languages' =&gt; [
-                'recusandae',
-                'autem',
+                'minima',
+                'animi',
             ],
         ],
     ]
@@ -7833,7 +8185,7 @@ Languages.Example ["English","French"]
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"email":"dolores","role_id":15,"office_id":14}'
+    -d '{"email":"blanditiis","role_id":17,"office_id":12}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/teams/invite"
@@ -7847,9 +8199,9 @@ let headers = {
 };
 
 let body = {
-    "email": "dolores",
-    "role_id": 15,
-    "office_id": 14
+    "email": "blanditiis",
+    "role_id": 17,
+    "office_id": 12
 }
 
 fetch(url, {
@@ -7868,9 +8220,9 @@ $response = $client-&gt;post(
             'Access-Control-Allow-Origin' =&gt; '*',
         ],
         'json' =&gt; [
-            'email' =&gt; 'dolores',
-            'role_id' =&gt; 15,
-            'office_id' =&gt; 14,
+            'email' =&gt; 'blanditiis',
+            'role_id' =&gt; 17,
+            'office_id' =&gt; 12,
         ],
     ]
 );
@@ -7928,7 +8280,7 @@ Office Id.
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"password":"similique","invite":"pariatur"}'
+    -d '{"password":"a","invite":"labore"}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost:8000/api/teams/set-password"
@@ -7941,8 +8293,8 @@ let headers = {
 };
 
 let body = {
-    "password": "similique",
-    "invite": "pariatur"
+    "password": "a",
+    "invite": "labore"
 }
 
 fetch(url, {
@@ -7960,8 +8312,8 @@ $response = $client-&gt;post(
             'Access-Control-Allow-Origin' =&gt; '*',
         ],
         'json' =&gt; [
-            'password' =&gt; 'similique',
-            'invite' =&gt; 'pariatur',
+            'password' =&gt; 'a',
+            'invite' =&gt; 'labore',
         ],
     ]
 );

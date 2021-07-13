@@ -11,7 +11,7 @@ Invite Member
 
 ```bash
 curl -X GET \
-    -G "http://localhost:8000/api/teams/all?role=1" \
+    -G "http://localhost:8000/api/teams/all?role=18" \
     -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
@@ -24,7 +24,7 @@ const url = new URL(
 );
 
 let params = {
-    "role": "1",
+    "role": "18",
 };
 Object.keys(params)
     .forEach(key => url.searchParams.append(key, params[key]));
@@ -55,7 +55,7 @@ $response = $client->get(
             'Access-Control-Allow-Origin' => '*',
         ],
         'query' => [
-            'role'=> '1',
+            'role'=> '18',
         ],
     ]
 );
@@ -217,7 +217,7 @@ curl -X PUT \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"name":"soluta","email":"et","phone_number":"sit","office_id":1,"role_id":1,"timezone_id":2,"gender":"male","region":"East Africa","city":"Nairobi","languages":["recusandae","autem"]}'
+    -d '{"name":"id","email":"consequuntur","phone_number":"dignissimos","office_id":1,"role_id":1,"timezone_id":2,"gender":"male","region":"East Africa","city":"Nairobi","languages":["minima","animi"]}'
 
 ```
 
@@ -234,9 +234,9 @@ let headers = {
 };
 
 let body = {
-    "name": "soluta",
-    "email": "et",
-    "phone_number": "sit",
+    "name": "id",
+    "email": "consequuntur",
+    "phone_number": "dignissimos",
     "office_id": 1,
     "role_id": 1,
     "timezone_id": 2,
@@ -244,8 +244,8 @@ let body = {
     "region": "East Africa",
     "city": "Nairobi",
     "languages": [
-        "recusandae",
-        "autem"
+        "minima",
+        "animi"
     ]
 }
 
@@ -268,9 +268,9 @@ $response = $client->put(
             'Access-Control-Allow-Origin' => '*',
         ],
         'json' => [
-            'name' => 'soluta',
-            'email' => 'et',
-            'phone_number' => 'sit',
+            'name' => 'id',
+            'email' => 'consequuntur',
+            'phone_number' => 'dignissimos',
             'office_id' => 1,
             'role_id' => 1,
             'timezone_id' => 2,
@@ -278,8 +278,8 @@ $response = $client->put(
             'region' => 'East Africa',
             'city' => 'Nairobi',
             'languages' => [
-                'recusandae',
-                'autem',
+                'minima',
+                'animi',
             ],
         ],
     ]
@@ -399,7 +399,7 @@ curl -X POST \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"email":"dolores","role_id":15,"office_id":14}'
+    -d '{"email":"blanditiis","role_id":17,"office_id":12}'
 
 ```
 
@@ -416,9 +416,9 @@ let headers = {
 };
 
 let body = {
-    "email": "dolores",
-    "role_id": 15,
-    "office_id": 14
+    "email": "blanditiis",
+    "role_id": 17,
+    "office_id": 12
 }
 
 fetch(url, {
@@ -440,9 +440,9 @@ $response = $client->post(
             'Access-Control-Allow-Origin' => '*',
         ],
         'json' => [
-            'email' => 'dolores',
-            'role_id' => 15,
-            'office_id' => 14,
+            'email' => 'blanditiis',
+            'role_id' => 17,
+            'office_id' => 12,
         ],
     ]
 );
@@ -509,7 +509,7 @@ curl -X POST \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
     -H "Access-Control-Allow-Origin: *" \
-    -d '{"password":"similique","invite":"pariatur"}'
+    -d '{"password":"a","invite":"labore"}'
 
 ```
 
@@ -525,8 +525,8 @@ let headers = {
 };
 
 let body = {
-    "password": "similique",
-    "invite": "pariatur"
+    "password": "a",
+    "invite": "labore"
 }
 
 fetch(url, {
@@ -547,8 +547,8 @@ $response = $client->post(
             'Access-Control-Allow-Origin' => '*',
         ],
         'json' => [
-            'password' => 'similique',
-            'invite' => 'pariatur',
+            'password' => 'a',
+            'invite' => 'labore',
         ],
     ]
 );

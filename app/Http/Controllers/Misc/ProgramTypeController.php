@@ -67,9 +67,42 @@ class ProgramTypeController extends Controller
         }
     }
 
-    public function update(Request $request)
+    /**
+     * Update Program Type
+     * @param Request $request
+     * @param $id
+     * @urlParam id integer required The ID of the program type. Example:1
+     * @return JsonResponse
+     * @bodyParam  name string required ProgramType Name.
+     * @authenticated
+     */
+    public function update(Request $request, $id): JsonResponse
     {
-
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } else {
+            try {
+                $record = ProgramType::firstWhere('id', $id);
+                if (!$record) {
+                    return $this->commonResponse(false, 'Record not found!', '', Response::HTTP_NOT_FOUND);
+                } else {
+                    $slug = Str::slug($request->get('name'));
+                    $record->update([
+                        'name' => $request->get('name'),
+                        'slug' => $slug,
+                    ]);
+                    $record->fresh();
+                    return $this->commonResponse(true, 'Record updated successfully!', new ProgramTypeResource($record), Response::HTTP_CREATED);
+                }
+            } catch (QueryException $ex) {
+                return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            } catch (Exception $ex) {
+                return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+        }
     }
 
     public function delete()

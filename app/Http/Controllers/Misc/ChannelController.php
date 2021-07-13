@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -70,12 +71,40 @@ class ChannelController extends Controller
 
     /**
      * Update Channel
+     * @param Request $request
+     * @param $id
+     * @urlParam id integer required The ID of the channel. Example:1
      * @return JsonResponse
+     * @bodyParam  name string required Channel Name.
      * @authenticated
      */
-    public function update(Request $request)
+    public function update(Request $request,$id): JsonResponse
     {
-
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } else {
+            try {
+                $channel = Channel::firstWhere('id', $id);
+                if (!$channel) {
+                    return $this->commonResponse(false, 'Channel not found!', '', Response::HTTP_NOT_FOUND);
+                } else {
+                    $slug=Str::slug($request->get('name'));
+                    $channel->update([
+                        'name' => $request->get('name'),
+                        'slug' => $slug,
+                    ]);
+                    $channel->fresh();
+                    return $this->commonResponse(true, 'Record updated successfully!', new ChannelResource($channel), Response::HTTP_CREATED);
+                }
+            } catch (QueryException $ex) {
+                return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            } catch (Exception $ex) {
+                return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+        }
     }
 
     /**
