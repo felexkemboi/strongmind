@@ -29,7 +29,11 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('country')->group(function () {
     Route::get('all', [CountryController::class, 'all']);
     Route::get('active', [CountryController::class, 'activeCountries']);
-    Route::put('update', [CountryController::class, 'toggleStatus'])->middleware('auth:sanctum');
+    Route::group(['middleware' => 'auth:sanctum'], function(){
+        Route::put('update', [CountryController::class, 'toggleStatus']);
+        Route::patch('activate',[CountryController::class,'activate']);
+        Route::patch('deactivate',[CountryController::class,'deactivate']);
+    });
 });
 Route::prefix('timezone')->group(function () {
     Route::get('all', [TimezoneController::class, 'all']);
