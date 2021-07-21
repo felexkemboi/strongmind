@@ -1,0 +1,39 @@
+#cloud-config
+
+# Update packages on first boot
+package_update: true
+
+# Install codedeploy agent
+packages:
+  - ruby-full
+  - htop
+
+# Write the Apache server site config
+write_files:
+  - content: |
+      <VirtualHost 127.0.0.1:80 _default_:80>
+          ServerAlias *
+          DocumentRoot /opt/bitnami/projects/appapi/public
+          <Directory "/opt/bitnami/projects/appapi/public">
+              Options -Indexes +FollowSymLinks -MultiViews
+              AllowOverride All
+              Require all granted
+          </Directory>
+      </VirtualHost>
+    path: /opt/bitnami/apache2/conf/vhosts/appapi-vhost.conf
+
+# Run server setup
+runcmd:
+  # Setup the application folders to be used by application
+  - sudo mkdir -p /opt/bitnami/projects/appapi/storage
+  - sudo chown -R daemon:daemon /opt/bitnami/projects/appapi/storage/
+  - sudo chmod -R 777 /opt/bitnami/projects/appapi/
+  # Setup the codedeploy configuration
+  - wget https://aws-codedeploy-us-east-2.s3.us-east-2.amazonaws.com/latest/install -O /home/bitnami/install
+  - chmod +x /home/bitnami/install
+  - sudo /home/bitnami/install auto
+  - sudo /opt/bitnami/ctlscript.sh restart apache
+
+# Capture all subprocess output into a logfile
+# Useful for troubleshooting cloud-init issues
+output: { all: "| tee -a /var/log/cloud-init-output.log" }
