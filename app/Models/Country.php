@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Country extends Model
 {
     protected $guarded = [];
-
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 0;
     /**
      * Scope a query to only include active users.
      *
