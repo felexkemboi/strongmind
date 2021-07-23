@@ -94,6 +94,9 @@ class CountryController extends Controller
             return $this->commonResponse(false,Arr::flatten($validator->messages()->get('*')),'',Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         try{
+            if(!auth()->user()->can('activate-country')){
+                return $this->commonResponse(false, 'Access denied!', '', Response::HTTP_FORBIDDEN);
+            }
             $country = Country::where('id',$request->country_id)->first();
             if(!$country){
                 return $this->commonResponse(false,'Country Not Found','',Response::HTTP_NOT_FOUND);
@@ -127,6 +130,9 @@ class CountryController extends Controller
             return $this->commonResponse(false,Arr::flatten($validator->messages()->get('*')),'',Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         try{
+            if(!auth()->user()->can('deactivate-country')){
+                return $this->commonResponse(false, 'Access denied!', '', Response::HTTP_FORBIDDEN);
+            }
             $country = Country::where('id',$request->country_id)->first();
             if(!$country){
                 return $this->commonResponse(false,'Country Not Found','',Response::HTTP_NOT_FOUND);
