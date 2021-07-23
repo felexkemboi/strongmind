@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\User;
+use Bouncer;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Silber\Bouncer\Database\Ability;
@@ -32,13 +34,11 @@ class UpdatePermissions extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
+        Bouncer::refresh();
+        $user=User::firstWhere('email','admin@strongminds.org');
+        Bouncer::allow($user)->everything();
         $t = file_get_contents("database/data/permissions.json");
         $permissions = json_decode($t, true);
         foreach($permissions as $key){

@@ -7,5 +7,6 @@ sudo chown -R daemon:daemon /opt/bitnami/projects/appapi/storage/**/*
 sudo chmod -R 777 /opt/bitnami/projects/appapi/
 /opt/bitnami/php/bin/php artisan migrate --force
 /opt/bitnami/php/bin/php artisan db:seed
+/opt/bitnami/php/bin/php artisan update:permissions
 /opt/bitnami/php/bin/php artisan scribe:generate
 sudo /opt/bitnami/ctlscript.sh restart apache
