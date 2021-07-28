@@ -47,7 +47,7 @@ class RoleController extends Controller
     public function create(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'name' => 'required|unique:roles',
             'role_code' => 'required',
             'description' => 'nullable',
             'access_permissions' => 'required|array',
