@@ -170,7 +170,7 @@ class InviteController extends Controller
                 $client->sendEmailWithTemplate(
                     config('mail.from.address'),
                     $member,
-                    'user-invitation',
+                    config('postmark.welcome_template_id'),
                     [
                         'action_url' => $action_url,
                         'support_email' => config('mail.from.address')
