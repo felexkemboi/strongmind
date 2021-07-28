@@ -142,38 +142,46 @@ class InviteController extends Controller
     /**
      * Send multiple invites
      * @param Request $request
+     * @return JsonResponse
      */
-    private function sendMultipleInvites(Request $request): void
+    private function sendMultipleInvites(Request $request): JsonResponse
     {
         $email = explode(',',$request->email);
         $role = Role::find($request->role_id);
         $client = new PostmarkClient(config('postmark.token'));
-        foreach($email as $member)
-        {
-            $invite_token = hash('sha256', utf8_encode(Str::uuid()));
-            $action_url = config('app.set_password_url') . "?invite=$invite_token";
+        try{
+            foreach($email as $member)
+            {
+                $invite_token = hash('sha256', utf8_encode(Str::uuid()));
+                $action_url = config('app.set_password_url') . "?invite=$invite_token";
 
-            $user = User::create([
-                'email' => $member,
-                'office_id' => $request->office_id,
-                'is_admin'  => 0,
-                'invite_accepted' => 0,
-                'invite_id' => $invite_token,
-                'password' => bcrypt(Str::random(8)),
-                'active' => 0
-            ]);
-            if ($role) {
-                $user->assign($role->name);
+                $user = User::create([
+                    'email' => $member,
+                    'office_id' => $request->office_id,
+                    'is_admin'  => 0,
+                    'invite_accepted' => 0,
+                    'invite_id' => $invite_token,
+                    'password' => bcrypt(Str::random(8)),
+                    'active' => 0
+                ]);
+                if ($role) {
+                    $user->assign($role->name);
+                }
+                $client->sendEmailWithTemplate(
+                    config('mail.from.address'),
+                    $member,
+                    'user-invitation',
+                    [
+                        'action_url' => $action_url,
+                        'support_email' => config('mail.from.address')
+                    ]
+                );
             }
-            $client->sendEmailWithTemplate(
-                config('mail.from.address'),
-                $member,
-                'user-invitation',
-                [
-                    'action_url' => $action_url,
-                    'support_email' => config('mail.from.address')
-                ]
-            );
+            return $this->commonResponse(true, 'invite sent successfully!', '', Response::HTTP_CREATED);
+        }catch(QueryException $queryException){
+            return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (Exception $exception){
+            return $this->commonResponse(false, $exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
