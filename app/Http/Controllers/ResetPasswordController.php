@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -44,7 +45,7 @@ class ResetPasswordController extends Controller
                 $email = $request->email;
                 $user = User::firstWhere('email', $email);
                 if (!$user) {
-                    return $this->commonResponse(false, 'User not found!', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    return $this->commonResponse(false, 'Email does not exist!', '', Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 //Create Password Reset Token
                 DB::table('password_resets')->insert([
@@ -98,35 +99,47 @@ class ResetPasswordController extends Controller
         );
         if ($validator->fails()) {
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
-        } else {
-            $email = $request->email;
-            $password = bcrypt($request->password);
-            $user = User::firstWhere('email', $email);
-            if (!$user) {
-                return $this->commonResponse(false, 'User not found!', '', Response::HTTP_UNPROCESSABLE_ENTITY);
-            }else if($user->invite_accepted === User::INVITE_NOT_ACCEPTED) {
-                return $this->commonResponse(false,'User is yet to accept invite','',Response::HTTP_UNPROCESSABLE_ENTITY);
-            }else{
-                // Validate the token
-                $tokenData = DB::table('password_resets')
-                    ->where('token', $request->token)->first();
-                if (is_null($tokenData) || !$tokenData) {
-                    return $this->commonResponse(false, 'Reset token is invalid', '', Response::HTTP_UNPROCESSABLE_ENTITY);
-                }else{
-                    //Update the new password
-                    $user->password = $password;
-                    $user->update(); //or $user->save();
-                    //Delete the token
-                    DB::table('password_resets')->where('email', $user->email)
-                        ->delete();
-                    //generate login access token
-                    $result = [
-                        'user' => $user,
-                        'accessToken' => $user->createToken('strong-minds')->plainTextToken,
-                    ];
-                    return $this->commonResponse(true, 'Your password has been reset', $result, Response::HTTP_CREATED);
-                }
+        }
+
+        $email = $request->email;
+        $password = bcrypt($request->password);
+        $user = User::firstWhere('email', $email);
+        if (!$user) {
+            return $this->commonResponse(false, 'Email does not exist!', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        if($user->invite_accepted === User::INVITE_NOT_ACCEPTED) {
+            return $this->commonResponse(false,'User is yet to accept invite','',Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // Validate the token
+        $tokenData = DB::table('password_resets')
+            ->where('token', $request->token)->first();
+        if (is_null($tokenData) || !$tokenData) {
+            return $this->commonResponse(false, 'Reset token is invalid', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        try{
+            //Update the new password
+            $user->password = $password;
+            $updatePwd = $user->update(); //or $user->save();
+            //Delete the token
+            $deleteTkn = DB::table('password_resets')->where('email', $user->email)
+                ->delete();
+            //generate login access token
+            $result = [
+                'user' => $user,
+                'accessToken' => $user->createToken('strong-minds')->plainTextToken,
+            ];
+            if($updatePwd && $deleteTkn){
+                return $this->commonResponse(true, 'Your password has been reset', $result, Response::HTTP_CREATED);
             }
+            return $this->commonResponse(false,'Failed to reset password','',Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (QueryException $queryException){
+            return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (Exception $exception){
+            Log::critical('Failed to reset user password: ERROR:' .$exception->getTraceAsString());
+            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
