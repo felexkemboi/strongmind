@@ -172,7 +172,7 @@ class InviteController extends Controller
                         return $this->commonResponse(false,'Invite Accepted Already, No Action Required','', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $existingUser->update(['invite_id' => $invite_token]);
-                    return $this->resendInvite($email, $action_url);
+                    return $this->resendInvite($member, $action_url);
                 }
                 $user = User::create([
                     'email' => $member,
