@@ -48,7 +48,7 @@ class LoginController extends Controller
             if (!$user) {
                 return $this->commonResponse(false, 'The provided credentials are incorrect!', '', Response::HTTP_EXPECTATION_FAILED);
             }
-            elseif ($user->invite_accepted !=1 && $user->active!=1) {
+            elseif ($user->invite_accepted !==1 && $user->active!==1) {
                 return $this->commonResponse(false, 'The provided credentials are incorrect or account is inactive.', '', Response::HTTP_EXPECTATION_FAILED);
             }elseif (!Hash::check($password, $user->password)) {
                 return $this->commonResponse(false, 'The provided credentials are incorrect.', '', Response::HTTP_EXPECTATION_FAILED);

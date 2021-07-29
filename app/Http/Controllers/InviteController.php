@@ -230,7 +230,6 @@ class InviteController extends Controller
 
     /**
      * Check if user invite status before resending email
-     * @param $user
      * @param $invite_token
      * @param $email
      * @param $action_url
