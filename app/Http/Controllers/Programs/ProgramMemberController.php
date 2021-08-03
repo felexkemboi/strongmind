@@ -69,12 +69,12 @@ class ProgramMemberController extends Controller
      * @bodyParam member_type_id integer required Member Type ID. Example -1
      * @urlParam id integer required the Program ID
      * @authenticated
-     */*
+     */
     public function store(Request $request, int $id): JsonResponse
     {
         $validator = Validator::make($request->all(),[
             'user_id.*' => 'required|integer|exists:users,id',
-            'member_type_id' => 'required|integer'//exists:program_member_types,id
+            'member_type_id' => 'required|integer|exists:program_member_types,id',
         ]);
         if($validator->fails()){
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
