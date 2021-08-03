@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,7 +41,7 @@ class ProgramMemberController extends Controller
             if (!$program) {
                 return $this->commonResponse(false, 'Program Does Not Exist', '', Response::HTTP_NOT_FOUND);
             }
-            $members = ProgramMember::with('programs', 'memberTypes', 'users')
+            $members = ProgramMember::with( 'users')
                 ->where('program_id', $program->id)
                 ->latest()
                 ->get()
@@ -97,8 +98,8 @@ class ProgramMemberController extends Controller
                     $existingMember = ProgramMember::where('user_id',$user_id)->where(function($query) use($request, $program){
                             $query->where('program_id',$program->id)->where('member_type_id',$request->member_type_id);
                     })->exists();
-                    if($existingMember){  // $member_type->name
-                        return $this->commonResponse(false,'Member '.$user->name .' with type '. $member_type.'  Exists for this program','', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    if($existingMember){
+                        return $this->commonResponse(false,'Member '.$user->name .' with type '. $member_type->name.'  exists for this program','', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $newMember = ProgramMember::create([
                         'user_id' => $user_id,
@@ -122,7 +123,7 @@ class ProgramMemberController extends Controller
                     $query->where('program_id',$program->id)->where('member_type_id',$request->member_type_id);
                 })->exists();
                 if($existingMember){  // $member_type->name
-                    return $this->commonResponse(false,'Member '.$user->name .' with type '. $member_type.'  Exists for this program','', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    return $this->commonResponse(false,'Member '.$user->name .' with type '. $member_type->name.'  exists for this program','', Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 //add a single program member
                 $newMember = ProgramMember::create([
@@ -141,39 +142,5 @@ class ProgramMemberController extends Controller
             Log::critical('Could Not Add New Program Members. ERROR: '.$exception->getTraceAsString());
             return $this->commonResponse(false, $exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }
