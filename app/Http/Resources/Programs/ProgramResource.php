@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Http\Resources\Programs;
+
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class ProgramResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  Request  $request
+     * @return array
+     */
+    public function toArray($request): array
+    {
+        return [
+            'id' => $this->id,
+            'office_id' => $this->office_id,
+            'program_type_id' => $this->program_type_id,
+            'member_count' => $this->member_count,
+            'program_code' => $this->program_code,
+            'colour_option' => $this->colour_option,
+            'office' => $this->office,
+            'program_type' => $this->programType,
+            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
+
+        ];
+    }
+}

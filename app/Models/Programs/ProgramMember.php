@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProgramMember extends Model
@@ -19,18 +20,18 @@ class ProgramMember extends Model
         'member_type_id'
     ];
 
-    public function program(): BelongsTo
+    public function programs(): HasMany
     {
-        return $this->belongsTo(Program::class,'program_id');
+        return $this->hasMany(Program::class,'id','program_id');
     }
 
-    public function memberType(): BelongsTo
+    public function memberTypes(): HasMany
     {
-        return $this->belongsTo(ProgramMemberType::class,'member_type_id');
+        return $this->hasMany(ProgramMemberType::class,'id','member_type_id');
     }
 
-    public function user(): BelongsTo
+    public function users(): HasMany
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->hasMany(User::class,'id','user_id');
     }
 }

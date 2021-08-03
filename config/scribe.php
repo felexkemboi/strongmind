@@ -244,7 +244,8 @@ INTRO
     /*
      * The base URL to be used in examples. If this is empty, Scribe will use the value of config('app.url').
      */
-    'base_url' => 'https://api.strongminds.made.ke',
+   // 'base_url' => 'https://api.strongminds.made.ke',
+    'base_url' => null,
     /*
      * Generate a Postman collection (v2.1.0) in addition to HTML docs.
      * For 'static' docs, the collection will be generated to public/docs/collection.json.
