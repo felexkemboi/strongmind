@@ -22,7 +22,7 @@ class ProgramMemberResource extends JsonResource
             'member_type_id' => $this->member_type_id,
             'user_id' => $this->user_id,
             //'programs' => ProgramResource::collection($this->programs),
-            'members' =>  $this->users, //UserResource::collection($this->users),
+            'members' =>  UserResource::collection($this->users),
             'memberTypes' => $this->memberTypes,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),

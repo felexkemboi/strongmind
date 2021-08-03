@@ -41,7 +41,7 @@ class ProgramMemberController extends Controller
             if (!$program) {
                 return $this->commonResponse(false, 'Program Does Not Exist', '', Response::HTTP_NOT_FOUND);
             }
-            $members = ProgramMember::with( 'users')
+            $members = ProgramMember::with( 'users','memberTypes','programs')
                 ->where('program_id', $program->id)
                 ->latest()
                 ->get()
