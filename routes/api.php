@@ -116,17 +116,17 @@ Route::group(['prefix' => 'programs','middleware' => 'auth:sanctum'], function()
     Route::get('/{id}/details',[ProgramController::class,'show']);
     Route::patch('/{id}/update',[ProgramController::class,'update']);
     Route::delete('/{id}/delete',[ProgramController::class,'destroy']);
+    //member types
+    Route::group(['prefix' => 'member-types'], function(){
+        Route::get('/',[ProgramMemberTypeController::class,'index']);
+        Route::post('/create',[ProgramMemberTypeController::class,'store']);
+        Route::get('/{id}/details',[ProgramMemberTypeController::class,'show']);
+        Route::patch('/{id}/update',[ProgramMemberTypeController::class,'update']);
+        Route::delete('/{id}/delete',[ProgramMemberTypeController::class,'destroy']);
+    });
     //Program Members
     Route::get('/{id}/members',[ProgramMemberController::class,'index']);
     Route::post('/{id}/new-members',[ProgramMemberController::class,'store']);
-
-    Route::group(['prefix' => 'member-types'], function(){
-            Route::get('/',[ProgramMemberTypeController::class,'index']);
-            Route::post('/create',[ProgramMemberTypeController::class,'store']);
-            Route::get('/{id}/details',[ProgramMemberTypeController::class,'show']);
-            Route::patch('/{id}/update',[ProgramMemberTypeController::class,'update']);
-            Route::delete('/{id}/delete',[ProgramMemberTypeController::class,'destroy']);
-    });
 });
 
 

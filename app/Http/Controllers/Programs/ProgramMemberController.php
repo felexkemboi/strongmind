@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Programs;
 
+use App\Events\ProgramMemberAdded;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Programs\ProgramMemberResource;
 use App\Models\Programs\Program;
@@ -107,6 +108,7 @@ class ProgramMemberController extends Controller
                         'member_type_id' => $request->member_type_id
                     ]);
                     if($newMember){
+                        $program->update(['member_count' => $program->member_count + count($userIds)]); //update member count
                         return $this->commonResponse(true,'Members Added Successfully',new ProgramMemberResource($newMember), Response::HTTP_OK);
                     }
                     return $this->commonResponse(false,'Failed To Add Program Members','', Response::HTTP_EXPECTATION_FAILED);
@@ -132,6 +134,7 @@ class ProgramMemberController extends Controller
                    'member_type_id' => $request->member_type_id
                 ]);
                 if($newMember){
+                    ProgramMemberAdded::dispatch($program); //update member_count
                     return $this->commonResponse(true,'Member Added Successfully', new ProgramMemberResource($newMember), Response::HTTP_OK);
                 }
                 return $this->commonResponse(false,'Failed To Add Program Member','', Response::HTTP_EXPECTATION_FAILED);

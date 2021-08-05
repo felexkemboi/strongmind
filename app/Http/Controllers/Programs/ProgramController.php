@@ -72,11 +72,11 @@ class ProgramController extends Controller
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')),'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         $programData = [
-            'office_id'                => $request->office_id,
-            'name'                    => $request->name,
+            'office_id'         => $request->office_id,
+            'name'              => $request->name,
             'program_code'      => $request->program_code,
             'program_type_id'   => $request->program_type_id,
-            'colour_option'       => $request->colour_option,
+            'colour_option'     => $request->colour_option,
             'member_count'      => 0
         ];
         try{

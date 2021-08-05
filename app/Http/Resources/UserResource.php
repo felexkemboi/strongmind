@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Helpers\AuthHelper;
+use App\Helpers\ProgramHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /** @mixin \App\Models\User */
@@ -30,6 +31,7 @@ class UserResource extends JsonResource
             'timezone' => $this->timezone,
             'office' => $this->office,
             'role'=>AuthHelper::UserRole($this->id) ?? '',
+            'programs' => ProgramHelper::userPrograms($this->id),
             'is_admin' => $this->is_admin,
             'active' => $this->active,
             'office_id' => $this->office_id,
