@@ -14,7 +14,9 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TimezoneController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Programs\ProgramController;
+use App\Http\Controllers\Programs\ProgramMemberController;
+use App\Http\Controllers\Programs\ProgramMemberTypeController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -106,6 +108,25 @@ Route::prefix('program-types')->group(function () {
     Route::post('create', [ProgramTypeController::class, 'create'])->middleware('auth:sanctum');
     Route::put('update/{id}', [ProgramTypeController::class, 'update'])->middleware('auth:sanctum');
     Route::delete('delete/{id}', [ProgramTypeController::class, 'delete'])->middleware('auth:sanctum');
+});
+//Programs
+Route::group(['prefix' => 'programs','middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',[ProgramController::class,'index']);
+    Route::post('/create',[ProgramController::class,'store']);
+    Route::get('/{id}/details',[ProgramController::class,'show']);
+    Route::patch('/{id}/update',[ProgramController::class,'update']);
+    Route::delete('/{id}/delete',[ProgramController::class,'destroy']);
+    //member types
+    Route::group(['prefix' => 'member-types'], function(){
+        Route::get('/',[ProgramMemberTypeController::class,'index']);
+        Route::post('/create',[ProgramMemberTypeController::class,'store']);
+        Route::get('/{id}/details',[ProgramMemberTypeController::class,'show']);
+        Route::patch('/{id}/update',[ProgramMemberTypeController::class,'update']);
+        Route::delete('/{id}/delete',[ProgramMemberTypeController::class,'destroy']);
+    });
+    //Program Members
+    Route::get('/{id}/members',[ProgramMemberController::class,'index']);
+    Route::post('/{id}/new-members',[ProgramMemberController::class,'store']);
 });
 
 
