@@ -46,7 +46,7 @@ class OfficeController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'country_id' => 'nullable',
-            'name' => 'required',
+            'name' => 'required|unique:offices',
         ]);
         if ($validator->fails()) {
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);

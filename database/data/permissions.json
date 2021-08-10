@@ -1,0 +1,126 @@
+[
+    {
+        "name": "view permissions",
+        "module": "Auth"
+    },
+    {
+        "name": "view roles",
+        "module": "Auth"
+    },
+    {
+        "name": "create role",
+        "module": "Auth"
+    },
+    {
+        "name": "edit role",
+        "module": "Auth"
+    },
+    {
+        "name": "delete role",
+        "module": "Auth"
+    },
+    {
+        "name": "view offices",
+        "module": "Administration"
+    },
+    {
+        "name": "create office",
+        "module": "Administration"
+    },
+    {
+        "name": "edit office",
+        "module": "Administration"
+    },
+    {
+        "name": "View office users",
+        "module": "Administration"
+    },
+    {
+        "name": "activate country",
+        "module": "Administration"
+    },
+    {
+        "name": "deactivate country",
+        "module": "Administration"
+    },
+    {
+        "name": "invite member",
+        "module": "Member"
+    },
+    {
+        "name": "view members",
+        "module": "Member"
+    },
+    {
+        "name": "edit member",
+        "module": "Member"
+    },
+    {
+        "name": "delete member",
+        "module": "Member"
+    },
+    {
+        "name": "view group types",
+        "module": "Miscellaneous"
+    },
+    {
+        "name": "create group type",
+        "module": "Miscellaneous"
+    },
+    {
+        "name": "edit group type",
+        "module": "Miscellaneous"
+    },
+    {
+        "name": "delete group type",
+        "module": "Miscellaneous"
+    },
+    {
+        "name": "view program types",
+        "module": "Miscellaneous"
+    },
+    {
+        "name": "create program type",
+        "module": "Miscellaneous"
+    },
+    {
+        "name": "edit program type",
+        "module": "Miscellaneous"
+    },
+    {
+        "name": "delete program type",
+        "module": "Miscellaneous"
+    },
+    {
+        "name": "view channels",
+        "module": "Miscellaneous"
+    },
+    {
+        "name": "create channel",
+        "module": "Miscellaneous"
+    },
+    {
+        "name": "edit channel",
+        "module": "Miscellaneous"
+    },
+    {
+        "name": "delete channel",
+        "module": "Miscellaneous"
+    },
+    {
+        "name": "view statuses",
+        "module": "Miscellaneous"
+    },
+    {
+        "name": "create status",
+        "module": "Miscellaneous"
+    },
+    {
+        "name": "edit status",
+        "module": "Miscellaneous"
+    },
+    {
+        "name": "delete status",
+        "module": "Miscellaneous"
+    }
+]

@@ -3,16 +3,19 @@
 namespace App\Http\Resources;
 
 use App\Helpers\AuthHelper;
+use App\Helpers\ProgramHelper;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\User */
+/** @mixin User */
 class UserResource extends JsonResource
 {
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return array
      */
-    public function toArray($request)
+    public function toArray($request): array
     {
         return [
             'id' => $this->id,
@@ -29,7 +32,8 @@ class UserResource extends JsonResource
             'timezone_id' => $this->timezone_id,
             'timezone' => $this->timezone,
             'office' => $this->office,
-            'role'=>AuthHelper::UserRole($this->id) ?? '',
+            'role'=> AuthHelper::UserRole($this->id) ?? null,
+            'programs' => ProgramHelper::userPrograms($this->id),
             'is_admin' => $this->is_admin,
             'active' => $this->active,
             'office_id' => $this->office_id,

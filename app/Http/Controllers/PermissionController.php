@@ -60,7 +60,7 @@ class PermissionController extends Controller
         } else {
             try {
                 $slug = Str::slug($request->slug);
-                $ability_exists = Ability::firstWhere('slug', $slug);
+                $ability_exists = Ability::firstWhere('name', $slug);
                 if ($ability_exists) {
                     return $this->commonResponse(false, 'Permission already exists!', '', Response::HTTP_UNPROCESSABLE_ENTITY);
                 } else {

@@ -47,7 +47,7 @@ phases:
       - echo AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} >> .env
       - echo AWS_BUCKET=${AWS_BUCKET} >> .env
       - echo AWS_BUCKET_URL=${AWS_BUCKET_URL} >> .env
-
+      - echo POSTMARK_WELCOME_TEMPLATE_ID=${POSTMARK_WELCOME_TEMPLATE_ID} >> .env
   build:
     commands:
       - echo Run Migration

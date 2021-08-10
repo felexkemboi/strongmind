@@ -13,6 +13,7 @@ return [
 
     'token' => env('POSTMARK_TOKEN'),
     'secret' => env('POSTMARK_SECRET'),
+    'welcome_template_id' => env('POSTMARK_WELCOME_TEMPLATE_ID'),
 
     /*
     |--------------------------------------------------------------------------

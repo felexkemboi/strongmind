@@ -52,8 +52,6 @@ class AuthHelper
                 ->select('roles.id as role_id', 'roles.title as name', 'roles.description'
                     , 'roles.code as role_code')
                 ->where('assigned_roles.entity_id', $userId)
-                ->first()
-            ?? [];
+                ->first();
     }
-
 }
