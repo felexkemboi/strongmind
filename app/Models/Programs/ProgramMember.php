@@ -20,6 +20,9 @@ class ProgramMember extends Model
         'member_type_id'
     ];
 
+    const MEMBERSHIP_ACTIVE = 'active';
+    const MEMBERSHIP_REVOVED = 'revoked';
+
     public function programs(): HasMany
     {
         return $this->hasMany(Program::class,'id','program_id');

@@ -9,6 +9,7 @@ use App\Models\Programs\Program;
 use App\Models\Programs\ProgramMember;
 use App\Models\Programs\ProgramMemberType;
 use App\Models\User;
+use App\Services\ProgramService;
 use App\Support\Collection;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -28,6 +29,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ProgramMemberController extends Controller
 {
+    public $programService;
+
+    public function __construct(ProgramService $programService){
+        $this->programService = $programService;
+    }
     /**
      * List Program Members
      * @param int $id
@@ -145,5 +151,20 @@ class ProgramMemberController extends Controller
             Log::critical('Could Not Add New Program Members. ERROR: '.$exception->getTraceAsString());
             return $this->commonResponse(false, $exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * Revoke Program Membership
+     * @param Request $request
+     * @param $id
+     * @urlParam id integer required the program Id.
+     * @bodyParam user_id integer required User ID
+     * @bodyParam member_type_id integer required The Member Type Id
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function removeMember(Request $request, $id): JsonResponse
+    {
+        return $this->programService->revokeMembership($request, $id);
     }
 }
