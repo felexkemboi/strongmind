@@ -15,6 +15,7 @@ class ProgramMemberTableSeeder extends Seeder
      */
     public function run()
     {
+        /*
         $user = User::firstWhere('email','admin@strongminds.org');
         $newProgram = Program::create([
             'name' => 'StrongMinds Demo Program',
@@ -29,5 +30,6 @@ class ProgramMemberTableSeeder extends Seeder
             'program_id' => $newProgram->id,
             'member_type_id' => 1
         ]);
+        **/
     }
 }
