@@ -116,6 +116,9 @@ Route::group(['prefix' => 'programs','middleware' => 'auth:sanctum'], function()
     Route::get('/{id}/details',[ProgramController::class,'show']);
     Route::patch('/{id}/update',[ProgramController::class,'update']);
     Route::delete('/{id}/delete',[ProgramController::class,'destroy']);
+    Route::group(['prefix' => 'invite'], function(){
+        Route::post('/{id}/send',[ProgramController::class,'sendInvites']);
+    });
     //member types
     Route::group(['prefix' => 'member-types'], function(){
         Route::get('/',[ProgramMemberTypeController::class,'index']);
@@ -127,6 +130,8 @@ Route::group(['prefix' => 'programs','middleware' => 'auth:sanctum'], function()
     //Program Members
     Route::get('/{id}/members',[ProgramMemberController::class,'index']);
     Route::post('/{id}/new-members',[ProgramMemberController::class,'store']);
+    Route::post('/{id}/revoke-membership',[ProgramMemberController::class,'removeMember']);
+    Route::post('/{id}/activate-membership',[ProgramMemberController::class,'activateMember']);
 });
 
 

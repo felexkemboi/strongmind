@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Programs;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Programs\ProgramResource;
 use App\Models\Programs\Program;
+use App\Services\ProgramService;
 use App\Support\Collection;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -23,6 +24,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ProgramController extends Controller
 {
+    public $programService;
+
+    public function __construct(ProgramService $programService){
+        $this->programService = $programService;
+    }
     /**
      * List Programs
      *
@@ -192,5 +198,20 @@ class ProgramController extends Controller
             Log::critical('Could Not Delete Program. ERROR:  '.$exception->getTraceAsString());
             return $this->commonResponse(false,$exception->getMessage(), '', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * Send Member Invites
+     * @param Request $request
+     * @param $id
+     * @urlParam id integer required The Program ID
+     * @bodyParam email email required The User Email Address
+     * @bodyParam member_type_id integer The Member Type ID
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function sendInvites(Request $request, $id): JsonResponse
+    {
+        return $this->programService->inviteMembers($request, $id);
     }
 }
