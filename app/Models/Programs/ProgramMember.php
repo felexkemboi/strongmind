@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProgramMember extends Model
 {
@@ -17,12 +18,21 @@ class ProgramMember extends Model
     protected $fillable = [
         'program_id',
         'user_id',
-        'member_type_id'
+        'member_type_id',
+        'status'
     ];
 
     const MEMBERSHIP_ACTIVE = 'active';
     const MEMBERSHIP_REVOVED = 'revoked';
 
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('status',self::MEMBERSHIP_ACTIVE);
+    }
     public function programs(): HasMany
     {
         return $this->hasMany(Program::class,'id','program_id');

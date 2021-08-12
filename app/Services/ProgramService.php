@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Events\ProgramMemberAdded;
 use App\Models\ProgramMemberWaitingList;
 use App\Models\Programs\Program;
 use App\Models\Programs\ProgramMember;
@@ -49,40 +50,39 @@ class ProgramService
             if( count($inviteEmails) > 1 ){
                 //invite multiple email address
                 foreach ($inviteEmails as $email){
-                    $invite_token = hash('sha256', utf8_encode(Str::uuid()));
-                    $action_url = '';
-                    $invitedUsers  = [
-                        'invite_id' => $invite_token,
-                        'email' => $email,
+                    $user = User::firstWhere('email', $email);
+                    if(!$user){
+                        return $this->commonResponse(false,'User with the email address '.$email.' does not exist','', Response::HTTP_NOT_FOUND);
+                    }
+                    //program member array data
+                    $newProgramMember = [
+                        'user_id' => $user->id,
                         'program_id' => $program->id,
-                        'member_type_id' => $request->member_type_id ?? 1
+                        'member_type_id' => $request->member_type_id
                     ];
-                    $mail = $this->sendMailInvite($email, $action_url, $program);
-                    if($mail){
-                        ProgramMemberWaitingList::create($invitedUsers); //create program member waiting list
+                    if(ProgramMember::create($newProgramMember)){
+                        $program->update(['member_count' => $program->member_count + count($inviteEmails)]);
+                        $this->notifyMember($user, $program);
                         return $this->commonResponse(true,'Invites sent successfully','', Response::HTTP_OK);
                     }
                     return $this->commonResponse(false,'Failed to send invites, please try again','', Response::HTTP_EXPECTATION_FAILED);
                 }
             }
-            //send a single invite
+            //send a single invite instead
             $email = $request->email;
-            $invite_token = hash('sha256', utf8_encode(Str::uuid()));
-            $action_url = '';
-            $invitedUser  = [
-                'invite_id' => $invite_token,
-                'email' => $email,
+            $user = User::firstWhere('email', $email);
+            if(!$user){
+                return $this->commonResponse(false,'User with the email address '.$email.' does not exist','', Response::HTTP_NOT_FOUND);
+            }
+            //program member array data
+            $newProgramMember = [
+                'user_id' => $user->id,
                 'program_id' => $program->id,
-                'member_type_id' => $request->member_type_id ?? 1
+                'member_type_id' => $request->member_type_id
             ];
-            $mail = $this->sendMailInvite($email, $action_url, $program);
-            if($mail){
-                $existingInvite = ProgramMemberWaitingList::firstWhere('email',$request->email);
-                if($existingInvite){
-                    $existingInvite->update(['invite_id' => $invite_token]);
-                }else{
-                    ProgramMemberWaitingList::create($invitedUser); //create program member waiting list
-                }
+            if(ProgramMember::create($newProgramMember)){
+                ProgramMemberAdded::dispatch($program); //update member count
+                $this->notifyMember($user, $program); //notify user
                 return $this->commonResponse(true,'Invite sent successfully','', Response::HTTP_OK);
             }
             return $this->commonResponse(false,'Failed to send invite, please try again','', Response::HTTP_EXPECTATION_FAILED);
@@ -94,53 +94,15 @@ class ProgramService
         }
     }
 
-    public function processInvite(Request $request): JsonResponse
-    {
-        $validator = Validator::make($request->all(),['invite_id' => 'required']);
-        if($validator->fails()){
-            return $this->commonResponse(false,Arr::flatten($validator->messages()->get('*')),'', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-        try{
-            $inWaitingList = ProgramMemberWaitingList::firstWhere('invite_id',$request->invite_id);
-            if(!$inWaitingList){
-                return $this->commonResponse(false,'Invalid invite ID','', Response::HTTP_NOT_FOUND);
-            }
-            $user = User::firstWhere('email',$inWaitingList->email);
-            if(!$user){
-                return $this->commonResponse(false,'User Does Not Exist','', Response::HTTP_NOT_FOUND);
-            }
-            $existingMember = ProgramMember::with('programs','memberTypes','users')->where('user_id',$user->id)
-                    ->where('member_type_id',$inWaitingList->member_type_id)->where('program_id',$inWaitingList->program_id)->exists();
-            if($existingMember){
-                return $this->commonResponse(false,'Program member exists','', Response::HTTP_UNPROCESSABLE_ENTITY);
-            }
-            $newProgramMember = [
-                'user_id' => $user->id,
-                'program_id' => $inWaitingList->program_id,
-                'member_type_id' => $inWaitingList->member_type_id
-            ];
-            if(ProgramMember::create($newProgramMember)){
-                $inWaitingList->delete(); //remove member from waiting list creation
-                return $this->commonResponse(true,'Member added successfully to the program','', Response::HTTP_OK);
-            }
-            return $this->commonResponse(false,'Failed to add member','', Response::HTTP_EXPECTATION_FAILED);
-        }catch (QueryException $queryException){
-            return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }catch (Exception $exception){
-            Log::critical('Failed to add invited user to the program');
-            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
     /**
      * @param Request $request
-     * @param $id
+     * @param int $id
      * @urlParam id integer required the program Id.
      * @bodyParam user_id integer required User ID
      * @bodyParam member_type_id integer required The Member Type Id
      * @return JsonResponse
      */
-    public function revokeMembership(Request $request, $id): JsonResponse
+    public function revokeMembership(Request $request, int $id): JsonResponse
     {
         $validator = Validator::make($request->all(),
             [
@@ -167,8 +129,10 @@ class ProgramService
             if(!$existingMember){
                 return $this->commonResponse(false,'Member does not exist for this program member type','', Response::HTTP_NOT_FOUND);
             }
-            //TODO set membership status as revoked instead of deleting record
-            if($existingMember->delete()){
+            if($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED ){
+                return $this->commonResponse(false,'Membership already revoked, no action needed','', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+            if($existingMember->update(['status' => ProgramMember::MEMBERSHIP_REVOVED])){
                 return $this->commonResponse(true,'Membership Revoked Successfully','', Response::HTTP_OK);
             }
             return $this->commonResponse(false,'Failed to revoke membership','', Response::HTTP_EXPECTATION_FAILED);
@@ -181,29 +145,72 @@ class ProgramService
     }
 
     /**
-     * @param $email
-     * @param $action_url
-     * @param $program
+     * @param Request $request
+     * @param int $id
      * @return JsonResponse
      */
-    private function sendMailInvite($email, $action_url, $program): JsonResponse
+    public function activateMembership(Request $request, int $id): JsonResponse
     {
-        try{
-            $client = new PostmarkClient(config('postmark.token'));
-            $client->sendEmailWithTemplate(
-                config('mail.from.address'),
-                $email,
-                'program-invitation',
-                [
-                    'action_url' => $action_url,
-                    'support_email' => config('mail.from.address'),
-                    'program_name'  => $program->name ?? '',
-                    'product_name' => env('APP_NAME')
-                ]
-            );
-            return $this->commonResponse(true,'Invite Sent Successfully','', Response::HTTP_CREATED);
-        }catch (Exception $exception){
-            return $this->commonResponse(false,$exception->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        $validator = Validator::make($request->all(),
+            [
+                'user_id.*' => 'required|integer|exists:users,id',
+                'member_type_id' => 'integer|required|exists:program_member_types,id'
+            ]);
+        if($validator->fails()){
+            return $this->commonResponse(false,Arr::flatten($validator->messages()->get('*')),'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+        try{
+            $program = Program::with('office','programType')->find($id);
+            if(!$program){
+                return $this->commonResponse(false,'Program Does Not Exist','', Response::HTTP_NOT_FOUND);
+            }
+            $user = User::firstWhere('id',$request->user_id);
+            if(!$user){
+                return $this->commonResponse(false,'User Does Not Exist','', Response::HTTP_NOT_FOUND);
+            }
+            $existingMember = ProgramMember::with('programs','memberTypes','users')
+                ->firstWhere('program_id',$program->id)
+                ->where(function($query) use($request){
+                    $query->where('user_id', $request->user_id)->where('member_type_id',$request->member_type_id);
+                });
+            if(!$existingMember){
+                return $this->commonResponse(false,'Member does not exist for this program member type','', Response::HTTP_NOT_FOUND);
+            }
+            if($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE ){
+                return $this->commonResponse(false,'Membership already active, no action needed','', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+            if($existingMember->update(['status' => ProgramMember::MEMBERSHIP_ACTIVE])){
+                return $this->commonResponse(true,'Membership activated Successfully','', Response::HTTP_OK);
+            }
+            return $this->commonResponse(false,'Failed to activate membership','', Response::HTTP_EXPECTATION_FAILED);
+        }catch (QueryException $queryException){
+            return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (Exception $exception){
+            Log::critical('Failed to activate program member. ERROR '. $exception->getTraceAsString());
+            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @param $user
+     * @param $program
+     * @return DynamicResponseModel
+     */
+    public function notifyMember($user, $program): DynamicResponseModel
+    {
+        //notify member that they have been added to this program
+        $client = new PostmarkClient(config('postmark.token'));
+        $action_url = '';
+        return $client->sendEmailWithTemplate(
+            config('mail.from.address'),
+            $user->email,
+            'program-invitation',
+            [
+                'action_url' => $action_url,
+                'support_email' => config('mail.from.address'),
+                'program_name'  => $program->name ?? '',
+                'product_name' => env('APP_NAME')
+            ]
+        );
     }
 }

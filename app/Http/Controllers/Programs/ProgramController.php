@@ -214,16 +214,4 @@ class ProgramController extends Controller
     {
         return $this->programService->inviteMembers($request, $id);
     }
-
-    /**
-     * Process Member Invites
-     * @param Request $request
-     * @return JsonResponse
-     * @bodyParam invite_id string required The User Invite Token
-     * @authenticated
-     */
-    public function acceptInvite(Request $request): JsonResponse
-    {
-        return $this->programService->processInvite($request);
-    }
 }

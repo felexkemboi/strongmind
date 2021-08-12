@@ -20,6 +20,7 @@ class ProgramMemberResource extends JsonResource
             'id' => $this->id,
             'program_id' => $this->program_id,
             'member_type_id' => $this->member_type_id,
+            'status' => $this->status,
             'user_id' => $this->user_id,
             //'programs' => ProgramResource::collection($this->programs),
             'members' =>  UserResource::collection($this->users),

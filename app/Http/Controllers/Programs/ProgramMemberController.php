@@ -15,10 +15,12 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Postmark\PostmarkClient;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -48,8 +50,11 @@ class ProgramMemberController extends Controller
             if (!$program) {
                 return $this->commonResponse(false, 'Program Does Not Exist', '', Response::HTTP_NOT_FOUND);
             }
-            $members = ProgramMember::with( 'users','memberTypes','programs')
-                ->where('program_id', $program->id)
+            $members = ProgramMember::active()->with( 'users','memberTypes','programs')
+                ->where(function($query) use($program)
+                {
+                    $query->where('program_id', $program->id);
+                })
                 ->latest()
                 ->get()
                 ->transform(function ($member) {
@@ -95,26 +100,26 @@ class ProgramMemberController extends Controller
             $userIds = explode(',', $request->user_id);
             if(count($userIds) > 1){
                 //add multiple program members
-                foreach ($userIds as $user_id){
-                    //check for an existing user with the same member type for this program
-                    $user = User::firstWhere('id', $user_id);
+                for($i = 0, $iMax = count($userIds); $i < $iMax; $i++){
+                    $user = User::firstWhere('id', $userIds[$i]);
                     if(!$user){
-                        return $this->commonResponse(false,'User Does Not Exist','', Response::HTTP_NOT_FOUND);
+                        return $this->commonResponse(false,'User With ID '.$userIds[$i].' Does Not Exist','', Response::HTTP_NOT_FOUND);
                     }
                     $member_type = ProgramMemberType::firstWhere('id', $request->member_type_id);
-                    $existingMember = ProgramMember::where('user_id',$user_id)->where(function($query) use($request, $program){
-                            $query->where('program_id',$program->id)->where('member_type_id',$request->member_type_id);
+                    $existingMember = ProgramMember::where('user_id',$userIds[$i])->where(function($query) use($request, $program){
+                        $query->where('program_id',$program->id)->where('member_type_id',$request->member_type_id);
                     })->exists();
                     if($existingMember){
                         return $this->commonResponse(false,'Member '.$user->name .' with type '. $member_type->name.'  exists for this program','', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $newMember = ProgramMember::create([
-                        'user_id' => $user_id,
+                        'user_id' => $userIds[$i],
                         'program_id' => $program->id,
                         'member_type_id' => $request->member_type_id
                     ]);
                     if($newMember){
                         $program->update(['member_count' => $program->member_count + count($userIds)]); //update member count
+                        $this->programService->notifyMember($user, $program);//notify member that they have been added to this program
                         return $this->commonResponse(true,'Members Added Successfully',new ProgramMemberResource($newMember), Response::HTTP_OK);
                     }
                     return $this->commonResponse(false,'Failed To Add Program Members','', Response::HTTP_EXPECTATION_FAILED);
@@ -124,7 +129,7 @@ class ProgramMemberController extends Controller
                 $user_id = $request->user_id;
                 $user = User::firstWhere('id', $user_id);
                 if(!$user){
-                    return $this->commonResponse(false,'User Does Not Exist','', Response::HTTP_NOT_FOUND);
+                    return $this->commonResponse(false,'User With ID '.$user_id.' Does Not Exist','', Response::HTTP_NOT_FOUND);
                 }
                 $member_type = ProgramMemberType::firstWhere('id', $request->member_type_id);
                 $existingMember = ProgramMember::where('user_id',$user_id)->where(function($query) use($request, $program){
@@ -141,6 +146,7 @@ class ProgramMemberController extends Controller
                 ]);
                 if($newMember){
                     ProgramMemberAdded::dispatch($program); //update member_count
+                    $this->programService->notifyMember($user, $program);//notify member that they have been added to this program
                     return $this->commonResponse(true,'Member Added Successfully', new ProgramMemberResource($newMember), Response::HTTP_OK);
                 }
                 return $this->commonResponse(false,'Failed To Add Program Member','', Response::HTTP_EXPECTATION_FAILED);
@@ -166,5 +172,20 @@ class ProgramMemberController extends Controller
     public function removeMember(Request $request, $id): JsonResponse
     {
         return $this->programService->revokeMembership($request, $id);
+    }
+
+    /**
+     * Activate Program Membership
+     * @param Request $request
+     * @param int $id
+     * @urlParam id integer required the program Id.
+     * @bodyParam user_id integer required User ID
+     * @bodyParam member_type_id integer required The Member Type Id
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function activateMember(Request $request, int $id): JsonResponse
+    {
+        return $this->programService->activateMembership($request, $id);
     }
 }
