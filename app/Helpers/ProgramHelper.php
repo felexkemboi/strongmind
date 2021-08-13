@@ -29,7 +29,7 @@ class ProgramHelper
             ->orderBy('programs.id','DESC')
             ->get();
         if($userPrograms->isEmpty()){
-            return null;
+            return [];
         }
         return $userPrograms;
     }
