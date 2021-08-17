@@ -41,9 +41,11 @@ class ProgramController extends Controller
             $programs = Program::with('office','programType')->latest()->get()->transform(function($program){
                     return new ProgramResource($program);
             })->groupBy('office_id');
+            /*
             if($programs->isEmpty()){
                 return $this->commonResponse(false,'Programs Not Found','', Response::HTTP_NOT_FOUND);
             }
+            **/
             return $this->commonResponse(true,'Success',(new Collection($programs)), Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -61,7 +63,7 @@ class ProgramController extends Controller
      * @bodyParam office_id integer required Office ID. Example-1
      * @bodyParam program_code string required Program Code
      * @bodyParam program_type_id integer required Program Type. Example-1
-     * @bodyParam colour_option string required Colour Code
+     * @bodyParam colour_option string Colour Code
      * @return JsonResponse
      * @authenticated
      */
@@ -72,7 +74,7 @@ class ProgramController extends Controller
             'name' => 'required|unique:programs|string|min:4|max:60',
             'program_code' => 'required|unique:programs|string|min:3|max:30',
             'program_type_id' => 'required|integer|exists:program_types,id',
-            'colour_option' => 'required|string',
+            'colour_option' => 'nullable|string',
         ]);
         if($validator->fails()){
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')),'', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -111,9 +113,11 @@ class ProgramController extends Controller
     {
         try{
             $program = Program::with('office','programType')->find($id);
+            /*
             if(!$program){
                 return $this->commonResponse(false,'Program Does Not Exist','', Response::HTTP_NOT_FOUND);
             }
+            **/
             return $this->commonResponse(true,'success',new ProgramResource($program), Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -152,7 +156,7 @@ class ProgramController extends Controller
         try {
             $program = Program::with('office','programType')->find($id);
             if(!$program){
-                return $this->commonResponse(false,'Program Does Not Exist', '', Response::HTTP_NOT_FOUND);
+                return $this->commonResponse(false,'Program Does Not Exist', '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $programUpdate = $program->update([
                 'name' => $request->name,
@@ -186,7 +190,7 @@ class ProgramController extends Controller
         try{
             $program = Program::with('office','programType')->find($id);
             if(!$program){
-                return $this->commonResponse(false,'Program Does Not Exist','', Response::HTTP_NOT_FOUND);
+                return $this->commonResponse(false,'Program Does Not Exist','', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if($program->delete()){
                 return $this->commonResponse(true,'Program Deleted Successfully', '', Response::HTTP_OK);

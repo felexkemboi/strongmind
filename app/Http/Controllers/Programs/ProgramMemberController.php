@@ -60,9 +60,11 @@ class ProgramMemberController extends Controller
                 ->transform(function ($member) {
                     return new ProgramMemberResource($member);
                 })->groupBy('member_type_id');
+            /*
             if ($members->isEmpty()) {
                 return $this->commonResponse(false, 'Program Members Not Found', '', Response::HTTP_NOT_FOUND);
             }
+            **/
             return $this->commonResponse(true, 'success', (new Collection($members)), Response::HTTP_OK);
         } catch (QueryException $queryException) {
             return $this->commonResponse(false, $queryException->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -115,7 +117,8 @@ class ProgramMemberController extends Controller
                     $newMember = ProgramMember::create([
                         'user_id' => $userIds[$i],
                         'program_id' => $program->id,
-                        'member_type_id' => $request->member_type_id
+                        'member_type_id' => $request->member_type_id,
+                        'status' => ProgramMember::MEMBERSHIP_ACTIVE
                     ]);
                     if($newMember){
                         $program->update(['member_count' => $program->member_count + count($userIds)]); //update member count
@@ -142,7 +145,8 @@ class ProgramMemberController extends Controller
                 $newMember = ProgramMember::create([
                    'user_id' => $request->user_id,
                    'program_id' => $program->id,
-                   'member_type_id' => $request->member_type_id
+                   'member_type_id' => $request->member_type_id,
+                    'status' => ProgramMember::MEMBERSHIP_ACTIVE
                 ]);
                 if($newMember){
                     ProgramMemberAdded::dispatch($program); //update member_count
