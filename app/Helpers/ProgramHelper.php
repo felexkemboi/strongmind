@@ -43,8 +43,11 @@ class ProgramHelper
             ->where(function($query) use($programId){
                 $query->where('programs.id',$programId);
             })
-            //->distinct()
-            ->groupBy('program_members.member_type_id')
+            ->whereNotNull('program_members.member_type_id')
+            ->groupBy('program_members.member_type_id','users.id')
+            ->distinct()
             ->get();
+            //->toSql();
+
     }
 }
