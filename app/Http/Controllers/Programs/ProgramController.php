@@ -41,11 +41,6 @@ class ProgramController extends Controller
             $programs = Program::with('office','programType')->latest()->get()->transform(function($program){
                     return new ProgramResource($program);
             })->groupBy('office_id');
-            /*
-            if($programs->isEmpty()){
-                return $this->commonResponse(false,'Programs Not Found','', Response::HTTP_NOT_FOUND);
-            }
-            **/
             return $this->commonResponse(true,'Success',(new Collection($programs)), Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -113,11 +108,9 @@ class ProgramController extends Controller
     {
         try{
             $program = Program::with('office','programType')->find($id);
-            /*
             if(!$program){
                 return $this->commonResponse(false,'Program Does Not Exist','', Response::HTTP_NOT_FOUND);
             }
-            **/
             return $this->commonResponse(true,'success',new ProgramResource($program), Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -156,7 +149,7 @@ class ProgramController extends Controller
         try {
             $program = Program::with('office','programType')->find($id);
             if(!$program){
-                return $this->commonResponse(false,'Program Does Not Exist', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+                return $this->commonResponse(false,'Program Does Not Exist', '', Response::HTTP_NOT_FOUND);
             }
             $programUpdate = $program->update([
                 'name' => $request->name,
@@ -190,7 +183,7 @@ class ProgramController extends Controller
         try{
             $program = Program::with('office','programType')->find($id);
             if(!$program){
-                return $this->commonResponse(false,'Program Does Not Exist','', Response::HTTP_UNPROCESSABLE_ENTITY);
+                return $this->commonResponse(false,'Program Does Not Exist','', Response::HTTP_NOT_FOUND);
             }
             if($program->delete()){
                 return $this->commonResponse(true,'Program Deleted Successfully', '', Response::HTTP_OK);
