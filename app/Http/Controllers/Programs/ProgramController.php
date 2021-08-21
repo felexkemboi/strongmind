@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,10 +39,8 @@ class ProgramController extends Controller
     public function index(): JsonResponse
     {
         try{
-            $programs = Program::with('office','programType')->latest()->get()->transform(function($program){
-                    return new ProgramResource($program);
-            })->groupBy('office_id');
-            return $this->commonResponse(true,'Success',(new Collection($programs)), Response::HTTP_OK);
+            $programs = Program::with('office','programType')->latest()->get();
+            return $this->commonResponse(true,'success',ProgramResource::collection($programs),Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){

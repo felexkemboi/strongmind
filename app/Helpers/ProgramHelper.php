@@ -45,10 +45,6 @@ class ProgramHelper
                     ->where('program_members.program_id', '=', $programId);
             })
             ->whereNotNull('program_members.member_type_id')
-            //->groupBy('program_members.member_type_id')
-            //->distinct('program_members.member_type_id')
             ->get();
-            //->toSql();
-
     }
 }
