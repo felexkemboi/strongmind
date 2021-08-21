@@ -3,7 +3,6 @@
 namespace App\Models\Programs;
 
 use App\Models\Misc\ProgramType;
-use App\Models\Office;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,10 +25,11 @@ class Program extends Model
 
     public function office(): BelongsTo
     {
-        return $this->belongsTo(Office::class,'office_id');
+        return $this->belongsTo(Office::class, 'office_id');
     }
+
     public function programType(): BelongsTo
     {
-        return $this->belongsTo(ProgramType::class,'program_type_id');
+        return $this->belongsTo(ProgramType::class, 'program_type_id');
     }
 }
