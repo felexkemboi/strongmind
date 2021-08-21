@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Programs;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\OfficeResource;
 use App\Http\Resources\Programs\ProgramResource;
+use App\Models\Office;
 use App\Models\Programs\Program;
 use App\Services\ProgramService;
 use App\Support\Collection;
@@ -40,7 +42,8 @@ class ProgramController extends Controller
     {
         try{
             $programs = Program::with('office','programType')->latest()->get();
-            return $this->commonResponse(true,'success',ProgramResource::collection($programs),Response::HTTP_OK);
+            $officesPrograms = Office::with('programs','members')->latest()->get();
+            return $this->commonResponse(true,'success',OfficeResource::collection($officesPrograms),Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
