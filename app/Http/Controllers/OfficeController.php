@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use Exception;
 use App\Models\User;
 use App\Models\Office;
@@ -136,7 +137,7 @@ class OfficeController extends Controller
      * @authenticated
      */
 
-    public function programs($id): JsonResponse //Request $request, 
+    public function programs($id): JsonResponse
     {
         try{
             $office = Office::find($id);

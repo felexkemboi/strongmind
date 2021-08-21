@@ -19,7 +19,7 @@ class ProgramResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->id,
+            'name' => $this->name,
             'office_id' => $this->office_id,
             'program_type_id' => $this->program_type_id,
             'member_count' => $this->member_count,

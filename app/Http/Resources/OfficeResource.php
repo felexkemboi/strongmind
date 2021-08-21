@@ -21,6 +21,7 @@ class OfficeResource extends JsonResource
             'member_count' => $this->member_count,
             'active' => $this->active,
             'created_at' => $this->created_at->format('Y-m-d'),
+            'programs' => $this->programs,
             'members' => $this->members,
         ];
     }
