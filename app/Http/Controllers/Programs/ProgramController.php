@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
+use function MongoDB\BSON\toJSON;
 
 /**
  * Class ProgramController
@@ -41,9 +42,18 @@ class ProgramController extends Controller
     public function index(): JsonResponse
     {
         try{
-            $programs = Program::with('office','programType')->latest()->get();
-            $officesPrograms = Office::with('programs','members')->latest()->get();
-            return $this->commonResponse(true,'success',OfficeResource::collection($officesPrograms),Response::HTTP_OK);
+            $offices = Office::all();
+            $data = [];
+            foreach($offices as $office){
+                $data[] = [
+                    'office_id' => $office->id,
+                    'name' => $office->name ?? NULL,
+                    'programs' => DB::table('programs')->select('programs.*')->where(function($query) use($office){
+                                return $query->where('office_id',$office->id);
+                    })->whereNotNull('office_id')->get()
+                ];
+            }
+            return $this->commonResponse(true,'success',$data,Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
