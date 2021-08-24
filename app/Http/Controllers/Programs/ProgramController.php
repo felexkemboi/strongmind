@@ -42,16 +42,18 @@ class ProgramController extends Controller
     public function index(): JsonResponse
     {
         try{
-            $offices = Office::all();
+            $offices = Office::all()->filter(function($office){
+                return (count($office->programs) > 0);
+            });
             $data = [];
             foreach($offices as $office){
-                $data[] = [
-                    'office_id' => $office->id,
-                    'name' => $office->name ?? NULL,
-                    'programs' => DB::table('programs')->select('programs.*')->where(function($query) use($office){
-                                return $query->where('office_id',$office->id);
-                    })->whereNotNull('office_id')->get()
-                ];
+                   $data[] = [
+                       'office_id' => $office->id,
+                       'name' => $office->name ?? NULL,
+                       'programs' => DB::table('programs')->select('id', 'name', 'member_count', 'colour_option')->where(function($query) use($office){
+                           return $query->where('office_id',$office->id);
+                       })->whereNotNull('office_id')->get()
+                   ];
             }
             return $this->commonResponse(true,'success',$data,Response::HTTP_OK);
         }catch (QueryException $queryException){
