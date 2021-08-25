@@ -25,8 +25,8 @@ class CreateClientsTable extends Migration
             $table->foreignId('timezone_id');
             $table->string('languages');
             $table->integer('age');
-            $table->enum('client_type',['main','inbound'])->default('inbound');
-            $table->boolean('main')->default(false); //TODO change to enum:main,inbound in future implementation
+            $table->enum('client_type',['therapy','screening'])->default('screening');
+            $table->boolean('therapy')->default(false);
             $table->foreignId('status_id');
             $table->foreignId('channel_id');
             $table->foreignId('staff_id')->index();

@@ -33,12 +33,15 @@ class Client extends Model
         'languages',
         'age',
         'client_type',
-        'main',
+        'therapy',
         'status_id',
         'channel_id',
         'staff_id',
         'active'
     ];
+
+    const SCREENING_CLIENT_TYPE = 'screening'; //previously inbound
+    const THERAPY_CLIENT_TYPE = 'therapy'; //previously main
 
     /**
      * @param Builder $query
@@ -47,6 +50,24 @@ class Client extends Model
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('active',true);
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeScreening(Builder $query): Builder
+    {
+        return $query->where('client_type','screening');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeTherapy(Builder $query): Builder
+    {
+        return $query->where('client_type','therapy');
     }
 
     /**
