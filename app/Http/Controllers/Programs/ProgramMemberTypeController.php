@@ -33,13 +33,7 @@ class ProgramMemberTypeController extends Controller
     {
         try{
             $memberTypes = ProgramMemberType::orderBy('name','ASC')->get();
-            if($memberTypes->isEmpty()){
-                return $this->commonResponse(false,'Member Types Not Found','', Response::HTTP_NOT_FOUND);
-            }
-            $data = [
-                'data' => ProgramMemberTypeResource::collection($memberTypes)
-            ];
-            return $this->commonResponse(true,'Success', $data , Response::HTTP_OK);
+            return $this->commonResponse(true,'Success', ProgramMemberTypeResource::collection($memberTypes) , Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false, $queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
