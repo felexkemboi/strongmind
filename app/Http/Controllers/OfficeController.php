@@ -48,6 +48,7 @@ class OfficeController extends Controller
      */
     public function create(Request $request): JsonResponse
     {
+        \Log::debug($request);
         $validator = Validator::make($request->all(), [
             'country_id' => 'nullable',
             'name' => 'required|unique:offices',
