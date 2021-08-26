@@ -122,10 +122,10 @@ class ProgramService
                 return $this->commonResponse(false,'User Does Not Exist','', Response::HTTP_NOT_FOUND);
             }
             $existingMember = ProgramMember::with('programs','memberTypes','users')
-                ->firstWhere('program_id',$program->id)
+                ->where('program_id',$program->id)
                 ->where(function($query) use($request){
                     $query->where('user_id', $request->user_id)->where('member_type_id',$request->member_type_id);
-            });
+            })->first();
             if(!$existingMember){
                 return $this->commonResponse(false,'Member does not exist for this program member type','', Response::HTTP_NOT_FOUND);
             }
@@ -169,10 +169,10 @@ class ProgramService
                 return $this->commonResponse(false,'User Does Not Exist','', Response::HTTP_NOT_FOUND);
             }
             $existingMember = ProgramMember::with('programs','memberTypes','users')
-                ->firstWhere('program_id',$program->id)
+                ->where('program_id',$program->id)
                 ->where(function($query) use($request){
                     $query->where('user_id', $request->user_id)->where('member_type_id',$request->member_type_id);
-                });
+                })->first();
             if(!$existingMember){
                 return $this->commonResponse(false,'Member does not exist for this program member type','', Response::HTTP_NOT_FOUND);
             }
