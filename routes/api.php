@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Programs\ProgramController;
 use App\Http\Controllers\Programs\ProgramMemberController;
 use App\Http\Controllers\Programs\ProgramMemberTypeController;
+use App\Http\Controllers\ClientController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -136,7 +137,9 @@ Route::group(['prefix' => 'programs','middleware' => 'auth:sanctum'], function()
     Route::post('/{id}/activate-membership',[ProgramMemberController::class,'activateMember']);
 });
 
-
+Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
+    Route::post('create', [ClientController::class, 'create']);
+});
 
 
 
