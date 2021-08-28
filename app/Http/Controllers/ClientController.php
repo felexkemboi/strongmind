@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -25,15 +26,17 @@ class ClientController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
+
     public function create(Request $request): JsonResponse
     {
-        \Log::debug($request->all());
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'patient_id' => 'required', 
-            'phone_number' => 'required',   
+            'patient_id' => 'required',
+            'phone_number' => 'required',
+            'country'      => 'required'
         ]);
-        if ($validator->fails()) { 
+
+        if ($validator->fails()) {
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             try {
@@ -55,7 +58,7 @@ class ClientController extends Controller
                 $client->staff_id = $request->staff_id;
                 $client->active = $request->active;
                 $client->save();
-                return $this->commonResponse(true, 'Client created successfully!','', Response::HTTP_CREATED);
+                return $this->commonResponse(true, 'Client created successfully!', '', Response::HTTP_CREATED);
             } catch (QueryException $ex) {
                 return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
             } catch (Exception $ex) {
