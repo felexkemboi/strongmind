@@ -49,7 +49,7 @@ class ClientController extends Controller
                 $client->region = $request->region;
                 $client->city = $request->city;
                 $client->timezone_id = $request->timezone_id;
-                $client->languages = $request->languages;
+                $client->languages = $request->input('languages');
                 $client->age = $request->age;
                 $client->client_type = $request->client_type;
                 $client->therapy = $request->therapy;
@@ -66,7 +66,6 @@ class ClientController extends Controller
             }
         }
     }
-}
 
     /**
      * Get Client by Id
