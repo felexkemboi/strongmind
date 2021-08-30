@@ -50,7 +50,7 @@ class ProgramController extends Controller
                    $data[] = [
                        'office_id' => $office->id,
                        'name' => $office->name ?? NULL,
-                       'programs' => DB::table('programs')->select('id', 'name', 'member_count', 'colour_option')->where(function($query) use($office){
+                       'programs' => DB::table('programs')->select('id', 'name', 'member_count', 'colour_option','program_type_id')->where(function($query) use($office){
                            return $query->where('office_id',$office->id);
                        })->whereNotNull('office_id')->get()
                    ];
