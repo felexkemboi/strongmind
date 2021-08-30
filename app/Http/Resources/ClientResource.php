@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ClientResource extends JsonResource
@@ -9,10 +11,10 @@ class ClientResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
-    public function toArray($request)
+    public function toArray($request): array
     {
         return [
             'id' => $this->id,
@@ -27,15 +29,18 @@ class ClientResource extends JsonResource
             'languages' => $this->languages,
             'age' => $this->age,
             'client_type' => $this->client_type,
-            'therapy' => $this->therapy,
+            'therapy' => $this->therapy === 1 ? true: false,
             'status_id' => $this->status_id,
             'channel_id' => $this->channel_id,
             'staff_id' => $this->staff_id,
+            'active' => $this->active === 1 ? true:false,
             'status' => $this->status,
             'channel' => $this->channel,
             'staff' => $this->staff,
             'timezone' => $this->timezone,
             'country' => $this->country,
+            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
         ];
     }
 }

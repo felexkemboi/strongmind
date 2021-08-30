@@ -141,6 +141,8 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::post('create', [ClientController::class, 'create']);
     Route::get('/{id}/details',[ClientController::class,'show']);
     Route::patch('/{id}/update',[ClientController::class,'update']);
+    Route::patch('/{id}/transfer',[ClientController::class,'transfer']);
+    Route::patch('/bulk-edit',[ClientController::class,'bulkEdit']);
 });
 
 
