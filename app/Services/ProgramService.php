@@ -200,13 +200,12 @@ class ProgramService
     {
         //notify member that they have been added to this program
         $client = new PostmarkClient(config('postmark.token'));
-        $action_url = '';
         return $client->sendEmailWithTemplate(
             config('mail.from.address'),
             $user->email,
             'program-invitation',
             [
-                'action_url' => $action_url,
+                'action_url' => env('PROGRAM_DETAILS_URL').'/'.$program->id,
                 'support_email' => config('mail.from.address'),
                 'program_name'  => $program->name ?? '',
                 'product_name' => env('APP_NAME')
