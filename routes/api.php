@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Programs\ProgramController;
 use App\Http\Controllers\Programs\ProgramMemberController;
 use App\Http\Controllers\Programs\ProgramMemberTypeController;
+use App\Http\Controllers\ClientController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -46,6 +47,8 @@ Route::prefix('office')->group(function () {
     Route::post('create', [OfficeController::class, 'create'])->middleware('auth:sanctum');
     Route::put('update/{id}', [OfficeController::class, 'update'])->middleware('auth:sanctum');
     Route::get('/{id}/members', [OfficeController::class, 'members'])->middleware('auth:sanctum');
+    Route::get('/{id}/programs', [OfficeController::class, 'programs'])->middleware('auth:sanctum');
+
 });
 //Roles and permissions
 Route::prefix('permission')->group(function () {
@@ -116,6 +119,9 @@ Route::group(['prefix' => 'programs','middleware' => 'auth:sanctum'], function()
     Route::get('/{id}/details',[ProgramController::class,'show']);
     Route::patch('/{id}/update',[ProgramController::class,'update']);
     Route::delete('/{id}/delete',[ProgramController::class,'destroy']);
+    Route::group(['prefix' => 'invite'], function(){
+        Route::post('/{id}/send',[ProgramController::class,'sendInvites']);
+    });
     //member types
     Route::group(['prefix' => 'member-types'], function(){
         Route::get('/',[ProgramMemberTypeController::class,'index']);
@@ -127,7 +133,15 @@ Route::group(['prefix' => 'programs','middleware' => 'auth:sanctum'], function()
     //Program Members
     Route::get('/{id}/members',[ProgramMemberController::class,'index']);
     Route::post('/{id}/new-members',[ProgramMemberController::class,'store']);
+    Route::post('/{id}/revoke-membership',[ProgramMemberController::class,'removeMember']);
+    Route::post('/{id}/activate-membership',[ProgramMemberController::class,'activateMember']);
 });
+//clients
+Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){ 
+    Route::post('create', [ClientController::class, 'create']);
+    Route::get('/{id}/details',[ClientController::class,'show']);
+});
+
 
 
 

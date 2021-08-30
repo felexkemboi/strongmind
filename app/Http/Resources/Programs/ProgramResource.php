@@ -19,17 +19,17 @@ class ProgramResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->name,
             'office_id' => $this->office_id,
             'program_type_id' => $this->program_type_id,
             'member_count' => $this->member_count,
             'program_code' => $this->program_code,
             'colour_option' => $this->colour_option,
             'office' => $this->office,
-            'program_type' => $this->programType,
+            'programType' => $this->programType,
             'members' => ProgramHelper::members($this->id),
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
-
         ];
     }
 }

@@ -26,10 +26,11 @@ class Program extends Model
 
     public function office(): BelongsTo
     {
-        return $this->belongsTo(Office::class,'office_id');
+        return $this->belongsTo(Office::class, 'office_id');
     }
+
     public function programType(): BelongsTo
     {
-        return $this->belongsTo(ProgramType::class,'program_type_id');
+        return $this->belongsTo(ProgramType::class, 'program_type_id');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use Exception;
 use App\Models\User;
 use App\Models\Office;
@@ -9,11 +10,14 @@ use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\Programs\ProgramResource;
 use App\Http\Resources\OfficeResource;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
+
+use function Psy\debug;
+
 /**
  * Class OfficeController
  * @package App\Http\Controllers
@@ -114,17 +118,40 @@ class OfficeController extends Controller
                 return $this->commonResponse(false,'Office Not Found','',Response::HTTP_NOT_FOUND);
             }else{
                 $users = User::with('office','timezone')->where('office_id',$office->id)->paginate(10);
-                if($users->isEmpty()){
-                    return $this->commonResponse(false,'Office Users Not Found','',Response::HTTP_NOT_FOUND);
-                }else{
-                    return $this->commonResponse(true,'Success',UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
-                }
+                return $this->commonResponse(true,'Success',UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
             }
         }catch(QueryException $exception){
             return $this->commonResponse(false, $exception->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         catch(Exception $exception){
             Log::critical('Something went wrong fetching office users. ERROR: '.$exception->getTraceAsString());
+            return $this->commonResponse(false, $exception->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    /**
+     * List All Office Programs
+     * @param $id
+     * @urlParam id integer required Office ID . Example:1
+     * @return JsonResponse
+     * @authenticated
+     */
+
+    public function programs($id): JsonResponse
+    {
+        try{
+            $office = Office::find($id);
+            if(!$office){
+                return $this->commonResponse(false,'Office Not Found','',Response::HTTP_NOT_FOUND);
+            }else{
+                $programs = $office->programs;
+                return $this->commonResponse(true,'Success',ProgramResource::collection($programs), Response::HTTP_OK);
+            }
+        }catch(QueryException $exception){
+            return $this->commonResponse(false, $exception->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        catch(Exception $exception) {
+            Log::critical('Something went wrong fetching office users. ERROR: ' . $exception->getTraceAsString());
             return $this->commonResponse(false, $exception->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }

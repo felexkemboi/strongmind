@@ -3,17 +3,22 @@
 namespace App\Http\Controllers\Programs;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\OfficeResource;
 use App\Http\Resources\Programs\ProgramResource;
+use App\Models\Office;
 use App\Models\Programs\Program;
+use App\Services\ProgramService;
 use App\Support\Collection;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
+use function MongoDB\BSON\toJSON;
 
 /**
  * Class ProgramController
@@ -23,6 +28,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ProgramController extends Controller
 {
+    public $programService;
+
+    public function __construct(ProgramService $programService){
+        $this->programService = $programService;
+    }
     /**
      * List Programs
      *
@@ -32,13 +42,18 @@ class ProgramController extends Controller
     public function index(): JsonResponse
     {
         try{
-            $programs = Program::with('office','programType')->latest()->get()->transform(function($program){
-                    return new ProgramResource($program);
-            })->groupBy('office_id');
-            if($programs->isEmpty()){
-                return $this->commonResponse(false,'Programs Not Found','', Response::HTTP_NOT_FOUND);
+            $offices = Office::all();
+            $data = [];
+            foreach($offices as $office){
+                   $data[] = [
+                       'office_id' => $office->id,
+                       'name' => $office->name ?? NULL,
+                       'programs' => DB::table('programs')->select('id', 'name', 'member_count', 'colour_option','program_type_id')->where(function($query) use($office){
+                           return $query->where('office_id',$office->id);
+                       })->whereNotNull('office_id')->get()
+                   ];
             }
-            return $this->commonResponse(true,'Success',(new Collection($programs)), Response::HTTP_OK);
+            return $this->commonResponse(true,'success',$data,Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
@@ -55,7 +70,7 @@ class ProgramController extends Controller
      * @bodyParam office_id integer required Office ID. Example-1
      * @bodyParam program_code string required Program Code
      * @bodyParam program_type_id integer required Program Type. Example-1
-     * @bodyParam colour_option string required Colour Code
+     * @bodyParam colour_option string Colour Code
      * @return JsonResponse
      * @authenticated
      */
@@ -66,7 +81,7 @@ class ProgramController extends Controller
             'name' => 'required|unique:programs|string|min:4|max:60',
             'program_code' => 'required|unique:programs|string|min:3|max:30',
             'program_type_id' => 'required|integer|exists:program_types,id',
-            'colour_option' => 'required|string',
+            'colour_option' => 'nullable|string',
         ]);
         if($validator->fails()){
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')),'', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -192,5 +207,20 @@ class ProgramController extends Controller
             Log::critical('Could Not Delete Program. ERROR:  '.$exception->getTraceAsString());
             return $this->commonResponse(false,$exception->getMessage(), '', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * Send Member Invites
+     * @param Request $request
+     * @param $id
+     * @urlParam id integer required The Program ID
+     * @bodyParam email email required The User Email Address
+     * @bodyParam member_type_id integer The Member Type ID
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function sendInvites(Request $request, $id): JsonResponse
+    {
+        return $this->programService->inviteMembers($request, $id);
     }
 }

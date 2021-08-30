@@ -29,7 +29,7 @@ class ProgramHelper
             ->orderBy('programs.id','DESC')
             ->get();
         if($userPrograms->isEmpty()){
-            return null;
+            return [];
         }
         return $userPrograms;
     }
@@ -37,14 +37,14 @@ class ProgramHelper
     public static function members($programId)
     {
         return DB::table('users')
-            ->select('users.*')
+            ->select('users.*', 'program_members.member_type_id')
             ->join('program_members','program_members.user_id','=','users.id')
             ->join('programs','programs.id','=','program_members.program_id')
-            ->where(function($query) use($programId){
-                $query->where('programs.id',$programId);
+            ->where(function($query) use($programId) {
+                $query->where('programs.id', $programId)
+                    ->where('program_members.program_id', '=', $programId);
             })
-            ->distinct()
-            ->groupBy('program_members.member_type_id')
+            ->whereNotNull('program_members.member_type_id')
             ->get();
     }
 }
