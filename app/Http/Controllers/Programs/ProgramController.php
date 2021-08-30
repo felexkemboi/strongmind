@@ -42,9 +42,7 @@ class ProgramController extends Controller
     public function index(): JsonResponse
     {
         try{
-            $offices = Office::all()->filter(function($office){
-                return (count($office->programs) > 0);
-            });
+            $offices = Office::all();
             $data = [];
             foreach($offices as $office){
                    $data[] = [
