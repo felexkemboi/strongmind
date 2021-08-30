@@ -30,10 +30,10 @@ class ClientController extends Controller
         \Log::debug($request->all());
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'patient_id' => 'required', 
-            'phone_number' => 'required',   
+            'patient_id' => 'required',
+            'phone_number' => 'required',
         ]);
-        if ($validator->fails()) { 
+        if ($validator->fails()) {
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             try {
