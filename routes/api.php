@@ -137,9 +137,12 @@ Route::group(['prefix' => 'programs','middleware' => 'auth:sanctum'], function()
     Route::post('/{id}/activate-membership',[ProgramMemberController::class,'activateMember']);
 });
 //clients
-Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){ 
+Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::post('create', [ClientController::class, 'create']);
     Route::get('/{id}/details',[ClientController::class,'show']);
+    Route::patch('/{id}/update',[ClientController::class,'update']);
+    Route::patch('/{id}/transfer',[ClientController::class,'transfer']);
+    Route::patch('/bulk-edit',[ClientController::class,'bulkEdit']);
 });
 
 
