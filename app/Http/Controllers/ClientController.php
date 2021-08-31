@@ -250,4 +250,33 @@ class ClientController extends Controller
             return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * Activate  Clients
+     * @param Request $request
+     * @bodyParam users required . The Client IDs . Example [1,2]
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function activate(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'users' => 'required'   
+        ]);
+        if ($validator->fails()) { 
+            return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } else {
+            try {
+                
+                Client::whereIn('id', $request->users)
+                    ->update(['client_type' =>  'therapy','therapy' =>  1]);
+                return $this->commonResponse(true, 'Clients updated successfully!','', Response::HTTP_OK);
+            } catch (QueryException $ex) {
+                return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            } catch (Exception $ex) {
+                return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+        }
+    }
 }
+
