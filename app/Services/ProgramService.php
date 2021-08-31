@@ -60,6 +60,13 @@ class ProgramService
                         'program_id' => $program->id,
                         'member_type_id' => $request->member_type_id
                     ];
+                    //check against an existing program member
+                    $existingMember = ProgramMember::firstWhere('user_id',$user->id)->where(function($query) use($program){
+                        $query->where('program_id', $program->id);
+                    })->exists();
+                    if($existingMember){
+                        return $this->commonResponse(false,'User exists for this program','', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
                     if(ProgramMember::create($newProgramMember)){
                         $program->update(['member_count' => $program->member_count + count($inviteEmails)]);
                         $this->notifyMember($user, $program);
@@ -80,6 +87,13 @@ class ProgramService
                 'program_id' => $program->id,
                 'member_type_id' => $request->member_type_id
             ];
+            //check against an existing program member
+            $existingMember = ProgramMember::firstWhere('user_id',$user->id)->where(function($query) use($program){
+                $query->where('program_id', $program->id);
+            })->exists();
+            if($existingMember){
+                return $this->commonResponse(false,'User exists for this program','', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
             if(ProgramMember::create($newProgramMember)){
                 ProgramMemberAdded::dispatch($program); //update member count
                 $this->notifyMember($user, $program); //notify user
