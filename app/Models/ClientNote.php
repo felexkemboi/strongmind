@@ -28,19 +28,19 @@ class ClientNote extends Model
     ];
 
     /**
-     * @param Builder $query
-     * @return Builder
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopePrivate(Builder $query): Builder
+    public function scopePrivate(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('private', true);
     }
 
     /**
-     * @param Builder $query
-     * @return Builder
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopePublic(Builder $query): Builder
+    public function scopePublic(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('private', false);
     }

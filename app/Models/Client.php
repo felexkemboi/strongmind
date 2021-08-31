@@ -7,6 +7,7 @@ use App\Models\Misc\Status;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 
@@ -108,5 +109,13 @@ class Client extends Model
     public function staff(): BelongsTo
     {
         return $this->belongsTo(User::class,'staff_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function notes(): HasMany
+    {
+        return $this->hasMany(ClientNote::class,'client_id','id');
     }
 }

@@ -18,6 +18,7 @@ use App\Http\Controllers\Programs\ProgramController;
 use App\Http\Controllers\Programs\ProgramMemberController;
 use App\Http\Controllers\Programs\ProgramMemberTypeController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ClientNoteController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -144,6 +145,10 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::patch('/{id}/update',[ClientController::class,'update']);
     Route::patch('/{id}/transfer',[ClientController::class,'transfer']);
     Route::patch('/bulk-edit',[ClientController::class,'bulkEdit']);
+    //client notes
+    Route::post('/{id}/notes/create',[ClientNoteController::class,'create']);
+    Route::get('/{id}/notes/public',[ClientNoteController::class,'getPublicNotes']);
+    Route::get('/{id}/notes/private',[ClientNoteController::class,'getPrivateNotes']);
 });
 
 
