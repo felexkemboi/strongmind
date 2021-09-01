@@ -28,7 +28,6 @@ class ClientNoteController extends Controller
      * @param Request $request
      * @param int $id
      * @urlParam id integer required . The Client ID
-     * @bodyParam staff_id integer required . The Staff ID
      * @bodyParam private boolean required . Specify whether true or false
      * @bodyParam notes string required . The specific notes about this client
      * @return JsonResponse
@@ -37,7 +36,7 @@ class ClientNoteController extends Controller
     public function create(Request $request, int $id): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'staff_id' =>  'required|integer|exists:users,id',
+            //'staff_id' =>  'nullable|integer|exists:users,id',
             'notes' => 'required|string|min:5|max:255|unique:client_notes',
             'private' => 'required|boolean'
         ]);
@@ -49,13 +48,9 @@ class ClientNoteController extends Controller
             if(!$client){
                 return $this->commonResponse(false,'Client Does Not Exist','', Response::HTTP_NOT_FOUND);
             }
-            $staff = User::firstWhere('id', $request->staff_id);
-            if(!$staff){
-                return $this->commonResponse(false,'Staff Does Not Exist','', Response::HTTP_NOT_FOUND);
-            }
             $clientNoteData = [
                 'client_id' => $client->id,
-                'staff_id' => $staff->id,
+                'staff_id' => $request->user()->id,
                 'private'  => $request->private,
                 'notes'    => $request->notes
             ];
