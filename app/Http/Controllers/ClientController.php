@@ -261,14 +261,14 @@ class ClientController extends Controller
     public function activate(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'users' => 'required|array',   
+            'users' => 'required|array',
             'users.*' => 'integer|exists:clients,id'
         ]);
-        if ($validator->fails()) { 
+        if ($validator->fails()) {
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             try {
-                
+
                 Client::whereIn('id', $request->users)
                     ->update(['client_type' =>  'therapy','therapy' =>  1]);
                 return $this->commonResponse(true, 'Clients updated successfully!','', Response::HTTP_OK);

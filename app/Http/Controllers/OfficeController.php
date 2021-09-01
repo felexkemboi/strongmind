@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
+use App\Support\Collection;
 use Exception;
 use App\Models\User;
 use App\Models\Office;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\Programs\ProgramResource;
 use App\Http\Resources\OfficeResource;
@@ -113,13 +115,17 @@ class OfficeController extends Controller
     public function members($id): JsonResponse
     {
         try{
-            $office = Office::find($id);
+            $office = Office::with('country','members','programs')->find($id);
             if(!$office){
                 return $this->commonResponse(false,'Office Not Found','',Response::HTTP_NOT_FOUND);
-            }else{
-                $users = User::with('office','timezone')->where('office_id',$office->id)->paginate(10);
-                return $this->commonResponse(true,'Success',UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
             }
+            $members = User::isActive()
+                ->hasAcceptedInvite()
+                ->with('office','timezone')
+                ->where(function($query) use($office){
+                    $query->where('office_id',$office->id);
+                })->paginate(10);
+            return $this->commonResponse(true,'Success',UserResource::collection($members)->response()->getData(true), Response::HTTP_OK);
         }catch(QueryException $exception){
             return $this->commonResponse(false, $exception->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
