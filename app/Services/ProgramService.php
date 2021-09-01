@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Postmark\Models\DynamicResponseModel;
+use Postmark\Models\PostmarkException;
 use Postmark\PostmarkClient;
 use Symfony\Component\HttpFoundation\Response;
 use Exception;
@@ -61,7 +62,7 @@ class ProgramService
                         'member_type_id' => $request->member_type_id
                     ];
                     //check against an existing program member
-                    $existingMember = ProgramMember::firstWhere('user_id',$user->id)->where(function($query) use($program){
+                    $existingMember = ProgramMember::where('user_id',$user->id)->where(function($query) use($program){
                         $query->where('program_id', $program->id);
                     })->exists();
                     if($existingMember){
@@ -88,7 +89,7 @@ class ProgramService
                 'member_type_id' => $request->member_type_id
             ];
             //check against an existing program member
-            $existingMember = ProgramMember::firstWhere('user_id',$user->id)->where(function($query) use($program){
+            $existingMember = ProgramMember::where('user_id',$user->id)->where(function($query) use($program){
                 $query->where('program_id', $program->id);
             })->exists();
             if($existingMember){
@@ -104,7 +105,7 @@ class ProgramService
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
             Log::critical('Failed to send program invite. ERROR: '.$exception->getTraceAsString());
-            return $this->commonResponse(false,'Failed to send program invite','', Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
