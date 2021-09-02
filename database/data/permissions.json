@@ -122,5 +122,77 @@
     {
         "name": "delete status",
         "module": "Miscellaneous"
+    },
+    {
+        "name": "create program",
+        "module": "Programs"
+    },
+    {
+        "name": "list programs",
+        "module": "Programs"
+    },
+    {
+        "name": "view program",
+        "module": "Programs"
+    },
+    {
+        "name": "edit program",
+        "module": "Programs"
+    },
+    {
+        "name": "update program",
+        "module": "Programs"
+    },
+    {
+        "name": "delete program",
+        "module": "Programs"
+    },
+    {
+        "name": "add program member",
+        "module": "Programs"
+    },
+    {
+        "name": "activate program membership",
+        "module": "Programs"
+    },
+    {
+        "name": "deactivate program membership",
+        "module": "Programs"
+    },
+    {
+        "name": "view program members",
+        "module": "Programs"
+    },
+    {
+        "name": "send program invitations",
+        "module": "Programs"
+    },
+    {
+        "name": "create program member type",
+        "module": "Programs"
+    },
+    {
+        "name": "list program member types",
+        "module": "Programs"
+    },
+    {
+        "name": "view program member type",
+        "module": "Programs"
+    },
+    {
+        "name": "edit program member type",
+        "module": "Programs"
+    },
+    {
+        "name": "update program member type",
+        "module": "Programs"
+    },
+    {
+        "name": "delete program member type",
+        "module": "Programs"
+    },
+    {
+        "name": "view office programs",
+        "module": "Administration"
     }
 ]
