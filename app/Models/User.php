@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Programs\ProgramMember;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -16,6 +17,8 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable, HasRolesAndAbilities;
     public const INVITE_ACCEPTED = 1;
     public const INVITE_NOT_ACCEPTED = 0;
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_INACTIVE = 0;
     /**
      * The attributes that are mass assignable.
      *
@@ -62,11 +65,35 @@ class User extends Authenticatable
         'languages' => 'array',
     ];
 
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeIsActive(Builder $query): Builder
+    {
+        return $query->where('active',self::STATUS_ACTIVE);
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeHasAcceptedInvite(Builder $query): Builder
+    {
+        return $query->where('invite_accepted', self::INVITE_ACCEPTED);
+    }
+
+    /**
+     * @return BelongsTo
+     */
     public function office(): BelongsTo
     {
         return $this->belongsTo(Office::class, 'office_id');
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function timezone(): BelongsTo
     {
         return $this->belongsTo(Timezone::class, 'timezone_id');
