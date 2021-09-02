@@ -59,7 +59,7 @@ class Client extends Model
      */
     public function scopeScreening(Builder $query): Builder
     {
-        return $query->where('client_type','screening');
+        return $query->where('client_type',self::SCREENING_CLIENT_TYPE);
     }
 
     /**
@@ -68,7 +68,7 @@ class Client extends Model
      */
     public function scopeTherapy(Builder $query): Builder
     {
-        return $query->where('client_type','therapy');
+        return $query->where('client_type',self::THERAPY_CLIENT_TYPE);
     }
 
     /**
