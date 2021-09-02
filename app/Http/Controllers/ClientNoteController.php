@@ -107,14 +107,12 @@ class ClientNoteController extends Controller
             if(!$client){
                 return $this->commonResponse(false,'Client Does Not Exist','', Response::HTTP_NOT_FOUND);
             }
-            $privateNotes = ClientNote::private()->where(function($query) use($client){
+            $privateNotes = ClientNote::private($request)->where(function($query) use($client){
                 $query->where('client_id', $client->id);
             })->select('client_id','staff_id','private','notes')
-                ->get()
-                ->filter(function($note) use($request){
-                    return $note->staff_id === $request->user()->id;
-            });
-            return $this->commonResponse(true,'success', (new Collection($privateNotes))->paginate(10), Response::HTTP_OK);
+                ->latest()
+                ->paginate(10);
+            return $this->commonResponse(true,'success', $privateNotes, Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
