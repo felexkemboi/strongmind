@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Postmark\Models\DynamicResponseModel;
+use Postmark\Models\PostmarkException;
 use Postmark\PostmarkClient;
 use Symfony\Component\HttpFoundation\Response;
 use Exception;
@@ -60,6 +61,13 @@ class ProgramService
                         'program_id' => $program->id,
                         'member_type_id' => $request->member_type_id
                     ];
+                    //check against an existing program member
+                    $existingMember = ProgramMember::where('user_id',$user->id)->where(function($query) use($program){
+                        $query->where('program_id', $program->id);
+                    })->exists();
+                    if($existingMember){
+                        return $this->commonResponse(false,'User exists for this program','', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
                     if(ProgramMember::create($newProgramMember)){
                         $program->update(['member_count' => $program->member_count + count($inviteEmails)]);
                         $this->notifyMember($user, $program);
@@ -80,6 +88,13 @@ class ProgramService
                 'program_id' => $program->id,
                 'member_type_id' => $request->member_type_id
             ];
+            //check against an existing program member
+            $existingMember = ProgramMember::where('user_id',$user->id)->where(function($query) use($program){
+                $query->where('program_id', $program->id);
+            })->exists();
+            if($existingMember){
+                return $this->commonResponse(false,'User exists for this program','', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
             if(ProgramMember::create($newProgramMember)){
                 ProgramMemberAdded::dispatch($program); //update member count
                 $this->notifyMember($user, $program); //notify user
@@ -90,7 +105,7 @@ class ProgramService
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
             Log::critical('Failed to send program invite. ERROR: '.$exception->getTraceAsString());
-            return $this->commonResponse(false,'Failed to send program invite','', Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

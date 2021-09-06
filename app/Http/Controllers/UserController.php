@@ -44,6 +44,7 @@ class UserController extends Controller
         $role=$request->get('role');
         $sort = $request->get('sort');
         $sort_params = ['desc','asc'];
+        $invited = $request->get('accepted');
         if ($request->has('name') && $request->filled('name')) {
             $users = $users->where('name', 'ilike', '%'.$name.'%');
         }
@@ -56,10 +57,18 @@ class UserController extends Controller
            }
             $users = $users->orderBy('id',$sort);
         }
-        $users=$users->where('is_admin', '<>', 1)->paginate(10);
-        if($users->isEmpty()){
-            return $this->commonResponse(false,'Users Not Found','',Response::HTTP_NOT_FOUND);
+
+        if($request->has('accepted') && $request->filled('accepted')){
+            if($invited === "true"){
+                $users = $users->where('invite_accepted',User::INVITE_ACCEPTED);
+            }else if($invited === "false"){
+                $users = $users->where('invite_accepted', User::INVITE_NOT_ACCEPTED);
+            }else{
+                return $this->commonResponse(false,'Invalid search parameter on invites','', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
         }
+
+        $users=$users->where('is_admin', '<>', 1)->paginate(10);
         return $this->commonResponse(true, 'success', UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
     }
     /**

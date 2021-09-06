@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 
 class ClientNote extends Model
 {
@@ -28,19 +29,22 @@ class ClientNote extends Model
     ];
 
     /**
-     * @param Builder $query
-     * @return Builder
+     * @param \Illuminate\Database\Eloquent\Builder $queryBuilder
+     * @param Request $request
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopePrivate(Builder $query): Builder
+    public function scopePrivate(\Illuminate\Database\Eloquent\Builder $queryBuilder, Request $request): \Illuminate\Database\Eloquent\Builder
     {
-        return $query->where('private', true);
+        return $queryBuilder->where('private', true)->where(function($query) use($request){
+            $query->where('staff_id', $request->user()->id);
+        });
     }
 
     /**
-     * @param Builder $query
-     * @return Builder
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopePublic(Builder $query): Builder
+    public function scopePublic(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('private', false);
     }

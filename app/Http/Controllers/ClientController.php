@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Helpers\CountryHelper;
 use App\Http\Resources\ClientResource;
+use App\Models\Misc\Channel;
+use App\Models\Misc\Status;
 use App\Models\User;
+use App\Services\ClientService;
+use App\Support\Collection;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -24,6 +29,36 @@ use App\Models\Client;
  */
 class ClientController extends Controller
 {
+    public $clientService;
+
+    /**
+     * ClientController constructor.
+     * @param ClientService $clientService
+     */
+    public function __construct(ClientService $clientService)
+    {
+        $this->clientService = $clientService;
+    }
+
+    /**
+     * List|Filter|Search|Paginate|Sort Clients
+     * @param Request $request
+     * @bodyParam name string . Search by name
+     * @bodyParam phone integer . Search by phone
+     * @bodyParam country integer . Search by country_id
+     * @bodyParam filter string . i.e filter by status,channel,screening,therapy
+     * @bodyParam channel integer . search by channel id
+     * @bodyParam status integer . search by status_id
+     * @bodyParam client_type string . filter by either screening or therapy
+     * @bodyParam pagination_items integer . specify number of records per page
+     * @bodyParam  records_per_page integer . specify the number of records to pull from database
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function index(Request $request): JsonResponse
+    {
+        return $this->clientService->filter($request);
+    }
 
     /**
      * Create Client
@@ -106,7 +141,7 @@ class ClientController extends Controller
         if ($client) {
             return $this->commonResponse(true, 'success', $client, Response::HTTP_OK);
         } else {
-            return $this->commonResponse(false, 'User not found!', '', Response::HTTP_NOT_FOUND);
+            return $this->commonResponse(false, 'Client not found!', '', Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -195,7 +230,10 @@ class ClientController extends Controller
             if(!$user){
                 return $this->commonResponse(false,'Staff Not Found','', Response::HTTP_NOT_FOUND);
             }
-            if($client->update(['staff_id' =>  $request->staff_id])){
+            if($client->staff_id === $user->id){
+                return $this->commonResponse(false,'Client already assigned to this staff','', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+            if($client->update(['staff_id' =>  $user->id])){
                 return $this->commonResponse(false,'Client transferred successfully','', Response::HTTP_OK);
             }
             return $this->commonResponse(false,'Failed to transfer client','', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -261,14 +299,14 @@ class ClientController extends Controller
     public function activate(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'users' => 'required|array',   
+            'users' => 'required|array',
             'users.*' => 'integer|exists:clients,id'
         ]);
-        if ($validator->fails()) { 
+        if ($validator->fails()) {
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             try {
-                
+
                 Client::whereIn('id', $request->users)
                     ->update(['client_type' =>  'therapy','therapy' =>  1]);
                 return $this->commonResponse(true, 'Clients updated successfully!','', Response::HTTP_OK);
@@ -280,3 +318,4 @@ class ClientController extends Controller
         }
     }
 }
+
