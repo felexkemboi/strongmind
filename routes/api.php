@@ -137,6 +137,7 @@ Route::group(['prefix' => 'programs','middleware' => 'auth:sanctum'], function()
     Route::post('/{id}/revoke-membership',[ProgramMemberController::class,'removeMember']);
     Route::post('/{id}/activate-membership',[ProgramMemberController::class,'activateMember']);
 });
+
 //clients
 Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::get('/all',[ClientController::class,'index']);
@@ -146,6 +147,8 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::patch('/{id}/update',[ClientController::class,'update']);
     Route::patch('/{id}/transfer',[ClientController::class,'transfer']);
     Route::patch('/bulk-edit',[ClientController::class,'bulkEdit']);
+    Route::get('{id}/activity',[ClientController::class,'clientLogs']);
+
     //client notes
     Route::post('/{id}/notes/create',[ClientNoteController::class,'create']);
     Route::get('/{id}/notes/public',[ClientNoteController::class,'getPublicNotes']);
