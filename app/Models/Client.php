@@ -10,10 +10,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Client extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes,LogsActivity;
 
     /**
      * @var string $table
@@ -40,6 +41,13 @@ class Client extends Model
         'staff_id',
         'active'
     ];
+
+    protected static $logAttributes = ['*'];
+    
+    protected static $logFillable = true;
+
+    protected static $logOnlyDirty = true;
+
 
     const SCREENING_CLIENT_TYPE = 'screening'; //previously inbound
     const THERAPY_CLIENT_TYPE = 'therapy'; //previously main

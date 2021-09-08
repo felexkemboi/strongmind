@@ -20,6 +20,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Arr;
 use Exception;
 use App\Models\Client;
+use Spatie\Activitylog\Models\Activity;
 
 /**
  * Class ClientController
@@ -316,6 +317,27 @@ class ClientController extends Controller
                 return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         }
+    }
+
+    /**
+     * Get clients from other sources 
+     * @group Clients
+     * @param Request $request
+     * @bodyParam id int required . The Client's id
+     * @return JsonResponse
+     * @authenticated
+     */
+
+    public function clientLogs(int $id) 
+    {
+        $activities = Activity::all();
+
+        $activities = $activities->where('causer_id', $id);
+
+        if ($activities) {
+            return $this->commonResponse(true, 'Success', $activities, Response::HTTP_OK);
+        } 
+        return $this->commonResponse(false, 'No activities Found!', '', Response::HTTP_NOT_FOUND);
     }
 }
 
