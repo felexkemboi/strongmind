@@ -17,6 +17,7 @@
         "league/flysystem-aws-s3-v3": "~1.0",
         "sentry/sentry-laravel": "^2.6",
         "silber/bouncer": "v1.0.0-rc.10",
+        "spatie/laravel-activitylog": "^3.17",
         "wildbit/postmark-php": "^4.0"
     },
     "require-dev": {
