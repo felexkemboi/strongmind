@@ -139,7 +139,8 @@ Route::group(['prefix' => 'programs','middleware' => 'auth:sanctum'], function()
 });
 
 //clients
-Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
+
+Route::group(['prefix' => 'clients'], function(){ //,'middleware' => 'auth:sanctum'
     Route::get('/all',[ClientController::class,'index']);
     Route::post('create', [ClientController::class, 'create']);
     Route::get('/{id}/details',[ClientController::class,'show']);
@@ -148,6 +149,7 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::patch('/{id}/transfer',[ClientController::class,'transfer']);
     Route::patch('/bulk-edit',[ClientController::class,'bulkEdit']);
     Route::get('{id}/activity',[ClientController::class,'clientLogs']);
+    Route::post('/sources', [ClientController::class, 'otherSources']);
 
     //client notes
     Route::post('/{id}/notes/create',[ClientNoteController::class,'create']);
