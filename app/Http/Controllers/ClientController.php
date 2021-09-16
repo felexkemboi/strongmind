@@ -21,11 +21,8 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Arr;
 use Exception;
 use App\Models\Client;
-<<<<<<< Updated upstream
 use Spatie\Activitylog\Models\Activity;
-=======
 use Maatwebsite\Excel\Facades\Excel;
->>>>>>> Stashed changes
 
 /**
  * Class ClientController
