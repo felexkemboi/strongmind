@@ -36,8 +36,7 @@ class ClientNoteController extends Controller
     public function create(Request $request, int $id): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            //'staff_id' =>  'nullable|integer|exists:users,id',
-            'notes' => 'required|string|min:5|max:255|unique:client_notes',
+            'notes' => 'required|string|min:5|max:255',
             'private' => 'required|boolean'
         ]);
         if($validator->fails()){
