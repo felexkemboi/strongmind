@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\CountryHelper;
+use App\Helpers\ImportClients;
 use App\Http\Resources\ClientResource;
 use App\Models\Misc\Channel;
 use App\Models\Misc\Status;
@@ -21,6 +22,7 @@ use Illuminate\Support\Arr;
 use Exception;
 use App\Models\Client;
 use Spatie\Activitylog\Models\Activity;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Class ClientController
@@ -336,8 +338,71 @@ class ClientController extends Controller
 
         if ($activities) {
             return $this->commonResponse(true, 'Success', $activities, Response::HTTP_OK);
-        } 
+        }
         return $this->commonResponse(false, 'No activities Found!', '', Response::HTTP_NOT_FOUND);
+    }
+    
+     /*
+     * Bulk load Clients
+     * @param Request $request
+     * @bodyParam file required.
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function otherSources(Request $request): JsonResponse
+    {
+        $import = new ImportClients;
+        $finalArray = array();
+        $passed = collect([]);
+        $failed_validations = collect([]);
+        $failed_saved = collect([]);
+
+        Excel::import($import, $request->file);
+        $array = $import->getArray();
+        foreach ($array as $user) {
+
+            if ($import->validate($user)->fails()) {
+                $failed_validations->push($user);
+                continue;
+            } else {
+                try {
+                    $client = new Client;
+                    $client->name = $user['name'];
+                    $client->phone_number = $user['phone_number'];
+                    $client->country_id = $user['country_id'];
+                    $client->gender = $user['gender'];
+                    $client->region = $user['region'];
+                    $client->city = $user['city'];
+                    $client->timezone_id = $user['timezone_id'];
+                    $client->languages = $user['languages']; //TODO comma separate these if multiple languages are provided
+                    $client->age = $user['age'];
+                    $client->status_id = $user['status_id'];
+                    $client->channel_id = $user['channel_id'];
+                    if($client->save()){
+                        $countryCode = CountryHelper::getCountryCode($user['country_id']);
+                        $yearVal = Carbon::now()->format('y');
+                        $patient_id = $countryCode->long_code.'-'.$yearVal.'-'.'0000'.$client->id; //random_int(0,4).$client->id;
+                        $client->update(['patient_id' => $patient_id]); //TODO change format to CountryCode-ProgramCode-Year-Cycle-Number
+                        $passed->push($user);
+                    }else{
+                        $failed_saved->push($user);
+                    }
+                    
+        
+                } catch  (\Exception $e) { 
+                    $failed_saved->push($user);
+                    continue;
+                }
+            }
+        }
+
+        $finalArray = array(
+            "passed" => $passed,
+            "failed validations" => $failed_validations,
+            "failed saved" => $failed_saved
+        );
+        return $this->commonResponse(true, 'Clients created successfully!', $finalArray, Response::HTTP_CREATED);
+
     }
 }
 
