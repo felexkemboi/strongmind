@@ -7,6 +7,7 @@ use App\Models\Office;
 use App\Models\Timezone;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Silber\Bouncer\Database\Role;
 use Symfony\Component\HttpFoundation\Response;
+use function Clue\StreamFilter\fun;
 
 /**
  * Class UserController
@@ -47,6 +49,15 @@ class UserController extends Controller
         $invited = $request->get('accepted');
         if ($request->has('name') && $request->filled('name')) {
             $users = $users->where('name', 'ilike', '%'.$name.'%');
+            if($request->has('accepted') && $request->filled('accepted')){
+                if($invited === "true"){
+                    $users = $users->where('invite_accepted',User::INVITE_ACCEPTED);
+                }else if($invited === "false"){
+                    $users = $users->where('invite_accepted', User::INVITE_NOT_ACCEPTED);
+                }else{
+                    return $this->commonResponse(false,'Invalid search parameter on invites','', Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+            }
         }
         if ($request->has('role') && $request->filled('role')) {
             $users = $users->whereIn('id', $this->getUserIds($role));
@@ -57,17 +68,6 @@ class UserController extends Controller
            }
             $users = $users->orderBy('id',$sort);
         }
-
-        if($request->has('accepted') && $request->filled('accepted')){
-            if($invited === "true"){
-                $users = $users->where('invite_accepted',User::INVITE_ACCEPTED);
-            }else if($invited === "false"){
-                $users = $users->where('invite_accepted', User::INVITE_NOT_ACCEPTED);
-            }else{
-                return $this->commonResponse(false,'Invalid search parameter on invites','', Response::HTTP_UNPROCESSABLE_ENTITY);
-            }
-        }
-
         $users=$users->where('is_admin', '<>', 1)->paginate(10);
         return $this->commonResponse(true, 'success', UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
     }
