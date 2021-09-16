@@ -140,7 +140,7 @@ Route::group(['prefix' => 'programs','middleware' => 'auth:sanctum'], function()
 
 //clients
 
-Route::group(['prefix' => 'clients'], function(){ //,'middleware' => 'auth:sanctum'
+Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::get('/all',[ClientController::class,'index']);
     Route::post('create', [ClientController::class, 'create']);
     Route::get('/{id}/details',[ClientController::class,'show']);
