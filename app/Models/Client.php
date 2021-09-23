@@ -126,4 +126,9 @@ class Client extends Model
     {
         return $this->hasMany(ClientNote::class,'client_id','id');
     }
+
+    public function getLanguagesAttribute($value)
+    {
+        return explode(',', $value);
+    }
 }
