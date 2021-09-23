@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             CountrySeeder::class,
             TimezoneSeeder::class,
             AdminSeeder::class,
+            ProgramMemberTypeSeeder::class,
             //ProgramMemberTableSeeder::class
         ]);
     }
