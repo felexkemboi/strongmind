@@ -349,7 +349,7 @@ class ClientController extends Controller
     {
         $activities = Activity::all();
 
-        $activities = $activities->where('causer_id', $id);
+        $activities = $activities->where('subject_id', $id);
 
         if ($activities) {
             return $this->commonResponse(true, 'Success', $activities, Response::HTTP_OK);
