@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\Helpers\CountryHelper;
 use App\Helpers\ImportClients;
 use App\Http\Resources\ClientResource;
-use App\Models\Misc\Channel;
-use App\Models\Misc\Status;
 use App\Models\User;
 use App\Services\ClientService;
-use App\Support\Collection;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -237,6 +234,11 @@ class ClientController extends Controller
                 return $this->commonResponse(false,'Client already assigned to this staff','', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if($client->update(['staff_id' =>  $user->id])){
+                $user = Auth::user();
+                activity('client')
+                    ->performedOn($client)
+                    ->causedBy($user)
+                    ->log('Client transferred to '.$user->name);
                 return $this->commonResponse(false,'Client transferred successfully','', Response::HTTP_OK);
             }
             return $this->commonResponse(false,'Failed to transfer client','', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -279,7 +281,12 @@ class ClientController extends Controller
                     'gender' => $request->gender ?? $client[$i]->gender,
                     'age' => $request->age ?? $client[$i]->age,
                     'region' => $request->region ?? $client[$i]->region
-                ])){ //TODO update more fields here
+                ])){
+                    $user = Auth::user();
+                    activity('client')
+                        ->performedOn($client)
+                        ->causedBy($user)
+                        ->log('Changed gender to '.$request->gender.', age to '.$request->age.', region to '.$request->region);
                     return $this->commonResponse(true,'Clients Updated successfully','', Response::HTTP_OK);
                 }
                 return $this->commonResponse(false,'Failed to update clients','', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -302,16 +309,24 @@ class ClientController extends Controller
     public function activate(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'users' => 'required|array',
-            'users.*' => 'integer|exists:clients,id'
+            'clients' => 'required|array',
+            'clients.*' => 'integer|exists:clients,id'
         ]);
         if ($validator->fails()) {
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             try {
 
-                Client::whereIn('id', $request->users)
+                Client::whereIn('id', $request->clients)
                     ->update(['client_type' =>  'therapy','therapy' =>  1]);
+                $user = Auth::user();
+                foreach ($request->clients as $client) {
+                    $clientRecords = Client::findorFail($client);
+                    activity('client')
+                    ->performedOn($clientRecords)
+                    ->causedBy($user)
+                    ->log('Changed client type  to Therapy and set it to Active');
+                }
                 return $this->commonResponse(true, 'Clients updated successfully!','', Response::HTTP_OK);
             } catch (QueryException $ex) {
                 return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -334,7 +349,7 @@ class ClientController extends Controller
     {
         $activities = Activity::all();
 
-        $activities = $activities->where('causer_id', $id);
+        $activities = $activities->where('subject_id', $id);
 
         if ($activities) {
             return $this->commonResponse(true, 'Success', $activities, Response::HTTP_OK);
