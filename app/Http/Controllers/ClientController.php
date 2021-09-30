@@ -350,9 +350,15 @@ class ClientController extends Controller
         $activities = Activity::all();
 
         $activities = $activities->where('subject_id', $id);
+        $activitiesList = collect();
+        
+        foreach($activities as $activity){
+            $activityInstance = ['description' => $activity->description, 'date' => $activity->created_at];
+            $activitiesList->push($activityInstance);
+        }
 
         if ($activities) {
-            return $this->commonResponse(true, 'Success', $activities, Response::HTTP_OK);
+            return $this->commonResponse(true, 'Success', $activitiesList, Response::HTTP_OK);
         }
         return $this->commonResponse(false, 'No activities Found!', '', Response::HTTP_NOT_FOUND);
     }
