@@ -349,12 +349,19 @@ class ClientController extends Controller
     {
         $activities = Activity::all();
 
-        $activities = $activities->where('subject_id', $id);
+        $client = Client::find($id);
 
-        if ($activities) {
-            return $this->commonResponse(true, 'Success', $activities, Response::HTTP_OK);
+        if ($client) {
+            $activities = $activities->where('subject_id', $id);
+
+            if ($activities) {
+                return $this->commonResponse(true, 'Success', $activities, Response::HTTP_OK);
+            }
+
+            return $this->commonResponse(false, 'No activities Found!', '', Response::HTTP_NOT_FOUND);
         }
-        return $this->commonResponse(false, 'No activities Found!', '', Response::HTTP_NOT_FOUND);
+      
+        return $this->commonResponse(false, 'Client not found!', '', Response::HTTP_NOT_FOUND);
     }
     
      /*
