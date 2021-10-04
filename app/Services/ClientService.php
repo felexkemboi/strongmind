@@ -27,7 +27,7 @@ class ClientService
     public function filter(Request $request): JsonResponse
     {
         try{
-            $name = $request->get('name');
+            $id = $request->get('id');
             $phone = $request->get('phone');
             $country = (int)$request->get('country');
             $status = (int)$request->get('status');
@@ -41,9 +41,9 @@ class ClientService
             $clients = Client::query()->with('timezone','country','status','channel','staff','notes');
 
             //search by name
-            if($request->has('name') && $request->filled('name')){
-                $clients = $clients->where(function($query) use($name){
-                    $query->where('name','ilike','%'. $name . '%');
+            if($request->has('id') && $request->filled('id')){
+                $clients = $clients->where(function($query) use($id){
+                    $query->where('id','ilike','%'. $id . '%');
                 });
             }
             //search by phone
@@ -150,6 +150,13 @@ class ClientService
                     return $this->commonResponse(false,'Invalid filter parameter','', Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
             }
+
+            //sort
+            if($request->has('sort')){
+                $sort = $request->get('sort');
+                $clients = $clients->orderBy($sort,'asc');
+            }
+ 
             $clients = $clients->latest()->paginate(10);
             return $this->commonResponse(true,'success',$clients, Response::HTTP_OK);
         }catch (QueryException $queryException){
