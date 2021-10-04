@@ -25,4 +25,19 @@ class Office extends Model
     {
         return $this->hasMany(Program::class, 'office_id');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function($office) {
+            $relationMethods = ['members', 'programs'];
+
+            foreach ($relationMethods as $relationMethod) {
+                if ($office->$relationMethod()->count() > 0) {
+                    return false;
+                }
+            }
+        });
+    }
 }
