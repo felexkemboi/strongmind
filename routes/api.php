@@ -49,6 +49,7 @@ Route::prefix('office')->group(function () {
     Route::put('update/{id}', [OfficeController::class, 'update'])->middleware('auth:sanctum');
     Route::get('/{id}/members', [OfficeController::class, 'members'])->middleware('auth:sanctum');
     Route::get('/{id}/programs', [OfficeController::class, 'programs'])->middleware('auth:sanctum');
+    Route::delete('delete/{id}', [OfficeController::class, 'delete'])->middleware('auth:sanctum');
 
 });
 //Roles and permissions
@@ -148,6 +149,7 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::patch('/{id}/transfer',[ClientController::class,'transfer']);
     Route::patch('/bulk-edit',[ClientController::class,'bulkEdit']);
     Route::get('/{id}/activity',[ClientController::class,'clientLogs']);
+    Route::post('/sources', [ClientController::class, 'otherSources']);
 
     //client notes
     Route::post('/{id}/notes/create',[ClientNoteController::class,'create']);

@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\Helpers\CountryHelper;
+use App\Helpers\ImportClients;
 use App\Http\Resources\ClientResource;
-use App\Models\Misc\Channel;
-use App\Models\Misc\Status;
 use App\Models\User;
 use App\Services\ClientService;
-use App\Support\Collection;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -21,6 +19,7 @@ use Illuminate\Support\Arr;
 use Exception;
 use App\Models\Client;
 use Spatie\Activitylog\Models\Activity;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Class ClientController
@@ -235,6 +234,11 @@ class ClientController extends Controller
                 return $this->commonResponse(false,'Client already assigned to this staff','', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if($client->update(['staff_id' =>  $user->id])){
+                $user = Auth::user();
+                activity('client')
+                    ->performedOn($client)
+                    ->causedBy($user)
+                    ->log('Client transferred to '.$user->name);
                 return $this->commonResponse(false,'Client transferred successfully','', Response::HTTP_OK);
             }
             return $this->commonResponse(false,'Failed to transfer client','', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -277,7 +281,12 @@ class ClientController extends Controller
                     'gender' => $request->gender ?? $client[$i]->gender,
                     'age' => $request->age ?? $client[$i]->age,
                     'region' => $request->region ?? $client[$i]->region
-                ])){ //TODO update more fields here
+                ])){
+                    $user = Auth::user();
+                    activity('client')
+                        ->performedOn($client)
+                        ->causedBy($user)
+                        ->log('Changed gender to '.$request->gender.', age to '.$request->age.', region to '.$request->region);
                     return $this->commonResponse(true,'Clients Updated successfully','', Response::HTTP_OK);
                 }
                 return $this->commonResponse(false,'Failed to update clients','', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -300,16 +309,24 @@ class ClientController extends Controller
     public function activate(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'users' => 'required|array',
-            'users.*' => 'integer|exists:clients,id'
+            'clients' => 'required|array',
+            'clients.*' => 'integer|exists:clients,id'
         ]);
         if ($validator->fails()) {
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             try {
 
-                Client::whereIn('id', $request->users)
+                Client::whereIn('id', $request->clients)
                     ->update(['client_type' =>  'therapy','therapy' =>  1]);
+                $user = Auth::user();
+                foreach ($request->clients as $client) {
+                    $clientRecords = Client::findorFail($client);
+                    activity('client')
+                    ->performedOn($clientRecords)
+                    ->causedBy($user)
+                    ->log('Changed client type  to Therapy and set it to Active');
+                }
                 return $this->commonResponse(true, 'Clients updated successfully!','', Response::HTTP_OK);
             } catch (QueryException $ex) {
                 return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -332,12 +349,75 @@ class ClientController extends Controller
     {
         $activities = Activity::all();
 
-        $activities = $activities->where('causer_id', $id);
+        $activities = $activities->where('subject_id', $id);
 
         if ($activities) {
             return $this->commonResponse(true, 'Success', $activities, Response::HTTP_OK);
-        } 
+        }
         return $this->commonResponse(false, 'No activities Found!', '', Response::HTTP_NOT_FOUND);
+    }
+    
+     /*
+     * Bulk load Clients
+     * @param Request $request
+     * @bodyParam file required.
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function otherSources(Request $request): JsonResponse
+    {
+        $import = new ImportClients;
+        $finalArray = array();
+        $passed = collect([]);
+        $failed_validations = collect([]);
+        $failed_saved = collect([]);
+
+        Excel::import($import, $request->file);
+        $array = $import->getArray();
+        foreach ($array as $user) {
+
+            if ($import->validate($user)->fails()) {
+                $failed_validations->push($user);
+                continue;
+            } else {
+                try {
+                    $client = new Client;
+                    $client->name = $user['name'];
+                    $client->phone_number = $user['phone_number'];
+                    $client->country_id = $user['country_id'];
+                    $client->gender = $user['gender'];
+                    $client->region = $user['region'];
+                    $client->city = $user['city'];
+                    $client->timezone_id = $user['timezone_id'];
+                    $client->languages = $user['languages']; //TODO comma separate these if multiple languages are provided
+                    $client->age = $user['age'];
+                    $client->status_id = $user['status_id'];
+                    $client->channel_id = $user['channel_id'];
+                    if($client->save()){
+                        $countryCode = CountryHelper::getCountryCode($user['country_id']);
+                        $yearVal = Carbon::now()->format('y');
+                        $patient_id = $countryCode->long_code.'-'.$yearVal.'-'.'0000'.$client->id; //random_int(0,4).$client->id;
+                        $client->update(['patient_id' => $patient_id]); //TODO change format to CountryCode-ProgramCode-Year-Cycle-Number
+                        $passed->push($user);
+                    }else{
+                        $failed_saved->push($user);
+                    }
+                    
+        
+                } catch  (\Exception $e) { 
+                    $failed_saved->push($user);
+                    continue;
+                }
+            }
+        }
+
+        $finalArray = array(
+            "passed" => $passed,
+            "failed validations" => $failed_validations,
+            "failed saved" => $failed_saved
+        );
+        return $this->commonResponse(true, 'Clients created successfully!', $finalArray, Response::HTTP_CREATED);
+
     }
 }
 
