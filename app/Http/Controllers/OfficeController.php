@@ -161,4 +161,24 @@ class OfficeController extends Controller
             return $this->commonResponse(false, $exception->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
+
+    /**
+     * Delete an office
+     * @param $id
+     * @urlParam id integer required Office ID . Example:1
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function delete($id) {
+        if(Office::where('id', $id)->exists()) {
+          $office = Office::find($id);
+
+          if($office->delete()){
+            return $this->commonResponse(true, 'Office Deleted successfully!', '', Response::HTTP_OK);
+          }
+          return $this->commonResponse(false, 'Office not Deleted!', 'Office has related records', Response::HTTP_NOT_IMPLEMENTED);
+        }
+
+        return $this->commonResponse(false, 'Office not Delete!', 'Office does not exist', Response::HTTP_NOT_FOUND);
+      }
 }
