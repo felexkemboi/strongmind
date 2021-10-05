@@ -22,8 +22,9 @@ class ClientService
      */
     public function filter(Request $request): JsonResponse
     {
-        try {
-            $name = $request->get('name');
+
+        try{
+            $id = $request->get('id');
             $phone = $request->get('phone');
             $country = (int)$request->get('country');
             $status = (int)$request->get('status');
@@ -34,10 +35,10 @@ class ClientService
             $pagination_records = (int)$request->get('pagination_items');
             $clients = Client::query()->with('timezone', 'country', 'status', 'channel', 'staff', 'notes');
 
-            //search by name
-            if ($request->has('name') && $request->filled('name')) {
-                $clients = $clients->where(function ($query) use ($name) {
-                    $query->where('name', 'ilike', '%'. $name . '%');
+            //search by id
+            if($request->has('id') && $request->filled('id')){
+                $clients = $clients->where(function($query) use($id){
+                    $query->where('id','ilike','%'. $id . '%');
                 });
             }
             //search by phone
@@ -109,10 +110,17 @@ class ClientService
                         $clients = $this->createQuery('client_type',Client::THERAPY_CLIENT_TYPE);
                         break;
                 }
-            };
+            }
 
-            return $this->commonResponse(true, 'success', $clients->latest()->paginate(10), Response::HTTP_OK);
-        } catch (QueryException $queryException) {
+            //sort
+            if($request->has('sort')){
+                $sort = $request->get('sort');
+                $clients = $clients->orderBy($sort,'asc');
+            }
+ 
+            $clients = $clients->latest()->paginate(10);
+            return $this->commonResponse(true,'success',$clients, Response::HTTP_OK);
+        }catch (QueryException $queryException){
             return $this->commonResponse(false, $queryException->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (\Exception $exception) {
             return $this->commonResponse(false, $exception->getMessage(), '', Response::HTTP_INTERNAL_SERVER_ERROR);
