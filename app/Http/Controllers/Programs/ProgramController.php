@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Programs;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\OfficeResource;
 use App\Http\Resources\Programs\ProgramResource;
 use App\Models\Office;
+use App\Models\User;
 use App\Models\Programs\Program;
 use App\Services\ProgramService;
-use App\Support\Collection;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,7 +17,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
-use function MongoDB\BSON\toJSON;
 
 /**
  * Class ProgramController
@@ -129,6 +127,26 @@ class ProgramController extends Controller
         }catch (Exception $exception){
             Log::critical('Could Not Fetch Program Details. ERROR: '.$exception->getTraceAsString());
             return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Display Program users
+     *
+     * @param int $id
+     * @urlParam id integer required The Program ID. Example-1
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function users(int $id): JsonResponse
+    {
+        try {
+            $office = Office::find($id);
+            $data = User::where('invite_accepted', 1)->where('office_id', $office->id);
+
+            return $this->commonResponse(true, 'success', $data, Response::HTTP_OK);
+        } catch (QueryException $queryException) {
+            return $this->commonResponse(false, $queryException->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 

@@ -121,6 +121,7 @@ Route::group(['prefix' => 'programs','middleware' => 'auth:sanctum'], function()
     Route::get('/{id}/details',[ProgramController::class,'show']);
     Route::patch('/{id}/update',[ProgramController::class,'update']);
     Route::delete('/{id}/delete',[ProgramController::class,'destroy']);
+    Route::get('/{id}/users',[ProgramController::class,'users']);
     Route::group(['prefix' => 'invite'], function(){
         Route::post('/{id}/send',[ProgramController::class,'sendInvites']);
     });
