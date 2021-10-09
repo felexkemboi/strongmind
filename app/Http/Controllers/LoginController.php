@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -30,37 +29,27 @@ class LoginController extends Controller
      * @bodyParam  password string required Password.
      *
      */
-    public function loginUser(Request $request): JsonResponse
+
+    public function loginUser(LoginRequest $request): JsonResponse
     {
-        $validatedLogin = Validator::make(
-            $request->all(),
-            [
-                'email' => 'required',
-                'password' => 'required',
-            ]
-        );
-        if ($validatedLogin->fails()) {
-            return $this->commonResponse(false, Arr::flatten($validatedLogin->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
-        } else {
-            $password = $request->password;
-            $email=$request->email;
-            $user=User::firstWhere('email',$email);
-            if (!$user) {
-                return $this->commonResponse(false, 'The provided credentials are incorrect!', '', Response::HTTP_EXPECTATION_FAILED);
-            }
-            elseif ($user->invite_accepted !==1 && $user->active!==1) {
-                return $this->commonResponse(false, 'The provided credentials are incorrect or account is inactive.', '', Response::HTTP_EXPECTATION_FAILED);
-            }elseif (!Hash::check($password, $user->password)) {
-                return $this->commonResponse(false, 'The provided credentials are incorrect.', '', Response::HTTP_EXPECTATION_FAILED);
-            } else {
-                $user->update(['last_login' => now()]);
-                $result = [
-                    'user' => new UserResource($user),
-                    'accessToken' => $user->createToken('strong-minds')->plainTextToken,
-                ];
-                return $this->commonResponse(true, 'success', $result, Response::HTTP_CREATED);
-            }
+
+        $user = User::where('email',$request->email)->firstOrFail();
+
+        if ($user->invite_accepted !== 1 && $user->active !== 1 ){
+            return $this->commonResponse(false, 'The user is not active!', '', Response::HTTP_EXPECTATION_FAILED);
         }
+
+        if ( !Hash::check($request->password, $user->password) ) {
+            return $this->commonResponse(false, 'The password/email is incorrect!', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $user->update(['last_login' => now()]);
+        $result = [
+            'user' => new UserResource($user),
+            'accessToken' => $user->createToken('strong-minds')->plainTextToken,
+        ];
+
+        return $this->commonResponse(true, 'success', $result, Response::HTTP_OK);
     }
     /**
      * User profile
@@ -80,17 +69,16 @@ class LoginController extends Controller
      * @return JsonResponse
      * @authenticated
      */
-    public function logout( Request $request): JsonResponse
+    public function logout(Request $request): JsonResponse
     {
-        try{
-            if($request->user()->tokens()->delete()){
-                return $this->commonResponse(true,'Logout Successful','',Response::HTTP_OK);
+        try {
+            if ($request->user()->tokens()->delete()) {
+                return $this->commonResponse(true, 'Logout Successful', '', Response::HTTP_OK);
             }
-            return $this->commonResponse(true,'Failed to logout','',Response::HTTP_UNPROCESSABLE_ENTITY);
-        }catch (Exception $exception){
-            Log::critical('Something went wrong performing the logout action. ERROR '.$exception->getTraceAsString());
+            return $this->commonResponse(true, 'Failed to logout', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $exception) {
+            Log::critical('Something went wrong performing the logout action. ERROR ' . $exception->getTraceAsString());
             return $this->commonResponse(false, $exception->getMessage(), '', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
 }
