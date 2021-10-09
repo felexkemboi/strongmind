@@ -40,7 +40,7 @@ class LoginController extends Controller
         }
 
         if ( !Hash::check($request->password, $user->password) ) {
-            return $this->commonResponse(false, 'The password/email is incorrect!', '', Response::HTTP_EXPECTATION_FAILED);
+            return $this->commonResponse(false, 'The password/email is incorrect!', '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $user->update(['last_login' => now()]);
@@ -49,7 +49,7 @@ class LoginController extends Controller
             'accessToken' => $user->createToken('strong-minds')->plainTextToken,
         ];
 
-        return $this->commonResponse(true, 'success', $result, Response::HTTP_CREATED);
+        return $this->commonResponse(true, 'success', $result, Response::HTTP_OK);
     }
     /**
      * User profile
