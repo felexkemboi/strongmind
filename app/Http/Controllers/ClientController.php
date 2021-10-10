@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Helpers\CountryHelper;
 use App\Helpers\ImportClients;
 use App\Http\Resources\ClientResource;
@@ -20,6 +20,7 @@ use Exception;
 use App\Models\Client;
 use Spatie\Activitylog\Models\Activity;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Requests\TransferClient;
 
 /**
  * Class ClientController
@@ -212,34 +213,22 @@ class ClientController extends Controller
      * @return JsonResponse
      * @authenticated
      */
-    public function transfer( Request $request, int $id ): JsonResponse
+    public function transfer(TransferClient $request, int $clientId ): JsonResponse
     {
-        $validator = Validator::make($request->all(),[
-            'staff_id' => 'required|integer|exists:users,id'
-        ]);
-        if($validator->fails())
-        {
-            return $this->commonResponse(false,Arr::flatten($validator->messages()->get('*')),'', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
         try{
-            $client = Client::with('timezone','country','status','channel','staff')->find($id);
-            if(!$client){
-                return $this->commonResponse(false,'Client Not Found','', Response::HTTP_NOT_FOUND);
+            $client = Client::findOrFail($clientId);
+
+            if($client->staff_id === $request->staff_id){
+                return $this->commonResponse(false,'Client already assigned to this staff','', Response::HTTP_ACCEPTED);
             }
-            $user = User::firstWhere('id', $request->staff_id);
-            if(!$user){
-                return $this->commonResponse(false,'Staff Not Found','', Response::HTTP_NOT_FOUND);
-            }
-            if($client->staff_id === $user->id){
-                return $this->commonResponse(false,'Client already assigned to this staff','', Response::HTTP_UNPROCESSABLE_ENTITY);
-            }
-            if($client->update(['staff_id' =>  $user->id])){
+
+            if($client->update(['staff_id' =>  $request->staff_id])){
                 $user = Auth::user();
                 activity('client')
                     ->performedOn($client)
                     ->causedBy($user)
                     ->log('Client transferred to '.$user->name);
-                return $this->commonResponse(false,'Client transferred successfully','', Response::HTTP_OK);
+                return $this->commonResponse(true,'Client transferred successfully','', Response::HTTP_OK);
             }
             return $this->commonResponse(false,'Failed to transfer client','', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (QueryException  $queryException){
