@@ -70,19 +70,15 @@ class ClientNoteController extends Controller
      * @urlParam id integer required . The Client ID
      * @authenticated
      */
-    public function getPublicNotes(int $id): JsonResponse
+    public function getPublicNotes(Request $request,int $clientId): JsonResponse
     {
         try {
-            $client = Client::find($id);
-
-            if (!$client) {
-                return $this->commonResponse(false, 'Client Does Not Exist', '', Response::HTTP_NOT_FOUND);
-            }
-            $publicNotes = ClientNote::public()
-                ->where(fn ($query) => $query->where('client_id', $client->id))
-                ->with(['staff' => fn ($query) => $query->select('id', 'name', 'profile_pic_url')])
-                ->select('created_at', 'staff_id', 'notes', 'id')
-                ->latest();
+            $publicNotes = ClientNote::select('id','notes','created_at','staff_id')
+                ->with(['staff' => fn ($query) => $query->select('id','name','profile_pic_url')])
+                ->where('client_id', $clientId)
+                ->where('private', false)
+                ->where('staff_id', $request->user()->id)
+                ->get();
 
             return $this->commonResponse(true, 'success', $publicNotes, Response::HTTP_OK);
         } catch (QueryException $queryException) {
@@ -104,17 +100,12 @@ class ClientNoteController extends Controller
     public function getPrivateNotes(Request $request, int $id): JsonResponse
     {
         try {
-            $client = Client::find($id);
-            if (!$client) {
-                return $this->commonResponse(false, 'Client Does Not Exist', '', Response::HTTP_NOT_FOUND);
-            }
-
-            $privateNotes =  ClientNote::private($request)
-                ->where(fn ($query) => $query->where('client_id', $client->id))
-                ->with(['staff' => fn ($query) => $query->select('id', 'name', 'profile_pic_url')])
-                ->select('created_at', 'staff_id', 'notes', 'id')
-                ->latest();
-
+            $privateNotes = ClientNote::select('id','notes','created_at','staff_id')
+                ->with(['staff' => fn ($query) => $query->select('id','name','profile_pic_url')])
+                ->where('client_id', $id)
+                ->where('private', true)
+                ->where('staff_id', $request->user()->id)
+                ->get();
             return $this->commonResponse(true, 'success', $privateNotes, Response::HTTP_OK);
         } catch (QueryException $queryException) {
             return $this->commonResponse(false, $queryException->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
