@@ -12,10 +12,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Testing\TestResponse;
 use Postmark\PostmarkClient;
 use Silber\Bouncer\Database\Role;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\SetPasswordRequest;
 
 /**
  * Class InviteController
@@ -104,48 +104,39 @@ class InviteController extends Controller
 
     /**
      * Set Password
-     * @param Request $request
+     * @param SetPasswordRequest $request
      * @return JsonResponse
-     * @bodyParam  password string required  Password.
-     * @bodyParam  invite string required Invite Id.
-     *
+     * @bodyParam  password string required  User Password
+     * @bodyParam  invite string required Invite Id
+     * @bodyParam  name string required Name
+     * @authenticated
      */
-    public function setPassword(Request $request): JsonResponse
+    public function setPassword(SetPasswordRequest $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'password' => 'required|min:6',
-            'invite' => 'required',
+        try {
 
-        ]);
-        if ($validator->fails()) {
-            return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
-        } else {
-            try {
-                $user = User::firstWhere('invite_id', $request->invite);
-                if (!$user) {
-                    return $this->commonResponse(false, 'Invite ID invalid!', '', Response::HTTP_NOT_FOUND);
-                } else {
-                    $user->update([
-                        'password' => bcrypt($request->password),
-                        'invite_accepted' => 1,
-                        'active' => 1,
-                        'invite_id' => '',
-                    ]);
-                    $user->fresh();
-                    $office=Office::firstWhere('id',$user->office_id);
-                    $new_count=($office->member_count)+1;
-                    $office->update(['member_count' => $new_count]);
-                    $result = [
-                        'user' => new UserResource($user),
-                        'accessToken' => $user->createToken('strongminds')->plainTextToken,
-                    ];
-                    return $this->commonResponse(true, 'Password set successfully!', $result, Response::HTTP_CREATED);
-                }
-            } catch (QueryException $ex) {
-                return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
-            } catch (Exception $ex) {
-                return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
-            }
+            $user = User::firstWhere('invite_id', $request->invite);
+            $user->update([
+                'password' => bcrypt($request->password),
+                'name' => $request->username,
+                'invite_accepted' => 1,
+                'active' => 1,
+                'invite_id' => '',
+            ]);
+            
+            $user->fresh();
+            $office=Office::firstWhere('id',$user->office_id);
+            $new_count=($office->member_count)+1;
+            $office->update(['member_count' => $new_count]);
+            $result = [
+                'user' => new UserResource($user),
+                'accessToken' => $user->createToken('strongminds')->plainTextToken,
+            ];
+            return $this->commonResponse(true, 'Password set successfully!', $result, Response::HTTP_CREATED);
+        } catch (QueryException $ex) {
+            return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $ex) {
+            return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
     }
