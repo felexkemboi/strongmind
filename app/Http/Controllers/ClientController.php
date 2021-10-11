@@ -18,7 +18,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Arr;
 use Exception;
 use App\Models\Client;
-use Spatie\Activitylog\Models\Activity;
+use Spatie\Activitylog\Models\Activity as ActivityLog;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\TransferClient;
 
@@ -336,21 +336,19 @@ class ClientController extends Controller
 
     public function clientLogs(int $id) 
     {
-        $activities = Activity::all();
-
-        $client = Client::find($id);
-
-        if ($client) {
-            $activities = $activities->where('subject_id', $id);
-
-            if ($activities) {
-                return $this->commonResponse(true, 'Success', $activities, Response::HTTP_OK);
+        $activities = ActivityLog::all();
+        $activities = $activities->where('subject_id', $id);
+        if(!$activities->isEmpty()){
+            $activitiesList = collect();
+            foreach($activities as $activity){
+                if($activity->causer_id){
+                    $activitiesList->push(['description' => $activity->description, 'date' => $activity->created_at , 'user' => User::findorFail($activity->causer_id)->name]);
+                }
+                $activitiesList->push(['description' => $activity->description, 'date' => $activity->created_at , 'user' => '']);
             }
-
-            return $this->commonResponse(false, 'No activities Found!', '', Response::HTTP_NOT_FOUND);
+            return $this->commonResponse(true, 'Success', $activitiesList, Response::HTTP_OK);
         }
-      
-        return $this->commonResponse(false, 'Client not found!', '', Response::HTTP_NOT_FOUND);
+        return $this->commonResponse(true, 'Success', 'Client has no Logs', Response::HTTP_OK);
     }
     
      /*

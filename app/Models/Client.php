@@ -42,7 +42,7 @@ class Client extends Model
         'active'
     ];
 
-    protected static $logAttributes = ['*'];
+    protected static $logAttributes = ['client_type','staff_id','name','therapy','patient_id','phone_number','city','languages','status_id','channel_id','active'];
     
     protected static $logFillable = true;
 
