@@ -34,6 +34,7 @@ class UserController extends Controller
      * @group Teams
      * @queryParam name string Search by name. No-example
      * @queryParam role integer Filter by role. 1
+     * @queryParam paginate boolean required . Specify whether true or false
      * @param Request $request
      * @queryParam sort string Filter either by desc or asc order
      * @return JsonResponse
@@ -44,6 +45,7 @@ class UserController extends Controller
         $users = User::query();
         $name=$request->get('name');
         $role=$request->get('role');
+        $paginate=$request->get('paginate');
         $sort = $request->get('sort');
         $sort_params = ['desc','asc'];
         $invited = $request->get('accepted');
@@ -68,7 +70,14 @@ class UserController extends Controller
            }
             $users = $users->orderBy('id',$sort);
         }
-        $users=$users->where('is_admin', '<>', 1)->paginate(10);
+
+        if ($request->get('paginate') && $request->filled('paginate')) {
+            if($paginate){
+                $users=$users->where('is_admin', '<>', 1)->paginate(10);
+            }
+            $users=$users->where('is_admin', '<>', 1);
+        }
+
         return $this->commonResponse(true, 'success', UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
     }
     /**
