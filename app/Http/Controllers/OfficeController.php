@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
-use App\Support\Collection;
 use Exception;
 use App\Models\User;
 use App\Models\Office;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\Programs\ProgramResource;
 use App\Http\Resources\OfficeResource;
