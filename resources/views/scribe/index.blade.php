@@ -45,7 +45,7 @@
                             <li><a href='http://github.com/knuckleswtf/scribe'>Documentation powered by Scribe ✍</a></li>
                     </ul>
             <ul class="toc-footer" id="last-updated">
-            <li>Last updated: October 11 2021</li>
+            <li>Last updated: October 12 2021</li>
         </ul>
 </div>
 <div class="page-wrapper">
@@ -2354,6 +2354,76 @@ print_r(json_decode((string) $body));</code></pre>
 <input type="number" name="id" data-endpoint="GETapi-clients--id--notes-private" data-component="url"  hidden>
 <br>
 required. The Client's ID
+</p>
+</form><h1>Languages</h1>
+<p>APIs for managing languages</p>
+<h2>All Languages</h2>
+<p><small class="badge badge-darkred">requires authentication</small></p>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "http://localhost:8000/api/languages/all" \
+    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Access-Control-Allow-Origin: *"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/languages/all"
+);
+
+let headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre>
+<pre><code class="language-php">
+$client = new \GuzzleHttp\Client();
+$response = $client-&gt;get(
+    'http://localhost:8000/api/languages/all',
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' =&gt; 'application/json',
+            'Access-Control-Allow-Origin' =&gt; '*',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre>
+<blockquote>
+<p>Example response (401):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "message": "Unauthenticated."
+}</code></pre>
+<div id="execution-results-GETapi-languages-all" hidden>
+    <blockquote>Received response<span id="execution-response-status-GETapi-languages-all"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-languages-all"></code></pre>
+</div>
+<div id="execution-error-GETapi-languages-all" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-languages-all"></code></pre>
+</div>
+<form id="form-GETapi-languages-all" data-method="GET" data-path="api/languages/all" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json","Access-Control-Allow-Origin":"*"}' onsubmit="event.preventDefault(); executeTryOut('GETapi-languages-all', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-GETapi-languages-all" onclick="tryItOut('GETapi-languages-all');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-GETapi-languages-all" onclick="cancelTryOut('GETapi-languages-all');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-GETapi-languages-all" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-green">GET</small>
+ <b><code>api/languages/all</code></b>
+</p>
+<p>
+<label id="auth-GETapi-languages-all" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="GETapi-languages-all" data-component="header"></label>
 </p>
 </form><h1>Misc</h1>
 <h2>All Statuses</h2>
