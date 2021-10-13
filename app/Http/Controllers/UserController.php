@@ -76,6 +76,8 @@ class UserController extends Controller
                 $users=$users->where('is_admin', '<>', 1)->paginate(10);
             }
             $users=$users->where('is_admin', '<>', 1);
+
+            return $this->commonResponse(true, 'success', UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
         }
 
         return $this->commonResponse(true, 'success', UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
