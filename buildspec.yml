@@ -9,8 +9,8 @@ phases:
       php: 7.3
     commands:
       - echo Install composer
-      - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-      - php composer-setup.php --install-dir=/bin --filename=composer
+      #- php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+      #- php composer-setup.php --install-dir=/bin --filename=composer
       - echo Install packages
       - composer update
       - composer install
