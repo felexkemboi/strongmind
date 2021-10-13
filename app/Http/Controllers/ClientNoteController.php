@@ -77,7 +77,6 @@ class ClientNoteController extends Controller
                 ->with(['staff:id,name,profile_pic_url'])
                 ->where('client_id', $clientId)
                 ->where('private', false)
-                ->where('staff_id', $request->user()->id)
                 ->get();
 
             return $this->commonResponse(true, 'success', $publicNotes, Response::HTTP_OK);
