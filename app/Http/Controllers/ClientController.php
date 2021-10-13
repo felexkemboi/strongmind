@@ -342,9 +342,9 @@ class ClientController extends Controller
             $activitiesList = collect();
             foreach($activities as $activity){
                 if($activity->causer_id){
-                    $activitiesList->push(['description' => $activity->description, 'date' => $activity->created_at , 'user' => User::findorFail($activity->causer_id)->name]);
+                    $activitiesList->push(['description' => $activity->description, 'date' => $activity->created_at , 'user' => User::findorFail($activity->causer_id)->name, 'profile' => User::findorFail($activity->causer_id)->profile_pic_url]);
                 }
-                $activitiesList->push(['description' => $activity->description, 'date' => $activity->created_at , 'user' => '']);
+                $activitiesList->push(['description' => $activity->description, 'date' => $activity->created_at , 'user' => '','profile' => '']);
             }
             return $this->commonResponse(true, 'Success', $activitiesList, Response::HTTP_OK);
         }
