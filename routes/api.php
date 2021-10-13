@@ -19,6 +19,7 @@ use App\Http\Controllers\Programs\ProgramMemberController;
 use App\Http\Controllers\Programs\ProgramMemberTypeController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientNoteController;
+use App\Http\Controllers\LanguageController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -157,6 +158,10 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
 });
 
 
+//Languages
+Route::group(['prefix' => 'languages','middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',[LanguageController::class, 'index']);
+});
 
 
 

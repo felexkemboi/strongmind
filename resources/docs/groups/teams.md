@@ -1,0 +1,705 @@
+# Teams
+Invite Member
+
+## All Users
+
+<small class="badge badge-darkred">requires authentication</small>
+
+
+
+> Example request:
+
+```bash
+curl -X GET \
+    -G "http://localhost:8000/api/teams/all?role=11&sort=non" \
+    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Access-Control-Allow-Origin: *"
+```
+
+```javascript
+const url = new URL(
+    "http://localhost:8000/api/teams/all"
+);
+
+let params = {
+    "role": "11",
+    "sort": "non",
+};
+Object.keys(params)
+    .forEach(key => url.searchParams.append(key, params[key]));
+
+let headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response => response.json());
+```
+
+```php
+
+$client = new \GuzzleHttp\Client();
+$response = $client->get(
+    'http://localhost:8000/api/teams/all',
+    [
+        'headers' => [
+            'Authorization' => 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' => 'application/json',
+            'Access-Control-Allow-Origin' => '*',
+        ],
+        'query' => [
+            'role'=> '11',
+            'sort'=> 'non',
+        ],
+    ]
+);
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+
+> Example response (401):
+
+```json
+{
+    "message": "Unauthenticated."
+}
+```
+<div id="execution-results-GETapi-teams-all" hidden>
+    <blockquote>Received response<span id="execution-response-status-GETapi-teams-all"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-teams-all"></code></pre>
+</div>
+<div id="execution-error-GETapi-teams-all" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-teams-all"></code></pre>
+</div>
+<form id="form-GETapi-teams-all" data-method="GET" data-path="api/teams/all" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json","Access-Control-Allow-Origin":"*"}' onsubmit="event.preventDefault(); executeTryOut('GETapi-teams-all', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-GETapi-teams-all" onclick="tryItOut('GETapi-teams-all');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-GETapi-teams-all" onclick="cancelTryOut('GETapi-teams-all');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-GETapi-teams-all" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-green">GET</small>
+ <b><code>api/teams/all</code></b>
+</p>
+<p>
+<label id="auth-GETapi-teams-all" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="GETapi-teams-all" data-component="header"></label>
+</p>
+<h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+<p>
+<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+<input type="text" name="name" data-endpoint="GETapi-teams-all" data-component="query"  hidden>
+<br>
+Search by name.
+</p>
+<p>
+<b><code>role</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+<input type="number" name="role" data-endpoint="GETapi-teams-all" data-component="query"  hidden>
+<br>
+Filter by role. 1
+</p>
+<p>
+<b><code>sort</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+<input type="text" name="sort" data-endpoint="GETapi-teams-all" data-component="query"  hidden>
+<br>
+Filter either by desc or asc order
+</p>
+</form>
+
+
+## Get User by Id
+
+<small class="badge badge-darkred">requires authentication</small>
+
+
+
+> Example request:
+
+```bash
+curl -X GET \
+    -G "http://localhost:8000/api/teams/show/1" \
+    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Access-Control-Allow-Origin: *"
+```
+
+```javascript
+const url = new URL(
+    "http://localhost:8000/api/teams/show/1"
+);
+
+let headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response => response.json());
+```
+
+```php
+
+$client = new \GuzzleHttp\Client();
+$response = $client->get(
+    'http://localhost:8000/api/teams/show/1',
+    [
+        'headers' => [
+            'Authorization' => 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' => 'application/json',
+            'Access-Control-Allow-Origin' => '*',
+        ],
+    ]
+);
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+
+> Example response (401):
+
+```json
+{
+    "message": "Unauthenticated."
+}
+```
+<div id="execution-results-GETapi-teams-show--id-" hidden>
+    <blockquote>Received response<span id="execution-response-status-GETapi-teams-show--id-"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-teams-show--id-"></code></pre>
+</div>
+<div id="execution-error-GETapi-teams-show--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-teams-show--id-"></code></pre>
+</div>
+<form id="form-GETapi-teams-show--id-" data-method="GET" data-path="api/teams/show/{id}" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json","Access-Control-Allow-Origin":"*"}' onsubmit="event.preventDefault(); executeTryOut('GETapi-teams-show--id-', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-GETapi-teams-show--id-" onclick="tryItOut('GETapi-teams-show--id-');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-GETapi-teams-show--id-" onclick="cancelTryOut('GETapi-teams-show--id-');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-GETapi-teams-show--id-" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-green">GET</small>
+ <b><code>api/teams/show/{id}</code></b>
+</p>
+<p>
+<label id="auth-GETapi-teams-show--id-" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="GETapi-teams-show--id-" data-component="header"></label>
+</p>
+<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+<p>
+<b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<input type="number" name="id" data-endpoint="GETapi-teams-show--id-" data-component="url" required  hidden>
+<br>
+The ID of the user.
+</p>
+</form>
+
+
+## Update member details.
+
+<small class="badge badge-darkred">requires authentication</small>
+
+
+
+> Example request:
+
+```bash
+curl -X PUT \
+    "http://localhost:8000/api/teams/update/1" \
+    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Access-Control-Allow-Origin: *" \
+    -d '{"name":"nemo","email":"sunt","phone_number":"quisquam","office_id":1,"role_id":1,"timezone_id":2,"gender":"male","region":"East Africa","city":"Nairobi","languages":["minima","consectetur"]}'
+
+```
+
+```javascript
+const url = new URL(
+    "http://localhost:8000/api/teams/update/1"
+);
+
+let headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+};
+
+let body = {
+    "name": "nemo",
+    "email": "sunt",
+    "phone_number": "quisquam",
+    "office_id": 1,
+    "role_id": 1,
+    "timezone_id": 2,
+    "gender": "male",
+    "region": "East Africa",
+    "city": "Nairobi",
+    "languages": [
+        "minima",
+        "consectetur"
+    ]
+}
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response => response.json());
+```
+
+```php
+
+$client = new \GuzzleHttp\Client();
+$response = $client->put(
+    'http://localhost:8000/api/teams/update/1',
+    [
+        'headers' => [
+            'Authorization' => 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' => 'application/json',
+            'Access-Control-Allow-Origin' => '*',
+        ],
+        'json' => [
+            'name' => 'nemo',
+            'email' => 'sunt',
+            'phone_number' => 'quisquam',
+            'office_id' => 1,
+            'role_id' => 1,
+            'timezone_id' => 2,
+            'gender' => 'male',
+            'region' => 'East Africa',
+            'city' => 'Nairobi',
+            'languages' => [
+                'minima',
+                'consectetur',
+            ],
+        ],
+    ]
+);
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+
+<div id="execution-results-PUTapi-teams-update--id-" hidden>
+    <blockquote>Received response<span id="execution-response-status-PUTapi-teams-update--id-"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-teams-update--id-"></code></pre>
+</div>
+<div id="execution-error-PUTapi-teams-update--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-teams-update--id-"></code></pre>
+</div>
+<form id="form-PUTapi-teams-update--id-" data-method="PUT" data-path="api/teams/update/{id}" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json","Access-Control-Allow-Origin":"*"}' onsubmit="event.preventDefault(); executeTryOut('PUTapi-teams-update--id-', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-PUTapi-teams-update--id-" onclick="tryItOut('PUTapi-teams-update--id-');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-PUTapi-teams-update--id-" onclick="cancelTryOut('PUTapi-teams-update--id-');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-PUTapi-teams-update--id-" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-darkblue">PUT</small>
+ <b><code>api/teams/update/{id}</code></b>
+</p>
+<p>
+<label id="auth-PUTapi-teams-update--id-" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="PUTapi-teams-update--id-" data-component="header"></label>
+</p>
+<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+<p>
+<b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<input type="number" name="id" data-endpoint="PUTapi-teams-update--id-" data-component="url" required  hidden>
+<br>
+The User ID.
+</p>
+<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+<p>
+<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+<input type="text" name="name" data-endpoint="PUTapi-teams-update--id-" data-component="body"  hidden>
+<br>
+Name
+</p>
+<p>
+<b><code>email</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="email" data-endpoint="PUTapi-teams-update--id-" data-component="body" required  hidden>
+<br>
+Email Address
+</p>
+<p>
+<b><code>phone_number</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+<input type="text" name="phone_number" data-endpoint="PUTapi-teams-update--id-" data-component="body"  hidden>
+<br>
+Phone Number
+</p>
+<p>
+<b><code>office_id</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+<input type="number" name="office_id" data-endpoint="PUTapi-teams-update--id-" data-component="body"  hidden>
+<br>
+Office ID.
+</p>
+<p>
+<b><code>role_id</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+<input type="number" name="role_id" data-endpoint="PUTapi-teams-update--id-" data-component="body"  hidden>
+<br>
+Role ID.
+</p>
+<p>
+<b><code>timezone_id</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+<input type="number" name="timezone_id" data-endpoint="PUTapi-teams-update--id-" data-component="body"  hidden>
+<br>
+Timezone ID.
+</p>
+<p>
+<b><code>gender</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+<input type="text" name="gender" data-endpoint="PUTapi-teams-update--id-" data-component="body"  hidden>
+<br>
+Gender.
+</p>
+<p>
+<b><code>region</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+<input type="text" name="region" data-endpoint="PUTapi-teams-update--id-" data-component="body"  hidden>
+<br>
+Region.
+</p>
+<p>
+<b><code>city</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+<input type="text" name="city" data-endpoint="PUTapi-teams-update--id-" data-component="body"  hidden>
+<br>
+City.
+</p>
+<p>
+<b><code>languages</code></b>&nbsp;&nbsp;<small>string[]</small>     <i>optional</i> &nbsp;
+<input type="text" name="languages.0" data-endpoint="PUTapi-teams-update--id-" data-component="body"  hidden>
+<input type="text" name="languages.1" data-endpoint="PUTapi-teams-update--id-" data-component="body" hidden>
+<br>
+Languages.Example ["English","French"]
+</p>
+
+</form>
+
+
+## Delete User
+
+<small class="badge badge-darkred">requires authentication</small>
+
+
+
+> Example request:
+
+```bash
+curl -X DELETE \
+    "http://localhost:8000/api/teams/1/delete" \
+    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Access-Control-Allow-Origin: *"
+```
+
+```javascript
+const url = new URL(
+    "http://localhost:8000/api/teams/1/delete"
+);
+
+let headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+};
+
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response => response.json());
+```
+
+```php
+
+$client = new \GuzzleHttp\Client();
+$response = $client->delete(
+    'http://localhost:8000/api/teams/1/delete',
+    [
+        'headers' => [
+            'Authorization' => 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' => 'application/json',
+            'Access-Control-Allow-Origin' => '*',
+        ],
+    ]
+);
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+
+<div id="execution-results-DELETEapi-teams--id--delete" hidden>
+    <blockquote>Received response<span id="execution-response-status-DELETEapi-teams--id--delete"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-teams--id--delete"></code></pre>
+</div>
+<div id="execution-error-DELETEapi-teams--id--delete" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-teams--id--delete"></code></pre>
+</div>
+<form id="form-DELETEapi-teams--id--delete" data-method="DELETE" data-path="api/teams/{id}/delete" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json","Access-Control-Allow-Origin":"*"}' onsubmit="event.preventDefault(); executeTryOut('DELETEapi-teams--id--delete', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-DELETEapi-teams--id--delete" onclick="tryItOut('DELETEapi-teams--id--delete');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-DELETEapi-teams--id--delete" onclick="cancelTryOut('DELETEapi-teams--id--delete');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-DELETEapi-teams--id--delete" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-red">DELETE</small>
+ <b><code>api/teams/{id}/delete</code></b>
+</p>
+<p>
+<label id="auth-DELETEapi-teams--id--delete" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="DELETEapi-teams--id--delete" data-component="header"></label>
+</p>
+<h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+<p>
+<b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<input type="number" name="id" data-endpoint="DELETEapi-teams--id--delete" data-component="url" required  hidden>
+<br>
+The ID of the user.
+</p>
+</form>
+
+
+## Invite member
+
+<small class="badge badge-darkred">requires authentication</small>
+
+
+
+> Example request:
+
+```bash
+curl -X POST \
+    "http://localhost:8000/api/teams/invite" \
+    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Access-Control-Allow-Origin: *" \
+    -d '{"email":"eius","role_id":12,"office_id":7}'
+
+```
+
+```javascript
+const url = new URL(
+    "http://localhost:8000/api/teams/invite"
+);
+
+let headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+};
+
+let body = {
+    "email": "eius",
+    "role_id": 12,
+    "office_id": 7
+}
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response => response.json());
+```
+
+```php
+
+$client = new \GuzzleHttp\Client();
+$response = $client->post(
+    'http://localhost:8000/api/teams/invite',
+    [
+        'headers' => [
+            'Authorization' => 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' => 'application/json',
+            'Access-Control-Allow-Origin' => '*',
+        ],
+        'json' => [
+            'email' => 'eius',
+            'role_id' => 12,
+            'office_id' => 7,
+        ],
+    ]
+);
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+
+<div id="execution-results-POSTapi-teams-invite" hidden>
+    <blockquote>Received response<span id="execution-response-status-POSTapi-teams-invite"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-teams-invite"></code></pre>
+</div>
+<div id="execution-error-POSTapi-teams-invite" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-teams-invite"></code></pre>
+</div>
+<form id="form-POSTapi-teams-invite" data-method="POST" data-path="api/teams/invite" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json","Access-Control-Allow-Origin":"*"}' onsubmit="event.preventDefault(); executeTryOut('POSTapi-teams-invite', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-POSTapi-teams-invite" onclick="tryItOut('POSTapi-teams-invite');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-POSTapi-teams-invite" onclick="cancelTryOut('POSTapi-teams-invite');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-POSTapi-teams-invite" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-black">POST</small>
+ <b><code>api/teams/invite</code></b>
+</p>
+<p>
+<label id="auth-POSTapi-teams-invite" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="POSTapi-teams-invite" data-component="header"></label>
+</p>
+<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+<p>
+<b><code>email</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="email" data-endpoint="POSTapi-teams-invite" data-component="body" required  hidden>
+<br>
+Email Address.
+</p>
+<p>
+<b><code>role_id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<input type="number" name="role_id" data-endpoint="POSTapi-teams-invite" data-component="body" required  hidden>
+<br>
+Role Id.
+</p>
+<p>
+<b><code>office_id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<input type="number" name="office_id" data-endpoint="POSTapi-teams-invite" data-component="body" required  hidden>
+<br>
+Office Id.
+</p>
+
+</form>
+
+
+## Set Password
+
+<small class="badge badge-darkred">requires authentication</small>
+
+
+
+> Example request:
+
+```bash
+curl -X POST \
+    "http://localhost:8000/api/teams/set-password" \
+    -H "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -H "Access-Control-Allow-Origin: *" \
+    -d '{"password":"dolorum","invite":"molestiae","name":"architecto"}'
+
+```
+
+```javascript
+const url = new URL(
+    "http://localhost:8000/api/teams/set-password"
+);
+
+let headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+};
+
+let body = {
+    "password": "dolorum",
+    "invite": "molestiae",
+    "name": "architecto"
+}
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response => response.json());
+```
+
+```php
+
+$client = new \GuzzleHttp\Client();
+$response = $client->post(
+    'http://localhost:8000/api/teams/set-password',
+    [
+        'headers' => [
+            'Authorization' => 'Bearer {YOUR_AUTH_KEY}',
+            'Accept' => 'application/json',
+            'Access-Control-Allow-Origin' => '*',
+        ],
+        'json' => [
+            'password' => 'dolorum',
+            'invite' => 'molestiae',
+            'name' => 'architecto',
+        ],
+    ]
+);
+$body = $response->getBody();
+print_r(json_decode((string) $body));
+```
+
+
+<div id="execution-results-POSTapi-teams-set-password" hidden>
+    <blockquote>Received response<span id="execution-response-status-POSTapi-teams-set-password"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-teams-set-password"></code></pre>
+</div>
+<div id="execution-error-POSTapi-teams-set-password" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-teams-set-password"></code></pre>
+</div>
+<form id="form-POSTapi-teams-set-password" data-method="POST" data-path="api/teams/set-password" data-authed="1" data-hasfiles="0" data-headers='{"Authorization":"Bearer {YOUR_AUTH_KEY}","Content-Type":"application\/json","Accept":"application\/json","Access-Control-Allow-Origin":"*"}' onsubmit="event.preventDefault(); executeTryOut('POSTapi-teams-set-password', this);">
+<h3>
+    Request&nbsp;&nbsp;&nbsp;
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-POSTapi-teams-set-password" onclick="tryItOut('POSTapi-teams-set-password');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-POSTapi-teams-set-password" onclick="cancelTryOut('POSTapi-teams-set-password');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-POSTapi-teams-set-password" hidden>Send Request 💥</button>
+    </h3>
+<p>
+<small class="badge badge-black">POST</small>
+ <b><code>api/teams/set-password</code></b>
+</p>
+<p>
+<label id="auth-POSTapi-teams-set-password" hidden>Authorization header: <b><code>Bearer </code></b><input type="text" name="Authorization" data-prefix="Bearer " data-endpoint="POSTapi-teams-set-password" data-component="header"></label>
+</p>
+<h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+<p>
+<b><code>password</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="password" name="password" data-endpoint="POSTapi-teams-set-password" data-component="body" required  hidden>
+<br>
+User Password
+</p>
+<p>
+<b><code>invite</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="invite" data-endpoint="POSTapi-teams-set-password" data-component="body" required  hidden>
+<br>
+Invite Id
+</p>
+<p>
+<b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="name" data-endpoint="POSTapi-teams-set-password" data-component="body" required  hidden>
+<br>
+Name
+</p>
+
+</form>
+
+
+
