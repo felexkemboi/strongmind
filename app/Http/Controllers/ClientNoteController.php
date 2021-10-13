@@ -74,7 +74,7 @@ class ClientNoteController extends Controller
     {
         try {
             $publicNotes = ClientNote::select('id','notes','created_at','staff_id')
-                ->with(['staff' => fn ($query) => $query->select('id','name','profile_pic_url')])
+                ->with(['staff:id,name,profile_pic_url'])
                 ->where('client_id', $clientId)
                 ->where('private', false)
                 ->where('staff_id', $request->user()->id)
@@ -101,7 +101,7 @@ class ClientNoteController extends Controller
     {
         try {
             $privateNotes = ClientNote::select('id','notes','created_at','staff_id')
-                ->with(['staff' => fn ($query) => $query->select('id','name','profile_pic_url')])
+                ->with(['staff:id,name,profile_pic_url'])
                 ->where('client_id', $id)
                 ->where('private', true)
                 ->where('staff_id', $request->user()->id)
