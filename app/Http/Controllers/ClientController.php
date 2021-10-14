@@ -422,7 +422,7 @@ class ClientController extends Controller
      * @param Request $request
      * @param int $id
      * @urlParam id integer  . The Client ID . Example - 1
-     * @bodyParam column integer . The column that needs  updating . Example channel|3
+     * @bodyParam column  . The column that needs  updating 
      * @return JsonResponse
      * @authenticated
      */
@@ -435,7 +435,6 @@ class ClientController extends Controller
 
         if ($request->has('status')) {
             if ($client->update(['status_id' =>  $request->get('status')])) {
-                //\Log::debug
                 $status = Status::findOrFail($request->get('status'));
                 $user = Auth::user();
                 activity('client')
