@@ -80,12 +80,12 @@ Route::prefix('auth')->group(function () {
 });
 
 //teams
-Route::group(['prefix' => 'teams','middleware' => 'auth:sanctum'],function () {
-    Route::get('all',           [UserController::class, 'index']);
-    Route::get('show/{id}',     [UserController::class, 'showUser']);
-    Route::put('update/{id}',   [UserController::class, 'updateUser']);
-    Route::delete('{id}/delete',[UserController::class,'delete']);
-    Route::post('invite',       [InviteController::class, 'invite']);
+Route::prefix('teams')->group(function () {
+    Route::get('all',           [UserController::class, 'index'])->middleware('auth:sanctum');
+    Route::get('show/{id}',     [UserController::class, 'showUser'])->middleware('auth:sanctum');
+    Route::put('update/{id}',   [UserController::class, 'updateUser'])->middleware('auth:sanctum');
+    Route::delete('{id}/delete',[UserController::class,'delete'])->middleware('auth:sanctum');
+    Route::post('invite',       [InviteController::class, 'invite'])->middleware('auth:sanctum');
     Route::post('set-password', [InviteController::class, 'setPassword']);
 });
 
