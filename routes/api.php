@@ -150,11 +150,15 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::patch('/{id}/transfer',[ClientController::class,'transfer']);
     Route::patch('/bulk-edit',[ClientController::class,'bulkEdit']);
     Route::get('/{id}/activity',[ClientController::class,'clientLogs']);
+    Route::patch('/{id}/change',[ClientController::class,'changeChannel']);
 
     //client notes
     Route::post('/{id}/notes/create',[ClientNoteController::class,'create']);
     Route::get('/{id}/notes/public',[ClientNoteController::class,'getPublicNotes']);
     Route::get('/{id}/notes/private',[ClientNoteController::class,'getPrivateNotes']);
+
+
+
 });
 
 
