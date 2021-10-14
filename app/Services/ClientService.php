@@ -36,9 +36,10 @@ class ClientService
             $clients = Client::query()->with('timezone', 'country', 'status', 'channel', 'staff', 'notes');
 
             //search by id
-            if($request->has('id') && $request->filled('id')){
-                $clients = Client::Where('patient_id', $id);
-            }
+            $clients = $clients->where(function($query) use($id){
+                $query->where('patient_id','ilike','%'. $id . '%');
+            });
+            
             //search by phone
             if ($request->has('phone') && $request->filled('phone')) {
                 $clients = $clients->where(function ($query) use ($phone) {
