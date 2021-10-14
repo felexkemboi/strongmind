@@ -21,6 +21,10 @@ use App\Models\Client;
 use Spatie\Activitylog\Models\Activity as ActivityLog;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\TransferClient;
+use App\Models\Misc\Channel;
+use App\Models\Misc\Status;
+
+
 
 /**
  * Class ClientController
@@ -411,7 +415,52 @@ class ClientController extends Controller
             "failed saved" => $failed_saved
         );
         return $this->commonResponse(true, 'Clients created successfully!', $finalArray, Response::HTTP_CREATED);
+    }
 
+    /**
+     * Change channel/status Client
+     * @param Request $request
+     * @param int $id
+     * @urlParam id integer  . The Client ID . Example - 1
+     * @bodyParam column  . The column that needs  updating 
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function changeChannel(Request $request, int $id ): JsonResponse
+    {
+        $client = Client::findOrFail($id);
+        if(!$client){
+            return $this->commonResponse(false, '', 'Client Not found', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        if ($request->has('status')) {
+            if ($client->update(['status_id' =>  $request->get('status')])) {
+                $status = Status::findOrFail($request->get('status'));
+                $user = Auth::user();
+                activity('client')
+                    ->performedOn($client)
+                    ->causedBy($user)
+                    ->log('Client changed status to '.$status->name);
+                return $this->commonResponse(true, 'Status changed successfully', '', Response::HTTP_OK);
+            }
+            return $this->commonResponse(true, 'Status not changed', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        if ($request->has('channel')) {
+            if($client->update(['channel_id' =>  $request->get('channel')])){
+                $channel = Channel::firstWhere('id', $request->get('channel'));
+                $user = Auth::user();
+                activity('client')
+                    ->performedOn($client)
+                    ->causedBy($user)
+                    ->log('Client changed channel to '.$channel->name);
+                return $this->commonResponse(true,'Channel changed successfully','', Response::HTTP_OK);
+            }
+            return $this->commonResponse(true,'Channel not changed','', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        //}
+
+        return $this->commonResponse(false, 'success', 'Encountered an error during update', Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }
 
