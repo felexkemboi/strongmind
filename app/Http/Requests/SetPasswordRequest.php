@@ -24,8 +24,8 @@ class SetPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'password' => 'required|min:6|exists:users,invite_id',
-            'invite' => 'required',
+            'password' => 'required|min:6',
+            'invite' => 'required|exists:users,invite_id',
             'name' => 'required',
         ];
     } 

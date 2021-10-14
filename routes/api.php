@@ -32,39 +32,44 @@ use App\Http\Controllers\LanguageController;
 */
 
 Route::prefix('country')->group(function () {
-    Route::get('all', [CountryController::class, 'all']);
+    Route::get('all',    [CountryController::class, 'all']);
     Route::get('active', [CountryController::class, 'activeCountries']);
     Route::group(['middleware' => 'auth:sanctum'], function(){
-        Route::put('update', [CountryController::class, 'toggleStatus']);
-        Route::patch('activate',[CountryController::class,'activate']);
+        Route::put('update',      [CountryController::class, 'toggleStatus']);
+        Route::patch('activate',  [CountryController::class,'activate']);
         Route::patch('deactivate',[CountryController::class,'deactivate']);
     });
 });
+
 Route::prefix('timezone')->group(function () {
-    Route::get('all', [TimezoneController::class, 'all']);
+    Route::get('all',    [TimezoneController::class, 'all']);
     Route::get('active', [TimezoneController::class, 'activeTimezones']);
 });
+
 Route::prefix('office')->group(function () {
-    Route::get('all', [OfficeController::class, 'all'])->middleware('auth:sanctum');
-    Route::post('create', [OfficeController::class, 'create'])->middleware('auth:sanctum');
-    Route::put('update/{id}', [OfficeController::class, 'update'])->middleware('auth:sanctum');
-    Route::get('/{id}/members', [OfficeController::class, 'members'])->middleware('auth:sanctum');
+    Route::get('all',            [OfficeController::class, 'all'])->middleware('auth:sanctum');
+    Route::post('create',        [OfficeController::class, 'create'])->middleware('auth:sanctum');
+    Route::put('update/{id}',    [OfficeController::class, 'update'])->middleware('auth:sanctum');
+    Route::get('/{id}/members',  [OfficeController::class, 'members'])->middleware('auth:sanctum');
     Route::get('/{id}/programs', [OfficeController::class, 'programs'])->middleware('auth:sanctum');
     Route::delete('delete/{id}', [OfficeController::class, 'delete'])->middleware('auth:sanctum');
 
 });
+
 //Roles and permissions
 Route::prefix('permission')->group(function () {
-    Route::get('all', [PermissionController::class, 'index'])->middleware('auth:sanctum');
+    Route::get('all',     [PermissionController::class, 'index'])->middleware('auth:sanctum');
     Route::post('create', [PermissionController::class, 'create'])->middleware('auth:sanctum');
 });
+
 Route::prefix('role')->group(function () {
-    Route::get('all', [RoleController::class, 'index'])->middleware('auth:sanctum');
-    Route::get('view/{id}', [RoleController::class, 'showRole'])->middleware('auth:sanctum');
-    Route::post('create', [RoleController::class, 'create'])->middleware('auth:sanctum');
-    Route::put('update/{id}', [RoleController::class, 'updateRole'])->middleware('auth:sanctum');
+    Route::get('all',            [RoleController::class, 'index'])->middleware('auth:sanctum');
+    Route::get('view/{id}',      [RoleController::class, 'showRole'])->middleware('auth:sanctum');
+    Route::post('create',        [RoleController::class, 'create'])->middleware('auth:sanctum');
+    Route::put('update/{id}',    [RoleController::class, 'updateRole'])->middleware('auth:sanctum');
     Route::delete('delete/{id}', [RoleController::class, 'deleteRole'])->middleware('auth:sanctum');
 });
+
 //Authentication
 Route::prefix('auth')->group(function () {
     Route::post('login',             [LoginController::class,'loginUser']);
@@ -72,10 +77,11 @@ Route::prefix('auth')->group(function () {
     Route::put('profile/update',     [UserController::class, 'updateProfile'])->middleware('auth:sanctum');
     Route::put('change-password',    [UserController::class, 'changePassword'])->middleware('auth:sanctum');
     Route::post('profile/set-photo', [UserController::class, 'setPhoto'])->middleware('auth:sanctum');
+
     //password resets
     Route::group(['prefix' => 'passwords'], function () {
         Route::post('/reset-link', [ResetPasswordController::class, 'index']);
-        Route::post('/reset', [ResetPasswordController::class, 'reset']);
+        Route::post('/reset',      [ResetPasswordController::class, 'reset']);
     });
 });
 
@@ -91,43 +97,48 @@ Route::prefix('teams')->group(function () {
 
 //status
 Route::prefix('status')->group(function () {
-    Route::get('all', [StatusController::class, 'index'])->middleware('auth:sanctum');
-    Route::post('create', [StatusController::class, 'create'])->middleware('auth:sanctum');
-    Route::put('update/{id}', [StatusController::class, 'update'])->middleware('auth:sanctum');
+    Route::get('all',            [StatusController::class, 'index'])->middleware('auth:sanctum');
+    Route::post('create',        [StatusController::class, 'create'])->middleware('auth:sanctum');
+    Route::put('update/{id}',    [StatusController::class, 'update'])->middleware('auth:sanctum');
     Route::delete('delete/{id}', [StatusController::class, 'delete'])->middleware('auth:sanctum');
 });
+
 //channels
 Route::prefix('channels')->group(function () {
-    Route::get('all', [ChannelController::class, 'index'])->middleware('auth:sanctum');
-    Route::post('create', [ChannelController::class, 'create'])->middleware('auth:sanctum');
-    Route::put('update/{id}', [ChannelController::class, 'update'])->middleware('auth:sanctum');
+    Route::get('all',            [ChannelController::class, 'index'])->middleware('auth:sanctum');
+    Route::post('create',        [ChannelController::class, 'create'])->middleware('auth:sanctum');
+    Route::put('update/{id}',    [ChannelController::class, 'update'])->middleware('auth:sanctum');
     Route::delete('delete/{id}', [ChannelController::class, 'delete'])->middleware('auth:sanctum');
 });
+
 //group types
 Route::prefix('group-types')->group(function () {
-    Route::get('all', [GroupTypeController::class, 'index'])->middleware('auth:sanctum');
-    Route::post('create', [GroupTypeController::class, 'create'])->middleware('auth:sanctum');
-    Route::put('update/{id}', [GroupTypeController::class, 'update'])->middleware('auth:sanctum');
+    Route::get('all',            [GroupTypeController::class, 'index'])->middleware('auth:sanctum');
+    Route::post('create',        [GroupTypeController::class, 'create'])->middleware('auth:sanctum');
+    Route::put('update/{id}',    [GroupTypeController::class, 'update'])->middleware('auth:sanctum');
     Route::delete('delete/{id}', [GroupTypeController::class, 'delete'])->middleware('auth:sanctum');
 });
+
 //program types
 Route::prefix('program-types')->group(function () {
-    Route::get('all', [ProgramTypeController::class, 'index'])->middleware('auth:sanctum');
-    Route::post('create', [ProgramTypeController::class, 'create'])->middleware('auth:sanctum');
-    Route::put('update/{id}', [ProgramTypeController::class, 'update'])->middleware('auth:sanctum');
+    Route::get('all',            [ProgramTypeController::class, 'index'])->middleware('auth:sanctum');
+    Route::post('create',        [ProgramTypeController::class, 'create'])->middleware('auth:sanctum');
+    Route::put('update/{id}',    [ProgramTypeController::class, 'update'])->middleware('auth:sanctum');
     Route::delete('delete/{id}', [ProgramTypeController::class, 'delete'])->middleware('auth:sanctum');
 });
+
 //Programs
 Route::group(['prefix' => 'programs','middleware' => 'auth:sanctum'], function(){
-    Route::get('/all',[ProgramController::class,'index']);
-    Route::post('/create',[ProgramController::class,'store']);
-    Route::get('/{id}/details',[ProgramController::class,'show']);
-    Route::patch('/{id}/update',[ProgramController::class,'update']);
+    Route::get('/all',           [ProgramController::class,'index']);
+    Route::post('/create',       [ProgramController::class,'store']);
+    Route::get('/{id}/details',  [ProgramController::class,'show']);
+    Route::patch('/{id}/update', [ProgramController::class,'update']);
     Route::delete('/{id}/delete',[ProgramController::class,'destroy']);
     Route::get('/{id}/users',[ProgramController::class,'users']);
     Route::group(['prefix' => 'invite'], function(){
         Route::post('/{id}/send',[ProgramController::class,'sendInvites']);
     });
+
     //member types
     Route::group(['prefix' => 'member-types'], function(){
         Route::get('/',              [ProgramMemberTypeController::class,'index']);
@@ -136,6 +147,7 @@ Route::group(['prefix' => 'programs','middleware' => 'auth:sanctum'], function()
         Route::patch('/{id}/update', [ProgramMemberTypeController::class,'update']);
         Route::delete('/{id}/delete',[ProgramMemberTypeController::class,'destroy']);
     });
+
     //Program Members
     Route::get('/{id}/members',             [ProgramMemberController::class,'index']);
     Route::post('/{id}/new-members',        [ProgramMemberController::class,'store']);
@@ -162,7 +174,6 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::put('/notes/{id}/update',   [ClientNoteController::class,'edit']);
     Route::delete('/notes/{id}/delete',[ClientNoteController::class,'destroy']);
 });
-
 
 //Languages
 Route::group(['prefix' => 'languages','middleware' => 'auth:sanctum'], function(){
