@@ -129,38 +129,37 @@ Route::group(['prefix' => 'programs','middleware' => 'auth:sanctum'], function()
     });
     //member types
     Route::group(['prefix' => 'member-types'], function(){
-        Route::get('/',[ProgramMemberTypeController::class,'index']);
-        Route::post('/create',[ProgramMemberTypeController::class,'store']);
-        Route::get('/{id}/details',[ProgramMemberTypeController::class,'show']);
-        Route::patch('/{id}/update',[ProgramMemberTypeController::class,'update']);
+        Route::get('/',              [ProgramMemberTypeController::class,'index']);
+        Route::post('/create',       [ProgramMemberTypeController::class,'store']);
+        Route::get('/{id}/details',  [ProgramMemberTypeController::class,'show']);
+        Route::patch('/{id}/update', [ProgramMemberTypeController::class,'update']);
         Route::delete('/{id}/delete',[ProgramMemberTypeController::class,'destroy']);
     });
     //Program Members
-    Route::get('/{id}/members',[ProgramMemberController::class,'index']);
-    Route::post('/{id}/new-members',[ProgramMemberController::class,'store']);
-    Route::post('/{id}/revoke-membership',[ProgramMemberController::class,'removeMember']);
+    Route::get('/{id}/members',             [ProgramMemberController::class,'index']);
+    Route::post('/{id}/new-members',        [ProgramMemberController::class,'store']);
+    Route::post('/{id}/revoke-membership',  [ProgramMemberController::class,'removeMember']);
     Route::post('/{id}/activate-membership',[ProgramMemberController::class,'activateMember']);
 });
 
 //clients
 Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
-    Route::get('/all',[ClientController::class,'index']);
-    Route::post('create', [ClientController::class, 'create']);
-    Route::get('/{id}/details',[ClientController::class,'show']);
-    Route::post('/therapy/activate', [ClientController::class, 'activate']);
-    Route::patch('/{id}/update',[ClientController::class,'update']);
-    Route::patch('/{id}/transfer',[ClientController::class,'transfer']);
-    Route::patch('/bulk-edit',[ClientController::class,'bulkEdit']);
-    Route::get('/{id}/activity',[ClientController::class,'clientLogs']);
-    Route::patch('/{id}/change',[ClientController::class,'changeChannel']);
+    Route::get('/all',                 [ClientController::class,'index']);
+    Route::post('create',              [ClientController::class,'create']);
+    Route::get('/{id}/details',        [ClientController::class,'show']);
+    Route::post('/therapy/activate',   [ClientController::class,'activate']);
+    Route::patch('/{id}/update',       [ClientController::class,'update']);
+    Route::patch('/{id}/transfer',     [ClientController::class,'transfer']);
+    Route::patch('/bulk-edit',         [ClientController::class,'bulkEdit']);
+    Route::get('/{id}/activity',       [ClientController::class,'clientLogs']);
+    Route::patch('/{id}/change',       [ClientController::class,'changeChannel']);
 
     //client notes
-    Route::post('/{id}/notes/create',[ClientNoteController::class,'create']);
-    Route::get('/{id}/notes/public',[ClientNoteController::class,'getPublicNotes']);
-    Route::get('/{id}/notes/private',[ClientNoteController::class,'getPrivateNotes']);
-
-
-
+    Route::post('/{id}/notes/create',  [ClientNoteController::class,'create']);
+    Route::get('/{id}/notes/public',   [ClientNoteController::class,'getPublicNotes']);
+    Route::get('/{id}/notes/private',  [ClientNoteController::class,'getPrivateNotes']);
+    Route::put('/notes/{id}/update',   [ClientNoteController::class,'edit']);
+    Route::delete('/notes/{id}/delete',[ClientNoteController::class,'destroy']);
 });
 
 
