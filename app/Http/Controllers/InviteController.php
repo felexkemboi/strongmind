@@ -118,7 +118,7 @@ class InviteController extends Controller
             $user = User::firstWhere('invite_id', $request->invite);
             $user->update([
                 'password' => bcrypt($request->password),
-                'name' => $request->username,
+                'name' => $request->name,
                 'invite_accepted' => 1,
                 'active' => 1,
                 'invite_id' => '',
