@@ -177,8 +177,10 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
 
 //Languages
 Route::group(['prefix' => 'languages','middleware' => 'auth:sanctum'], function(){
-    Route::get('/all',    [LanguageController::class, 'index']);
-    Route::post('/create', [LanguageController::class, 'create']);
+    Route::get('/all',           [LanguageController::class, 'index']);
+    Route::post('/create',       [LanguageController::class, 'create']);
+    Route::put('{id}/update',    [LanguageController::class, 'update']);
+    Route::delete('{id}/delete', [LanguageController::class, 'destroy']);
 });
 
 
