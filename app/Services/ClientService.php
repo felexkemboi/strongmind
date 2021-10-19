@@ -39,7 +39,7 @@ class ClientService
             $clients = $clients->where(function($query) use($id){
                 $query->where('patient_id','ilike','%'. $id . '%');
             });
-            
+
             //search by phone
             if ($request->has('phone') && $request->filled('phone')) {
                 $clients = $clients->where(function ($query) use ($phone) {
@@ -54,7 +54,7 @@ class ClientService
             }
             //filter by client type
             if ($request->has('client_type') && $request->filled('client_type')) {
-                if (in_array($client_type, $clientTypes, true)) {
+                if (in_array($clientType, $clientTypes, true)) {
                     if ($clientType === Client::SCREENING_CLIENT_TYPE) {
                         $clients = $clients->where('client_type', Client::SCREENING_CLIENT_TYPE);
                     }
@@ -62,7 +62,7 @@ class ClientService
                         $clients = $clients->where('client_type', Client::THERAPY_CLIENT_TYPE);
                     }
                 }
-                
+
                 return $this->commonResponse(false, 'Invalid client type', '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             //search by status id
@@ -116,7 +116,7 @@ class ClientService
                 $sort = $request->get('sort');
                 $clients = $clients->orderBy($sort,'asc');
             }
- 
+
             $clients = $clients->latest()->paginate(10);
             return $this->commonResponse(true,'success',$clients, Response::HTTP_OK);
         }catch (QueryException $queryException){
