@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateLanguageRequest;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Exception;
 
 /**
@@ -44,9 +45,9 @@ class LanguageController extends Controller
     public function create(CreateLanguageRequest $request): JsonResponse
     {
         try {
-            $client = new Language();
-            $client->name = $request->name;
-            if ($client->save()) {
+            $language = new Language();
+            $language->name = $request->name;
+            if ($language->save()) {
                 return $this->commonResponse(true, 'Language created successfully!', '', Response::HTTP_CREATED);
             }
             return $this->commonResponse(false, 'Failed to create Language', '', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -54,6 +55,51 @@ class LanguageController extends Controller
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $ex) {
             return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    /**
+     * Edit Language
+     * @group Languages
+     * @param Request $request
+     * @bodyParam name string required . The Language's Name
+     * @return JsonResponse
+     * @authenticated
+     */
+
+    public function update(Request $request, int $id): JsonResponse
+    {
+        try {
+            $language = Language::find($id);
+            if($language){
+                $language->name = $request->name;
+                if ($language->save()) {
+                    return $this->commonResponse(true, 'Language updated successfully!', '', Response::HTTP_CREATED);
+                }
+            }
+            return $this->commonResponse(false, 'Failed to update Language', 'Language Not Found', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (QueryException $ex) {
+            return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $ex) {
+            return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    /**
+     * Delete Language
+     * @param int $id
+     * @urlParam id integer required The ID of the role. Example:1
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        $language = Language::find($id);
+        if ($language) {
+            $language->delete();
+            return $this->commonResponse(true, 'Language deleted', '', Response::HTTP_OK);
+        } else {
+            return $this->commonResponse(false, 'Language not found!', '', Response::HTTP_NOT_FOUND);
         }
     }
 }
