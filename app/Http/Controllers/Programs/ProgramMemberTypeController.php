@@ -9,7 +9,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\Programs\ProgramMemberTypeResource;
 use Exception;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -37,7 +36,7 @@ class ProgramMemberTypeController extends Controller
         }catch (QueryException $queryException){
             return $this->commonResponse(false, $queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
-            Log::critical('Failed to fetch program member types. ERROR: '.$exception->getTraceAsString());
+            Log::critical('Failed to fetch project member types. ERROR: '.$exception->getTraceAsString());
             return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -59,13 +58,13 @@ class ProgramMemberTypeController extends Controller
         try{
             $newMemberType = ProgramMemberType::create(['name' => $request->name]);
             if($newMemberType){
-                return $this->commonResponse(true,'Program Member Type Created Successfully',new ProgramMemberTypeResource($newMemberType), Response::HTTP_OK);
+                return $this->commonResponse(true,'Project Member Type Created Successfully',new ProgramMemberTypeResource($newMemberType), Response::HTTP_OK);
             }
             return $this->commonResponse(false,'Failed To Create Member Type','', Response::HTTP_EXPECTATION_FAILED);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
-            Log::critical('Failed to add new program member type. ERROR: '.$exception->getTraceAsString());
+            Log::critical('Failed to add new project member type. ERROR: '.$exception->getTraceAsString());
             return $this->commonResponse(false,$exception->getMessage(), '', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -83,13 +82,13 @@ class ProgramMemberTypeController extends Controller
         try{
             $memberType = ProgramMemberType::find($id);
             if(!$memberType){
-                return $this->commonResponse(false,'Program Member Type Does Not Exist','', Response::HTTP_NOT_FOUND);
+                return $this->commonResponse(false,'Project Member Type Does Not Exist','', Response::HTTP_NOT_FOUND);
             }
             return $this->commonResponse(true,'Success',new ProgramMemberTypeResource($memberType), Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
-            Log::critical('Failed to fetch program member type details. ERROR: '.$exception->getTraceAsString());
+            Log::critical('Failed to fetch project member type details. ERROR: '.$exception->getTraceAsString());
             return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -112,17 +111,17 @@ class ProgramMemberTypeController extends Controller
         try{
             $memberType = ProgramMemberType::find($id);
             if(!$memberType){
-                return $this->commonResponse(false,'Program Member Type Does Not Exist','', Response::HTTP_NOT_FOUND);
+                return $this->commonResponse(false,'Project Member Type Does Not Exist','', Response::HTTP_NOT_FOUND);
             }
             $memberTypeUpdate = $memberType->update(['name' => $request->name]);
             if($memberTypeUpdate){
-                return $this->commonResponse(true,'Program Member Type Updated Successfully',new ProgramMemberTypeResource($memberType), Response::HTTP_OK);
+                return $this->commonResponse(true,'Project Member Type Updated Successfully',new ProgramMemberTypeResource($memberType), Response::HTTP_OK);
             }
             return $this->commonResponse(false,'Failed To Update Member Type','', Response::HTTP_EXPECTATION_FAILED);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
-            Log::critical('Failed to update program member type. ERROR: '.$exception->getTraceAsString());
+            Log::critical('Failed to update project member type. ERROR: '.$exception->getTraceAsString());
             return $this->commonResponse(false,$exception->getMessage(), '', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -140,16 +139,16 @@ class ProgramMemberTypeController extends Controller
         try{
             $memberType = ProgramMemberType::find($id);
             if(!$memberType){
-                return $this->commonResponse(false,'Program Member Type Does Not Exist','', Response::HTTP_NOT_FOUND);
+                return $this->commonResponse(false,'Project Member Type Does Not Exist','', Response::HTTP_NOT_FOUND);
             }
             if($memberType->delete()){
-                return $this->commonResponse(true,'Program Member Type Deleted Successfully','', Response::HTTP_OK);
+                return $this->commonResponse(true,'Project Member Type Deleted Successfully','', Response::HTTP_OK);
             }
-            return $this->commonResponse(false,'Failed To Delete Program Member Type','', Response::HTTP_EXPECTATION_FAILED);
+            return $this->commonResponse(false,'Failed To Delete Project Member Type','', Response::HTTP_EXPECTATION_FAILED);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
-            Log::critical('Failed to delete program member type. ERROR: '. $exception->getTraceAsString());
+            Log::critical('Failed to delete project member type. ERROR: '. $exception->getTraceAsString());
             return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
