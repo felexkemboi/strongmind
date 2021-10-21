@@ -5,7 +5,6 @@ namespace App\Services;
 
 
 use App\Events\ProgramMemberAdded;
-use App\Models\ProgramMemberWaitingList;
 use App\Models\Programs\Project;
 use App\Models\Programs\ProgramMember;
 use App\Models\User;
@@ -16,9 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 use Postmark\Models\DynamicResponseModel;
-use Postmark\Models\PostmarkException;
 use Postmark\PostmarkClient;
 use Symfony\Component\HttpFoundation\Response;
 use Exception;
@@ -68,7 +65,7 @@ class ProjectService
                         $query->where('program_id', $project->id);
                     })->exists();
                     if ($existingMember) {
-                        return $this->commonResponse(false, 'User exists for this program', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+                        return $this->commonResponse(false, 'User exists for this project', '', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     if (ProgramMember::create($newProgramMember)) {
                         $project->update(['member_count' => $project->member_count + count($inviteEmails)]);
@@ -91,11 +88,11 @@ class ProjectService
                 'member_type_id' => $request->member_type_id
             ];
             //check against an existing program member
-            $existingMember = ProgramMember::where('user_id', $user->id)->where(function ($query) use ($program) {
+            $existingMember = ProgramMember::where('user_id', $user->id)->where(function ($query) use ($project) {
                 $query->where('program_id', $project->id);
             })->exists();
             if ($existingMember) {
-                return $this->commonResponse(false, 'User exists for this program', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+                return $this->commonResponse(false, 'User exists for this project', '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if (ProgramMember::create($newProgramMember)) {
                 ProgramMemberAdded::dispatch($project); //update member count
@@ -146,7 +143,7 @@ class ProjectService
                     $query->where('user_id', $request->user_id)->where('member_type_id', $request->member_type_id);
                 })->first();
             if (!$existingMember) {
-                return $this->commonResponse(false, 'Member does not exist for this program member type', '', Response::HTTP_NOT_FOUND);
+                return $this->commonResponse(false, 'Member does not exist for this project member type', '', Response::HTTP_NOT_FOUND);
             }
             if ($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED) {
                 return $this->commonResponse(false, 'Membership already revoked, no action needed', '', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -158,7 +155,7 @@ class ProjectService
         } catch (QueryException $queryException) {
             return $this->commonResponse(false, $queryException->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $exception) {
-            Log::critical('Failed to remove program member. ERROR ' . $exception->getTraceAsString());
+            Log::critical('Failed to remove project member. ERROR ' . $exception->getTraceAsString());
             return $this->commonResponse(false, $exception->getMessage(), '', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
