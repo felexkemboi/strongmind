@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Controllers\SpatiePermissionController;
-use App\Services\PermissionRoleService;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PermissionRequest extends FormRequest

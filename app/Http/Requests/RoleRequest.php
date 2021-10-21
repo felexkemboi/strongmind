@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Services\PermissionRoleService;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RoleRequest extends FormRequest

@@ -6,12 +6,7 @@ use App\Actions\RoleAction;
 use App\Http\Requests\RoleRequest;
 use App\Http\Requests\RoleUpdateRequest;
 use App\Services\PermissionRoleService;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use Symfony\Component\HttpFoundation\Response;
-use Exception;
 
 /**
  * Roles and Permission Endpoints
