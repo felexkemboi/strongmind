@@ -188,6 +188,10 @@ Route::group(['prefix' => 'languages','middleware' => 'auth:sanctum'], function(
 //Groups
 Route::group(['middleware' => 'auth:sanctum','prefix' => 'groups'], function(){
     Route::post('/create',[GroupController::class,'store']);
+    Route::get('/',[GroupController::class,'index']);
+    Route::get('/{id}',[GroupController::class,'show']);
+    Route::patch('/{id}/update',[GroupController::class,'update']);
+    Route::delete('/{id}/delete',[GroupController::class,'destroy']);
 });
 
 
