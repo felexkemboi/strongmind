@@ -48,9 +48,10 @@ class ClientNoteController extends Controller
                 'notes'    => $request->notes
             ];
             if (ClientNote::create($clientNoteData)) {
+                $user = Auth::user();
                 activity('client')
                     ->performedOn($client)
-                    ->causedBy($request->user()->id)
+                    ->causedBy($user)
                     ->log('Note for '.$client->name.' created');
                 return $this->commonResponse(true, 'Client notes created successfully', '', Response::HTTP_OK);
             }
