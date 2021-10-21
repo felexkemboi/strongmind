@@ -14,7 +14,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TimezoneController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Programs\ProgramController;
+use App\Http\Controllers\Programs\ProjectController;
 use App\Http\Controllers\Programs\ProgramMemberController;
 use App\Http\Controllers\Programs\ProgramMemberTypeController;
 use App\Http\Controllers\ClientController;
@@ -128,15 +128,15 @@ Route::prefix('program-types')->group(function () {
 });
 
 //Programs
-Route::group(['prefix' => 'programs','middleware' => 'auth:sanctum'], function(){
-    Route::get('/all',           [ProgramController::class,'index']);
-    Route::post('/create',       [ProgramController::class,'store']);
-    Route::get('/{id}/details',  [ProgramController::class,'show']);
-    Route::patch('/{id}/update', [ProgramController::class,'update']);
-    Route::delete('/{id}/delete',[ProgramController::class,'destroy']);
-    Route::get('/{id}/users',[ProgramController::class,'users']);
+Route::group(['prefix' => 'projects','middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',           [ProjectController::class,'index']);
+    Route::post('/create',       [ProjectController::class,'store']);
+    Route::get('/{id}/details',  [ProjectController::class,'show']);
+    Route::patch('/{id}/update', [ProjectController::class,'update']);
+    Route::delete('/{id}/delete',[ProjectController::class,'destroy']);
+    Route::get('/{id}/users',[ProjectController::class,'users']);
     Route::group(['prefix' => 'invite'], function(){
-        Route::post('/{id}/send',[ProgramController::class,'sendInvites']);
+        Route::post('/{id}/send',[ProjectController::class,'sendInvites']);
     });
 
     //member types
@@ -177,7 +177,10 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
 
 //Languages
 Route::group(['prefix' => 'languages','middleware' => 'auth:sanctum'], function(){
-    Route::get('/all',[LanguageController::class, 'index']);
+    Route::get('/all',           [LanguageController::class, 'index']);
+    Route::post('/create',       [LanguageController::class, 'create']);
+    Route::put('{id}/update',    [LanguageController::class, 'update']);
+    Route::delete('{id}/delete', [LanguageController::class, 'destroy']);
 });
 
 

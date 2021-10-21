@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Programs;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Programs\ProgramResource;
+use App\Http\Resources\Programs\ProjectResource;
 use App\Models\Office;
 use App\Models\User;
-use App\Models\Programs\Program;
-use App\Services\ProgramService;
+use App\Models\Programs\Project;
+use App\Services\ProjectService;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,20 +19,20 @@ use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class ProgramController
- * @package App\Http\Controllers\Programs
- * @group Programs
- * API Endpoints for managing programs
+ * Class ProjectController
+ * @package App\Http\Controllers\Projects
+ * @group Projects
+ * API Endpoints for managing Projects
  */
-class ProgramController extends Controller
+class ProjectController extends Controller
 {
-    public $programService;
+    public $projectService;
 
-    public function __construct(ProgramService $programService){
-        $this->programService = $programService;
+    public function __construct(ProjectService $projectService){
+        $this->projectService = $projectService;
     }
     /**
-     * List Programs
+     * List Projects
      *
      * @return JsonResponse
      * @authenticated
@@ -46,7 +46,7 @@ class ProgramController extends Controller
                    $data[] = [
                        'office_id' => $office->id,
                        'name' => $office->name ?? NULL,
-                       'programs' => DB::table('programs')->select('id', 'name', 'member_count', 'colour_option','program_type_id')->where(function($query) use($office){
+                       'projects' => DB::table('programs')->select('id', 'name', 'member_count', 'colour_option','program_type_id')->where(function($query) use($office){
                            return $query->where('office_id',$office->id);
                        })->whereNotNull('office_id')->get()
                    ];
@@ -55,19 +55,19 @@ class ProgramController extends Controller
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
-            Log::critical('Failed to fetch programs list. ERROR: '. $exception->getTraceAsString());
+            Log::critical('Failed to fetch projects list. ERROR: '. $exception->getTraceAsString());
             return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * Create Program
+     * Create Project
      *
      * @param Request $request
-     * @bodyParam name string required Program Name
+     * @bodyParam name string required Project Name
      * @bodyParam office_id integer required Office ID. Example-1
-     * @bodyParam program_code string required Program Code
-     * @bodyParam program_type_id integer required Program Type. Example-1
+     * @bodyParam program_code string required Project Code
+     * @bodyParam program_type_id integer required Project Type. Example-1
      * @bodyParam colour_option string Colour Code
      * @return JsonResponse
      * @authenticated
@@ -84,7 +84,7 @@ class ProgramController extends Controller
         if($validator->fails()){
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')),'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        $programData = [
+        $projectData = [
             'office_id'         => $request->office_id,
             'name'              => $request->name,
             'program_code'      => $request->program_code,
@@ -93,11 +93,11 @@ class ProgramController extends Controller
             'member_count'      => 0
         ];
         try{
-            $newProgram = Program::create($programData);
-            if($newProgram){
-                return $this->commonResponse(true,'Program Created Successfully','', Response::HTTP_CREATED);
+            $newProject = Project::create($projectData);
+            if($newProject){
+                return $this->commonResponse(true,'Project Created Successfully','', Response::HTTP_CREATED);
             }
-            return $this->commonResponse(false,'Program Not Created','', Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->commonResponse(false,'Project Not Created','', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
@@ -107,34 +107,34 @@ class ProgramController extends Controller
     }
 
     /**
-     * Display Program Details
+     * Display Project Details
      *
      * @param int $id
-     * @urlParam id integer required The Program ID. Example-1
+     * @urlParam id integer required The Project ID. Example-1
      * @return JsonResponse
      * @authenticated
      */
     public function show(int $id): JsonResponse
     {
         try{
-            $program = Program::with('office','programType')->find($id);
-            if(!$program){
-                return $this->commonResponse(false,'Program Does Not Exist','', Response::HTTP_NOT_FOUND);
+            $project = Project::with('office','programType')->find($id);
+            if(!$project){
+                return $this->commonResponse(false,'Project Does Not Exist','', Response::HTTP_NOT_FOUND);
             }
-            return $this->commonResponse(true,'success',new ProgramResource($program), Response::HTTP_OK);
+            return $this->commonResponse(true,'success',new ProjectResource($project), Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
-            Log::critical('Could Not Fetch Program Details. ERROR: '.$exception->getTraceAsString());
+            Log::critical('Could Not Fetch Project Details. ERROR: '.$exception->getTraceAsString());
             return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * Display Program users
+     * Display Project users
      *
      * @param int $id
-     * @urlParam id integer required The Program ID. Example-1
+     * @urlParam id integer required The Project ID. Example-1
      * @return JsonResponse
      * @authenticated
      */
@@ -151,16 +151,16 @@ class ProgramController extends Controller
     }
 
     /**
-     * Update Program
+     * Update Project
      *
      * @param Request $request
      * @param int $id
-     * @bodyParam name string required The Program Name
+     * @bodyParam name string required The Project Name
      * @bodyParam office_id integer required The Office ID Example-1
-     * @bodyParam program_code string required The Program Code
-     * @bodyParam program_type_id integer required The Program Type ID Example-1
-     * @bodyParam colour_option string required the Program Colour Code
-     * @urlParam id integer required the Program ID Example-1
+     * @bodyParam program_code string required The Project Code
+     * @bodyParam program_type_id integer required The Project Type ID Example-1
+     * @bodyParam colour_option string required the Project Colour Code
+     * @urlParam id integer required the Project ID Example-1
      * @return JsonResponse
      * @authenticated
      */
@@ -177,52 +177,52 @@ class ProgramController extends Controller
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         try {
-            $program = Program::with('office','programType')->find($id);
-            if(!$program){
-                return $this->commonResponse(false,'Program Does Not Exist', '', Response::HTTP_NOT_FOUND);
+            $project = Project::with('office','programType')->find($id);
+            if(!$project){
+                return $this->commonResponse(false,'Project Does Not Exist', '', Response::HTTP_NOT_FOUND);
             }
-            $programUpdate = $program->update([
+            $projectUpdate = $project->update([
                 'name' => $request->name,
                 'office_id' => $request->office_id,
                 'program_code' => $request->program_code,
                 'program_type_id'  => $request->program_type_id,
                 'colour_option' => $request->colour_option,
             ]);
-            if($programUpdate){
-                return $this->commonResponse(true,'Program Updated Successfully', new ProgramResource($program),Response::HTTP_OK);
+            if($projectUpdate){
+                return $this->commonResponse(true,'Project Updated Successfully', new ProjectResource($project),Response::HTTP_OK);
             }
-            return $this->commonResponse(false,'Failed To Update Program','', Response::HTTP_EXPECTATION_FAILED);
+            return $this->commonResponse(false,'Failed To Update Project','', Response::HTTP_EXPECTATION_FAILED);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
-            Log::critical('Failed to update program. ERROR: '.$exception->getTraceAsString());
+            Log::critical('Failed to update project. ERROR: '.$exception->getTraceAsString());
             return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * Delete Program
+     * Delete Project
      *
      * @param int $id
-     * @urlParam id integer required The Program ID Example-1
+     * @urlParam id integer required The Project ID Example-1
      * @return JsonResponse
      * @authenticated
      */
     public function destroy(int $id): JsonResponse
     {
         try{
-            $program = Program::with('office','programType')->find($id);
-            if(!$program){
-                return $this->commonResponse(false,'Program Does Not Exist','', Response::HTTP_NOT_FOUND);
+            $project = Project::with('office','programType')->find($id);
+            if(!$project){
+                return $this->commonResponse(false,'Project Does Not Exist','', Response::HTTP_NOT_FOUND);
             }
-            if($program->delete()){
-                return $this->commonResponse(true,'Program Deleted Successfully', '', Response::HTTP_OK);
+            if($project->delete()){
+                return $this->commonResponse(true,'Project Deleted Successfully', '', Response::HTTP_OK);
             }
-            return$this->commonResponse(false,'Failed To Delete Program','', Response::HTTP_EXPECTATION_FAILED);
+            return$this->commonResponse(false,'Failed To Delete Project','', Response::HTTP_EXPECTATION_FAILED);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
-            Log::critical('Could Not Delete Program. ERROR:  '.$exception->getTraceAsString());
+            Log::critical('Could Not Delete Project. ERROR:  '.$exception->getTraceAsString());
             return $this->commonResponse(false,$exception->getMessage(), '', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -231,7 +231,7 @@ class ProgramController extends Controller
      * Send Member Invites
      * @param Request $request
      * @param $id
-     * @urlParam id integer required The Program ID
+     * @urlParam id integer required The Project ID
      * @bodyParam email email required The User Email Address
      * @bodyParam member_type_id integer The Member Type ID
      * @return JsonResponse
@@ -239,6 +239,6 @@ class ProgramController extends Controller
      */
     public function sendInvites(Request $request, $id): JsonResponse
     {
-        return $this->programService->inviteMembers($request, $id);
+        return $this->projectService->inviteMembers($request, $id);
     }
 }
