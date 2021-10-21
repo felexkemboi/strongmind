@@ -4,10 +4,14 @@
 namespace App\Helpers;
 
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class AuthHelper
 {
@@ -53,5 +57,20 @@ class AuthHelper
                     , 'roles.code as role_code')
                 ->where('assigned_roles.entity_id', $userId)
                 ->first();
+    }
+
+    public static function userRoles(int $userId){
+        $user = User::find($userId);
+        return $user->getRoleNames();
+    }
+
+    public static function UserPermissions(int $userId){
+        $user = User::find($userId);
+        return $user->getAllPermissions()->transform(function($permission){
+            return [
+                'id'    => $permission->id,
+                'name'  => $permission->name,
+            ];
+        });
     }
 }

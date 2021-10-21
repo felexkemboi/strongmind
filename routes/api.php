@@ -20,6 +20,9 @@ use App\Http\Controllers\Programs\ProgramMemberTypeController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientNoteController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\SpatiePermissionController;
+use App\Http\Controllers\SpatieRoleController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -55,7 +58,11 @@ Route::prefix('office')->group(function () {
     Route::delete('delete/{id}', [OfficeController::class, 'delete'])->middleware('auth:sanctum');
 
 });
-
+//Updated permissions endpoints(Spatie Laravel Permissions Package)
+Route::group(['middleware' => 'auth:sanctum'], function(){
+    Route::resource('permissions', SpatiePermissionController::class);
+    Route::resource('roles',SpatieRoleController::class);
+});
 //Roles and permissions
 Route::prefix('permission')->group(function () {
     Route::get('all',     [PermissionController::class, 'index'])->middleware('auth:sanctum');
