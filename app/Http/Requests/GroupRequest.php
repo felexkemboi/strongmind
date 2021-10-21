@@ -11,9 +11,9 @@ class GroupRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,12 @@ class GroupRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'name' => ['required','string','unique:groups,name','min:3','max:30'],
+            'group_type_id' => ['required','integer','not_in:0','exists:group_types,id'],
+            'last_session' => ['nullable','datetime'],
         ];
     }
 }
