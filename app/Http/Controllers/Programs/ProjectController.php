@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Programs;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Programs\ProjectResource;
 use App\Models\Office;
+use App\Models\Country;
 use App\Models\User;
 use App\Models\Programs\Project;
 use App\Services\ProjectService;
@@ -66,9 +67,8 @@ class ProjectController extends Controller
      * @param Request $request
      * @bodyParam name string required Project Name
      * @bodyParam office_id integer required Office ID. Example-1
-     * @bodyParam program_code string required Project Code
      * @bodyParam program_type_id integer required Project Type. Example-1
-     * @bodyParam colour_option string Colour Code
+     * @bodyParam colour_option string required Colour Code
      * @return JsonResponse
      * @authenticated
      */
@@ -77,24 +77,26 @@ class ProjectController extends Controller
         $validator = Validator::make($request->all(),[
             'office_id' => 'required|exists:offices,id|integer',
             'name' => 'required|unique:programs|string|min:4|max:60',
-            'program_code' => 'required|unique:programs|string|min:3|max:30',
             'program_type_id' => 'required|integer|exists:program_types,id',
             'colour_option' => 'nullable|string',
         ]);
         if($validator->fails()){
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')),'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+        $office = Office::find($request->office_id);
+        $country = Country::find($office->country_id);
         $projectData = [
             'office_id'         => $request->office_id,
             'name'              => $request->name,
-            'program_code'      => $request->program_code,
             'program_type_id'   => $request->program_type_id,
             'colour_option'     => $request->colour_option,
             'member_count'      => 0
         ];
         try{
             $newProject = Project::create($projectData);
-            if($newProject){
+            $code = $country->country_code.'-'.now()->year.'-'.$newProject->id;
+            $newProject->program_code = $code;
+            if($newProject->save()){
                 return $this->commonResponse(true,'Project Created Successfully','', Response::HTTP_CREATED);
             }
             return $this->commonResponse(false,'Project Not Created','', Response::HTTP_UNPROCESSABLE_ENTITY);
