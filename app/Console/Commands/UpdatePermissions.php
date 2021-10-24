@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 //use Bouncer;
+use App\Services\PermissionRoleService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Silber\Bouncer\Database\Ability;
 use Spatie\Permission\Models\Permission;
@@ -52,23 +54,11 @@ class UpdatePermissions extends Command
                 'name' => $key['name'],
                 'guard_name' => $key['guard_name']
             ];
-            Permission::insert($permissionsArray);
-        }
-        /**
-        foreach($permissions as $key){
-
-            $slug = Str::slug($key['name']);
-            $ability_exists = Ability::firstWhere('name', $slug);
-            if (!$ability_exists) {
-                $ability = new Ability;
-                $ability->name = $slug;
-                $ability->title = $key['name'];
-                $ability->module_name = $key['module'];
-                $ability->save();
+            $existingPermission = Permission::findByName($permissionsArray['name'], PermissionRoleService::API_GUARD);
+            if(!$existingPermission){
+                Permission::insert($permissionsArray);
             }
         }
-         **/
         $this->info('Permissions Updated successfully!');
-
     }
 }
