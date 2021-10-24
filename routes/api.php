@@ -235,3 +235,11 @@ Route::group(['prefix' => 'cycle','middleware' => 'auth:sanctum'], function(){
     Route::put('{id}/update',    [CycleController::class, 'update']);
     Route::delete('{id}/delete', [CycleController::class, 'destroy']);
 });
+
+//GroupType
+Route::group(['prefix' => 'group-type','middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',           [GroupTypeController::class, 'index']);
+    Route::post('/create',       [GroupTypeController::class, 'create']);
+    Route::put('{id}/update',    [GroupTypeController::class, 'update']);
+    Route::delete('{id}/delete', [GroupTypeController::class, 'destroy']);
+});
