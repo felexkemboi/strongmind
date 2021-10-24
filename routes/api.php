@@ -20,6 +20,8 @@ use App\Http\Controllers\Programs\ProgramMemberTypeController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientNoteController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\Groups\GroupController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -181,6 +183,15 @@ Route::group(['prefix' => 'languages','middleware' => 'auth:sanctum'], function(
     Route::post('/create',       [LanguageController::class, 'create']);
     Route::put('{id}/update',    [LanguageController::class, 'update']);
     Route::delete('{id}/delete', [LanguageController::class, 'destroy']);
+});
+
+//Groups
+Route::group(['middleware' => 'auth:sanctum','prefix' => 'groups'], function(){
+    Route::post('/create',[GroupController::class,'store']);
+    Route::get('/',[GroupController::class,'index']);
+    Route::get('/{id}',[GroupController::class,'show']);
+    Route::patch('/{id}/update',[GroupController::class,'update']);
+    Route::delete('/{id}/delete',[GroupController::class,'destroy']);
 });
 
 
