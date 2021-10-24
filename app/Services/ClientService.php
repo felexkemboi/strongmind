@@ -128,6 +128,14 @@ class ClientService
 
     private function createQuery($filterColumn,$filterValue)
     {
-        return Client::select('id', 'name', 'patient_id', 'phone_number', 'region', 'country_id', 'gender', 'languages', 'age', 'status_id', 'channel_id', 'staff_id', 'active', 'client_type')->where($filterColumn, $filterValue);
+        return Client::select('id', 'last_name','first_name','name','other_name','nick_name',
+            'date_of_birth','nationality',
+            'education_level_id','marital_status_id',
+            'phone_ownership_id','is_disabled',
+            'patient_id', 'phone_number', 'region',
+            'country_id', 'gender',
+            'languages', 'age', 'status_id', 'channel_id',
+            'staff_id', 'active', 'client_type')
+            ->where($filterColumn, $filterValue);
     }
 }
