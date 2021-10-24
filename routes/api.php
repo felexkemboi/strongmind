@@ -18,6 +18,7 @@ use App\Http\Controllers\Programs\ProjectController;
 use App\Http\Controllers\Programs\ProgramMemberController;
 use App\Http\Controllers\Programs\ProgramMemberTypeController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ClientStatusController;
 use App\Http\Controllers\ClientNoteController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Groups\GroupController;
@@ -194,6 +195,13 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'groups'], function(){
     Route::delete('/{id}/delete',[GroupController::class,'destroy']);
 });
 
+//ClientStatus
+Route::group(['prefix' => 'client-status'], function(){ //,'middleware' => 'auth:sanctum'
+    Route::get('/all',           [ClientStatusController::class, 'index']);
+    Route::post('/create',       [ClientStatusController::class, 'create']);
+    Route::put('{id}/update',    [ClientStatusController::class, 'update']);
+    Route::delete('{id}/delete', [ClientStatusController::class, 'destroy']);
+});
 
 
 
