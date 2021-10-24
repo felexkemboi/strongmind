@@ -18,10 +18,12 @@ use App\Http\Controllers\Programs\ProjectController;
 use App\Http\Controllers\Programs\ProgramMemberController;
 use App\Http\Controllers\Programs\ProgramMemberTypeController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\CycleController;
 use App\Http\Controllers\ClientStatusController;
 use App\Http\Controllers\ClientNoteController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LeaderShipController;
+use App\Http\Controllers\TherapyModeController;
 use App\Http\Controllers\Groups\GroupController;
 use App\Http\Controllers\SpatiePermissionController;
 use App\Http\Controllers\SpatieRoleController;
@@ -210,8 +212,16 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'groups'], function(){
     Route::delete('/{id}/delete',[GroupController::class,'destroy']);
 });
 
+//LeaderShip
+Route::group(['prefix' => 'leadership','middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',           [LeaderShipController::class, 'index']);
+    Route::post('/create',       [LeaderShipController::class, 'create']);
+    Route::put('{id}/update',    [LeaderShipController::class, 'update']);
+    Route::delete('{id}/delete', [LeaderShipController::class, 'destroy']);
+});
+
 //ClientStatus
-Route::group(['prefix' => 'client-status','middleware' => 'auth:sanctum'], function(){
+Route::group(['prefix' => 'client-status' , 'middleware' => 'auth:sanctum'], function(){
     Route::get('/all',           [ClientStatusController::class, 'index']);
     Route::post('/create',       [ClientStatusController::class, 'create']);
     Route::put('{id}/update',    [ClientStatusController::class, 'update']);
@@ -219,9 +229,33 @@ Route::group(['prefix' => 'client-status','middleware' => 'auth:sanctum'], funct
 });
 
 //LeaderShip
-Route::group(['prefix' => 'leadership','middleware' => 'auth:sanctum'], function(){
-    Route::get('/all',           [LeaderShipController::class, 'index']);
-    Route::post('/create',       [LeaderShipController::class, 'create']);
-    Route::put('{id}/update',    [LeaderShipController::class, 'update']);
+Route::group(['prefix' => 'leadership','middleware' => 'auth:sanctum'], function() {
+    Route::get('/all', [LeaderShipController::class, 'index']);
+    Route::post('/create', [LeaderShipController::class, 'create']);
+    Route::put('{id}/update', [LeaderShipController::class, 'update']);
     Route::delete('{id}/delete', [LeaderShipController::class, 'destroy']);
+});
+//TherapyMode
+Route::group(['prefix' => 'therapy-mode', 'middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',           [TherapyModeController::class, 'index']);
+    Route::post('/create',       [TherapyModeController::class, 'create']);
+    Route::put('{id}/update',    [TherapyModeController::class, 'update']);
+    Route::delete('{id}/delete', [TherapyModeController::class, 'destroy']);
+});
+
+
+//Cycle
+Route::group(['prefix' => 'cycle','middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',           [CycleController::class, 'index']);
+    Route::post('/create',       [CycleController::class, 'create']);
+    Route::put('{id}/update',    [CycleController::class, 'update']);
+    Route::delete('{id}/delete', [CycleController::class, 'destroy']);
+});
+
+//GroupType
+Route::group(['prefix' => 'group-type','middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',           [GroupTypeController::class, 'index']);
+    Route::post('/create',       [GroupTypeController::class, 'create']);
+    Route::put('{id}/update',    [GroupTypeController::class, 'update']);
+    Route::delete('{id}/delete', [GroupTypeController::class, 'destroy']);
 });
