@@ -142,7 +142,7 @@ class ClientController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $client = Client::find($id);
+        $client = Client::with('status','channel')->find($id);
         if ($client) {
             return $this->commonResponse(true, 'success', $client, Response::HTTP_OK);
         } else {
