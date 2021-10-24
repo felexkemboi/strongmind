@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             ProgramMemberTypeSeeder::class,
             //ProgramMemberTableSeeder::class
+            PermissionTableSeeder::class,
+            RoleTableSeeder::class
         ]);
     }
 }

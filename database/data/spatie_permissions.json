@@ -1,0 +1,218 @@
+[
+    {
+        "name": "view permissions",
+        "guard_name": "api"
+    },
+    {
+        "name": "create permission",
+        "guard_name": "api"
+    },
+    {
+        "name": "view permission details",
+        "guard_name": "api"
+    },
+    {
+        "name": "delete permission",
+        "guard_name": "api"
+    },
+    {
+        "name": "update permission",
+        "guard_name": "api"
+    },
+    {
+        "name": "view roles",
+        "guard_name": "api"
+    },
+    {
+        "name": "create role",
+        "guard_name": "api"
+    },
+    {
+        "name": "edit role",
+        "guard_name": "api"
+    },
+    {
+        "name": "view role details",
+        "guard_name": "api"
+    },
+    {
+        "name": "delete role",
+        "guard_name": "api"
+    },
+    {
+        "name": "view offices",
+        "guard_name": "api"
+    },
+    {
+        "name": "create office",
+        "guard_name": "api"
+    },
+    {
+        "name": "edit office",
+        "guard_name": "api"
+    },
+    {
+        "name": "View office users",
+        "guard_name": "api"
+    },
+    {
+        "name": "activate country",
+        "guard_name": "api"
+    },
+    {
+        "name": "deactivate country",
+        "guard_name": "api"
+    },
+    {
+        "name": "invite member",
+        "guard_name": "api"
+    },
+    {
+        "name": "view members",
+        "guard_name": "api"
+    },
+    {
+        "name": "edit member",
+        "guard_name": "api"
+    },
+    {
+        "name": "delete member",
+        "guard_name": "api"
+    },
+    {
+        "name": "view group types",
+        "guard_name": "api"
+    },
+    {
+        "name": "create group type",
+        "guard_name": "api"
+    },
+    {
+        "name": "edit group type",
+        "guard_name": "api"
+    },
+    {
+        "name": "delete group type",
+        "guard_name": "api"
+    },
+    {
+        "name": "view program types",
+        "guard_name": "api"
+    },
+    {
+        "name": "create program type",
+        "guard_name": "api"
+    },
+    {
+        "name": "edit program type",
+        "guard_name": "api"
+    },
+    {
+        "name": "delete program type",
+        "guard_name": "api"
+    },
+    {
+        "name": "view channels",
+        "guard_name": "api"
+    },
+    {
+        "name": "create channel",
+        "guard_name": "api"
+    },
+    {
+        "name": "edit channel",
+        "guard_name": "api"
+    },
+    {
+        "name": "delete channel",
+        "guard_name": "api"
+    },
+    {
+        "name": "view statuses",
+        "guard_name": "api"
+    },
+    {
+        "name": "create status",
+        "guard_name": "api"
+    },
+    {
+        "name": "edit status",
+        "guard_name": "api"
+    },
+    {
+        "name": "delete status",
+        "guard_name": "api"
+    },
+    {
+        "name": "create program",
+        "guard_name": "api"
+    },
+    {
+        "name": "list programs",
+        "guard_name": "api"
+    },
+    {
+        "name": "view program",
+        "guard_name": "api"
+    },
+    {
+        "name": "edit program",
+        "guard_name": "api"
+    },
+    {
+        "name": "update program",
+        "guard_name": "api"
+    },
+    {
+        "name": "delete program",
+        "guard_name": "api"
+    },
+    {
+        "name": "add program member",
+        "guard_name": "api"
+    },
+    {
+        "name": "activate program membership",
+        "guard_name": "api"
+    },
+    {
+        "name": "deactivate program membership",
+        "guard_name": "api"
+    },
+    {
+        "name": "view program members",
+        "guard_name": "api"
+    },
+    {
+        "name": "send program invitations",
+        "guard_name": "api"
+    },
+    {
+        "name": "create program member type",
+        "guard_name": "api"
+    },
+    {
+        "name": "list program member types",
+        "guard_name": "api"
+    },
+    {
+        "name": "view program member type",
+        "guard_name": "api"
+    },
+    {
+        "name": "edit program member type",
+        "guard_name": "api"
+    },
+    {
+        "name": "update program member type",
+        "guard_name": "api"
+    },
+    {
+        "name": "delete program member type",
+        "guard_name": "api"
+    },
+    {
+        "name": "view office programs",
+        "guard_name": "api"
+    }
+]

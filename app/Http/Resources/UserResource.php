@@ -40,6 +40,8 @@ class UserResource extends JsonResource
             'office_id' => $this->office_id,
             'last_login' => $this->last_login,
             'created_at' => $this->created_at,
+            'roles' => AuthHelper::userRoles($this->id),
+            'permissions' => AuthHelper::UserPermissions($this->id)
         ];
     }
 }
