@@ -69,15 +69,26 @@ class ClientController extends Controller
      * Create Client
      * @group Clients
      * @param Request $request
-     * @bodyParam name string required . The Client's Name
+     * @bodyParam first_name string required . The Client's First Name
+     * @bodyParam last_name string required . The Client's Last Name
+     * @bodyParam other_name string required . The Client's Other Name
+     * @bodyParam nick_name string . The Client's Nick Name
+     * @bodyParam name string . The Client's Name
      * @bodyParam gender string required . The Client's Gender
      * @bodyParam phone_number integer required . The Client's Phone Number
      * @bodyParam country_id integer required . The Client's Country . Example 1
+     * @bodyParam nationality string required . The Client's Nationality
+     * @bodyParam project_id integer required . The Client's Project ID . Example 1
+     * @bodyParam education_level_id integer required . The Client's Educational Level . Example 1
+     * @bodyParam marital_status_id integer required . The Client's Marital Status . Example 1
+     * @bodyParam phone_ownership_id integer required . The Client's Phone Ownership . Example 1
+     * @bodyParam is_disabled boolean required . Do You Have Any Disability?
+     * @bodyParam date_of_birth date required . The Client's Date of Birth
      * @bodyParam region string required . The Client's Region
      * @bodyParam city string required . The Client's City
      * @bodyParam timezone_id integer required . The Client's TimeZone . Example 1
      * @bodyParam languages string required . The Client's Languages(comma separated)
-     * @bodyParam age integer required . The Client's Age
+     * @bodyParam age integer required . The Client's Age At Enrollment
      * @bodyParam status_id integer required . The Client's Status . Example 1
      * @bodyParam channel_id integer required . The Client's Channel . Example 1
      * @return JsonResponse
@@ -87,17 +98,28 @@ class ClientController extends Controller
     public function create(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|min:3|max:60|unique:clients',
-            'gender' => 'required|string|in:Male,Female',
+            'name' => 'nullable|string|min:3|max:60|unique:clients',
+            'first_name' => 'required|string|min:3|max:60',
+            'last_name' => 'required|string|min:3|max:60',
+            'other_name' => 'required|string|min:3|max:60',
+            'nick_name' => 'nullable|string|min:3|max:60',
+            'gender' => 'required|string|in:Male,Female|Other',
             'phone_number' => 'required|numeric|unique:clients', //min:10|max:13
             'country_id' => 'required|integer|exists:countries,id',
             'region' => 'required|string|min:3|max:20',
             'city' => 'required|string|min:3|max:20',
             'timezone_id' => 'required|integer|exists:timezones,id',
+            'date_of_birth' => 'date|required',
             'age' => 'required|integer|not_in:0', //TODO specify if over 18 or above some particular age
+            'nationality' => 'string|nullable|exists:countries,name',
             'status_id' => 'required|exists:statuses,id|integer',
             'channel_id' => 'required|integer|exists:channels,id',
-            'languages' => 'required|string|min:3|max:30'
+            'languages' => 'required|string|min:3|max:30',
+            'project_id' => 'required|integer|not_in:0|exists:programs,id',
+            'education_level_id' => 'required|integer|not_in:0|exists:client_education_levels,id',
+            'marital_status_id' => 'required|integer|not_in:0|exists:client_marital_statuses,id',
+            'phone_ownership_id' => 'required|integer|not_in:0|exists:client_phone_ownerships,id',
+            'is_disabled' => 'required|boolean'
         ]);
 
         if ($validator->fails()) {
@@ -116,6 +138,16 @@ class ClientController extends Controller
                 $client->age = $request->age;
                 $client->status_id = $request->status_id;
                 $client->channel_id = $request->channel_id;
+                $client->project_id = $request->project_id;
+                $client->first_name = $request->first_name;
+                $client->last_name = $request->last_name;
+                $client->other_name = $request->other_name;
+                $client->nick_name = $request->nick_name;
+                $client->date_of_birth = Carbon::parse($request->date_of_birth)->format('Y-m-d');
+                $client->education_level_id = $request->education_level_id;
+                $client->marital_status_id = $request->marital_status_id;
+                $client->phone_ownership_id = $request->phone_ownership_id;
+                $client->is_disabled = $request->is_disabled;
                 if($client->save()){
                     $countryCode = CountryHelper::getCountryCode($request->country_id);
                     $yearVal = Carbon::now()->format('y');
@@ -210,11 +242,11 @@ class ClientController extends Controller
 
     /**
      * Transfer Client
-     * @param Request $request
-     * @param int $id
+     * @param TransferClient $request
+     * @param int $clientId
+     * @return JsonResponse
      * @urlParam id integer required . The Client ID . Example - 1
      * @bodyParam staff_id integer required . The Staff ID (user in this case)
-     * @return JsonResponse
      * @authenticated
      */
     public function transfer(TransferClient $request, int $clientId ): JsonResponse
@@ -330,15 +362,15 @@ class ClientController extends Controller
     }
 
     /**
-     * Get clients from other sources 
+     * Get clients from other sources
      * @group Clients
-     * @param Request $request
-     * @bodyParam id int required . The Client's id
+     * @param int $id
      * @return JsonResponse
+     * @bodyParam id int required . The Client's id
      * @authenticated
      */
 
-    public function clientLogs(int $id) 
+    public function clientLogs(int $id)
     {
         $activities = ActivityLog::all();
         $activities = $activities->where('subject_id', $id);
@@ -354,7 +386,7 @@ class ClientController extends Controller
         }
         return $this->commonResponse(true, 'Success', 'Client has no Logs', Response::HTTP_OK);
     }
-    
+
      /*
      * Bulk load Clients
      * @param Request $request
@@ -381,6 +413,12 @@ class ClientController extends Controller
                 try {
                     $client = new Client;
                     $client->name = $user['name'];
+                    $client->first_name = $user['first_name'];
+                    $client->last_name = $user['last_name'];
+                    $client->other_name = $user['other_name'];
+                    $client->nick_name = $user['nick_name'];
+                    $client->date_of_birth = Carbon::parse($user['date_of_birth'])->format('Y-m-d');
+                    $client->nationality = $user['nationality'];
                     $client->phone_number = $user['phone_number'];
                     $client->country_id = $user['country_id'];
                     $client->gender = $user['gender'];
@@ -391,6 +429,11 @@ class ClientController extends Controller
                     $client->age = $user['age'];
                     $client->status_id = $user['status_id'];
                     $client->channel_id = $user['channel_id'];
+                    $client->project_id = $user['project_id'];
+                    $client->education_level_id = $user['education_level_id'];
+                    $client->marital_status_id = $user['marital_status_id'];
+                    $client->phone_ownership_id = $user['phone_ownership_id'];
+                    $client->is_disabled = $user['is_disabled'];
                     if($client->save()){
                         $countryCode = CountryHelper::getCountryCode($user['country_id']);
                         $yearVal = Carbon::now()->format('y');
@@ -400,9 +443,7 @@ class ClientController extends Controller
                     }else{
                         $failed_saved->push($user);
                     }
-                    
-        
-                } catch  (\Exception $e) { 
+                } catch  (\Exception $e) {
                     $failed_saved->push($user);
                     continue;
                 }
@@ -422,7 +463,7 @@ class ClientController extends Controller
      * @param Request $request
      * @param int $id
      * @urlParam id integer  . The Client ID . Example - 1
-     * @bodyParam column  . The column that needs  updating 
+     * @bodyParam column  . The column that needs  updating
      * @return JsonResponse
      * @authenticated
      */
