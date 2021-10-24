@@ -131,7 +131,7 @@ class ProgramMemberTypeController extends Controller
      *
      * @param int $id
      * @return JsonResponse
-     * @urlParam id integer required The Program Member Type ID Example , 1
+     * @urlParam id integer required The Project Member Type ID Example , 1
      * @authenticated
      */
     public function destroy(int $id): JsonResponse
