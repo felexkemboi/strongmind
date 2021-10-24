@@ -12,6 +12,9 @@ class Group extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public const SESSION_ONGOING = true;
+    public const SESSION_TERMINATED = false;
+
     protected $table = 'groups';
 
     protected $fillable = [
