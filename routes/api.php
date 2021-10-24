@@ -22,6 +22,7 @@ use App\Http\Controllers\ClientStatusController;
 use App\Http\Controllers\ClientNoteController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LeaderShipController;
+use App\Http\Controllers\TherapyModeController;
 use App\Http\Controllers\Groups\GroupController;
 use App\Http\Controllers\SpatiePermissionController;
 use App\Http\Controllers\SpatieRoleController;
@@ -215,4 +216,20 @@ Route::group(['prefix' => 'leadership','middleware' => 'auth:sanctum'], function
     Route::post('/create',       [LeaderShipController::class, 'create']);
     Route::put('{id}/update',    [LeaderShipController::class, 'update']);
     Route::delete('{id}/delete', [LeaderShipController::class, 'destroy']);
+});
+
+//ClientStatus
+Route::group(['prefix' => 'client-status' , 'middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',           [ClientStatusController::class, 'index']);
+    Route::post('/create',       [ClientStatusController::class, 'create']);
+    Route::put('{id}/update',    [ClientStatusController::class, 'update']);
+    Route::delete('{id}/delete', [ClientStatusController::class, 'destroy']);
+});
+
+//TherapyMode
+Route::group(['prefix' => 'therapy-mode', 'middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',           [TherapyModeController::class, 'index']);
+    Route::post('/create',       [TherapyModeController::class, 'create']);
+    Route::put('{id}/update',    [TherapyModeController::class, 'update']);
+    Route::delete('{id}/delete', [TherapyModeController::class, 'destroy']);
 });
