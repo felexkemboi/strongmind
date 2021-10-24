@@ -41,9 +41,10 @@ class ClientNoteController extends Controller
             if (!$client) {
                 return $this->commonResponse(false, 'Client Does Not Exist', '', Response::HTTP_NOT_FOUND);
             }
+            $user = Auth::user();
             $clientNoteData = [
                 'client_id' => $client->id,
-                'staff_id' => $request->user()->id,
+                'staff_id' => $user->id,
                 'private'  => $request->private,
                 'notes'    => $request->notes
             ];
@@ -55,7 +56,7 @@ class ClientNoteController extends Controller
                     ->log('Note for '.$client->name.' created');
                 return $this->commonResponse(true, 'Client notes created successfully', '', Response::HTTP_OK);
             }
-            return $this->commonResponse(false, 'Client notes not created', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->commonResponse(false, 'Client note not created', '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (QueryException $queryException) {
             return $this->commonResponse(false, $queryException->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $exception) {
