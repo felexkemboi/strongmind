@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             PermissionTableSeeder::class,
             RoleTableSeeder::class,
             ClientPhoneOwnershipTableSeeder::class,
+            ClientMaritalStatusTableSeeder::class,
         ]);
     }
 }
