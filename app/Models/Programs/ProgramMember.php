@@ -5,7 +5,6 @@ namespace App\Models\Programs;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
@@ -35,7 +34,7 @@ class ProgramMember extends Model
     }
     public function programs(): HasMany
     {
-        return $this->hasMany(Program::class,'id','program_id');
+        return $this->hasMany(Project::class,'id','program_id');
     }
 
     public function memberTypes(): HasMany

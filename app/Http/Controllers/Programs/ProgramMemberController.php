@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Manage Program Members
+ * Manage Project Members
  * Class ProgramMemberController
  * @package App\Http\Controllers\Programs
  * @group Programs
@@ -34,9 +34,9 @@ class ProgramMemberController extends Controller
         $this->projectService = $programService;
     }
     /**
-     * List Program Members
+     * List Project Members
      * @param int $id
-     * @urlParam id integer required The Program ID Example-1
+     * @urlParam id integer required The Project ID Example-1
      * @return JsonResponse
      * @authenticated
      */
@@ -75,7 +75,7 @@ class ProgramMemberController extends Controller
      * @return JsonResponse
      * @bodyParam user_id  required User ID Example-1
      * @bodyParam member_type_id integer required Member Type ID. Example -1
-     * @urlParam id integer required the Program ID
+     * @urlParam id integer required the Project ID
      * @authenticated
      */
     public function store(Request $request, int $id): JsonResponse
@@ -101,8 +101,8 @@ class ProgramMemberController extends Controller
                         return $this->commonResponse(false,'User With ID '.$userIds[$i].' Does Not Exist','', Response::HTTP_NOT_FOUND);
                     }
                     $member_type = ProgramMemberType::firstWhere('id', $request->member_type_id);
-                    $existingMember = ProgramMember::where('user_id',$userIds[$i])->where(function($query) use($request, $program){
-                        $query->where('program_id',$program->id)->where('member_type_id',$request->member_type_id);
+                    $existingMember = ProgramMember::where('user_id',$userIds[$i])->where(function($query) use($request, $project){
+                        $query->where('program_id',$project->id)->where('member_type_id',$request->member_type_id);
                     })->exists();
                     if($existingMember){
                         return $this->commonResponse(false,'Member '.$user->name .' with type '. $member_type->name.'  exists for this project','', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -157,10 +157,10 @@ class ProgramMemberController extends Controller
     }
 
     /**
-     * Revoke Program Membership
+     * Revoke Project Membership
      * @param Request $request
      * @param $id
-     * @urlParam id integer required the program Id.
+     * @urlParam id integer required the project Id.
      * @bodyParam user_id integer required User ID
      * @bodyParam member_type_id integer required The Member Type Id
      * @return JsonResponse
@@ -172,10 +172,10 @@ class ProgramMemberController extends Controller
     }
 
     /**
-     * Activate Program Membership
+     * Activate Project Membership
      * @param Request $request
      * @param int $id
-     * @urlParam id integer required the program Id.
+     * @urlParam id integer required the project Id.
      * @bodyParam user_id integer required User ID
      * @bodyParam member_type_id integer required The Member Type Id
      * @return JsonResponse
