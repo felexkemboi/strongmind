@@ -42,6 +42,5 @@ class RoleTableSeeder extends Seeder
         foreach ($permissions as $permission){
             $adminRole->givePermissionTo($permission);
         }
-        //$adminRole->syncPermissions($permissions); //assign admin all permissions
     }
 }
