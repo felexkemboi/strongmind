@@ -21,7 +21,9 @@ class DatabaseSeeder extends Seeder
             ProgramMemberTypeSeeder::class,
             //ProgramMemberTableSeeder::class
             PermissionTableSeeder::class,
-            RoleTableSeeder::class
+            RoleTableSeeder::class,
+            ClientPhoneOwnershipTableSeeder::class,
+            ClientMaritalStatusTableSeeder::class,
         ]);
     }
 }
