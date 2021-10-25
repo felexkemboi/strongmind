@@ -13,6 +13,7 @@ class AddColumnsClientTable extends Migration
      */
     public function up()
     {
+        /**
         Schema::table('clients', function (Blueprint $table) {
             $table->foreignId('project_id')->after('channel_id');
             $table->string('first_name')->after('name');
@@ -26,6 +27,7 @@ class AddColumnsClientTable extends Migration
             $table->foreignId('phone_ownership_id')->after('marital_status_id');
             $table->boolean('is_disabled')->after('phone_ownership_id')->default(false);
         });
+         * **/
     }
 
     /**
@@ -36,6 +38,7 @@ class AddColumnsClientTable extends Migration
     public function down()
     {
         Schema::table('clients', function (Blueprint $table) {
+            /**
             $table->dropColumn([
                 'first_name',
                 'last_name',
@@ -49,6 +52,7 @@ class AddColumnsClientTable extends Migration
                 'marital_status_id',
                 'phone_ownership_id'
             ]);
+             * **/
         });
     }
 }
