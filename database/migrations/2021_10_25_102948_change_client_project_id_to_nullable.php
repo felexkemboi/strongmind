@@ -14,7 +14,7 @@ class ChangeClientProjectIdToNullable extends Migration
     public function up()
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->foreignId('project_id')->nullable()->change();
+            $table->foreignId('project_id')->default(1)->nullable()->change();
         });
     }
 
