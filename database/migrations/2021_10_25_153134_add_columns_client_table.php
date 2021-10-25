@@ -14,7 +14,7 @@ class AddColumnsClientTable extends Migration
     public function up()
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->foreignId('project_id')->after('channel_id')->nullable();
+            $table->foreignId('project_id')->after('channel_id');
             $table->string('first_name')->after('name');
             $table->string('last_name')->after('first_name');
             $table->string('other_name')->after('last_name');
