@@ -20,6 +20,7 @@ class AddMissingClientBiodataToClientsTable extends Migration
             $table->string('nick_name')->nullable();
             $table->date('date_of_birth')->after('age');
             $table->string('nationality')->after('country_id')->nullable();
+            $table->foreignId('project_id')->nullable();
             $table->foreignId('education_level_id');
             $table->foreignId('marital_status_id');
             $table->foreignId('phone_ownership_id');
