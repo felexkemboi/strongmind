@@ -24,6 +24,11 @@ class DatabaseSeeder extends Seeder
             RoleTableSeeder::class,
             ClientPhoneOwnershipTableSeeder::class,
             ClientMaritalStatusTableSeeder::class,
+            ClientDistrictTableSeeder::class,
+            ClientSubCountyTableSeeder::class,
+            ClientMunicipalityTableSeeder::class,
+            ClientVillageTableSeeder::class,
+            ClientParishTableSeeder::class
         ]);
     }
 }

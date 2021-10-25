@@ -27,6 +27,7 @@ use App\Http\Controllers\TherapyModeController;
 use App\Http\Controllers\Groups\GroupController;
 use App\Http\Controllers\SpatiePermissionController;
 use App\Http\Controllers\SpatieRoleController;
+use App\Http\Controllers\ClientLocationController;
 use App\Http\Controllers\ClientEducationController;
 use App\Http\Controllers\ClientMaritalStatusController;
 use App\Http\Controllers\ClientPhoneOwnershipController;
@@ -189,6 +190,14 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::put('/notes/{id}/update',   [ClientNoteController::class,'edit']);
     Route::delete('/notes/{id}/delete',[ClientNoteController::class,'destroy']);
 
+    //Client Locations
+    Route::group(['prefix' => 'locations'], function(){
+        Route::get('/districts',[ClientLocationController::class,'districts']);
+        Route::get('/sub_counties',[ClientLocationController::class,'subCounties']);
+        Route::get('/municipalities',[ClientLocationController::class,'municipalities']);
+        Route::get('/villages',[ClientLocationController::class,'villages']);
+        Route::get('/parish',[ClientLocationController::class,'parish']);
+    });
     //extra client bio-data endpoints
     Route::get('/education/all',[ClientEducationController::class,'__invoke']);
     Route::get('/marital_statuses/all',[ClientMaritalStatusController::class,'__invoke']);
