@@ -54,7 +54,9 @@ class UpdatePermissions extends Command
                 'name' => $key['name'],
                 'guard_name' => $key['guard_name']
             ];
-            $existingPermission = Permission::findByName($permissionsArray['name'], PermissionRoleService::API_GUARD);
+            $existingPermission = Permission::where(function($query) use($permissionsArray){
+                $query->where('name',$permissionsArray['name']);
+            })->exists();
             if(!$existingPermission){
                 Permission::insert($permissionsArray);
             }
