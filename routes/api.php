@@ -27,6 +27,8 @@ use App\Http\Controllers\TherapyModeController;
 use App\Http\Controllers\Groups\GroupController;
 use App\Http\Controllers\SpatiePermissionController;
 use App\Http\Controllers\SpatieRoleController;
+use App\Http\Controllers\ClientLocationController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -184,6 +186,15 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::get('/{id}/notes/private',  [ClientNoteController::class,'getPrivateNotes']);
     Route::put('/notes/{id}/update',   [ClientNoteController::class,'edit']);
     Route::delete('/notes/{id}/delete',[ClientNoteController::class,'destroy']);
+
+    //Client Locations
+    Route::group(['prefix' => 'locations'], function(){
+        Route::get('/districts',[ClientLocationController::class,'districts']);
+        Route::get('/sub_counties',[ClientLocationController::class,'subCounties']);
+        Route::get('/municipalities',[ClientLocationController::class,'municipalities']);
+        Route::get('/villages',[ClientLocationController::class,'villages']);
+        Route::get('/parish',[ClientLocationController::class,'parish']);
+    });
 });
 
 //Languages
@@ -204,7 +215,7 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'groups'], function(){
 });
 
 //LeaderShip
-Route::group(['prefix' => 'leadership','middleware' => 'auth:sanctum'], function(){ 
+Route::group(['prefix' => 'leadership','middleware' => 'auth:sanctum'], function(){
     Route::get('/all',           [LeaderShipController::class, 'index']);
     Route::post('/create',       [LeaderShipController::class, 'create']);
     Route::put('{id}/update',    [LeaderShipController::class, 'update']);

@@ -1,0 +1,42 @@
+[
+    {
+        "name": "LABWOR",
+        "slug": "",
+        "district_id": 1
+    },
+    {
+        "name": "East Moyo",
+        "slug": "",
+        "district_id": 2
+    },
+    {
+        "name": "AGAGO",
+        "slug": "",
+        "district_id": 3
+    },
+    {
+        "name": "MOROTO",
+        "slug": "",
+        "district_id": 4
+    },
+    {
+        "name": " KIOGA ",
+        "slug": "",
+        "district_id": 5
+    },
+    {
+        "name": " UPE (POKOT)",
+        "slug": "",
+        "district_id": 6
+    },
+    {
+        "name": "AMURIA",
+        "slug": "",
+        "district_id": 7
+    },
+    {
+        "name": "KILAK",
+        "slug": "",
+        "district_id": 8
+    }
+]
