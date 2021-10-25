@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddClientBioData extends Migration
+class AddClientBioDataToClientsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -24,7 +24,7 @@ class AddClientBioData extends Migration
             $table->foreignId('education_level_id')->after('nationality');
             $table->foreignId('marital_status_id')->after('education_level_id');
             $table->foreignId('phone_ownership_id')->after('marital_status_id');
-            $table->boolean('is_disabled')->default(false)->after('phone_ownership_id');
+            $table->boolean('is_disabled')->after('phone_ownership_id')->default(false);
         });
     }
 
@@ -37,12 +37,12 @@ class AddClientBioData extends Migration
     {
         Schema::table('clients', function (Blueprint $table) {
             $table->dropColumn([
-                'project_id',
                 'first_name','last_name','other_name','nick_name',
                 'date_of_birth',
                 'nationality',
-                'education_level_id','marital_status_id','phone_ownership_id','is_disabled'
+                'is_disabled'
             ]);
+            $table->dropForeign(['project_id','education_level_id','marital_status_id','phone_ownership_id']);
         });
     }
 }
