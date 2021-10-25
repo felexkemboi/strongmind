@@ -37,12 +37,19 @@ class AddClientBioDataToClientsTable extends Migration
     {
         Schema::table('clients', function (Blueprint $table) {
             $table->dropColumn([
-                'first_name','last_name','other_name','nick_name',
+                'first_name',
+                'last_name',
+                'other_name',
+                'nick_name',
                 'date_of_birth',
                 'nationality',
-                'is_disabled'
+                'is_disabled',
+                'project_id',
+                'education_level_id',
+                'marital_status_id',
+                'phone_ownership_id'
             ]);
-            $table->dropForeign(['project_id','education_level_id','marital_status_id','phone_ownership_id']);
+            //$table->dropForeign([]);
         });
     }
 }
