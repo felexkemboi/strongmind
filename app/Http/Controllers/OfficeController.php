@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Programs\ProjectResource;
 use App\Http\Resources\UserResource;
 use Exception;
 use App\Models\User;
@@ -10,7 +11,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use App\Http\Resources\Programs\ProgramResource;
 use App\Http\Resources\OfficeResource;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
@@ -134,7 +134,7 @@ class OfficeController extends Controller
     }
 
     /**
-     * List All Office Programs
+     * List All Office Projects
      * @param $id
      * @urlParam id integer required Office ID . Example:1
      * @return JsonResponse
@@ -148,8 +148,8 @@ class OfficeController extends Controller
             if(!$office){
                 return $this->commonResponse(false,'Office Not Found','',Response::HTTP_NOT_FOUND);
             }else{
-                $programs = $office->programs;
-                return $this->commonResponse(true,'Success',ProgramResource::collection($programs), Response::HTTP_OK);
+                $projects = $office->programs;
+                return $this->commonResponse(true,'Success',ProjectResource::collection($projects), Response::HTTP_OK);
             }
         }catch(QueryException $exception){
             return $this->commonResponse(false, $exception->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);

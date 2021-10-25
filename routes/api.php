@@ -28,6 +28,9 @@ use App\Http\Controllers\Groups\GroupController;
 use App\Http\Controllers\SpatiePermissionController;
 use App\Http\Controllers\SpatieRoleController;
 use App\Http\Controllers\ClientLocationController;
+use App\Http\Controllers\ClientEducationController;
+use App\Http\Controllers\ClientMaritalStatusController;
+use App\Http\Controllers\ClientPhoneOwnershipController;
 
 /*
 |--------------------------------------------------------------------------
@@ -195,6 +198,10 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
         Route::get('/villages',[ClientLocationController::class,'villages']);
         Route::get('/parish',[ClientLocationController::class,'parish']);
     });
+    //extra client bio-data endpoints
+    Route::get('/education/all',[ClientEducationController::class,'__invoke']);
+    Route::get('/marital_statuses/all',[ClientMaritalStatusController::class,'__invoke']);
+    Route::get('/phone_ownerships/all',[ClientPhoneOwnershipController::class,'__invoke']);
 });
 
 //Languages
@@ -230,6 +237,13 @@ Route::group(['prefix' => 'client-status' , 'middleware' => 'auth:sanctum'], fun
     Route::delete('{id}/delete', [ClientStatusController::class, 'destroy']);
 });
 
+//LeaderShip
+Route::group(['prefix' => 'leadership','middleware' => 'auth:sanctum'], function() {
+    Route::get('/all', [LeaderShipController::class, 'index']);
+    Route::post('/create', [LeaderShipController::class, 'create']);
+    Route::put('{id}/update', [LeaderShipController::class, 'update']);
+    Route::delete('{id}/delete', [LeaderShipController::class, 'destroy']);
+});
 //TherapyMode
 Route::group(['prefix' => 'therapy-mode', 'middleware' => 'auth:sanctum'], function(){
     Route::get('/all',           [TherapyModeController::class, 'index']);

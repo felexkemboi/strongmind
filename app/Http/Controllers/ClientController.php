@@ -88,7 +88,6 @@ class ClientController extends Controller
      * @bodyParam city string required . The Client's City
      * @bodyParam timezone_id integer required . The Client's TimeZone . Example 1
      * @bodyParam languages string required . The Client's Languages(comma separated)
-     * @bodyParam age integer required . The Client's Age At Enrollment
      * @bodyParam status_id integer required . The Client's Status . Example 1
      * @bodyParam channel_id integer required . The Client's Channel . Example 1
      * @return JsonResponse
@@ -110,7 +109,6 @@ class ClientController extends Controller
             'city' => 'required|string|min:3|max:20',
             'timezone_id' => 'required|integer|exists:timezones,id',
             'date_of_birth' => 'date|required',
-            'age' => 'required|integer|not_in:0', //TODO specify if over 18 or above some particular age
             'nationality' => 'string|nullable|exists:countries,name',
             'status_id' => 'required|exists:statuses,id|integer',
             'channel_id' => 'required|integer|exists:channels,id',
@@ -135,7 +133,7 @@ class ClientController extends Controller
                 $client->city = $request->city;
                 $client->timezone_id = $request->timezone_id;
                 $client->languages = $request->input('languages'); //TODO comma separate these if multiple languages are provided
-                $client->age = $request->age;
+                $client->age = Carbon::parse($request->date_of_birth)->age;
                 $client->status_id = $request->status_id;
                 $client->channel_id = $request->channel_id;
                 $client->project_id = $request->project_id;
@@ -426,7 +424,7 @@ class ClientController extends Controller
                     $client->city = $user['city'];
                     $client->timezone_id = $user['timezone_id'];
                     $client->languages = $user['languages']; //TODO comma separate these if multiple languages are provided
-                    $client->age = $user['age'];
+                    $client->age = Carbon::parse($user['date_of_birth'])->age;
                     $client->status_id = $user['status_id'];
                     $client->channel_id = $user['channel_id'];
                     $client->project_id = $user['project_id'];

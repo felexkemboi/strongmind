@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClientEducationLevel;
+use App\Models\ClientPhoneOwnership;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Exception;
 use Symfony\Component\HttpFoundation\Response;
+use Exception;
 
 /**
- * Class ClientEducationController
+ * Class ClientPhoneOwnershipController
  * @package App\Http\Controllers
  * @group Clients
  */
-class ClientEducationController extends Controller
+class ClientPhoneOwnershipController extends Controller
 {
     /**
-     * List Client Education
+     * List Client Phone Ownerships
      *
      * @param Request $request
      * @return JsonResponse
@@ -26,8 +26,8 @@ class ClientEducationController extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         try{
-            $clientEducationData = ClientEducationLevel::select(['id','name'])->latest()->get();
-        return $this->commonResponse(true,'Success',$clientEducationData,Response::HTTP_OK);
+            $clientPhoneOwnershipData = ClientPhoneOwnership::select(['id','name'])->latest()->get();
+            return $this->commonResponse(true,'Success',$clientPhoneOwnershipData,Response::HTTP_OK);
         }catch (QueryException $ex) {
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }  catch (Exception $ex) {
