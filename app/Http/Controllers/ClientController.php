@@ -133,7 +133,6 @@ class ClientController extends Controller
                 $client->city = $request->city;
                 $client->timezone_id = $request->timezone_id;
                 $client->languages = $request->input('languages'); //TODO comma separate these if multiple languages are provided
-                $client->age = Carbon::parse($request->date_of_birth)->age;
                 $client->status_id = $request->status_id;
                 $client->channel_id = $request->channel_id;
                 $client->project_id = $request->project_id;
@@ -142,6 +141,7 @@ class ClientController extends Controller
                 $client->other_name = $request->other_name;
                 $client->nick_name = $request->nick_name;
                 $client->date_of_birth = Carbon::parse($request->date_of_birth)->format('Y-m-d');
+                $client->age = Carbon::parse($request->date_of_birth)->diff(Carbon::now())->y;
                 $client->education_level_id = $request->education_level_id;
                 $client->marital_status_id = $request->marital_status_id;
                 $client->phone_ownership_id = $request->phone_ownership_id;
@@ -424,7 +424,7 @@ class ClientController extends Controller
                     $client->city = $user['city'];
                     $client->timezone_id = $user['timezone_id'];
                     $client->languages = $user['languages']; //TODO comma separate these if multiple languages are provided
-                    $client->age = Carbon::parse($user['date_of_birth'])->age;
+                    $client->age = Carbon::parse($user['date_of_birth'])->diff(Carbon::now())->y;
                     $client->status_id = $user['status_id'];
                     $client->channel_id = $user['channel_id'];
                     $client->project_id = $user['project_id'];
