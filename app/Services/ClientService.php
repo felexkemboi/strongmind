@@ -131,7 +131,7 @@ class ClientService
 
     private function createQuery($filterColumn,$filterValue)
     {
-        $clients = DB::table('clients')
+        return DB::table('clients')
             ->join('client_bio_data','clients.id','=','client_bio_data.client_id')
             ->select(['clients.id','clients.name','client_bio_data.first_name',
                 'client_bio_data.last_name','client_bio_data.other_name','client_bio_data.nick_name',
@@ -144,20 +144,5 @@ class ClientService
                 'client_bio_data.nationality','client_bio_data.is_disabled'
             ])
             ->where($filterColumn, $filterValue);
-
-         return Client::select('id','name',
-            'patient_id', 'phone_number', 'region',
-            'country_id', 'gender',
-            'languages', 'age', 'status_id', 'channel_id',
-            'staff_id', 'active', 'client_type')->where($filterColumn, $filterValue)->transform(function($client){
-                return ClientBioData::firstWhere(function(Builder $query) use($client){
-                    $query->where('client_id', $client->id);
-                })->select([
-                    'first_name','last_name','other_name','nick_name',
-                    'project_id','education_level_id','marital_status_id','phone_ownership_id',
-                    'district_id','province_id','parish_ward_id','village_id','sub_county_id',
-                    'nationality','is_disabled'
-                ]);
-        });
     }
 }
