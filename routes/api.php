@@ -221,14 +221,6 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'groups'], function(){
     Route::delete('/{id}/delete',[GroupController::class,'destroy']);
 });
 
-//LeaderShip
-Route::group(['prefix' => 'leadership','middleware' => 'auth:sanctum'], function(){
-    Route::get('/all',           [LeaderShipController::class, 'index']);
-    Route::post('/create',       [LeaderShipController::class, 'create']);
-    Route::put('{id}/update',    [LeaderShipController::class, 'update']);
-    Route::delete('{id}/delete', [LeaderShipController::class, 'destroy']);
-});
-
 //ClientStatus
 Route::group(['prefix' => 'clientstatus' , 'middleware' => 'auth:sanctum'], function(){
     Route::get('/all',           [ClientStatusController::class, 'index']);
