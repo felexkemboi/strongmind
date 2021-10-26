@@ -31,7 +31,7 @@ class SpatiePermissionController extends Controller
      */
     public function index(PermissionAction $permissionAction): JsonResponse
     {
-        $this->permissionService->verifyPermission('view permissions');
+        $this->permissionService->verifyUserHasPermissionTo('view permissions');
         return $permissionAction->listPermissions();
     }
 
@@ -46,7 +46,7 @@ class SpatiePermissionController extends Controller
      */
     public function store(PermissionRequest $request,PermissionAction $permissionAction): JsonResponse
     {
-        $this->permissionService->verifyPermission('create permission');
+        $this->permissionService->verifyUserHasPermissionTo('create permission');
         return $permissionAction->createPermission($request);
     }
 
@@ -60,7 +60,7 @@ class SpatiePermissionController extends Controller
      */
     public function show(PermissionAction $permissionAction, int $id): JsonResponse
     {
-        $this->permissionService->verifyPermission('view permission details');
+        $this->permissionService->verifyUserHasPermissionTo('view permission details');
         return $permissionAction->displayPermission($id);
     }
 
@@ -76,7 +76,7 @@ class SpatiePermissionController extends Controller
      */
     public function update(PermissionUpdateRequest $request, int $id, PermissionAction $permissionAction): JsonResponse
     {
-        $this->permissionService->verifyPermission('update permission');
+        $this->permissionService->verifyUserHasPermissionTo('update permission');
         return $permissionAction->updatePermission($request, $id);
     }
 
@@ -90,7 +90,7 @@ class SpatiePermissionController extends Controller
      */
     public function destroy(int $id, PermissionAction $permissionAction): JsonResponse
     {
-        $this->permissionService->verifyPermission('delete permission');
+        $this->permissionService->verifyUserHasPermissionTo('delete permission');
         return $permissionAction->deletePermission($id);
     }
 }
