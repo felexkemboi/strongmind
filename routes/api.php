@@ -120,7 +120,7 @@ Route::prefix('status')->group(function () {
 });
 
 //channels
-Route::prefix('channels')->group(function () {
+Route::prefix('channel')->group(function () {
     Route::get('all',            [ChannelController::class, 'index'])->middleware('auth:sanctum');
     Route::post('create',        [ChannelController::class, 'create'])->middleware('auth:sanctum');
     Route::put('update/{id}',    [ChannelController::class, 'update'])->middleware('auth:sanctum');
@@ -128,7 +128,7 @@ Route::prefix('channels')->group(function () {
 });
 
 //group types
-Route::prefix('group-types')->group(function () {
+Route::prefix('grouptype')->group(function () {
     Route::get('all',            [GroupTypeController::class, 'index'])->middleware('auth:sanctum');
     Route::post('create',        [GroupTypeController::class, 'create'])->middleware('auth:sanctum');
     Route::put('update/{id}',    [GroupTypeController::class, 'update'])->middleware('auth:sanctum');
@@ -136,7 +136,7 @@ Route::prefix('group-types')->group(function () {
 });
 
 //program types
-Route::prefix('program-types')->group(function () {
+Route::prefix('programtype')->group(function () {
     Route::get('all',            [ProgramTypeController::class, 'index'])->middleware('auth:sanctum');
     Route::post('create',        [ProgramTypeController::class, 'create'])->middleware('auth:sanctum');
     Route::put('update/{id}',    [ProgramTypeController::class, 'update'])->middleware('auth:sanctum');
@@ -156,7 +156,7 @@ Route::group(['prefix' => 'projects','middleware' => 'auth:sanctum'], function()
     });
 
     //member types
-    Route::group(['prefix' => 'member-types'], function(){
+    Route::group(['prefix' => 'membertype'], function(){
         Route::get('/',              [ProgramMemberTypeController::class,'index']);
         Route::post('/create',       [ProgramMemberTypeController::class,'store']);
         Route::get('/{id}/details',  [ProgramMemberTypeController::class,'show']);
@@ -205,7 +205,7 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
 });
 
 //Languages
-Route::group(['prefix' => 'languages','middleware' => 'auth:sanctum'], function(){
+Route::group(['prefix' => 'language','middleware' => 'auth:sanctum'], function(){
     Route::get('/all',           [LanguageController::class, 'index']);
     Route::post('/create',       [LanguageController::class, 'create']);
     Route::put('{id}/update',    [LanguageController::class, 'update']);
@@ -230,7 +230,7 @@ Route::group(['prefix' => 'leadership','middleware' => 'auth:sanctum'], function
 });
 
 //ClientStatus
-Route::group(['prefix' => 'client-status' , 'middleware' => 'auth:sanctum'], function(){
+Route::group(['prefix' => 'clientstatus' , 'middleware' => 'auth:sanctum'], function(){
     Route::get('/all',           [ClientStatusController::class, 'index']);
     Route::post('/create',       [ClientStatusController::class, 'create']);
     Route::put('{id}/update',    [ClientStatusController::class, 'update']);
@@ -245,13 +245,12 @@ Route::group(['prefix' => 'leadership','middleware' => 'auth:sanctum'], function
     Route::delete('{id}/delete', [LeaderShipController::class, 'destroy']);
 });
 //TherapyMode
-Route::group(['prefix' => 'therapy-mode', 'middleware' => 'auth:sanctum'], function(){
+Route::group(['prefix' => 'therapymode', 'middleware' => 'auth:sanctum'], function(){
     Route::get('/all',           [TherapyModeController::class, 'index']);
     Route::post('/create',       [TherapyModeController::class, 'create']);
     Route::put('{id}/update',    [TherapyModeController::class, 'update']);
     Route::delete('{id}/delete', [TherapyModeController::class, 'destroy']);
 });
-
 
 //Cycle
 Route::group(['prefix' => 'cycle','middleware' => 'auth:sanctum'], function(){
@@ -262,7 +261,7 @@ Route::group(['prefix' => 'cycle','middleware' => 'auth:sanctum'], function(){
 });
 
 //GroupType
-Route::group(['prefix' => 'group-type','middleware' => 'auth:sanctum'], function(){
+Route::group(['prefix' => 'grouptype','middleware' => 'auth:sanctum'], function(){
     Route::get('/all',           [GroupTypeController::class, 'index']);
     Route::post('/create',       [GroupTypeController::class, 'create']);
     Route::put('{id}/update',    [GroupTypeController::class, 'update']);
