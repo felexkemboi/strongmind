@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddClientBioDataToClientsTable extends Migration
+class AddCountryIdToClientDistrictsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddClientBioDataToClientsTable extends Migration
      */
     public function up()
     {
-        Schema::table('clients', function (Blueprint $table) {
-
+        Schema::table('client_districts', function (Blueprint $table) {
+            $table->foreignId('country_id')->nullable()->after('id');
         });
     }
 
@@ -25,8 +25,8 @@ class AddClientBioDataToClientsTable extends Migration
      */
     public function down()
     {
-        Schema::table('clients', function (Blueprint $table) {
-
+        Schema::table('client_districts', function (Blueprint $table) {
+            $table->dropForeign('country_id');
         });
     }
 }
