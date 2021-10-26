@@ -32,14 +32,11 @@ class GroupTypeController extends Controller
 
     /**
      * Create  GroupType
-     * @group  GroupType
      * @param CreateGroupTypeRequest $request
+     * @return JsonResponse
      * @bodyParam name string required The Group Type's Name
-     * @return \Illuminate\Http\Response
      * @authenticated
      */
-
-
     public function create(CreateGroupTypeRequest $request): JsonResponse
     {
         try {
@@ -58,10 +55,9 @@ class GroupTypeController extends Controller
 
     /**
      * Get GroupType by Id
-     * @group GroupType.
      * @param int $id
+     * @return JsonResponse
      * @urlParam id integer required The ID of the Group Type Example:1
-     * @return \Illuminate\Http\Response
      * @authenticated
      */
     public function show(int $id): JsonResponse
@@ -76,10 +72,10 @@ class GroupTypeController extends Controller
 
     /**
      * Edit GroupType
-     * @group GroupType
      * @param CreateGroupTypeRequest $request
-     * @bodyParam name string required The Group Type' Name
+     * @param int $id
      * @return JsonResponse
+     * @bodyParam name string required The Group Type' Name
      * @authenticated
      */
 
@@ -103,7 +99,6 @@ class GroupTypeController extends Controller
 
     /**
      * Delete GroupType
-     * @group  GroupType
      * @param int $id
      * @urlParam id integer required The ID of the Group Type. Example:1
      * @return JsonResponse

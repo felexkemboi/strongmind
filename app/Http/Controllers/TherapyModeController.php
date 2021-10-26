@@ -22,9 +22,8 @@ class TherapyModeController extends Controller
 {
     /**
      * All TherapyMode
-     * @group Therapy Mode
      * @authenticated
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
 
     public function index(): JsonResponse
@@ -35,10 +34,9 @@ class TherapyModeController extends Controller
 
     /**
      * Create  TherapyMode
-     * @group  Therapy Mode
      * @param CreateTherapyModeRequest $request
+     * @return JsonResponse
      * @bodyParam name string required The TherapyMode's Name
-     * @return \Illuminate\Http\Response
      * @authenticated
      */
 
@@ -61,10 +59,9 @@ class TherapyModeController extends Controller
 
     /**
      * Get TherapyMode by Id
-     * @group Therapy Mode.
      * @param int $id
+     * @return JsonResponse
      * @urlParam id integer required The ID of the TherapyMode Example:1
-     * @return \Illuminate\Http\Response
      * @authenticated
      */
     public function show(int $id): JsonResponse
@@ -79,10 +76,10 @@ class TherapyModeController extends Controller
 
     /**
      * Edit TherapyMode
-     * @group Therapy Mode
      * @param CreateTherapyModeRequest $request
-     * @bodyParam name string required The TherapyMode' Name
+     * @param int $id
      * @return JsonResponse
+     * @bodyParam name string required The TherapyMode' Name
      * @authenticated
      */
 
@@ -106,7 +103,6 @@ class TherapyModeController extends Controller
 
     /**
      * Delete TherapyMode
-     * @group  Therapy Mode
      * @param int $id
      * @urlParam id integer required The ID of the TherapyMode. Example:1
      * @return JsonResponse

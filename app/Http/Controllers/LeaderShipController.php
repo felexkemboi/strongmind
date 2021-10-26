@@ -11,7 +11,7 @@ use App\Http\Requests\CreateLeaderShipRequest;
 
 /**
  * APIs for managing LeaderShipController
- * 
+ *
  * Class LeaderShipController
  * @package App\Http\Controllers
  * @group Dynamic Fields
@@ -22,9 +22,8 @@ class LeaderShipController extends Controller
 {
     /**
      * All LeaderShips
-     * @group LeaderShip
      * @authenticated
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
 
     public function index(): JsonResponse
@@ -35,10 +34,9 @@ class LeaderShipController extends Controller
 
     /**
      * Create  LeaderShip
-     * @group  LeaderShip
      * @param CreateLeaderShipRequest $request
+     * @return JsonResponse
      * @bodyParam name string required The LeaderShip's Name
-     * @return \Illuminate\Http\Response
      * @authenticated
      */
 
@@ -61,10 +59,9 @@ class LeaderShipController extends Controller
 
     /**
      * Get LeaderShip by Id
-     * @group LeaderShip.
      * @param int $id
+     * @return JsonResponse
      * @urlParam id integer required The ID of the LeaderShip Example:1
-     * @return \Illuminate\Http\Response
      * @authenticated
      */
     public function show(int $id): JsonResponse
@@ -79,10 +76,10 @@ class LeaderShipController extends Controller
 
     /**
      * Edit LeaderShip
-     * @group LeaderShip
      * @param CreateLeaderShipRequest $request
-     * @bodyParam name string required The LeaderShip' Name
+     * @param int $id
      * @return JsonResponse
+     * @bodyParam name string required The LeaderShip' Name
      * @authenticated
      */
 
@@ -106,7 +103,6 @@ class LeaderShipController extends Controller
 
     /**
      * Delete LeaderShip
-     * @group  LeaderShip
      * @param int $id
      * @urlParam id integer required The ID of the LeaderShip. Example:1
      * @return JsonResponse
