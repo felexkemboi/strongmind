@@ -13,7 +13,7 @@ use App\Http\Requests\CreateGroupTypeRequest;
  * GroupTypes Endpoints
  * Class GroupTypeController
  * @package App\Http\Controllers\Groups
- * @group Groups
+ * @group Dynamic Fields
  */
 class GroupTypeController extends Controller
 {
