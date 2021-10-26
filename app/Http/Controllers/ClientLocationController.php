@@ -22,6 +22,8 @@ use Symfony\Component\HttpFoundation\Response;
 class ClientLocationController extends Controller
 {
     /**
+     * List Districts
+     *
      * @return JsonResponse
      * @authenticated
      */
@@ -38,6 +40,8 @@ class ClientLocationController extends Controller
     }
 
     /**
+     * List Sub Counties
+     *
      * @return JsonResponse
      * @authenticated
      */
@@ -54,6 +58,8 @@ class ClientLocationController extends Controller
     }
 
     /**
+     * List Provinces/Municipalities
+     *
      * @return JsonResponse
      * @authenticated
      */
@@ -70,6 +76,8 @@ class ClientLocationController extends Controller
     }
 
     /**
+     * List Villages
+     *
      * @return JsonResponse
      * @authenticated
      */
@@ -86,6 +94,7 @@ class ClientLocationController extends Controller
     }
 
     /**
+     * List Parish/Wards
      * @return JsonResponse
      * @authenticated
      */
