@@ -32,7 +32,7 @@ class SpatieRoleController extends Controller
      */
     public function index(RoleAction $roleAction): JsonResponse
     {
-        $this->permissionService->verifyPermission('view roles');
+        $this->permissionService->verifyUserHasPermissionTo('view roles');
         return $roleAction->listRoles();
     }
 
@@ -47,7 +47,7 @@ class SpatieRoleController extends Controller
      */
     public function store(RoleRequest $request, RoleAction $roleAction): JsonResponse
     {
-        $this->permissionService->verifyPermission('create role');
+        $this->permissionService->verifyUserHasPermissionTo('create role');
         return $roleAction->createRole($request);
     }
 
@@ -61,7 +61,7 @@ class SpatieRoleController extends Controller
      */
     public function show(int $id, RoleAction $roleAction): JsonResponse
     {
-        $this->permissionService->verifyPermission('view role details');
+        $this->permissionService->verifyUserHasPermissionTo('view role details');
         return $roleAction->displayRole($id);
     }
 
@@ -77,7 +77,7 @@ class SpatieRoleController extends Controller
      */
     public function update(RoleUpdateRequest $request, int $id, RoleAction $roleAction): JsonResponse
     {
-        $this->permissionService->verifyPermission('edit role');
+        $this->permissionService->verifyUserHasPermissionTo('edit role');
         return $roleAction->updateRole($request, $id);
     }
 
@@ -91,7 +91,7 @@ class SpatieRoleController extends Controller
      */
     public function destroy(int $id, RoleAction $roleAction): JsonResponse
     {
-        $this->permissionService->verifyPermission('delete role');
+        $this->permissionService->verifyUserHasPermissionTo('delete role');
         return $roleAction->deleteRole($id);
     }
 

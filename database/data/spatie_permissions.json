@@ -214,5 +214,57 @@
     {
         "name": "view office programs",
         "guard_name": "api"
+    },
+    {
+        "name": "list groups",
+        "guard_name": "api"
+    },
+    {
+        "name": "view group item",
+        "guard_name": "api"
+    },
+    {
+        "name": "update group",
+        "guard_name": "api"
+    },
+    {
+        "name": "create group",
+        "guard_name": "api"
+    },
+    {
+        "name": "delete group",
+        "guard_name": "api"
+    },
+    {
+        "name": "terminate group",
+        "guard_name": "api"
+    },
+    {
+        "name": "list group clients by staff member",
+        "guard_name": "api"
+    },
+    {
+        "name": "add clients to a group",
+        "guard_name": "api"
+    },
+    {
+        "name": "list clients by group",
+        "guard_name": "api"
+    },
+    {
+        "name": "create session in a group",
+        "guard_name": "api"
+    },
+    {
+        "name": "take session attendance of a group",
+        "guard_name": "api"
+    },
+    {
+        "name": "list groups with their respective sessions",
+        "guard_name": "api"
+    },
+    {
+        "name": "list clients session attendance",
+        "guard_name": "api"
     }
 ]
