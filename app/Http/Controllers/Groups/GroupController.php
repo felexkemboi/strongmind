@@ -19,7 +19,7 @@ use Exception;
  *
  * Class GroupController
  * @package App\Http\Controllers\Groups
- * @group Dynamic Fields
+ * @group Groups
  */
 class GroupController extends Controller
 {
