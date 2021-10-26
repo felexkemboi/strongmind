@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Manage Project Members
  * Class ProgramMemberController
  * @package App\Http\Controllers\Programs
- * @group Programs
+ * @group Projects
  */
 class ProgramMemberController extends Controller
 {

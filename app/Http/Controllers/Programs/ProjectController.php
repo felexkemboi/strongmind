@@ -20,10 +20,12 @@ use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * API Endpoints for managing Projects
+ *
  * Class ProjectController
  * @package App\Http\Controllers\Projects
  * @group Projects
- * API Endpoints for managing Projects
+ *
  */
 class ProjectController extends Controller
 {

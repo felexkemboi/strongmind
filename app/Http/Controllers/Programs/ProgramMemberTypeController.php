@@ -15,10 +15,11 @@ use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * API Endpoints Manage Program Member Types
  * Class ProgramMemberTypeController
  * @package App\Http\Controllers\Programs
- * @group Programs
- * API Endpoints Manage Program Member Types
+ * @group Projects
+ *
  */
 class ProgramMemberTypeController extends Controller
 {

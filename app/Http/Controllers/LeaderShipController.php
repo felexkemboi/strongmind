@@ -10,10 +10,12 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateLeaderShipRequest;
 
 /**
+ * APIs for managing LeaderShipController
+ * 
  * Class LeaderShipController
  * @package App\Http\Controllers
- * @group LeaderShip
- * APIs for managing LeaderShipController
+ * @group Dynamic Fields
+ *
  */
 
 class LeaderShipController extends Controller

@@ -11,10 +11,12 @@ use Illuminate\Http\Request;
 use Exception;
 
 /**
+ * APIs for managing languages
+ *
  * Class LanguageController
  * @package App\Http\Controllers
- * @group Languages
- * APIs for managing languages
+ * @group Dynamic Fields
+ *
  */
 
 class LanguageController extends Controller

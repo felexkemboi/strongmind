@@ -11,7 +11,7 @@ use App\Http\Requests\CreateCycleRequest;
 /**
  * Class CycleController
  * @package App\Http\Controllers
- * @group Cycle
+ * @group Dynamic Fields
  * APIs for managing Cycle
  */
 

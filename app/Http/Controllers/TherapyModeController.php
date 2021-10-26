@@ -10,10 +10,12 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateTherapyModeRequest;
 
 /**
+ * APIs for managing TherapyMode
+ *
  * Class TherapyModeController
  * @package App\Http\Controllers
- * @group Therapy Mode
- * APIs for managing TherapyMode
+ * @group Dynamic Fields
+ *
  */
 
 class TherapyModeController extends Controller
