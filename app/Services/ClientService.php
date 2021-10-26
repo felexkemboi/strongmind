@@ -4,10 +4,13 @@
 namespace App\Services;
 
 use App\Models\Client;
+use App\Models\ClientBioData;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use App\Traits\ApiResponser;
 
@@ -33,7 +36,7 @@ class ClientService
             $clientTypes = ['screening','therapy'];
             $num_records = (int)$request->get('records_per_page');
             $pagination_records = (int)$request->get('pagination_items');
-            $clients = Client::query()->with('timezone', 'country', 'status', 'channel', 'staff', 'notes');
+            $clients = Client::query()->with('timezone', 'country', 'status', 'channel', 'staff', 'notes','bioData');
 
             //search by id
             $clients = $clients->where(function($query) use($id){
@@ -84,7 +87,7 @@ class ClientService
             }
             //specify pagination number
             if ($request->has('pagination_items') && $request->filled('pagination_items')) {
-                $clients = Client::with('timezone', 'country', 'status', 'channel', 'staff', 'notes')->latest()->paginate($pagination_records);
+                $clients = Client::with('timezone', 'country', 'status', 'channel', 'staff', 'notes','bioData')->latest()->paginate($pagination_records);
                 return $this->commonResponse(true, 'success', $clients, Response::HTTP_OK);
             }
 
@@ -128,14 +131,33 @@ class ClientService
 
     private function createQuery($filterColumn,$filterValue)
     {
-        return Client::select('id', 'last_name','first_name','name','other_name','nick_name',
-            'date_of_birth','nationality',
-            'education_level_id','marital_status_id',
-            'phone_ownership_id','is_disabled',
+        $clients = DB::table('clients')
+            ->join('client_bio_data','clients.id','=','client_bio_data.client_id')
+            ->select(['clients.id','clients.name','client_bio_data.first_name',
+                'client_bio_data.last_name','client_bio_data.other_name','client_bio_data.nick_name',
+                'clients.patient_id','clients.phone_number','clients.region','clients.country_id',
+                'clients.gender','clients.languages','clients.age','clients.status_id','clients.channel_id',
+                'clients.staff_id','clients.active','clients.client_type',
+                'client_bio_data.project_id','client_bio_data.education_level_id','client_bio_data.marital_status_id',
+                'client_bio_data.phone_ownership_id','client_bio_data.district_id','client_bio_data.province_id',
+                'client_bio_data.parish_ward_id','client_bio_data.village_id','client_bio_data.sub_county_id',
+                'client_bio_data.nationality','client_bio_data.is_disabled'
+            ])
+            ->where($filterColumn, $filterValue);
+
+         return Client::select('id','name',
             'patient_id', 'phone_number', 'region',
             'country_id', 'gender',
             'languages', 'age', 'status_id', 'channel_id',
-            'staff_id', 'active', 'client_type')
-            ->where($filterColumn, $filterValue);
+            'staff_id', 'active', 'client_type')->where($filterColumn, $filterValue)->transform(function($client){
+                return ClientBioData::firstWhere(function(Builder $query) use($client){
+                    $query->where('client_id', $client->id);
+                })->select([
+                    'first_name','last_name','other_name','nick_name',
+                    'project_id','education_level_id','marital_status_id','phone_ownership_id',
+                    'district_id','province_id','parish_ward_id','village_id','sub_county_id',
+                    'nationality','is_disabled'
+                ]);
+        });
     }
 }

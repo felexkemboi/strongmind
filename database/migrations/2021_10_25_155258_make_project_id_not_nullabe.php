@@ -14,7 +14,6 @@ class MakeProjectIdNotNullabe extends Migration
     public function up()
     {
         Schema::table('clients', function (Blueprint $table) {
-            //$table->foreignId('project_id')->nullable()->change();
         });
     }
 
@@ -26,7 +25,6 @@ class MakeProjectIdNotNullabe extends Migration
     public function down()
     {
         Schema::table('clients', function (Blueprint $table) {
-            //$table->foreignId('project_id');
         });
     }
 }

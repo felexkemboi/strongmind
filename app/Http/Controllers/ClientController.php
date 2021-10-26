@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClientBioData;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\CountryHelper;
 use App\Helpers\ImportClients;
@@ -90,6 +91,11 @@ class ClientController extends Controller
      * @bodyParam languages string required . The Client's Languages(comma separated)
      * @bodyParam status_id integer required . The Client's Status . Example 1
      * @bodyParam channel_id integer required . The Client's Channel . Example 1
+     * @bodyParam district_id integer required . The Client's District . Example 1
+     * @bodyParam sub_county_id integer required . The Client's Sub County . Example 1
+     * @bodyParam province_id integer  . The Client's Province/Municipality . Example 1
+     * @bodyParam village_id integer  . The Client's Village/Cells . Example 1
+     * @bodyParam parish_ward_id integer  . The Client's Ward/Parish . Example 1
      * @return JsonResponse
      * @authenticated
      */
@@ -102,7 +108,7 @@ class ClientController extends Controller
             'last_name' => 'required|string|min:3|max:60',
             'other_name' => 'required|string|min:3|max:60',
             'nick_name' => 'nullable|string|min:3|max:60',
-            'gender' => 'required|string|in:Male,Female|Other',
+            'gender' => 'required|string|in:Male,Female,Other',
             'phone_number' => 'required|numeric|unique:clients', //min:10|max:13
             'country_id' => 'required|integer|exists:countries,id',
             'region' => 'required|string|min:3|max:20',
@@ -117,7 +123,12 @@ class ClientController extends Controller
             'education_level_id' => 'required|integer|not_in:0|exists:client_education_levels,id',
             'marital_status_id' => 'required|integer|not_in:0|exists:client_marital_statuses,id',
             'phone_ownership_id' => 'required|integer|not_in:0|exists:client_phone_ownerships,id',
-            'is_disabled' => 'required|boolean'
+            'is_disabled' => 'required|boolean',
+            'district_id' => 'required|integer|not_in:0|exists:client_districts,id',
+            'province_id' => 'nullable|integer|not_in:0|exists:client_municipalities,id',
+            'sub_county_id' => 'required|integer|not_in:0|exists:client_sub_counties,id',
+            'parish_ward_id' => 'nullable|integer|not_in:0|exists:client_parishes,id',
+            'village_id' => 'nullable|integer|not_in:0|exists:client_villages,id',
         ]);
 
         if ($validator->fails()) {
@@ -135,18 +146,9 @@ class ClientController extends Controller
                 $client->languages = $request->input('languages'); //TODO comma separate these if multiple languages are provided
                 $client->status_id = $request->status_id;
                 $client->channel_id = $request->channel_id;
-                $client->project_id = $request->project_id;
-                $client->first_name = $request->first_name;
-                $client->last_name = $request->last_name;
-                $client->other_name = $request->other_name;
-                $client->nick_name = $request->nick_name;
-                $client->date_of_birth = Carbon::parse($request->date_of_birth)->format('Y-m-d');
                 $client->age = Carbon::parse($request->date_of_birth)->diff(Carbon::now())->y;
-                $client->education_level_id = $request->education_level_id;
-                $client->marital_status_id = $request->marital_status_id;
-                $client->phone_ownership_id = $request->phone_ownership_id;
-                $client->is_disabled = $request->is_disabled;
                 if($client->save()){
+                    $this->addClientBioData($request, $client);
                     $countryCode = CountryHelper::getCountryCode($request->country_id);
                     $yearVal = Carbon::now()->format('y');
                     $patient_id = $countryCode->long_code.'-'.$yearVal.'-'.'0000'.$client->id; //random_int(0,4).$client->id;
@@ -172,7 +174,7 @@ class ClientController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $client = Client::with('status','channel')->find($id);
+        $client = Client::with('status','channel','bioData')->find($id);
         if ($client) {
             return $this->commonResponse(true, 'success', $client, Response::HTTP_OK);
         } else {
@@ -212,7 +214,7 @@ class ClientController extends Controller
             return $this->commonResponse(false,Arr::flatten($validator->messages()->get('*')),'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         try{
-            $client = Client::with('timezone','country','status','channel','staff')->find($id);
+            $client = Client::with('timezone','country','status','channel','staff','bioData')->find($id);
             if(!$client){
                 return $this->commonResponse(false,'Client Not Found','', Response::HTTP_NOT_FOUND);
             }
@@ -411,11 +413,6 @@ class ClientController extends Controller
                 try {
                     $client = new Client;
                     $client->name = $user['name'];
-                    $client->first_name = $user['first_name'];
-                    $client->last_name = $user['last_name'];
-                    $client->other_name = $user['other_name'];
-                    $client->nick_name = $user['nick_name'];
-                    $client->date_of_birth = Carbon::parse($user['date_of_birth'])->format('Y-m-d');
                     $client->nationality = $user['nationality'];
                     $client->phone_number = $user['phone_number'];
                     $client->country_id = $user['country_id'];
@@ -427,12 +424,27 @@ class ClientController extends Controller
                     $client->age = Carbon::parse($user['date_of_birth'])->diff(Carbon::now())->y;
                     $client->status_id = $user['status_id'];
                     $client->channel_id = $user['channel_id'];
-                    $client->project_id = $user['project_id'];
-                    $client->education_level_id = $user['education_level_id'];
-                    $client->marital_status_id = $user['marital_status_id'];
-                    $client->phone_ownership_id = $user['phone_ownership_id'];
-                    $client->is_disabled = $user['is_disabled'];
                     if($client->save()){
+                        $clientBioData = [
+                            'client_id' => $client->id,
+                            'first_name' => $user['first_name'],
+                            'last_name' => $user['last_name'],
+                            'other_name' => $user['other_name'],
+                            'nick_name' => $user['nick_name'],
+                            'date_of_birth' => Carbon::parse($user['date_of_birth'])->format('Y-m-d'),
+                            'education_level_id' => $user['education_level_id'],
+                            'marital_status_id' => $user['marital_status_id'],
+                            'phone_ownership_id' => $user['phone_ownership_id'],
+                            'is_disabled' => $user['is_disabled'],
+                            'project_id' => $user['project_id'],
+                            'district_id' => $user['district_id'],
+                            'province_id' => $user['province_id'],
+                            'parish_ward_id' => $user['parish_ward_id'],
+                            'village_id' => $user['village_id'],
+                            'sub_county_id' => $user['sub_county_id'],
+                            'nationality'   => $user['nationality'],
+                        ];
+                        ClientBioData::create($clientBioData);
                         $countryCode = CountryHelper::getCountryCode($user['country_id']);
                         $yearVal = Carbon::now()->format('y');
                         $patient_id = $countryCode->long_code.'-'.$yearVal.'-'.'0000'.$client->id; //random_int(0,4).$client->id;
@@ -500,6 +512,34 @@ class ClientController extends Controller
         //}
 
         return $this->commonResponse(false, 'success', 'Encountered an error during update', Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * @param Request $request
+     * @param Client $client
+     */
+    private function addClientBioData(Request $request, Client $client): void
+    {
+        $clientBioData = [
+            'client_id' => $client->id,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'other_name' => $request->other_name,
+            'nick_name' => $request->nick_name,
+            'date_of_birth' => Carbon::parse($request->date_of_birth)->format('Y-m-d'),
+            'education_level_id' => $request->education_level_id,
+            'marital_status_id' => $request->marital_status_id,
+            'phone_ownership_id' => $request->phone_ownership_id,
+            'is_disabled' => $request->is_disabled,
+            'project_id' => $request->project_id,
+            'district_id' => $request->district_id,
+            'province_id' => $request->province_id,
+            'parish_ward_id' => $request->parish_ward_id,
+            'village_id' => $request->village_id,
+            'sub_county_id' => $request->sub_county_id,
+            'nationality'  => $request->nationality,
+        ];
+        ClientBioData::create($clientBioData);
     }
 }
 

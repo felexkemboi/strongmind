@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder
             ClientSubCountyTableSeeder::class,
             ClientMunicipalityTableSeeder::class,
             ClientVillageTableSeeder::class,
-            ClientParishTableSeeder::class
+            ClientParishTableSeeder::class,
+            ClientEducationLevelTableSeeder::class
         ]);
     }
 }

@@ -2,12 +2,14 @@
     {
         "id": 1,
         "name": "ABIM",
-        "slug": ""
+        "slug": "",
+        "country_id": 229
     },
     {
         "id": 2,
         "name": "ADJUMANI",
-        "slug": ""
+        "slug": "",
+        "country_id": 229
     },
     {
         "id": 3,
@@ -17,66 +19,79 @@
     {
         "id": 4,
         "name": "ALEBTONG",
-        "slug": ""
+        "slug": "",
+        "country_id": 229
     },
     {
         "id": 5,
         "name": "AMOLATAR",
-        "slug": ""
+        "slug": "",
+        "country_id": 229
     },
     {
         "id": 6,
         "name": "AMUDAT",
-        "slug": ""
+        "slug": "",
+        "country_id": 229
     },
     {
         "id": 7,
         "name": "AMURIA",
-        "slug": ""
+        "slug": "",
+        "country_id": 229
     },
     {
         "id": 8,
         "name": "AMURU",
-        "slug": ""
+        "slug": "",
+        "country_id": 229
     },
     {
         "id": 9,
         "name": "APAC",
-        "slug": ""
+        "slug": "",
+        "country_id": 229
     },
     {
         "id": 10,
         "name": "ARUA",
-        "slug": ""
+        "slug": "",
+        "country_id": 229
     },
     {
         "id": 11,
         "name": "BUDAKA",
-        "slug": ""
+        "slug": "",
+        "country_id": 229
     },
     {
         "id": 12,
         "name": "BUDUDA",
-        "slug": ""
+        "slug": "",
+        "country_id": 229
     },
     {
         "id": 13,
         "name": "BUGIRI",
-        "slug": ""
+        "slug": "",
+        "country_id": 229
     },
     {
         "id": 14,
         "name": "BULAMBULI",
-        "slug": ""
+        "slug": "",
+        "country_id": 229
     },
     {
         "id": 15,
         "name": "BUSHENYI",
-        "slug": ""
+        "slug": "",
+        "country_id": 229
     },
     {
         "id": 16,
         "name": "BUKEDEA",
-        "slug": ""
+        "slug": "",
+        "country_id": 229
     }
 ]

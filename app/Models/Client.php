@@ -41,16 +41,6 @@ class Client extends Model
         'channel_id',
         'staff_id',
         'active',
-        'project_id',
-        'first_name',
-        'last_name',
-        'other_name',
-        'nick_name',
-        'date_of_birth',
-        'education_level_id',
-        'marital_status_id',
-        'phone_ownership_id',
-        'is_disabled'
     ];
 
     protected static $logAttributes = ['client_type','staff_id','name','therapy','patient_id','phone_number','city','languages','status_id','channel_id','active'];
@@ -139,28 +129,13 @@ class Client extends Model
     }
 
     /**
-     * @return BelongsTo
+     * @return HasMany
      */
-    public function project(): BelongsTo
+    public function bioData(): HasMany
     {
-        return $this->belongsTo(Project::class,'project_id');
+        return $this->hasMany(ClientBioData::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function phoneOwnership(): BelongsTo
-    {
-        return $this->belongsTo(ClientPhoneOwnership::class,'phone_ownership_id');
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function maritalStatus(): BelongsTo
-    {
-        return $this->belongsTo(ClientMaritalStatus::class,'marital_status_id');
-    }
     public function getLanguagesAttribute($value)
     {
         return explode(',', $value);

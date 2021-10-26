@@ -28,7 +28,7 @@ class ClientLocationController extends Controller
     public function districts(): JsonResponse
     {
         try {
-            $districts = ClientDistrict::select(['id','name'])->latest()->get();
+            $districts = ClientDistrict::with('country')->select(['id','name','country_id'])->latest()->get();
             return $this->commonResponse(true,'Success',$districts,Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'',Response::HTTP_UNPROCESSABLE_ENTITY);
