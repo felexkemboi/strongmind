@@ -10,19 +10,20 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateClientStatusRequest;
 
 /**
+ * APIs for managing ClientStatus
+ *
  * Class ClientStatusController
  * @package App\Http\Controllers
- * @group ClientStatus
- * APIs for managing ClientStatus
+ * @group Dynamic Fields
+ *
  */
 
 class ClientStatusController extends Controller
 {
     /**
      * All Client Status.
-     * @group Client Status
      * @authenticated
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
 
     public function index(): JsonResponse
@@ -31,17 +32,13 @@ class ClientStatusController extends Controller
         return $this->commonResponse(true, 'success', $statuses, Response::HTTP_OK);
     }
 
-
     /**
      * Create  Client Status
-     * @group  Client Status
      * @param CreateClientStatusRequest $request
+     * @return JsonResponse
      * @bodyParam name string required The Client Status' Name
-     * @return \Illuminate\Http\Response
      * @authenticated
      */
-
-
     public function create(CreateClientStatusRequest $request): JsonResponse
     {
         try {
@@ -60,10 +57,9 @@ class ClientStatusController extends Controller
 
     /**
      * Get Client Status by Id
-     * @group Client Status.
      * @param int $id
+     * @return JsonResponse
      * @urlParam id integer required The ID of the client status.Example:1
-     * @return \Illuminate\Http\Response
      * @authenticated
      */
     public function show(int $id): JsonResponse
@@ -78,7 +74,6 @@ class ClientStatusController extends Controller
 
     /**
      * Edit Client Status
-     * @group Client Status
      * @param CreateClientStatusRequest $request
      * @bodyParam name string required The Client Status' Name
      * @return JsonResponse
@@ -105,7 +100,6 @@ class ClientStatusController extends Controller
 
     /**
      * Delete Client Status
-     * @group  Client Status
      * @param int $id
      * @urlParam id integer required The ID of the Client Status. Example:1
      * @return JsonResponse

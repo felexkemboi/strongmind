@@ -67,7 +67,8 @@ class ClientNoteController extends Controller
 
     /**
      * List Client Public Notes
-     * @param int $id
+     * @param Request $request
+     * @param int $clientId
      * @return JsonResponse
      * @urlParam id integer required . The Client ID
      * @authenticated
@@ -149,13 +150,12 @@ class ClientNoteController extends Controller
 
     /**
      * Delete  Note
-     * @param Request $request
      * @param int $id
-     * @urlParam id integer required . The Note ID
      * @return JsonResponse
+     * @urlParam id integer required . The Note ID
      * @authenticated
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
 
         try{

@@ -19,9 +19,8 @@ class CycleController extends Controller
 {
     /**
      * All Cycle.
-     * @group Cycle
      * @authenticated
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
 
     public function index(): JsonResponse
@@ -33,14 +32,11 @@ class CycleController extends Controller
 
     /**
      * Create  Cycle
-     * @group  Cycle
      * @param CreateCycleRequest $request
+     * @return JsonResponse
      * @bodyParam name string required The Cycle' Name
-     * @return \Illuminate\Http\Response
      * @authenticated
      */
-
-
     public function create(CreateCycleRequest $request): JsonResponse
     {
         try {
@@ -59,10 +55,9 @@ class CycleController extends Controller
 
     /**
      * Get Cycle by Id
-     * @group Cycle.
      * @param int $id
+     * @return JsonResponse
      * @urlParam id integer required The ID of the Cycle.Example:1
-     * @return \Illuminate\Http\Response
      * @authenticated
      */
     public function show(int $id): JsonResponse
@@ -77,10 +72,10 @@ class CycleController extends Controller
 
     /**
      * Edit Cycle
-     * @group Cycle
      * @param CreateCycleRequest $request
-     * @bodyParam name string required The Cycle' Name
+     * @param int $id
      * @return JsonResponse
+     * @bodyParam name string required The Cycle' Name
      * @authenticated
      */
 
@@ -104,7 +99,6 @@ class CycleController extends Controller
 
     /**
      * Delete Cycle
-     * @group  Cycle
      * @param int $id
      * @urlParam id integer required The ID of the Cycle. Example:1
      * @return JsonResponse

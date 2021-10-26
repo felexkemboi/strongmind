@@ -17,12 +17,12 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * Class ClientLocationController
  * @package App\Http\Controllers
- * @group Client Locations
+ * @group Clients
  */
 class ClientLocationController extends Controller
 {
     /**
-     * List Districts
+     * List Client Districts
      *
      * @return JsonResponse
      * @authenticated
@@ -40,7 +40,7 @@ class ClientLocationController extends Controller
     }
 
     /**
-     * List Sub Counties
+     * List Client Sub Counties
      *
      * @return JsonResponse
      * @authenticated
@@ -58,7 +58,7 @@ class ClientLocationController extends Controller
     }
 
     /**
-     * List Provinces/Municipalities
+     * List Client Provinces/Municipalities
      *
      * @return JsonResponse
      * @authenticated
@@ -76,7 +76,7 @@ class ClientLocationController extends Controller
     }
 
     /**
-     * List Villages
+     * List Client Villages
      *
      * @return JsonResponse
      * @authenticated
@@ -94,7 +94,7 @@ class ClientLocationController extends Controller
     }
 
     /**
-     * List Parish/Wards
+     * List Client Parish/Wards
      * @return JsonResponse
      * @authenticated
      */

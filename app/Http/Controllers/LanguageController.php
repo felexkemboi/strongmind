@@ -23,7 +23,6 @@ class LanguageController extends Controller
 {
     /**
      * All Languages
-     * @group Languages
      * @return JsonResponse
      * @authenticated
      */
@@ -37,7 +36,6 @@ class LanguageController extends Controller
 
     /**
      * Create Language
-     * @group Languages
      * @param CreateLanguageRequest $request
      * @bodyParam name string required . The Language's Name
      * @return JsonResponse
@@ -62,10 +60,10 @@ class LanguageController extends Controller
 
     /**
      * Edit Language
-     * @group Languages
      * @param Request $request
-     * @bodyParam name string required . The Language's Name
+     * @param int $id
      * @return JsonResponse
+     * @bodyParam name string required . The Language's Name
      * @authenticated
      */
 
