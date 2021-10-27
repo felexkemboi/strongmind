@@ -140,4 +140,11 @@ class Client extends Model
     {
         return explode(',', $value);
     }
+
+    // public function delete()
+    // {
+    //     $this->bioData()->delete();
+
+    //     return parent::delete();
+    // }
 }
