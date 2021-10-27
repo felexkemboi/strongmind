@@ -95,12 +95,11 @@ class ProjectController extends Controller
             'member_count'      => 0
         ];
         try{
-            $newProject = Project::create($projectData);
-            $code = $country->country_code.'-'.now()->year.'-000'.$newProject->id;
-            $newProject->program_code = $code;
-            if($newProject->save()){
-                return $this->commonResponse(true,'Project Created Successfully','', Response::HTTP_CREATED);
-            }
+           if($newProject = Project::create($projectData)){
+               $code = $country->country_code.'-'.now()->year.'-000'.$newProject->id;
+               $newProject->update(['program_code' => $code]);
+               return $this->commonResponse(true,'Project Created Successfully','', Response::HTTP_CREATED);
+           }
             return $this->commonResponse(false,'Project Not Created','', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
