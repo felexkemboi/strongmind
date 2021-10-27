@@ -541,5 +541,24 @@ class ClientController extends Controller
         ];
         ClientBioData::create($clientBioData);
     }
+
+
+    /**
+     * Delete Client
+     * @group Clients
+     * @param int $id
+     * @urlParam id integer required The ID of the client.Example:1
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function destroy(int $id): JsonResponse
+    {   
+        $client = Client::find($id);
+        if ($client->delete()) {
+            return $this->commonResponse(true, 'Client deleted', '', Response::HTTP_OK);
+        } else {
+            return $this->commonResponse(false, 'Client not found!', '', Response::HTTP_NOT_FOUND);
+        }
+    }
 }
 

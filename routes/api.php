@@ -176,6 +176,7 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::get('/all',                 [ClientController::class,'index']);
     Route::post('create',              [ClientController::class,'create']);
     Route::get('/{id}/details',        [ClientController::class,'show']);
+    Route::delete('/{id}/delete',      [ClientController::class,'destroy']);
     Route::post('/therapy/activate',   [ClientController::class,'activate']);
     Route::patch('/{id}/update',       [ClientController::class,'update']);
     Route::patch('/{id}/transfer',     [ClientController::class,'transfer']);
