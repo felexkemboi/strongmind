@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use App\Models\Cycle;
 use Illuminate\Http\JsonResponse;
@@ -29,19 +30,23 @@ class CycleController extends Controller
         return $this->commonResponse(true, 'success', $cycleses, Response::HTTP_OK);
     }
 
-
     /**
      * Create  Cycle
      * @param CreateCycleRequest $request
      * @return JsonResponse
-     * @bodyParam name string required The Cycle' Name
+     * @bodyParam year date required . The Cycle's Year
+     * @bodyParam cycle_code string required . The Cycle's Code
      * @authenticated
      */
     public function create(CreateCycleRequest $request): JsonResponse
     {
         try {
             $cycle = new Cycle();
-            $cycle->name = $request->name;
+            $code = $request->cycle_code;
+            $year = $request->year;
+            $cycle->name = $year.' '.$code;
+            $cycle->cycle_code = $code;
+            $cycle->year = $year;
             if ($cycle->save()) {
                 return $this->commonResponse(true, 'Cycle created successfully!', '', Response::HTTP_CREATED);
             }
