@@ -4,19 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Cycle extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * @var string $table
      */
     protected $table = 'cycle';
 
-    protected $guarded = [];
-
     protected $fillable = [
-        'name'
+        'name',
+        'cycle_code',
+        'year'
     ];
 }

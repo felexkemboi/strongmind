@@ -11,7 +11,7 @@ class CreateCycleRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -21,10 +21,12 @@ class CreateCycleRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'name' => 'required|unique:client_status,name',
+            //'name' => 'nullable|unique:client_status,name',
+            'year' => 'required|max:'.date("Y"),
+            'cycle_code' => 'required|string|in:C1,C2,C3,C4'
         ];
     }
 }
