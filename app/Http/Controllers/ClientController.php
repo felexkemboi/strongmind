@@ -96,6 +96,7 @@ class ClientController extends Controller
      * @bodyParam province_id integer  . The Client's Province/Municipality . Example 1
      * @bodyParam village_id integer  . The Client's Village/Cells . Example 1
      * @bodyParam parish_ward_id integer  . The Client's Ward/Parish . Example 1
+     * @bodyParam program_type_id integer required . The Client's Program Type Id(Program)
      * @return JsonResponse
      * @authenticated
      */
@@ -129,6 +130,7 @@ class ClientController extends Controller
             'sub_county_id' => 'required|integer|not_in:0|exists:client_sub_counties,id',
             'parish_ward_id' => 'nullable|integer|not_in:0|exists:client_parishes,id',
             'village_id' => 'nullable|integer|not_in:0|exists:client_villages,id',
+            'program_type_id' => 'required|integer|not_in:0|exists:program_types,id',
         ]);
 
         if ($validator->fails()) {
@@ -443,6 +445,7 @@ class ClientController extends Controller
                             'village_id' => $user['village_id'],
                             'sub_county_id' => $user['sub_county_id'],
                             'nationality'   => $user['nationality'],
+                            'program_type_id' => $user['program_type_id'],
                         ];
                         ClientBioData::create($clientBioData);
                         $countryCode = CountryHelper::getCountryCode($user['country_id']);
@@ -538,6 +541,7 @@ class ClientController extends Controller
             'village_id' => $request->village_id,
             'sub_county_id' => $request->sub_county_id,
             'nationality'  => $request->nationality,
+            'program_type_id' => $request->program_type_id
         ];
         ClientBioData::create($clientBioData);
     }
@@ -552,7 +556,7 @@ class ClientController extends Controller
      * @authenticated
      */
     public function destroy(int $id): JsonResponse
-    {   
+    {
         $client = Client::find($id);
         if ($client->delete()) {
             return $this->commonResponse(true, 'Client deleted', '', Response::HTTP_OK);

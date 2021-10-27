@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Misc\ProgramType;
 use App\Models\Programs\Project;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -36,7 +37,8 @@ class ClientBioData extends Model
         'province_id',
         'parish_ward_id',
         'village_id',
-        'sub_county_id'
+        'sub_county_id',
+        'program_type_id'
     ];
 
     /**
@@ -109,6 +111,14 @@ class ClientBioData extends Model
     public function village(): BelongsTo
     {
         return $this->belongsTo(ClientVillage::class,'village_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function programType(): BelongsTo
+    {
+        return $this->belongsTo(ProgramType::class,'program_type_id');
     }
 
     /**
