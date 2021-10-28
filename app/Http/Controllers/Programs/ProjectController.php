@@ -89,7 +89,7 @@ class ProjectController extends Controller
         $office = Office::findOrFail($request->office_id);
         $country = Country::findOrFail($office->country_id);
         $projectData = [
-            'office_id'         => $office,
+            'office_id'         => $office->id,
             'name'              => $request->name,
             'program_type_id'   => $request->program_type_id,
             'colour_option'     => $request->colour_option,
