@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CountryResource;
+use App\Models\ClientDistrict;
 use App\Models\Country;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -112,7 +115,7 @@ class CountryController extends Controller
         }catch (QueryException $exception){
             return $this->commonResponse(false,$exception->errorInfo[2],'',Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
-            Log::critical('');
+            Log::critical('Failed to activate country. ERROR: '.$exception->getMessage());
             return $this->commonResponse(false,$exception->getMessage(),'',Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -148,7 +151,35 @@ class CountryController extends Controller
         }catch (QueryException $exception){
             return $this->commonResponse(false,$exception->errorInfo[2],'',Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
-            Log::critical('');
+            Log::critical('Failed to deactivate country. ERROR: '.$exception->getMessage());
+            return $this->commonResponse(false,$exception->getMessage(),'',Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * List Districts By Country ID
+     *
+     * @param int $id
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function districts(int $id): JsonResponse
+    {
+        try{
+            $country = Country::findOrFail($id);
+            $districts = ClientDistrict::with('country')
+                ->select(['id','name','country_id'])
+                ->where(function(Builder $query) use($country){
+                    $query->where('country_id',$country->id);
+            })->get();
+            return $this->commonResponse(true,'Success',$districts, Response::HTTP_OK);
+        }catch (ModelNotFoundException $exception){
+            return $this->commonResponse(false,'Country Does Not Exist','', Response::HTTP_NOT_FOUND);
+        }
+        catch (QueryException $exception){
+            return $this->commonResponse(false,$exception->errorInfo[2],'',Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (Exception $exception){
+            Log::critical('Could Not Find Districts By Country. ERROR: '.$exception->getMessage());
             return $this->commonResponse(false,$exception->getMessage(),'',Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

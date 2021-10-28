@@ -50,6 +50,7 @@ Route::prefix('country')->group(function () {
         Route::put('update',      [CountryController::class, 'toggleStatus']);
         Route::patch('activate',  [CountryController::class,'activate']);
         Route::patch('deactivate',[CountryController::class,'deactivate']);
+        Route::get('/{id}/districts',[CountryController::class,'districts']);
     });
 });
 
