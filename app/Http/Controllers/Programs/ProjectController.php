@@ -9,6 +9,7 @@ use App\Models\Country;
 use App\Models\User;
 use App\Models\Programs\Project;
 use App\Services\ProjectService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -85,10 +86,10 @@ class ProjectController extends Controller
         if($validator->fails()){
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')),'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        $office = Office::find($request->office_id);
-        $country = Country::find($office->country_id);
+        $office = Office::findOrFail($request->office_id);
+        $country = Country::findOrFail($office->country_id);
         $projectData = [
-            'office_id'         => $request->office_id,
+            'office_id'         => $office->id,
             'name'              => $request->name,
             'program_type_id'   => $request->program_type_id,
             'colour_option'     => $request->colour_option,
@@ -101,10 +102,13 @@ class ProjectController extends Controller
                return $this->commonResponse(true,'Project Created Successfully', $newProject , Response::HTTP_CREATED);
            }
             return $this->commonResponse(false,'Project Not Created','', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }catch (QueryException $queryException){
+        }catch (ModelNotFoundException $exception){
+            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
-            Log::critical('Could Not Create New Program. ERROR: '.$exception->getTraceAsString());
+            Log::critical('Could Not Create New Project. ERROR: '.$exception->getTraceAsString());
             return $this->commonResponse(false, $exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -120,12 +124,12 @@ class ProjectController extends Controller
     public function show(int $id): JsonResponse
     {
         try{
-            $project = Project::with('office','programType')->find($id);
-            if(!$project){
-                return $this->commonResponse(false,'Project Does Not Exist','', Response::HTTP_NOT_FOUND);
-            }
+            $project = Project::with('office','programType')->findOrFail($id);
             return $this->commonResponse(true,'success',new ProjectResource($project), Response::HTTP_OK);
-        }catch (QueryException $queryException){
+        }catch (ModelNotFoundException $exception){
+            return $this->commonResponse(false,'Project Does Not Exist','', Response::HTTP_NOT_FOUND);
+        }
+        catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
             Log::critical('Could Not Fetch Project Details. ERROR: '.$exception->getTraceAsString());
@@ -144,12 +148,17 @@ class ProjectController extends Controller
     public function users(int $id): JsonResponse
     {
         try {
-            $office = Office::find($id);
-            $data = User::where('invite_accepted', 1)->where('office_id', $office->id);
-
+            $office = Office::findOrFail($id);
+            $data = User::where('invite_accepted', User::INVITE_ACCEPTED)->where('office_id', $office->id);
             return $this->commonResponse(true, 'success', $data, Response::HTTP_OK);
-        } catch (QueryException $queryException) {
+        }catch (ModelNotFoundException $exception){
+            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_NOT_FOUND);
+        }
+        catch (QueryException $queryException) {
             return $this->commonResponse(false, $queryException->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (Exception $exception){
+            Log::critical('Could Not Fetch Project Users. ERROR: '.$exception->getTraceAsString());
+            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -211,15 +220,15 @@ class ProjectController extends Controller
     public function destroy(int $id): JsonResponse
     {
         try{
-            $project = Project::with('office','programType')->find($id);
-            if(!$project){
-                return $this->commonResponse(false,'Project Does Not Exist','', Response::HTTP_NOT_FOUND);
-            }
+            $project = Project::with('office','programType')->findOrFail($id);
             if($project->delete()){
                 return $this->commonResponse(true,'Project Deleted Successfully', '', Response::HTTP_OK);
             }
             return$this->commonResponse(false,'Failed To Delete Project','', Response::HTTP_EXPECTATION_FAILED);
-        }catch (QueryException $queryException){
+        }catch (ModelNotFoundException $exception){
+            return $this->commonResponse(false,'Project Does Not Exist','', Response::HTTP_NOT_FOUND);
+        }
+        catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
             Log::critical('Could Not Delete Project. ERROR:  '.$exception->getTraceAsString());
