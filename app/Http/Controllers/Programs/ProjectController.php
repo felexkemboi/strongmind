@@ -49,7 +49,7 @@ class ProjectController extends Controller
                    $data[] = [
                        'office_id' => $office->id,
                        'name' => $office->name ?? NULL,
-                       'projects' => DB::table('programs')->select('id', 'name', 'member_count', 'colour_option','program_type_id')->where(function($query) use($office){
+                       'projects' => DB::table('programs')->select('id', 'name', 'member_count', 'colour_option','program_type_id','program_code')->where(function($query) use($office){
                            return $query->where('office_id',$office->id);
                        })->whereNotNull('office_id')->get()
                    ];
