@@ -49,7 +49,7 @@ class ProjectController extends Controller
                    $data[] = [
                        'office_id' => $office->id,
                        'name' => $office->name ?? NULL,
-                       'projects' => DB::table('programs')->select('id', 'name', 'member_count', 'colour_option','program_type_id')->where(function($query) use($office){
+                       'projects' => DB::table('programs')->select('id', 'name', 'member_count', 'colour_option','program_type_id','program_code')->where(function($query) use($office){
                            return $query->where('office_id',$office->id);
                        })->whereNotNull('office_id')->get()
                    ];
@@ -160,7 +160,6 @@ class ProjectController extends Controller
      * @param int $id
      * @bodyParam name string required The Project Name
      * @bodyParam office_id integer required The Office ID Example-1
-     * @bodyParam program_code string required The Project Code
      * @bodyParam program_type_id integer required The Project Type ID Example-1
      * @bodyParam colour_option string required the Project Colour Code
      * @urlParam id integer required the Project ID Example-1
@@ -172,7 +171,6 @@ class ProjectController extends Controller
         $validator = Validator::make($request->all(),[
             'office_id' => 'required|exists:offices,id|integer',
             'name' => 'required|string|min:4|max:60',
-            'program_code' => 'required|string|min:3|max:30',
             'program_type_id' => 'required|integer|exists:program_types,id',
             'colour_option' => 'required|string',
         ]);
@@ -187,7 +185,6 @@ class ProjectController extends Controller
             $projectUpdate = $project->update([
                 'name' => $request->name,
                 'office_id' => $request->office_id,
-                'program_code' => $request->program_code,
                 'program_type_id'  => $request->program_type_id,
                 'colour_option' => $request->colour_option,
             ]);
