@@ -8,5 +8,6 @@ sudo chmod -R 777 /opt/bitnami/projects/appapi/
 /opt/bitnami/php/bin/php artisan migrate --force
 /opt/bitnami/php/bin/php artisan db:seed
 /opt/bitnami/php/bin/php artisan update:permissions
+/opt/bitnami/php/bin/php artisan update:districts
 /opt/bitnami/php/bin/php artisan scribe:generate
 sudo /opt/bitnami/ctlscript.sh restart apache
