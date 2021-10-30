@@ -7,6 +7,7 @@ use App\Http\Resources\UserResource;
 use Exception;
 use App\Models\User;
 use App\Models\Office;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -49,7 +50,7 @@ class OfficeController extends Controller
     public function create(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'country_id' => 'nullable',
+            'country_id' => 'required|integer|not_in:0|exists:countries,id',
             'name' => 'required|unique:offices',
         ]);
         if ($validator->fails()) {
@@ -80,7 +81,7 @@ class OfficeController extends Controller
     public function update(Request $request, $id): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'country_id' => 'required|integer|not_in:0|exists:countries,id',
+            'country_id' => 'nullable|integer|not_in:0|exists:countries,id',
             'name' => 'required|string|min:3|max:20',
             'active' => 'nullable',
         ]);
@@ -88,14 +89,21 @@ class OfficeController extends Controller
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             try {
-                $office = Office::find($id);
+                $office = Office::findOrFail($id);
                 if ($office) {
-                    $office->update($validator->validated());
+                    $office->update([
+                        'name' => $request->name ?? $office->name,
+                        'country_id' => $request->country_id ?? $office->country_id,
+                        'active'     => $request->active ?? $office->active
+                    ]);
                     return $this->commonResponse(true, 'Office updated successfully!', new OfficeResource($office), Response::HTTP_CREATED);
                 } else {
                     return $this->commonResponse(false, 'Office not found!', '', Response::HTTP_NOT_FOUND);
                 }
-            } catch (QueryException $ex) {
+            }catch (ModelNotFoundException $exception){
+                return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_NOT_FOUND);
+            }
+            catch (QueryException $ex) {
                 return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
             } catch (Exception $ex) {
                 return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
