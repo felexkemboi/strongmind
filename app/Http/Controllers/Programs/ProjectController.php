@@ -79,9 +79,9 @@ class ProjectController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'office_id' => 'required|exists:offices,id|integer',
-            'name' => 'required|unique:programs|string|min:4|max:60',
+            'name' => 'required|unique:programs|string|min:3|max:60',
             'program_type_id' => 'required|integer|exists:program_types,id',
-            'colour_option' => 'nullable|string',
+            'colour_option' => 'required|string',
         ]);
         if($validator->fails()){
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')),'', Response::HTTP_UNPROCESSABLE_ENTITY);
