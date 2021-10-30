@@ -80,8 +80,8 @@ class OfficeController extends Controller
     public function update(Request $request, $id): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'country_id' => 'nullable',
-            'name' => 'required',
+            'country_id' => 'required|integer|not_in:0|exists:countries,id',
+            'name' => 'required|string|min:3|max:20',
             'active' => 'nullable',
         ]);
         if ($validator->fails()) {
