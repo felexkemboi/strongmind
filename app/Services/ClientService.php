@@ -4,7 +4,6 @@
 namespace App\Services;
 
 use App\Models\Client;
-use App\Models\ClientBioData;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -36,6 +35,8 @@ class ClientService
             $clientTypes = ['screening','therapy'];
             $num_records = (int)$request->get('records_per_page');
             $pagination_records = (int)$request->get('pagination_items');
+            $filter = $request->get('filters');
+            $sort = $request->get('sort');
             $clients = Client::query()->with('timezone', 'country', 'status', 'channel', 'staff', 'notes','bioData');
 
             //search by id
@@ -47,7 +48,7 @@ class ClientService
             //search by phone
             if ($request->has('phone') && $request->filled('phone')) {
                 $clients = $clients->where(function ($query) use ($phone) {
-                    $query->where('phone_number', 'like', '%'. $phone .'%');
+                    $query->where('phone_number', 'ilike', '%'. $phone .'%');
                 });
             }
             //search by country
@@ -58,16 +59,11 @@ class ClientService
             }
             //filter by client type
             if ($request->has('client_type') && $request->filled('client_type')) {
-                if (in_array($clientType, $clientTypes, true)) {
-                    if ($clientType === Client::SCREENING_CLIENT_TYPE) {
+                    if ($clientType === $clientTypes[0]) {
                         $clients = $clients->where('client_type', Client::SCREENING_CLIENT_TYPE);
-                    }
-                    if ($clientType === Client::THERAPY_CLIENT_TYPE) {
+                    }elseif ($clientType === $clientTypes[1]){
                         $clients = $clients->where('client_type', Client::THERAPY_CLIENT_TYPE);
                     }
-                }
-
-                return $this->commonResponse(false, 'Invalid client type', '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             //search by status id
             if ($request->has('status') && $request->filled('status')) {
@@ -93,7 +89,6 @@ class ClientService
             }
 
             if ($request->has('filters')) {
-                $filter = $request->get('filters');
                 $filterItem = explode('|', $filter);
 
                 switch ($filterItem[0]) {
@@ -117,8 +112,7 @@ class ClientService
 
             //sort
             if($request->has('sort')){
-                $sort = $request->get('sort');
-                $clients = $clients->orderBy($sort,'asc');
+                $clients = $clients->orderBy($sort,'DESC');
             }
 
             $clients = $clients->latest()->paginate(10);
@@ -130,7 +124,7 @@ class ClientService
         }
     }
 
-    private function createQuery($filterColumn,$filterValue)
+    private function createQuery($filterColumn,$filterValue): Builder
     {
         return DB::table('clients')
             ->join('client_bio_data','clients.id','=','client_bio_data.client_id')

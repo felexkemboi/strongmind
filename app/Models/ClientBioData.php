@@ -38,7 +38,8 @@ class ClientBioData extends Model
         'parish_ward_id',
         'village_id',
         'sub_county_id',
-        'program_type_id'
+        'program_type_id',
+        'date_of_birth'
     ];
 
     /**
