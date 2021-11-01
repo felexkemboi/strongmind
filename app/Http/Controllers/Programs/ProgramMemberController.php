@@ -11,6 +11,7 @@ use App\Models\Programs\ProgramMember;
 use App\Models\Programs\ProgramMemberType;
 use App\Models\User;
 use App\Services\ProjectService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -43,23 +44,23 @@ class ProgramMemberController extends Controller
     public function index(int $id): JsonResponse
     {
         try {
-            $program = Project::with('office', 'programType')->find($id);
-            if (!$program) {
-                return $this->commonResponse(false, 'Project Does Not Exist', '', Response::HTTP_NOT_FOUND);
-            }
+            $project = Project::with('office', 'programType')->findOrFail($id);
             $members = ProgramMember::active()->with( 'users','memberTypes','programs')
-                ->where(function($query) use($program)
+                ->where(function($query) use($project)
                 {
-                    $query->where('program_id', $program->id);
+                    $query->where('program_id', $project->id);
                 })
                 ->latest()
                 ->get()
                 ->transform(function ($member) {
                     return new ProgramMemberResource($member);
                 })->groupBy('member_type_id');
-            $users = ProjectHelper::members($program->id);
+            $users = ProjectHelper::members($project->id);
             return $this->commonResponse(true, 'success', $users, Response::HTTP_OK);
-        } catch (QueryException $queryException) {
+        }catch (ModelNotFoundException $exception){
+            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_NOT_FOUND);
+        }
+        catch (QueryException $queryException) {
             return $this->commonResponse(false, $queryException->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $exception) {
             Log::critical('Failed to fetch project members. ERROR: ' . $exception->getTraceAsString());

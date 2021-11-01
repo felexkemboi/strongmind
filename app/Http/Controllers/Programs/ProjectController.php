@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Programs;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Programs\ProjectResource;
+use App\Http\Resources\UserResource;
 use App\Models\Office;
 use App\Models\Country;
+use App\Models\Programs\ProgramMember;
 use App\Models\User;
 use App\Models\Programs\Project;
 use App\Services\ProjectService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -147,6 +150,7 @@ class ProjectController extends Controller
      * @urlParam id integer required The Project ID. Example-1
      * @return JsonResponse
      * @authenticated
+     * @hideFromAPIDocumentation
      */
     public function users(int $id): JsonResponse
     {

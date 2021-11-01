@@ -47,6 +47,7 @@ class ProjectHelper
                     ->where('program_members.program_id', '=', $projectId);
             })
             ->whereNotNull('program_members.member_type_id')
+            ->where('program_members.status', ProgramMember::MEMBERSHIP_ACTIVE)
             ->get();
     }
 }
