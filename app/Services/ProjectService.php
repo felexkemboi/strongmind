@@ -149,6 +149,7 @@ class ProjectService
                 return $this->commonResponse(false, 'Membership already revoked, no action needed', '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($existingMember->update(['status' => ProgramMember::MEMBERSHIP_REVOVED])) {
+                $project->update(['member_count' => $project->member_count - 1]);
                 return $this->commonResponse(true, 'Membership Revoked Successfully', '', Response::HTTP_OK);
             }
             return $this->commonResponse(false, 'Failed to revoke membership', '', Response::HTTP_EXPECTATION_FAILED);
