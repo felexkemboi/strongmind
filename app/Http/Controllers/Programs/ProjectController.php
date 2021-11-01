@@ -98,7 +98,7 @@ class ProjectController extends Controller
         try{
             if($country){
                 if($newProject = Project::create($projectData)){
-                    $code = substr($office->name,0,3).'-'.now()->year.'-000'.$newProject->id;
+                    $code = strtoupper(substr($office->name,0,3)).'-'.now()->year.'-000'.$newProject->id;
                     $newProject->update(['program_code' => $code]);
                     return $this->commonResponse(true,'Project Created Successfully', $newProject , Response::HTTP_CREATED);
                 }

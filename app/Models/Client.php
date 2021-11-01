@@ -129,11 +129,11 @@ class Client extends Model
     }
 
     /**
-     * @return HasMany
+     * @return BelongsTo
      */
-    public function bioData(): HasMany
+    public function bioData(): BelongsTo
     {
-        return $this->hasMany(ClientBioData::class);
+        return $this->belongsTo(ClientBioData::class);
     }
 
     public function getLanguagesAttribute($value)
