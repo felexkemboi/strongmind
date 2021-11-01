@@ -59,7 +59,7 @@ class UpdateOfficeWithCountryId extends Command
             });
             if($projects){
                 foreach ($projects as $project) {
-                    $code = $country->country_code.'-'.now()->year.'-000'.$project->id;
+                    $code =  substr($office->name,0,3).'-'.now()->year.'-000'.$project->id;
                     $project->update(['program_code' => $code]);
                 }
             }
