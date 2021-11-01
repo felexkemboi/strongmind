@@ -133,7 +133,7 @@ class Client extends Model
      */
     public function bioData(): BelongsTo
     {
-        return $this->belongsTo(ClientBioData::class);
+        return $this->belongsTo(ClientBioData::class,'id','client_id');
     }
 
     public function getLanguagesAttribute($value)
