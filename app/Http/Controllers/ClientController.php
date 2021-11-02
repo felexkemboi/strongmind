@@ -29,7 +29,6 @@ use App\Models\Misc\Channel;
 use App\Models\Misc\Status;
 
 
-
 /**
  * Class ClientController
  * @package App\Http\Controllers
@@ -179,11 +178,19 @@ class ClientController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $client = Client::with('status','channel','bioData')->find($id);
-        if ($client) {
-            return $this->commonResponse(true, 'success', $client, Response::HTTP_OK);
-        } else {
+        try{
+            $client = Client::with('bioData','status','channel','country','timezone','staff','notes')->findOrFail($id);
+            return $this->commonResponse(true, 'success', new ClientResource($client), Response::HTTP_OK);
+        }
+        catch (ModelNotFoundException $exception){
             return $this->commonResponse(false, 'Client not found!', '', Response::HTTP_NOT_FOUND);
+        }
+        catch (QueryException $exception){
+            return $this->commonResponse(false,$exception->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        catch (Exception $exception){
+            Log::info('Failed to load client data. ERROR: '. $exception->getTraceAsString());
+            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
