@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ClientUpdateRequest;
 use App\Models\ClientBioData;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\CountryHelper;
 use App\Helpers\ImportClients;
@@ -186,55 +189,85 @@ class ClientController extends Controller
 
     /**
      * Update Client Profile
-     * @param Request $request
+     * @param ClientUpdateRequest $request
      * @param int $id
-     * @urlParam id integer required . The client ID . Example 1
-     * @bodyParam name string required . The Client's Name
-     * @bodyParam gender string required . The Client's Gender
-     * @bodyParam phone_number integer required . Thr Client's Phone Number
-     * @bodyParam country_id integer required . The Client's Country . Example 1
-     * @bodyParam region string required . The Client's Region
-     * @bodyParam city string required . The Client's City
-     * @bodyParam timezone_id integer required. The Clients' TimeZone
-     * @bodyParam age integer required. The Client's Age
      * @return JsonResponse
+     * @urlParam id integer required . The client ID . Example 1
+     * @bodyParam name string . The Client's Name
+     * @bodyParam first_name string . The Clients' First Name
+     * @bodyParam last_name string . The Client's Last Name
+     * @bodyParam other_name string . The Client's Other Name
+     * @bodyParam nick_name string . The  Clients' Nick Name
+     * @bodyParam nationality string . The Client's Nationality
+     * @bodyParam project_id integer . The Client's Project ID . Example 1
+     * @bodyParam education_level_id integer . The Client's Educational Level . Example 1
+     * @bodyParam marital_status_id integer . The Client's Marital Status . Example 1
+     * @bodyParam phone_ownership_id integer . The Client's Phone Ownership . Example 1
+     * @bodyParam is_disabled boolean . Do You Have Any Disability?
+     * @bodyParam date_of_birth date . The Client's Date of Birth
+     * @bodyParam district_id integer . The Client's District . Example 1
+     * @bodyParam sub_county_id integer . The Client's Sub County . Example 1
+     * @bodyParam province_id integer  . The Client's Province/Municipality . Example 1
+     * @bodyParam village_id integer  . The Client's Village/Cells . Example 1
+     * @bodyParam parish_ward_id integer  . The Client's Ward/Parish . Example 1
+     * @bodyParam gender string  . The Client's Gender
+     * @bodyParam phone_number integer  . Thr Client's Phone Number
+     * @bodyParam country_id integer  . The Client's Country . Example 1
+     * @bodyParam region string  . The Client's Region
+     * @bodyParam city string  . The Client's City
+     * @bodyParam timezone_id integer . The Clients' TimeZone
+     * @bodyParam program_type_id integer  . The Client's Program Type Id(Program)
      * @authenticated
      */
-    public function update( Request $request, int $id ): JsonResponse
+    public function update( ClientUpdateRequest $request, int $id ): JsonResponse
     {
-        $validator = Validator::make($request->all(),[
-            'name' => 'required|string|min:3|max:60',
-            'gender' => 'required|string|in:Male,Female',
-            'phone_number' => 'required|numeric', //min:10|max:13
-            'country_id' => 'required|integer|exists:countries,id',
-            'region' => 'nullable|string|min:3|max:20',
-            'city' => 'nullable|string|min:3|max:20',
-            'timezone_id' => 'nullable|integer|exists:timezones,id',
-            'age' => 'required|integer|not_in:0',
-        ]);
-        if($validator->fails()){
-            return $this->commonResponse(false,Arr::flatten($validator->messages()->get('*')),'', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
         try{
-            $client = Client::with('timezone','country','status','channel','staff','bioData')->find($id);
+            $client = Client::with('timezone','country','status','channel','staff','bioData')->findOrFail($id);
             if(!$client){
                 return $this->commonResponse(false,'Client Not Found','', Response::HTTP_NOT_FOUND);
             }
             $clientData = [
-                'name' => $request->name,
+                'name' => $request->name ?? $client->name,
                 'gender' => $request->gender ?? $client->gender,
-                'age' => $request->age ?? $client->age,
-                'phone_number' => $request->phone_number,
-                'country_id' => $request->country_id,
+                'age' => Carbon::parse($request->date_of_birth)->diff(Carbon::now())->y ?? $client->age,
+                'phone_number' => $request->phone_number ?? $client->phone_number,
+                'country_id' => $request->country_id ?? $client->country_id,
                 'city'=> $request->city ?? $client->city,
                 'region' => $request->region ?? $client->region,
                 'timezone_id' => $request->timezone_id ?? $client->timezone_id,
             ];
             if($client->update($clientData)){
-                return $this->commonResponse(true,'Client Updated Successfully', new ClientResource($client), Response::HTTP_OK);
+                $clientBioData = ClientBioData::where(function(Builder $query) use($client){
+                    $query->where('client_id', $client->id);
+                })->first();
+                if($clientBioData){
+                    $clientBioData->update([
+                        'first_name'            => $request->first_name ?? $clientBioData->first_name,
+                        'last_name'             => $request->last_name ?? $clientBioData->last_name,
+                        'other_name'            => $request->other_name ?? $clientBioData->last_name,
+                        'nick_name'             => $request->nick_name ?? $clientBioData->nick_name,
+                        'project_id'            => $request->project_id ?? $clientBioData->project_id,
+                        'education_level_id'    => $request->education_level_id ?? $clientBioData->education_level_id,
+                        'marital_status_id'     => $request->marital_status_id ?? $clientBioData->marital_status_id,
+                        'phone_ownership_id'    => $request->phone_ownership_id ?? $clientBioData->phone_ownership_id,
+                        'is_disabled'           => $request->is_disabled ?? $clientBioData->is_disabled,
+                        'district_id'           => $request->district_id ?? $clientBioData->district_id,
+                        'province_id'           => $request->province_id ?? $clientBioData->province_id,
+                        'sub_county_id'         => $request->sub_county_id ?? $clientBioData->sub_county_id,
+                        'parish_ward_id'        => $request->parish_ward_id ?? $clientBioData->parish_ward_id,
+                        'village_id'            => $request->village_id ?? $clientBioData->village_id,
+                        'program_type_id'       => $request->program_type_id ?? $clientBioData->program_type_id,
+                        'nationality'           => $request->nationality ?? $clientBioData->nationality,
+                        'date_of_birth'         => $request->date_of_birth ?? $clientBioData->date_of_birth,
+                    ]);
+                }
+                return $this->commonResponse(true,'Client Updated Successfully', new ClientResource($client->fresh(['bioData'])), Response::HTTP_OK);
             }
             return $this->commonResponse(false,'Failed to Update Client','', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }catch (QueryException $queryException){
+        }catch (ModelNotFoundException $exception){
+            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_NOT_FOUND);
+        }
+        catch (QueryException $queryException){
             return $this->commonResponse(false, $queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
             Log::critical('Failed to Update Client Details. ERROR: '.$exception->getTraceAsString());
