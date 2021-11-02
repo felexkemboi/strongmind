@@ -224,6 +224,8 @@ class ClientController extends Controller
      * @bodyParam city string  . The Client's City
      * @bodyParam timezone_id integer . The Clients' TimeZone
      * @bodyParam program_type_id integer  . The Client's Program Type Id(Program)
+     * @bodyParam status_id integer . The Client's Status
+     * @bodyParam channel_id integer . The Client's Channel
      * @authenticated
      */
     public function update( ClientUpdateRequest $request, int $id ): JsonResponse
@@ -242,6 +244,8 @@ class ClientController extends Controller
                 'city'=> $request->city ?? $client->city,
                 'region' => $request->region ?? $client->region,
                 'timezone_id' => $request->timezone_id ?? $client->timezone_id,
+                'status_id'   => $request->status_id ?? $client->status_id,
+                'channel_id'  => $request->channel_id ?? $client->channel_id,
             ];
             if($client->update($clientData)){
                 $clientBioData = ClientBioData::where(function(Builder $query) use($client){
