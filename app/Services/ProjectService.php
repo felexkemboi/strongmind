@@ -63,7 +63,7 @@ class ProjectService
                     //check against an existing active program member
                     $existingMember = ProgramMember::where('user_id', $user->id)->where(function ($query) use ($project) {
                         $query->where('program_id', $project->id);
-                    })->exists();
+                    })->first();
                     if ($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE) {
                         return $this->commonResponse(false, 'User actively exists for this project', '', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
@@ -95,7 +95,7 @@ class ProjectService
             //check against an existing active program member
             $existingMember = ProgramMember::where('user_id', $user->id)->where(function ($query) use ($project) {
                 $query->where('program_id', $project->id);
-            })->exists();
+            })->first();
             if ($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE) {
                 return $this->commonResponse(false, 'User exists for this project', '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }if($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED){

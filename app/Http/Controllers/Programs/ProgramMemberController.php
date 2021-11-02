@@ -89,7 +89,7 @@ class ProgramMemberController extends Controller
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         try{
-            $project = Project::with('office','programType')->find($id);
+            $project = Project::with('office','programType')->findOrFail($id);
             if(!$project){
                 return $this->commonResponse(false,'Project Does Not Exist','', Response::HTTP_NOT_FOUND);
             }
@@ -104,8 +104,11 @@ class ProgramMemberController extends Controller
                     $member_type = ProgramMemberType::firstWhere('id', $request->member_type_id);
                     $existingMember = ProgramMember::where('user_id',$userIds[$i])->where(function($query) use($request, $project){
                         $query->where('program_id',$project->id)->where('member_type_id',$request->member_type_id);
-                    })->exists();
-                    if($existingMember){
+                    })->first();
+                    if($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED){
+                        return $this->commonResponse(false,'Member ' .$userIds[$i].' exists with status as revoked, kindly activate their membership','', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+                    if($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE){
                         return $this->commonResponse(false,'Member '.$user->name .' with type '. $member_type->name.'  exists for this project','', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $newMember = ProgramMember::create([
@@ -131,8 +134,11 @@ class ProgramMemberController extends Controller
                 $member_type = ProgramMemberType::firstWhere('id', $request->member_type_id);
                 $existingMember = ProgramMember::where('user_id',$user_id)->where(function($query) use($request, $project){
                     $query->where('program_id',$project->id)->where('member_type_id',$request->member_type_id);
-                })->exists();
-                if($existingMember){  // $member_type->name
+                })->first();
+                if($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED){
+                    return $this->commonResponse(false,'Member exists with status as revoked, kindly activate their membership','', Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+                if($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE){  // $member_type->name
                     return $this->commonResponse(false,'Member '.$user->name .' with type '. $member_type->name.'  exists for this project','', Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 //add a single program member
@@ -149,7 +155,10 @@ class ProgramMemberController extends Controller
                 }
                 return $this->commonResponse(false,'Failed To Add Project Member','', Response::HTTP_EXPECTATION_FAILED);
             }
-        }catch (QueryException $queryException){
+        }catch (ModelNotFoundException $exception){
+            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_NOT_FOUND);
+        }
+        catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
             Log::critical('Could Not Add New Project Members. ERROR: '.$exception->getTraceAsString());
