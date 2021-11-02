@@ -106,7 +106,7 @@ class ProgramMemberController extends Controller
                         $query->where('program_id',$project->id)->where('member_type_id',$request->member_type_id);
                     })->first();
                     if($existingMember){
-                        if($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED){
+                        if($existingMember->status === ProgramMember::MEMBERSHIP_REVOKED){
                             return $this->commonResponse(false,'Member ' .$userIds[$i].' exists with status as revoked, kindly activate their membership','', Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         if($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE){
@@ -138,7 +138,7 @@ class ProgramMemberController extends Controller
                     $query->where('program_id',$project->id)->where('member_type_id',$request->member_type_id);
                 })->first();
                 if($existingMember){
-                    if($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED){
+                    if($existingMember->status === ProgramMember::MEMBERSHIP_REVOKED){
                         return $this->commonResponse(false,'Member exists with status as revoked, kindly activate their membership','', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     if($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE){
