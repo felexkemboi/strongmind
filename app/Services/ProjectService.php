@@ -64,13 +64,15 @@ class ProjectService
                     $existingMember = ProgramMember::where('user_id', $user->id)->where(function ($query) use ($project) {
                         $query->where('program_id', $project->id);
                     })->first();
-                    if ($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE) {
-                        return $this->commonResponse(false, 'User actively exists for this project', '', Response::HTTP_UNPROCESSABLE_ENTITY);
-                    }
-                    if ($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED) {
-                        $existingMember->update(['status' => ProgramMember::MEMBERSHIP_ACTIVE]);
-                        $project->update(['member_count' => $project->member_count + count($inviteEmails)]);
-                        return $this->commonResponse(true, 'Project member added successfully', '', Response::HTTP_OK);
+                    if($existingMember){
+                        if ($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE) {
+                            return $this->commonResponse(false, 'User actively exists for this project', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+                        }
+                        if ($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED) {
+                            $existingMember->update(['status' => ProgramMember::MEMBERSHIP_ACTIVE]);
+                            $project->update(['member_count' => $project->member_count + count($inviteEmails)]);
+                            return $this->commonResponse(true, 'Project member added successfully', '', Response::HTTP_OK);
+                        }
                     }
                     if (ProgramMember::create($newProgramMember)) {
                         $project->update(['member_count' => $project->member_count + count($inviteEmails)]);
@@ -96,12 +98,14 @@ class ProjectService
             $existingMember = ProgramMember::where('user_id', $user->id)->where(function ($query) use ($project) {
                 $query->where('program_id', $project->id);
             })->first();
-            if ($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE) {
-                return $this->commonResponse(false, 'User exists for this project', '', Response::HTTP_UNPROCESSABLE_ENTITY);
-            }if($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED){
-                $existingMember->update(['status' => ProgramMember::MEMBERSHIP_ACTIVE]);
-                $project->update(['member_count' => $project->member_count + 1]);
-                return $this->commonResponse(true, 'Project member added successfully', '', Response::HTTP_OK);
+            if($existingMember){
+                if ($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE) {
+                    return $this->commonResponse(false, 'User exists for this project', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+                }if($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED){
+                    $existingMember->update(['status' => ProgramMember::MEMBERSHIP_ACTIVE]);
+                    $project->update(['member_count' => $project->member_count + 1]);
+                    return $this->commonResponse(true, 'Project member added successfully', '', Response::HTTP_OK);
+                }
             }
             if (ProgramMember::create($newProgramMember)) {
                 ProgramMemberAdded::dispatch($project); //update member count
