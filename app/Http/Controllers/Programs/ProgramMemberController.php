@@ -105,11 +105,13 @@ class ProgramMemberController extends Controller
                     $existingMember = ProgramMember::where('user_id',$userIds[$i])->where(function($query) use($request, $project){
                         $query->where('program_id',$project->id)->where('member_type_id',$request->member_type_id);
                     })->first();
-                    if($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED){
-                        return $this->commonResponse(false,'Member ' .$userIds[$i].' exists with status as revoked, kindly activate their membership','', Response::HTTP_UNPROCESSABLE_ENTITY);
-                    }
-                    if($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE){
-                        return $this->commonResponse(false,'Member '.$user->name .' with type '. $member_type->name.'  exists for this project','', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    if($existingMember){
+                        if($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED){
+                            return $this->commonResponse(false,'Member ' .$userIds[$i].' exists with status as revoked, kindly activate their membership','', Response::HTTP_UNPROCESSABLE_ENTITY);
+                        }
+                        if($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE){
+                            return $this->commonResponse(false,'Member '.$user->name .' with type '. $member_type->name.'  exists for this project','', Response::HTTP_UNPROCESSABLE_ENTITY);
+                        }
                     }
                     $newMember = ProgramMember::create([
                         'user_id' => $userIds[$i],
@@ -135,11 +137,13 @@ class ProgramMemberController extends Controller
                 $existingMember = ProgramMember::where('user_id',$user_id)->where(function($query) use($request, $project){
                     $query->where('program_id',$project->id)->where('member_type_id',$request->member_type_id);
                 })->first();
-                if($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED){
-                    return $this->commonResponse(false,'Member exists with status as revoked, kindly activate their membership','', Response::HTTP_UNPROCESSABLE_ENTITY);
-                }
-                if($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE){  // $member_type->name
-                    return $this->commonResponse(false,'Member '.$user->name .' with type '. $member_type->name.'  exists for this project','', Response::HTTP_UNPROCESSABLE_ENTITY);
+                if($existingMember){
+                    if($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED){
+                        return $this->commonResponse(false,'Member exists with status as revoked, kindly activate their membership','', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+                    if($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE){
+                        return $this->commonResponse(false,'Member '.$user->name .' with type '. $member_type->name.'  exists for this project','', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
                 }
                 //add a single program member
                 $newMember = ProgramMember::create([
