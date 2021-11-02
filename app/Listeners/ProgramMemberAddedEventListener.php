@@ -26,6 +26,6 @@ class ProgramMemberAddedEventListener
      */
     public function handle(ProgramMemberAdded $event)
     {
-        $event->program->update(['member_count' => $event->program->member_count + 1]);
+        $event->project->update(['member_count' => $event->project->member_count + 1]);
     }
 }

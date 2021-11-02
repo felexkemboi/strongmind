@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @package App\Http\Controllers
  * @group Auth
  * APIs for roles and permissions
+ * @hideFromAPIDocumentation
  */
 class PermissionController extends Controller
 {

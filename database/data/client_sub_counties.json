@@ -1,0 +1,82 @@
+[
+    {
+        "name": "ABIM Subcounty",
+        "slug": "",
+        "district_id": 1
+    },
+    {
+        "name": "ADJUMANI Town Council",
+        "slug": "",
+        "district_id": 2
+    },
+    {
+        "name": "ADILANG",
+        "slug": "",
+        "district_id": 3
+    },
+    {
+        "name": "ABAKO",
+        "slug": "",
+        "district_id": 4
+    },
+    {
+        "name": "AMOLATAR Town Council",
+        "slug": "",
+        "district_id": 5
+    },
+    {
+        "name": "AMUDAT",
+        "slug": "",
+        "district_id": 6
+    },
+    {
+        "name": "ABARILELA",
+        "slug": "",
+        "district_id": 7
+    },
+    {
+        "name": "AMURU Subcounty",
+        "slug": "",
+        "district_id": 8
+    },
+    {
+        "name": "ABONGOMOLA",
+        "slug": "",
+        "district_id": 9
+    },
+    {
+        "name": "ARUA HILL DIVISION",
+        "slug": "",
+        "district_id": 10
+    },
+    {
+        "name": "Budaka Subcounty",
+        "slug": "",
+        "district_id": 11
+    },
+    {
+        "name": "BUBIITA",
+        "slug": "",
+        "district_id": 12
+    },
+    {
+        "name": "BUDHAYA",
+        "slug": "",
+        "district_id": 13
+    },
+    {
+        "name": "BUGINYANYA",
+        "slug": "",
+        "district_id": 14
+    },
+    {
+        "name": "Central Division (Curved from Bushenyi - Ishaka T/C, Bumbaire & Kakanju S/Cs)",
+        "slug": "",
+        "district_id": 15
+    },
+    {
+        "name": "Bukedea Subcounty",
+        "slug": "",
+        "district_id": 16
+    }
+]

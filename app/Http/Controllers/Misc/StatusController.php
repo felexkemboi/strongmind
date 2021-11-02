@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Class StatusController
  * @package App\Http\Controllers\Misc
- * @group Misc
+ * @group Dynamic Fields
  */
 class StatusController extends Controller
 {

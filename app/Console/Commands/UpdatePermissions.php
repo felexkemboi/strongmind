@@ -3,10 +3,13 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
-use Bouncer;
+//use Bouncer;
+use App\Services\PermissionRoleService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Silber\Bouncer\Database\Ability;
+use Spatie\Permission\Models\Permission;
 
 class UpdatePermissions extends Command
 {
@@ -36,24 +39,28 @@ class UpdatePermissions extends Command
 
     public function handle()
     {
+        /*
         Bouncer::refresh();
         $user=User::firstWhere('email','admin@strongminds.org');
         Bouncer::allow($user)->everything();
+
         $t = file_get_contents("database/data/permissions.json");
         $permissions = json_decode($t, true);
-        foreach($permissions as $key){
-
-            $slug = Str::slug($key['name']);
-            $ability_exists = Ability::firstWhere('name', $slug);
-            if (!$ability_exists) {
-                $ability = new Ability;
-                $ability->name = $slug;
-                $ability->title = $key['name'];
-                $ability->module_name = $key['module'];
-                $ability->save();
+        **/
+        $data = file_get_contents('database/data/spatie_permissions.json');
+        $permissions_data = json_decode($data, true);
+        foreach ($permissions_data as $key){
+            $permissionsArray = [
+                'name' => $key['name'],
+                'guard_name' => $key['guard_name']
+            ];
+            $existingPermission = Permission::where(function($query) use($permissionsArray){
+                $query->where('name',$permissionsArray['name']);
+            })->exists();
+            if(!$existingPermission){
+                Permission::insert($permissionsArray);
             }
         }
         $this->info('Permissions Updated successfully!');
-
     }
 }

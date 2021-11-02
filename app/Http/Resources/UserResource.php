@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Helpers\AuthHelper;
 use App\Helpers\ProgramHelper;
+use App\Helpers\ProjectHelper;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -33,12 +34,14 @@ class UserResource extends JsonResource
             'timezone' => $this->timezone,
             'office' => $this->office,
             'role'=> AuthHelper::UserRole($this->id) ?? null,
-            'programs' => ProgramHelper::userPrograms($this->id),
+            'programs' => ProjectHelper::userProjects($this->id),
             'is_admin' => $this->is_admin,
             'active' => $this->active,
             'office_id' => $this->office_id,
             'last_login' => $this->last_login,
             'created_at' => $this->created_at,
+            'roles' => AuthHelper::userRoles($this->id),
+            'permissions' => AuthHelper::UserPermissions($this->id)
         ];
     }
 }

@@ -20,6 +20,16 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             ProgramMemberTypeSeeder::class,
             //ProgramMemberTableSeeder::class
+            PermissionTableSeeder::class,
+            RoleTableSeeder::class,
+            ClientPhoneOwnershipTableSeeder::class,
+            ClientMaritalStatusTableSeeder::class,
+            //ClientDistrictTableSeeder::class,
+            ClientSubCountyTableSeeder::class,
+            ClientMunicipalityTableSeeder::class,
+            ClientVillageTableSeeder::class,
+            ClientParishTableSeeder::class,
+            ClientEducationLevelTableSeeder::class
         ]);
     }
 }

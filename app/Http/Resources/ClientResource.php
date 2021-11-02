@@ -39,6 +39,7 @@ class ClientResource extends JsonResource
             'staff' => $this->staff,
             'timezone' => $this->timezone,
             'country' => $this->country,
+            'bio_data' => $this->bioData,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
         ];
