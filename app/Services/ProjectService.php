@@ -68,7 +68,7 @@ class ProjectService
                         if ($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE) {
                             return $this->commonResponse(false, 'User actively exists for this project', '', Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
-                        if ($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED) {
+                        if ($existingMember->status === ProgramMember::MEMBERSHIP_REVOKED) {
                             $existingMember->update(['status' => ProgramMember::MEMBERSHIP_ACTIVE]);
                             $project->update(['member_count' => $project->member_count + count($inviteEmails)]);
                             return $this->commonResponse(true, 'Project member added successfully', '', Response::HTTP_OK);
@@ -101,7 +101,7 @@ class ProjectService
             if($existingMember){
                 if ($existingMember->status === ProgramMember::MEMBERSHIP_ACTIVE) {
                     return $this->commonResponse(false, 'User exists for this project', '', Response::HTTP_UNPROCESSABLE_ENTITY);
-                }if($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED){
+                }if($existingMember->status === ProgramMember::MEMBERSHIP_REVOKED){
                     $existingMember->update(['status' => ProgramMember::MEMBERSHIP_ACTIVE]);
                     $project->update(['member_count' => $project->member_count + 1]);
                     return $this->commonResponse(true, 'Project member added successfully', '', Response::HTTP_OK);
@@ -158,10 +158,10 @@ class ProjectService
             if (!$existingMember) {
                 return $this->commonResponse(false, 'Member does not exist for this project member type', '', Response::HTTP_NOT_FOUND);
             }
-            if ($existingMember->status === ProgramMember::MEMBERSHIP_REVOVED) {
+            if ($existingMember->status === ProgramMember::MEMBERSHIP_REVOKED) {
                 return $this->commonResponse(false, 'Membership already revoked, no action needed', '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
-            if ($existingMember->update(['status' => ProgramMember::MEMBERSHIP_REVOVED])) {
+            if ($existingMember->update(['status' => ProgramMember::MEMBERSHIP_REVOKED])) {
                 $project->update(['member_count' => $project->member_count - 1]);
                 return $this->commonResponse(true, 'Membership Revoked Successfully', '', Response::HTTP_OK);
             }

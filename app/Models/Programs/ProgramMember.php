@@ -22,7 +22,7 @@ class ProgramMember extends Model
     ];
 
     const MEMBERSHIP_ACTIVE = 'active';
-    const MEMBERSHIP_REVOVED = 'revoked';
+    const MEMBERSHIP_REVOKED = 'revoked';
 
     /**
      * @param Builder $query

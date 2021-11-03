@@ -47,6 +47,8 @@ class ClientUpdateRequest extends FormRequest
             'parish_ward_id' => 'nullable|integer|not_in:0|exists:client_parishes,id',
             'village_id' => 'nullable|integer|not_in:0|exists:client_villages,id',
             'program_type_id' => 'nullable|integer|not_in:0|exists:program_types,id',
+            'status_id' => 'nullable|integer|not_in:0|exists:statuses,id',
+            'channel_id' => 'nullable|integer|not_in:0|exists:channels,id',
         ];
     }
 }
