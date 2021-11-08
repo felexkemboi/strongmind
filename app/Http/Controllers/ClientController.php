@@ -112,7 +112,7 @@ class ClientController extends Controller
             'other_name' => 'required|string|min:3|max:60',
             'nick_name' => 'nullable|string|min:3|max:60',
             'gender' => 'required|string|in:Male,Female,Other',
-            'phone_number' => 'required|numeric|unique:clients', //min:10|max:13
+            'phone_number' => 'required|string|unique:clients', //min:10|max:13
             'country_id' => 'required|integer|exists:countries,id',
             'region' => 'required|string|min:3|max:20',
             'city' => 'required|string|min:3|max:20',
