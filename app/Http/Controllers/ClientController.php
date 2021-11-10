@@ -99,6 +99,8 @@ class ClientController extends Controller
      * @bodyParam village_id integer  . The Client's Village/Cells . Example 1
      * @bodyParam parish_ward_id integer  . The Client's Ward/Parish . Example 1
      * @bodyParam program_type_id integer required . The Client's Program Type Id(Program)
+     * @bodyParam referredThrough string . How the client was Reffered
+     * @bodyParam referralType string . The Client's Referral type
      * @return JsonResponse
      * @authenticated
      */
@@ -133,6 +135,8 @@ class ClientController extends Controller
             'parish_ward_id' => 'nullable|integer|not_in:0|exists:client_parishes,id',
             'village_id' => 'nullable|integer|not_in:0|exists:client_villages,id',
             'program_type_id' => 'required|integer|not_in:0|exists:program_types,id',
+            'referredThrough' => 'nullable|string|min:2|max:60',
+            'referralType' => 'nullable|string|min:3|max:60',
         ]);
 
         if ($validator->fails()) {
@@ -150,6 +154,9 @@ class ClientController extends Controller
                 $client->languages = $request->input('languages'); //TODO comma separate these if multiple languages are provided
                 $client->status_id = $request->status_id;
                 $client->channel_id = $request->channel_id;
+                $client->referredThrough = $request->referredThrough;
+                $client->referralType = $request->referralType;
+
                 $client->age = Carbon::parse($request->date_of_birth)->diff(Carbon::now())->y;
                 if($client->save()){
                     $this->addClientBioData($request, $client);
@@ -226,6 +233,8 @@ class ClientController extends Controller
      * @bodyParam program_type_id integer  . The Client's Program Type Id(Program)
      * @bodyParam status_id integer . The Client's Status
      * @bodyParam channel_id integer . The Client's Channel
+     * @bodyParam referredThrough string . How the client was Reffered
+     * @bodyParam referralType string . The Client's Referral type
      * @authenticated
      */
     public function update( ClientUpdateRequest $request, int $id ): JsonResponse
@@ -246,7 +255,10 @@ class ClientController extends Controller
                 'timezone_id' => $request->timezone_id ?? $client->timezone_id,
                 'status_id'   => $request->status_id ?? $client->status_id,
                 'channel_id'  => $request->channel_id ?? $client->channel_id,
+                'referredThrough' => $client->referredThrough ?? $request->referredThrough,
+                'referralType' => $client->referralType ?? $request->referralType,
             ];
+
             if($client->update($clientData)){
                 $clientBioData = ClientBioData::where(function(Builder $query) use($client){
                     $query->where('client_id', $client->id);
@@ -270,6 +282,8 @@ class ClientController extends Controller
                         'program_type_id'       => $request->program_type_id ?? $clientBioData->program_type_id,
                         'nationality'           => $request->nationality ?? $clientBioData->nationality,
                         'date_of_birth'         => $request->date_of_birth ?? $clientBioData->date_of_birth,
+                        'referredThrough'       => $client->referredThrough ?? $request->referredThrough,
+                        'referralType'          => $client->referralType ?? $request->referralType,
                     ]);
                 }
                 return $this->commonResponse(true,'Client Updated Successfully', new ClientResource($client->fresh(['bioData'])), Response::HTTP_OK);
