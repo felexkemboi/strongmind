@@ -45,8 +45,10 @@ class UserController extends Controller
         $users = User::query();
         $name=$request->get('name');
         $role=$request->get('role');
+        $active=$request->get('active');
         $paginate=$request->get('paginate');
         $sort = $request->get('sort');
+        $pagination_items = (int)$request->input('pagination_items',10);
         $sort_params = ['desc','asc'];
         $invited = $request->get('accepted');
         if ($request->has('name') && $request->filled('name')) {
@@ -64,6 +66,11 @@ class UserController extends Controller
         if ($request->has('role') && $request->filled('role')) {
             $users = $users->whereIn('id', $this->getUserIds($role));
         }
+
+        if ($request->has('active') && $request->filled('active')) {
+            $users = $users->where('active', $active);
+        }
+
         if($request->has('sort') &&  $request->filled('sort')){
            if(!$this->sort_array($sort, $sort_params)){
                 return $this->commonResponse(false,'Invalid Sort Parameter','',Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -73,7 +80,7 @@ class UserController extends Controller
 
         if($request->has('paginate') &&  $request->filled('paginate')){
             if($paginate ===  '1'){
-                $users=$users->where('is_admin', '<>', 1)->paginate(10);
+                $users=$users->where('is_admin', '<>', 1)->paginate($pagination_items);
 
                 return $this->commonResponse(true, 'success', UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
             }
@@ -82,7 +89,7 @@ class UserController extends Controller
             return $this->commonResponse(true, 'success', UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
         }
 
-        $users=$users->where('is_admin', '<>', 1)->paginate(10);
+        $users=$users->where('is_admin', '<>', 1)->paginate($pagination_items);
 
         return $this->commonResponse(true, 'success', UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
     }
