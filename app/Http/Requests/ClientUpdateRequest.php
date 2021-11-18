@@ -26,7 +26,7 @@ class ClientUpdateRequest extends FormRequest
         return [
             'name' => 'nullable|string|min:3|max:60',
             'gender' => 'nullable|string|in:Male,Female',
-            'phone_number' => 'nullable|numeric', //min:10|max:13
+            'phone_number' => 'nullable', //min:10|max:13
             'country_id' => 'nullable|integer|exists:countries,id',
             'region' => 'nullable|string|min:3|max:20',
             'city' => 'nullable|string|min:3|max:20',
