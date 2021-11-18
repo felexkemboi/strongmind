@@ -26,7 +26,7 @@ class GroupUpdateRequest extends FormRequest
         return [
             'name' => ['required','string','min:3','max:30'],
             'group_type_id' => ['nullable','integer','not_in:0','exists:group_types,id'],
-            'last_session' => ['nullable','datetime'],
+            'last_session' => ['nullable','date'],
         ];
     }
 }
