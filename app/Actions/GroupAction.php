@@ -76,7 +76,7 @@ class GroupAction
         try{
             $group = Group::with('staff','groupType')->findOrFail($id);
             if($group->ongoing === Group::SESSION_TERMINATED){
-                return $this->commonResponse(false,'No action required',$group->only('id', 'name', 'last_session', 'ongoing'), Response::HTTP_UNPROCESSABLE_ENTITY);
+                return $this->commonResponse(false,'Group Session is terminated, no action required',$group->only('id', 'name', 'last_session', 'ongoing'), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $group->update(['ongoing' => Group::SESSION_TERMINATED]);
             return $this->commonResponse(true,'Group terminated successfully',$group->only('id', 'name', 'last_session', 'ongoing'), Response::HTTP_OK);
