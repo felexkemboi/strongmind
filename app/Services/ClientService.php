@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Resources\ClientResource;
 use App\Traits\ApiResponser;
 
 class ClientService
@@ -80,12 +81,12 @@ class ClientService
             //get records based on the specified number
             if ($request->has('records_per_page') && $request->filled('records_per_page')) {
                 $clients = $clients->limit($num_records)->latest()->get();
-                return $this->commonResponse(true, 'success', (new Collection($clients))->paginate(10), Response::HTTP_OK);
+                return $this->commonResponse(true, 'success',ClientResource::collection($clients)->response()->getData(true), Response::HTTP_OK);
             }
             //specify pagination number
             if ($request->has('pagination_items') && $request->filled('pagination_items')) {
                 $clients = Client::with('timezone', 'country', 'status', 'channel', 'staff', 'notes','bioData')->latest()->paginate($pagination_records);
-                return $this->commonResponse(true, 'success', $clients, Response::HTTP_OK);
+                return $this->commonResponse(true, 'success',ClientResource::collection($clients)->response()->getData(true), Response::HTTP_OK);
             }
 
             if ($request->has('filters')) {
@@ -116,7 +117,7 @@ class ClientService
             }
 
             $clients = $clients->latest()->paginate(10);
-            return $this->commonResponse(true,'success',$clients, Response::HTTP_OK);
+            return $this->commonResponse(true, 'success',ClientResource::collection($clients)->response()->getData(true), Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false, $queryException->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (\Exception $exception) {
