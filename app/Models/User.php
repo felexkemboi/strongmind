@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Silber\Bouncer\Database\HasRolesAndAbilities;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable

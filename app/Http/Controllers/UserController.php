@@ -18,9 +18,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Silber\Bouncer\Database\Role;
 use Symfony\Component\HttpFoundation\Response;
 use function Clue\StreamFilter\fun;
+use Spatie\Permission\Models\Role;
+
 
 /**
  * Class UserController
@@ -240,7 +241,7 @@ class UserController extends Controller
             'city' => 'nullable',
             'languages' => 'nullable|array',
             'timezone_id' => 'nullable',
-            'role_id' => 'nullable',
+            'role_id' => 'nullable|exists:spatie_roles,id',
         ]);
         try {
             if ($validator->fails()) {
@@ -266,17 +267,18 @@ class UserController extends Controller
             }
 
             $user->update($data);
-            $user->fresh();
             if ($request->has('role_id') && $request->filled('role_id')) {
+                \Log::debug($request->role_id);
                 $role = Role::firstwhere('id', $data['role_id']);
 
+
                 if ($role) {
-                    //delete existing role
-                    DB::table('assigned_roles')->where('entity_id', $user->id)
-                ->delete();
-                    $user->assign($role->name);
+                    $user->syncRoles($role);
                 }
             }
+
+            $user->fresh();
+
 
 
             return $this->commonResponse(true, 'Profile updated successfully!', new UserResource($user), Response::HTTP_CREATED);
