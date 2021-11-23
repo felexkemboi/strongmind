@@ -6,6 +6,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Office;
 use App\Models\Timezone;
 use App\Models\User;
+use App\Services\PermissionRoleService;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
@@ -30,6 +31,13 @@ use Spatie\Permission\Models\Role;
  */
 class UserController extends Controller
 {
+    public $permissionRoleService;
+
+    public function __construct(PermissionRoleService $permissionRoleService)
+    {
+        $this->permissionRoleService = $permissionRoleService;
+    }
+
     /**
      * All Users
      * @group Teams
@@ -233,7 +241,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'nullable',
-            'email' => 'required',
+            'email' => 'nullable',
             'office_id' => 'nullable',
             'phone_number' => 'nullable',
             'gender' => 'nullable',
@@ -247,12 +255,24 @@ class UserController extends Controller
             if ($validator->fails()) {
                 return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
-            $data = $validator->validated();
             //Get user
              $user=User::find($id);
             if (!$user) {
                 return $this->commonResponse(false, 'User not found!', '', Response::HTTP_NOT_FOUND);
             }
+            $data = [
+                'name' => $request->name ?? $user->name,
+                'email' => $request->email ?? $user->email,
+                'office_id' => $request->office_id ?? $user->office_id,
+                'phone_number' => $request->phone_number ?? $user->phone_number,
+                'gender' => $request->gender ?? $user->gender,
+                'region' => $request->region ?? $user->region,
+                'city' => $request->city ?? $user->city,
+                'languages' => $request->input('languages') ?? $user->languages,
+                'timezone_id' => $request->timezone_id ?? $user->timezone_id,
+                'role_id' => $request->role_id ?? $user->role_id
+            ];
+
             if ($request->has('timezone_id') && $request->filled('timezone_id')) {
                 $timezone = Timezone::find($request->timezone_id);
                 if (!$timezone) {
@@ -268,19 +288,17 @@ class UserController extends Controller
 
             $user->update($data);
             if ($request->has('role_id') && $request->filled('role_id')) {
-                \Log::debug($request->role_id);
-                $role = Role::firstwhere('id', $data['role_id']);
-
-
+                $role = Role::findById($data['role_id'], $this->permissionRoleService::API_GUARD);
                 if ($role) {
+                    if($user->hasRole($role)){
+                        return $this->commonResponse(false,'User already has the specified role', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
                     $user->syncRoles($role);
+                }else{
+                    return $this->commonResponse(false,'Role Does Not Exist','',Response::HTTP_NOT_FOUND);
                 }
             }
-
             $user->fresh();
-
-
-
             return $this->commonResponse(true, 'Profile updated successfully!', new UserResource($user), Response::HTTP_CREATED);
         } catch (QueryException $ex) {
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
