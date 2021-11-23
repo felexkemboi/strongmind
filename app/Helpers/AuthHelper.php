@@ -70,14 +70,6 @@ class AuthHelper
 
     public static function UserPermissions(int $userId){
         $user = User::with('permissions')->find($userId);
-        $user->permissions->transform(function($permission){
-            return [
-                'permission_id'    => $permission->id,
-                'name'  => $permission->name,
-                'slug'  => $permission->slug,
-                'module' => $permission->module,
-                'description' => $permission->description
-            ];
-        })->groupBy('module');
+        return $user->getAllPermissions()->pluck('name');
     }
 }
