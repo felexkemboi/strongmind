@@ -73,7 +73,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::resource('permissions', SpatiePermissionController::class);
     Route::resource('roles',SpatieRoleController::class);
 });
-//Roles and permissions
+/*
+//Roles and permissions based on Bouncer Package which has since been shifted to the new implementation with Spatie package as above
 Route::prefix('permission')->group(function () {
     Route::get('all',     [PermissionController::class, 'index'])->middleware('auth:sanctum');
     Route::post('create', [PermissionController::class, 'create'])->middleware('auth:sanctum');
@@ -86,7 +87,7 @@ Route::prefix('role')->group(function () {
     Route::put('update/{id}',    [RoleController::class, 'updateRole'])->middleware('auth:sanctum');
     Route::delete('delete/{id}', [RoleController::class, 'deleteRole'])->middleware('auth:sanctum');
 });
-
+**/
 //Authentication
 Route::prefix('auth')->group(function () {
     Route::post('login',             [LoginController::class,'loginUser']);

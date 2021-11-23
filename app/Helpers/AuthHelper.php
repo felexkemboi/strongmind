@@ -5,6 +5,7 @@ namespace App\Helpers;
 
 
 use App\Models\User;
+use App\Services\PermissionRoleService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -60,17 +61,23 @@ class AuthHelper
     }
 
     public static function userRoles(int $userId){
-        $user = User::find($userId);
-        return $user->getRoleNames();
+        $user = User::with('roles')->find($userId);
+        $roleService = new PermissionRoleService();
+        foreach ($user->roles as $role){
+            return $roleService->fetchRoleData($role);
+        }
     }
 
     public static function UserPermissions(int $userId){
-        $user = User::find($userId);
-        return $user->getAllPermissions()->transform(function($permission){
+        $user = User::with('permissions')->find($userId);
+        $user->permissions->transform(function($permission){
             return [
-                'id'    => $permission->id,
+                'permission_id'    => $permission->id,
                 'name'  => $permission->name,
+                'slug'  => $permission->slug,
+                'module' => $permission->module,
+                'description' => $permission->description
             ];
-        });
+        })->groupBy('module');
     }
 }

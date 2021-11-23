@@ -47,12 +47,16 @@ class UpdatePermissions extends Command
         $t = file_get_contents("database/data/permissions.json");
         $permissions = json_decode($t, true);
         **/
+        //DB::table('spatie_permissions')->truncate();
         $data = file_get_contents('database/data/spatie_permissions.json');
         $permissions_data = json_decode($data, true);
         foreach ($permissions_data as $key){
             $permissionsArray = [
                 'name' => $key['name'],
-                'guard_name' => $key['guard_name']
+                'guard_name' => $key['guard_name'],
+                'module'     => $key['module'],
+                'slug'       => Str::slug($key['name'],'-'),
+                'description'  => $key['description']
             ];
             $existingPermission = Permission::where(function($query) use($permissionsArray){
                 $query->where('name',$permissionsArray['name']);

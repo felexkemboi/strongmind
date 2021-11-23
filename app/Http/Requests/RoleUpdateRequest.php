@@ -24,7 +24,9 @@ class RoleUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|min:3|max:60',
+            'name' => ['nullable','string','min:3','max:60'],
+            'role_code' => ['string','min:2','max:30'],
+            'description' => ['string','nullable','min:3','max:60']
         ];
     }
 }
