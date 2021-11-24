@@ -25,10 +25,7 @@ class EditNoteRequest extends FormRequest
     {
         return [
             'notes' => 'required|string|min:5|max:255',
-            'private' => 'required|boolean',
-            'client_id' => 'required',
-            'staff_id' => 'required',
-
+            'private' => 'required|boolean'
         ];
     }
 

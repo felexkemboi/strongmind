@@ -80,6 +80,7 @@ class ClientNoteController extends Controller
                 ->with(['staff:id,name,profile_pic_url'])
                 ->where('client_id', $clientId)
                 ->where('private', false)
+                ->orderBy('created_at', 'desc')
                 ->get();
 
             return $this->commonResponse(true, 'success', $publicNotes, Response::HTTP_OK);
@@ -107,6 +108,7 @@ class ClientNoteController extends Controller
                 ->where('client_id', $id)
                 ->where('private', true)
                 ->where('staff_id', $request->user()->id)
+                ->orderBy('created_at', 'desc')
                 ->get();
             return $this->commonResponse(true, 'success', $privateNotes, Response::HTTP_OK);
         } catch (QueryException $queryException) {
@@ -121,11 +123,9 @@ class ClientNoteController extends Controller
      * Edit Client Note
      * @param EditNoteRequest $request
      * @param int $id
-     * @urlParam id integer required . The Client ID
-     * @bodyParam private boolean required . Specify whether true or false
-     * @bodyParam notes string required . The specific notes about this client
-     * @bodyParam client_id int required . The client the note belongs to
-     * @bodyParam staff_id int required . The staff the note is responsible for
+     * @urlParam id integer required  The ClientNote ID
+     * @bodyParam private boolean required  Specify whether true or false
+     * @bodyParam notes string required  The specific notes about this client
      * @return JsonResponse
      * @authenticated
      */
@@ -136,7 +136,7 @@ class ClientNoteController extends Controller
                 return $this->commonResponse(false, 'Note Does Not Exist', '', Response::HTTP_NOT_FOUND);
             }
 
-            if(ClientNote::find($id)->update([ 'client_id' => $request->client, 'staff_id'  => $request->staff,'private'  => $request->private,'notes'    => $request->notes])){
+            if(ClientNote::find($id)->update(['private'  => $request->private,'notes' => $request->notes])){
                 return $this->commonResponse(true, 'Note updated successfully', '', Response::HTTP_OK);
             }
             return $this->commonResponse(false, 'Note not updated', '', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -159,7 +159,6 @@ class ClientNoteController extends Controller
     {
 
         try{
-            \Log::debug($id);
             $note = ClientNote::find($id);
             if(!$note){
                 return $this->commonResponse(false,'Note Does Not Exist','', Response::HTTP_NOT_FOUND);
