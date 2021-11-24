@@ -247,7 +247,7 @@ class ClientController extends Controller
             $clientData = [
                 'name' => $request->name ?? $client->name,
                 'gender' => $request->gender ?? $client->gender,
-                'age' => Carbon::parse($request->date_of_birth)->diff(Carbon::now())->y ?? $client->age,
+                'age' => $request->age,
                 'phone_number' => $request->phone_number ?? $client->phone_number,
                 'country_id' => $request->country_id ?? $client->country_id,
                 'city'=> $request->city ?? $client->city,
@@ -432,7 +432,7 @@ class ClientController extends Controller
 
     public function clientLogs(int $id)
     {
-        $activities = ActivityLog::all();
+        $activities = ActivityLog::latest();
         $activities = $activities->where('subject_id', $id);
         if(!$activities->isEmpty()){
             $activitiesList = collect();
