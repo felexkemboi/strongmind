@@ -432,8 +432,9 @@ class ClientController extends Controller
 
     public function clientLogs(int $id)
     {
-        $activities = ActivityLog::latest();
-        $activities = $activities->where('subject_id', $id);
+        $activities = ActivityLog::orderBy('created_at', 'desc')
+                        ->where('subject_id', $id)
+                        ->get();
         if(!$activities->isEmpty()){
             $activitiesList = collect();
             foreach($activities as $activity){
