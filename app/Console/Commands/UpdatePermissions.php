@@ -6,6 +6,8 @@ use App\Models\User;
 //use Bouncer;
 use App\Services\PermissionRoleService;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Silber\Bouncer\Database\Ability;
@@ -52,19 +54,34 @@ class UpdatePermissions extends Command
         $permissions_data = json_decode($data, true);
         foreach ($permissions_data as $key){
             $permissionsArray = [
-                'name' => $key['name'],
-                'guard_name' => $key['guard_name'],
-                'module'     => $key['module'],
-                'slug'       => Str::slug($key['name'],'-'),
-                'description'  => $key['description']
+                'name'          => $key['name'],
+                'guard_name'    => $key['guard_name'],
+                'module'        => $key['module'],
+                'slug'          => Str::slug($key['name'],'-'),
+                'description'   => $key['description']
             ];
-            $existingPermission = Permission::where(function($query) use($permissionsArray){
-                $query->where('name',$permissionsArray['name']);
-            })->exists();
-            if(!$existingPermission){
-                Permission::insert($permissionsArray);
+            try{
+                $existingPermission = Permission::where(function(Builder $query) use($permissionsArray){
+                    $query->where('name',$permissionsArray['name']);
+                })->first();
+                if($existingPermission){
+                    if($existingPermission->module === null || $existingPermission->slug === null || $existingPermission->description === null){
+                        $existingPermission->update([
+                            'module' => $permissionsArray['module'],
+                            'slug'   => $permissionsArray['slug'],
+                            'description' => $permissionsArray['description']
+                        ]);
+                        $this->info('Permissions Updated successfully');
+                    }
+                }else{
+                    Permission::insert($permissionsArray);
+                }
+            }catch (QueryException $queryException){
+                $this->error($queryException->errorInfo[2]);
+            }catch (\Exception $exception){
+                $this->error($exception->getMessage());
             }
         }
-        $this->info('Permissions Updated successfully!');
+        $this->info('Permissions Added successfully!');
     }
 }
