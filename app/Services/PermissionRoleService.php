@@ -38,7 +38,7 @@ class PermissionRoleService
                     'description' => $permission->description,
                     'module' => $permission->module
                 ];
-            })->groupBy('module')
+            })//->groupBy('module')
         ];
     }
 }
