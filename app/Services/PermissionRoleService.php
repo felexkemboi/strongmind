@@ -5,6 +5,7 @@ namespace App\Services;
 
 
 use App\Traits\ApiResponser;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -39,6 +40,21 @@ class PermissionRoleService
                     'module' => $permission->module
                 ];
             })//->groupBy('module')
+        ];
+    }
+
+    /**
+     //* @param Permission $permission
+     * @return array
+     */
+    public function fetchPermissionData(Permission $permission): array
+    {
+        return [
+            'permission_id' => $permission->id,
+            'name' => $permission->name,
+            'slug' => $permission->slug,
+            'description' => $permission->description,
+            'module' => $permission->module
         ];
     }
 }

@@ -40,7 +40,9 @@ class SpatiePermissionController extends Controller
      * @bodyParam name string . The name of the permission
      * @param PermissionRequest $request
      * @param PermissionAction $permissionAction
-     * @bodyParam name string required.
+     * @bodyParam name string required . The Permission's Name
+     * @bodyParam module string required . The Permission's Module
+     * @bodyParam description string required . The Permission's Description
      * @return JsonResponse
      * @authenticated
      */
@@ -55,6 +57,7 @@ class SpatiePermissionController extends Controller
      *
      * @param PermissionAction $permissionAction
      * @param int $id
+     * @urlParam id integer required . The Permission ID
      * @return JsonResponse
      * @authenticated
      */
@@ -70,7 +73,10 @@ class SpatiePermissionController extends Controller
      * @param PermissionUpdateRequest $request
      * @param int $id
      * @param PermissionAction $permissionAction
-     * @bodyParam name string required.
+     * @urlParam id integer required . The Permission ID
+     * @bodyParam name string. The Permission Name
+     * @bodyParam module string. The Permission's Module
+     * @bodyParam description string. The Permission's Description
      * @return JsonResponse
      * @authenticated
      */
@@ -85,6 +91,7 @@ class SpatiePermissionController extends Controller
      *
      * @param int $id
      * @param PermissionAction $permissionAction
+     * @urlParam id integer required . The Permission ID
      * @return JsonResponse
      * @authenticated
      */
