@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Services\PermissionRoleService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
@@ -28,14 +29,16 @@ class RoleTableSeeder extends Seeder
         );
 
         for($i =0, $iMax = count($roles_data); $i < $iMax; $i++){
-            $existingRole = Role::where(function($query) use($roles_data, $i){
+            $existingRole = Role::firstWhere(function($query) use($roles_data, $i){
                 $query->where('name',$roles_data[$i]['name'])
-                ->where('role_code',$roles_data[$i]['role_code']);
-            })->exists();
+                ->where('role_code',$roles_data[$i]['role_code'])
+                ->where('guard_name', PermissionRoleService::API_GUARD);
+            });
             if(!$existingRole){
                 Role::insert($roles_data);
             }
         }
+
         $user = User::firstWhere('email','admin@strongminds.org');
         $adminRole = Role::findByName($roles_data[0]['name'],PermissionRoleService::API_GUARD);
         $user->assignRole($adminRole); //assign this user an admin role with all permissions
