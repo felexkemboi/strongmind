@@ -24,7 +24,9 @@ class PermissionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|min:3|max:60|unique:spatie_permissions,name',
+            'name' => ['required','string','min:3','max:60','unique:spatie_permissions,name'],
+            'module' => ['string','required','min:2','max:30'],
+            'description' => ['string','required','min:3','max:60']
         ];
     }
 }
