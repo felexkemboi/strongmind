@@ -29,7 +29,8 @@ class RoleTableSeeder extends Seeder
 
         for($i =0, $iMax = count($roles_data); $i < $iMax; $i++){
             $existingRole = Role::where(function($query) use($roles_data, $i){
-                $query->where('name',$roles_data[$i]['name']);
+                $query->where('name',$roles_data[$i]['name'])
+                ->where('role_code',$roles_data[$i]['role_code']);
             })->exists();
             if(!$existingRole){
                 Role::insert($roles_data);

@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Exceptions\PermissionDoesNotExist;
+use Spatie\Permission\Exceptions\RoleAlreadyExists;
 use Spatie\Permission\Exceptions\RoleDoesNotExist;
 use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,7 +53,10 @@ class RoleAction
                 return $this->commonResponse(true,'Role Created Successfully',$this->permissionRoleService->fetchRoleData($newRole), Response::HTTP_CREATED);
             }
             return $this->commonResponse(false,'Failed to create role','', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }catch (QueryException $queryException){
+        }catch (RoleAlreadyExists $roleAlreadyExists){
+            return $this->commonResponse(false,$roleAlreadyExists->getMessage(),'', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
             Log::critical('Failed to create role. ERROR: '.$exception->getTraceAsString());
