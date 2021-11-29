@@ -33,7 +33,7 @@ class RoleTableSeeder extends Seeder
                 $query->where('name',$roles_data[$i]['name'])
                 ->where('role_code',$roles_data[$i]['role_code'])
                 ->where('guard_name', PermissionRoleService::API_GUARD);
-            });
+            })->exists();
             if(!$existingRole){
                 Role::insert($roles_data);
             }
