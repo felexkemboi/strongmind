@@ -23,7 +23,7 @@ class RoleTableSeeder extends Seeder
             array(
                 'name' => 'admin',
                 'guard_name' => PermissionRoleService::API_GUARD,
-                'role_code' => 'ADM',
+                'role_code' => 'ADMIN',
                 'description' => 'admin role'
             ),
         );
