@@ -19,28 +19,22 @@ class RoleTableSeeder extends Seeder
     public function run()
     {
         //DB::table('spatie_roles')->truncate();
-        $roles_data = array(
-            array(
-                'name' => 'admin',
-                'guard_name' => PermissionRoleService::API_GUARD,
-                'role_code' => 'ADM',
-                'description' => 'admin role'
-            ),
-        );
-
-        for($i =0, $iMax = count($roles_data); $i < $iMax; $i++){
-            $existingRole = Role::firstWhere(function($query) use($roles_data, $i){
-                $query->where('name',$roles_data[$i]['name'])
-                ->where('role_code',$roles_data[$i]['role_code'])
-                ->where('guard_name', PermissionRoleService::API_GUARD);
-            })->exists();
-            if(!$existingRole){
-                Role::insert($roles_data);
+        $rolesData = [
+            'name' => 'admin',
+            'guard_name' => PermissionRoleService::API_GUARD,
+            'role_code' => 'ADM',
+            'description' => 'admin role'
+        ];
+        $existingRoles = Role::all();
+        foreach($existingRoles as $role){
+            if(!($role->name === $rolesData['name'] && $role->role_code === $rolesData['role_code']))
+            {
+                Role::create($rolesData);
             }
         }
 
         $user = User::firstWhere('email','admin@strongminds.org');
-        $adminRole = Role::findByName($roles_data[0]['name'],PermissionRoleService::API_GUARD);
+        $adminRole = Role::findByName($rolesData['name'],PermissionRoleService::API_GUARD);
         $user->assignRole($adminRole); //assign this user an admin role with all permissions
         $permissions = Permission::get()->filter(function ($permission){
             return $permission->guard_name === PermissionRoleService::API_GUARD;
