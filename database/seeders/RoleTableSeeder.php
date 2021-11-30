@@ -7,6 +7,7 @@ use App\Services\PermissionRoleService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Exceptions\RoleAlreadyExists;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 class RoleTableSeeder extends Seeder
@@ -27,7 +28,7 @@ class RoleTableSeeder extends Seeder
         ];
         $existingRoles = Role::all();
         foreach($existingRoles as $role){
-            if(!($role->name === $rolesData['name'] && $role->role_code === $rolesData['role_code']))
+            if(!($role->name === $rolesData['name']))
             {
                 Role::create($rolesData);
             }
