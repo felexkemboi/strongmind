@@ -26,22 +26,18 @@ class RoleTableSeeder extends Seeder
             'role_code' => 'ADM',
             'description' => 'admin role'
         ];
-        $existingRoles = Role::all();
-        foreach($existingRoles as $role){
-            if(!($role->name === $rolesData['name']))
-            {
-                Role::create($rolesData);
-            }
-        }
-
-        $user = User::firstWhere('email','admin@strongminds.org');
         $adminRole = Role::findByName($rolesData['name'],PermissionRoleService::API_GUARD);
-        $user->assignRole($adminRole); //assign this user an admin role with all permissions
-        $permissions = Permission::get()->filter(function ($permission){
-            return $permission->guard_name === PermissionRoleService::API_GUARD;
-        });
-        foreach ($permissions as $permission){
-            $adminRole->givePermissionTo($permission);
+        if(!$adminRole){
+            Role::create($rolesData);
+        }else{
+            $user = User::firstWhere('email','admin@strongminds.org');
+            $user->assignRole($adminRole); //assign this user an admin role with all permissions
+            $permissions = Permission::get()->filter(function ($permission){
+                return $permission->guard_name === PermissionRoleService::API_GUARD;
+            });
+            foreach ($permissions as $permission){
+                $adminRole->givePermissionTo($permission);
+            }
         }
     }
 }
