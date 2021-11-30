@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 use Spatie\Permission\Exceptions\RoleAlreadyExists;
 use Spatie\Permission\Exceptions\RoleDoesNotExist;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
 use Exception;
@@ -91,6 +92,12 @@ class RoleAction
                 'role_code' => $request->role_code ?? $role->role_code,
                 'description' => $request->description ?? $role->description
             ])){
+                for($i = 0, $iMax = count($request->permission_id); $i < $iMax; $i++){
+                    $permission = Permission::findById($request->permission_id[$i],PermissionRoleService::API_GUARD);
+                    if(!$role->hasPermissionTo($permission)){
+                        $role->givePermissionTo($permission);
+                    }
+                }
                 return $this->commonResponse(true,'Role Updated Successfully',$this->permissionRoleService->fetchRoleData($role), Response::HTTP_OK);
             }
             return $this->commonResponse(false,'Failed to update role','', Response::HTTP_UNPROCESSABLE_ENTITY);
