@@ -25,7 +25,7 @@ class GroupRequest extends FormRequest
     {
         return [
             'name' => ['required','string','unique:groups,name','min:3','max:30'],
-            'group_type_id' => ['required','integer','not_in:0'], //exists:group_types,id
+            'group_type_id' => ['required','integer','not_in:0','exists:group_types,id'],
             'last_session' => ['nullable','date'],
             'office_id' => ['required','integer','exists:offices,id','not_in:0'],
             'project_id' => ['required','integer','exists:projects,id','not_in:0'],
