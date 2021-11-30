@@ -10,6 +10,7 @@ use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -24,10 +25,13 @@ class GroupAction
     public function listGroups(): JsonResponse
     {
         try{
-            $groups = Group::with('groupType','staff')->latest()->get()->transform(function ($group){
+            $groups = Group::with('groupType','staff','sessions')->latest()->get()->transform(function ($group){
                 return [
                     'id' => $group->id,
                     'name' => $group->name,
+                    'sessions' => $group->sessions->transform(function($session){
+                        return $session->session_date;
+                    }),
                     'last_session' => $group->last_session !== null ? Carbon::parse($group->last_session)->format('d M Y') : null,
                     'ongoing' => $group->ongoing === Group::SESSION_ONGOING ? 'Ongoing' : 'Terminated',
                 ];
@@ -44,8 +48,12 @@ class GroupAction
     public function createGroup(GroupRequest $request): JsonResponse
     {
         try{
-            if($group = Group::create(array_merge($request->validated(),['staff_id' => auth()->id()]))){
-                return $this->commonResponse(true,'Group Created Successfully',$group->only('id', 'name', 'last_session', 'ongoing'), Response::HTTP_CREATED);
+            if($newGroup = Group::create(array_merge($request->validated(),
+                ['staff_id' => auth()->id(),
+                    'last_session' => $request->last_session !== null ? Carbon::parse($request->last_session)->format('d M Y') : null
+                ]))){
+                $groupItem = Group::with('staff','sessions','groupType')->findOrFail($newGroup->id);
+                return $this->commonResponse(true,'Group Created Successfully',$groupItem, Response::HTTP_CREATED);
             }
             return $this->commonResponse(false,'Failed to create group','', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (QueryException $queryException){
