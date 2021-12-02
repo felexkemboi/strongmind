@@ -30,7 +30,6 @@ class GroupRequest extends FormRequest
             'office_id' => ['required','integer','not_in:0','exists:offices,id'],
             'project_id' => ['required','integer','not_in:0','exists:programs,id'],
             'cycle_id'  => ['integer','required','not_in:0','exists:cycle,id'],
-            'group_id' => ['nullable','string'],
             'fascilitator_id' => ['integer','required','not_in:0','exists:users,id'],
             'supervisor_id' => ['integer','required','not_in:0','exists:users,id'],
             'therapy_mode_id' => ['integer','required','not_in:0','exists:therapy_mode,id'],
