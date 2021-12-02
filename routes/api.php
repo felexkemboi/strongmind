@@ -32,6 +32,8 @@ use App\Http\Controllers\ClientEducationController;
 use App\Http\Controllers\ClientMaritalStatusController;
 use App\Http\Controllers\ClientPhoneOwnershipController;
 use App\Http\Controllers\ModeOfDeliveryController;
+use App\Http\Controllers\FormController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -265,3 +267,10 @@ Route::group(['prefix' => 'grouptype','middleware' => 'auth:sanctum'], function(
 });
 
 Route::resource('deliverymodes',ModeOfDeliveryController::class)->middleware('auth:sanctum');
+//Forms
+Route::group(['prefix' => 'forms','middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',           [FormController::class, 'index']);
+    Route::post('/create',       [FormController::class, 'create']);
+    Route::put('{id}/update',    [FormController::class, 'update']);
+    Route::delete('{id}/delete', [FormController::class, 'destroy']);
+});
