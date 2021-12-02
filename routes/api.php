@@ -31,6 +31,7 @@ use App\Http\Controllers\ClientLocationController;
 use App\Http\Controllers\ClientEducationController;
 use App\Http\Controllers\ClientMaritalStatusController;
 use App\Http\Controllers\ClientPhoneOwnershipController;
+use App\Http\Controllers\FormController;
 
 /*
 |--------------------------------------------------------------------------
@@ -262,4 +263,12 @@ Route::group(['prefix' => 'grouptype','middleware' => 'auth:sanctum'], function(
     Route::post('/create',       [GroupTypeController::class, 'create']);
     Route::put('{id}/update',    [GroupTypeController::class, 'update']);
     Route::delete('{id}/delete', [GroupTypeController::class, 'destroy']);
+});
+
+//Forms
+Route::group(['prefix' => 'forms','middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',           [FormController::class, 'index']);
+    Route::post('/create',       [FormController::class, 'create']);
+    Route::put('{id}/update',    [FormController::class, 'update']);
+    Route::delete('{id}/delete', [FormController::class, 'destroy']);
 });
