@@ -467,5 +467,40 @@
         "module": "Groups",
         "slug": "",
         "description": ""
+    },
+    {
+        "name": "list modes of delivery",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "create mode of delivery",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view mode of delivery item",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "update mode of delivery",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "delete mode of delivery",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
     }
 ]

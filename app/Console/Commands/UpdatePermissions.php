@@ -2,15 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
-//use Bouncer;
-use App\Services\PermissionRoleService;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Silber\Bouncer\Database\Ability;
 use Spatie\Permission\Models\Permission;
 
 class UpdatePermissions extends Command

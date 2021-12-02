@@ -35,7 +35,7 @@ class RoleTableSeeder extends Seeder
         }
 
         $user = User::firstWhere('email','admin@strongminds.org');
-        $adminRole = Role::findByName($rolesData['name'],PermissionRoleService::API_GUARD);
+        $adminRole = Role::findOrCreate('admin',PermissionRoleService::API_GUARD);
         $user->assignRole($adminRole); //assign this user an admin role with all permissions
         $permissions = Permission::get()->filter(function ($permission){
             return $permission->guard_name === PermissionRoleService::API_GUARD;

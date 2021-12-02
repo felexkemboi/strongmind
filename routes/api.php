@@ -31,7 +31,7 @@ use App\Http\Controllers\ClientLocationController;
 use App\Http\Controllers\ClientEducationController;
 use App\Http\Controllers\ClientMaritalStatusController;
 use App\Http\Controllers\ClientPhoneOwnershipController;
-
+use App\Http\Controllers\ModeOfDeliveryController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -263,3 +263,5 @@ Route::group(['prefix' => 'grouptype','middleware' => 'auth:sanctum'], function(
     Route::put('{id}/update',    [GroupTypeController::class, 'update']);
     Route::delete('{id}/delete', [GroupTypeController::class, 'destroy']);
 });
+
+Route::resource('deliverymodes',ModeOfDeliveryController::class)->middleware('auth:sanctum');
