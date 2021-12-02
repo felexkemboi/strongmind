@@ -57,7 +57,7 @@ class Group extends Model
      */
     public function sessions(): HasMany
     {
-        return $this->hasMany(GroupSession::class, 'id', 'group_id');
+        return $this->hasMany(GroupSession::class,'id');
     }
 
     /**

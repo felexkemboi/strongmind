@@ -48,8 +48,16 @@ class GroupController extends Controller
      * Create Group
      *
      * @param GroupRequest $request
-     * @bodyParam name string required.
-     * @bodyParam group_type_id integer required.
+     * @bodyParam name string required .
+     * @bodyParam group_type_id integer required . Group Type
+     * @bodyParam office_id integer required . The Group Office ID . Example: 1
+     * @bodyParam project_id integer required . The Group Project ID . Example: 1
+     * @bodyParam cycle_id integer required . The Group Cycle ID . Example: 1
+     * @bodyParam fascilitator_id integer required . The Group Fascilitator 1
+     * @bodyParam supervisor_id integer required . The Group Supervisor . Example 1
+     * @bodyParam therapy_mode_id integer required . The Group Therapy Mode ID . Example: 1
+     * @bodyParam mode_of_delivery_id integer required . The Group Mode Of Delivery ID . Example: 1
+     * @bodyParam group_allocation_date date required . The Group Allocation Date
      * @return JsonResponse
      * @authenticated
      */
@@ -78,9 +86,16 @@ class GroupController extends Controller
      * @param GroupUpdateRequest $request
      * @param int $id
      * @return JsonResponse
-     * @bodyParam id integer required .
+     * @urlParam  id integer required .
      * @bodyParam name string required
      * @bodyParam group_type_id integer
+     * @bodyParam office_id integer. The Group's Office ID . Example: 1
+     * @bodyParam project_id integer. The Group's Project ID . Example: 1
+     * @bodyParam cycle_id integer. The Group's Cycle ID . Example: 1
+     * @bodyParam fascilitator_id integer. The Group's Fascilitator ID . Example: 1
+     * @bodyParam supervisor_id integer. The Group's Supervisor ID. Example: 1
+     * @bodyParam therapy_mode_id integer. The Group's Therapy Mode ID. Example: 1
+     * @bodyParam group_allocation_date date. The Group's Allocation Date
      * @authenticated
      */
     public function update(GroupUpdateRequest $request, int $id): JsonResponse
