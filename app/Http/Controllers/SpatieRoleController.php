@@ -73,7 +73,10 @@ class SpatieRoleController extends Controller
      * @param RoleUpdateRequest $request
      * @param int $id
      * @param RoleAction $roleAction
-     * @bodyParam name string required.
+     * @bodyParam name string required .
+     * @bodyParam role_code string. The Role's Role Code
+     * @bodyParam description string. The Role's Description
+     * @bodyParam permission_id integer. An Array of permission_id(s) e.g [1,2,3]
      * @return JsonResponse
      * @authenticated
      */

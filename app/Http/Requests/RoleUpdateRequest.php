@@ -26,7 +26,9 @@ class RoleUpdateRequest extends FormRequest
         return [
             'name' => ['nullable','string','min:3','max:60'],
             'role_code' => ['string','min:2','max:30'],
-            'description' => ['string','nullable','min:3','max:60']
+            'description' => ['string','nullable','min:3','max:60'],
+            'permission_id' => ['required','array','min:1'],
+            'permission_id.*' => ['required','integer','exists:spatie_permissions,id','distinct']
         ];
     }
 }
