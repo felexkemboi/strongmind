@@ -5,9 +5,12 @@ namespace App\Actions;
 
 
 use App\Helpers\CountryHelper;
+use App\Http\Requests\GroupClientRequest;
 use App\Http\Requests\GroupRequest;
 use App\Http\Requests\GroupUpdateRequest;
+use App\Models\Client;
 use App\Models\Group;
+use App\Models\GroupClient;
 use App\Models\Office;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
@@ -25,36 +28,17 @@ class GroupAction
     public function listGroups(): JsonResponse
     {
         try{
-            $groups = Group::with('groupType','staff','sessions','therapyMode','deliveryMode','supervisor','fascilitator','cycle','project','office')
-                ->latest()
+            $groups = Group::with('sessions')->latest()
                 ->get()
                 ->transform(function ($group){
                 return [
                     'id' => $group->id,
-                    'group_id' => $group->group_id,
                     'name' => $group->name,
                     'sessions' => $group->sessions->transform(function($session){
                         return $session->session_date;
                     }),
                     'last_session' => $group->last_session !== null ? Carbon::parse($group->last_session)->format('d M Y') : null,
-                    'ongoing' => $group->ongoing === Group::SESSION_ONGOING ? 'Ongoing' : 'Terminated',
-                    'therapy_mode_id' => $group->therapy_mode_id,
-                    'office_id' => $group->office_id,
-                    'project_id' => $group->project_id,
-                    'cycle_id' => $group->cycle_id,
-                    'fascilitator_id' => $group->fascilitator_id,
-                    'supervisor_id' => $group->supervisor_id,
-                    'mode_of_delivery_id' => $group->mode_of_delivery_id,
-                    'group_allocation_date' => $group->group_allocation_date,
-                    'staff' => $group->staff,
-                    'groupType' => $group->groupType,
-                    'therapyMode' => $group->therapyMode,
-                    'deliveryMode' => $group->deliveryMode,
-                    'supervisor' => $group->supervisor,
-                    'fascilitator' => $group->fascilitator,
-                    'cycle' => $group->cycle,
-                    'project' => $group->project,
-                    'office' => $group->office
+                    'ongoing' => $group->ongoing === Group::SESSION_ONGOING ? 'Ongoing' : 'Terminated'
                 ];
             });
             return $this->commonResponse(true,'Success',$groups, Response::HTTP_OK);
@@ -80,7 +64,7 @@ class GroupAction
                         'group_id' => $countryCode->long_code.'-'.Carbon::now()->format('y').'-'.$newGroup->id
                     ]);
                 }
-                $groupItem = Group::with('groupType','staff','sessions','therapyMode','deliveryMode','supervisor','fascilitator','cycle','project','office')->findOrFail($newGroup->id);
+                $groupItem = Group::with('sessions')->findOrFail($newGroup->id);
                 return $this->commonResponse(true,'Group Created Successfully',$groupItem, Response::HTTP_CREATED);
             }
             return $this->commonResponse(false,'Failed to create group','', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -94,7 +78,7 @@ class GroupAction
     public function viewGroupItem(int $id): JsonResponse
     {
         try{
-            $group = Group::with('groupType','staff','sessions','therapyMode','deliveryMode','supervisor','fascilitator','cycle','project','office')->findOrFail($id);
+            $group = Group::with('sessions')->findOrFail($id);
             return $this->commonResponse(false,'Success',$group,Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -110,7 +94,7 @@ class GroupAction
     public function terminateGroup(int $id): JsonResponse
     {
         try{
-            $group = Group::with('groupType','staff','sessions','therapyMode','deliveryMode','supervisor','fascilitator','cycle','project','office')->findOrFail($id);
+            $group = Group::with('sessions')->findOrFail($id);
             if($group->ongoing === Group::SESSION_TERMINATED){
                 return $this->commonResponse(false,'Group Session is terminated, no action required',$group, Response::HTTP_UNPROCESSABLE_ENTITY);
             }
@@ -131,7 +115,7 @@ class GroupAction
     public function updateGroupItem(GroupUpdateRequest $request, int $id): JsonResponse
     {
         try {
-            $group = Group::with('groupType','staff','sessions','therapyMode','deliveryMode','supervisor','fascilitator','cycle','project','office')->findOrFail($id);
+            $group = Group::with('sessions')->findOrFail($id);
             $office_id = $request->office_id ?? $group->office_id;
             $office = Office::findOrFail($office_id);
             $countryCode = null;
@@ -168,9 +152,33 @@ class GroupAction
     public function deleteGroup(int $id): JsonResponse
     {
         try{
-            $group = Group::with('groupType','staff','sessions','therapyMode','deliveryMode','supervisor','fascilitator','cycle','project','office')->findOrFail($id);
+            $group = Group::with('sessions')->findOrFail($id);
             $group->delete();
             return $this->commonResponse(true,'Group Deleted Successfully','', Response::HTTP_OK);
+        }catch (ModelNotFoundException $exception){
+            return $this->commonResponse(false,'Group Does Not Exist','', Response::HTTP_NOT_FOUND);
+        }
+        catch (QueryException $exception){
+            return $this->commonResponse(false,$exception->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (Exception $exception){
+            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function addClientsToGroup(GroupClientRequest $request, int $id): JsonResponse
+    {
+        try{
+            $group = Group::with('sessions')->findOrFail($id);
+            $clients = Client::whereIn('id', $request->client_id);
+            foreach ($clients as $client){
+                GroupClient::create(
+                    [
+                        'client_id' => $client->id,
+                        'group_id'  => $group->id
+                    ]
+                );
+            }
+            return $this->commonResponse(true,'Clients Added Successfully','', Response::HTTP_CREATED);
         }catch (ModelNotFoundException $exception){
             return $this->commonResponse(false,'Group Does Not Exist','', Response::HTTP_NOT_FOUND);
         }
