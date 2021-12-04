@@ -225,6 +225,7 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'groups'], function(){
     Route::patch('/{id}/update',[GroupController::class,'update']);
     Route::delete('/{id}/delete',[GroupController::class,'destroy']);
     Route::patch('/{id}/terminate',[GroupController::class,'terminate']);
+    Route::post('/{id}/add_clients',[GroupController::class,'addClients']);
 });
 
 //ClientStatus
