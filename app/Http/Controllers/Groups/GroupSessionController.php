@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Groups;
 
+use App\Actions\GroupSessionAction;
 use App\Http\Controllers\Controller;
+use App\Services\PermissionRoleService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -13,6 +15,14 @@ use Illuminate\Http\Request;
  */
 class GroupSessionController extends Controller
 {
+    public $permissionRoleService;
+    public $groupSessionAction;
+
+    public function __construct(PermissionRoleService $permissionRoleService, GroupSessionAction $groupSessionAction){
+        $this->permissionRoleService = $permissionRoleService;
+        $this->groupSessionAction = $groupSessionAction;
+    }
+
     /**
      * List Group Sessions
      *
@@ -20,7 +30,8 @@ class GroupSessionController extends Controller
      */
     public function index(): JsonResponse
     {
-        //
+        $this->permissionRoleService->verifyUserHasPermissionTo('list groups with their respective sessions');
+        return $this->groupSessionAction->listSessions();
     }
 
     /**
