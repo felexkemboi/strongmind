@@ -120,4 +120,9 @@ class Group extends Model
     {
         return $this->hasMany(GroupClient::class,'id');
     }
+
+    public function attendance(): HasMany
+    {
+        return $this->hasMany(SessionAttendance::class,'id','group_id');
+    }
 }

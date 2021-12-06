@@ -59,8 +59,8 @@ class GroupAction
                 $newGroup->update([
                     'group_id' => $countryCode->long_code.'-'.Carbon::now()->format('y').'-'.$newGroup->id
                 ]);
-                $groupItem = Group::with('sessions')->findOrFail($newGroup->id);
-                return $this->commonResponse(true,'Group Created Successfully',$groupItem, Response::HTTP_CREATED);
+                $groupItem = Group::with('sessions','staff')->findOrFail($newGroup->id);
+                return $this->commonResponse(true,'Group Created Successfully',GroupService::viewGroupDetails($newGroup), Response::HTTP_CREATED);
             }
             return $this->commonResponse(false,'Failed to create group','', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (ModelNotFoundException $exception){
@@ -76,8 +76,8 @@ class GroupAction
     public function viewGroupItem(int $id): JsonResponse
     {
         try{
-            $group = Group::with('sessions')->findOrFail($id);
-            return $this->commonResponse(false,'Success',GroupService::getGroupData($group),Response::HTTP_OK);
+            $group = Group::with('sessions','staff','groupType','attendance')->findOrFail($id);
+            return $this->commonResponse(false,'Success',GroupService::viewGroupDetails($group),Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (ModelNotFoundException $exception){
@@ -97,7 +97,7 @@ class GroupAction
                 return $this->commonResponse(false,'Group Session is terminated, no action required',GroupService::getGroupData($group), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $group->update(['ongoing' => Group::SESSION_TERMINATED]);
-            return $this->commonResponse(true,'Group terminated successfully',GroupService::getGroupData($group), Response::HTTP_OK);
+            return $this->commonResponse(true,'Group terminated successfully',GroupService::viewGroupDetails($group), Response::HTTP_OK);
         }
         catch (ModelNotFoundException $exception){
             return $this->commonResponse(false,'Group Does Not Exist','', Response::HTTP_NOT_FOUND);
@@ -135,7 +135,7 @@ class GroupAction
                 'group_allocation_date' => $request->group_allocation_date !== null ? Carbon::parse($request->group_allocation_date)->format('d M Y') : $group->group_allocation_date,
                 'group_id' => $request->office_id !== null ? $countryCode->long_code.'-'.Carbon::now()->format('y').'-'.$group->id : $group->group_id
             ]));
-            return $this->commonResponse(true, 'Group Updated Successfully', GroupService::getGroupData($group), Response::HTTP_OK);
+            return $this->commonResponse(true, 'Group Updated Successfully', GroupService::viewGroupDetails($group), Response::HTTP_OK);
         }
         catch (ModelNotFoundException $exception) {
             return $this->commonResponse(false, $exception->getMessage(), '', Response::HTTP_NOT_FOUND);
@@ -176,11 +176,10 @@ class GroupAction
                     ]
                 );
             }
-            //update group clients count here
             $group->update([
                 'total_clients' => $group->clients->count()
             ]);
-            return $this->commonResponse(true,'Clients Added Successfully',GroupService::getGroupData($group), Response::HTTP_CREATED);
+            return $this->commonResponse(true,'Clients Added Successfully',GroupService::viewGroupDetails($group), Response::HTTP_CREATED);
         }catch (ModelNotFoundException $exception){
             return $this->commonResponse(false,'Group Does Not Exist','', Response::HTTP_NOT_FOUND);
         }
