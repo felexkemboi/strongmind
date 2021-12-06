@@ -469,6 +469,27 @@
         "description": ""
     },
     {
+        "name":"view session details",
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name":"update group session",
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name":"delete group session",
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
+    },
+    {
         "name": "list modes of delivery",
         "guard_name": "api",
         "module": "Dynamic Fields",

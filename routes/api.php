@@ -33,7 +33,7 @@ use App\Http\Controllers\ClientMaritalStatusController;
 use App\Http\Controllers\ClientPhoneOwnershipController;
 use App\Http\Controllers\ModeOfDeliveryController;
 use App\Http\Controllers\FormController;
-
+use App\Http\Controllers\Groups\GroupSessionController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -226,6 +226,13 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'groups'], function(){
     Route::delete('/{id}/delete',[GroupController::class,'destroy']);
     Route::patch('/{id}/terminate',[GroupController::class,'terminate']);
     Route::post('/{id}/add_clients',[GroupController::class,'addClients']);
+    Route::get('/{id}/sessions',[GroupSessionController::class,'index']);
+    Route::post('/{id}/sessions/create',[GroupSessionController::class,'store']);
+    Route::group(['prefix' => 'sessions'], function(){
+        Route::get('/{id}/details',[GroupSessionController::class,'show']);
+        Route::patch('/{id}/update',[GroupSessionController::class,'update']);
+        Route::delete('/{id}/delete',[GroupSessionController::class,'destroy']);
+    });
 });
 
 //ClientStatus
