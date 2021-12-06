@@ -11,6 +11,8 @@ class Office extends Model
 {
     protected $guarded = [];
 
+    public const GLOBAL_OFFICE_NAME = 'Global';
+
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'country_id');
