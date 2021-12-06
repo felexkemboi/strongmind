@@ -25,6 +25,7 @@ use App\Models\Client;
 use Spatie\Activitylog\Models\Activity as ActivityLog;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\TransferClient;
+use App\Http\Requests\TransferClientsRequest;
 use App\Models\Misc\Channel;
 use App\Models\Misc\Status;
 
@@ -334,6 +335,41 @@ class ClientController extends Controller
             return $this->commonResponse(false, $exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * Bulk transfer Clients
+     * @param TransferClients $request $request
+     * @bodyParam client_ids array required  The Clients' ids . Example - 1,2,3
+     * @bodyParam staff_id integer required  The Staff ID (user in this case)
+     * @return JsonResponse
+     * @authenticated
+     */
+
+    public function bulkTransfer(TransferClientsRequest $request): JsonResponse
+    {
+        \Log::debug($request);
+        try{
+            foreach (explode(',', $request->client_ids) as $client_id) {
+                $client = Client::find((int)$client_id);
+                if($client){
+                    if($client->update(['staff_id' =>  $request->staff_id])){
+                        $user = Auth::user();
+                        activity('client')
+                            ->performedOn($client)
+                            ->causedBy($user)
+                            ->log('Client transferred to '.$user->name);
+                    }
+                }
+            }
+            return $this->commonResponse(true,'Clients successfully transferred','', Response::HTTP_OK);
+        }catch (QueryException  $queryException){
+            return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (Exception $exception){
+            Log::critical('Failed to Transfer Client. ERROR: '. $exception->getTraceAsString());
+            return $this->commonResponse(false, $exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     /**
      * Bulk Edit Clients

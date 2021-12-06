@@ -184,6 +184,7 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::post('/therapy/activate',   [ClientController::class,'activate']);
     Route::patch('/{id}/update',       [ClientController::class,'update']);
     Route::patch('/{id}/transfer',     [ClientController::class,'transfer']);
+    Route::patch('/bulk-transfer',     [ClientController::class,'bulkTransfer']);
     Route::patch('/bulk-edit',         [ClientController::class,'bulkEdit']);
     Route::get('/{id}/activity',       [ClientController::class,'clientLogs']);
     Route::patch('/{id}/change',       [ClientController::class,'changeChannel']);
