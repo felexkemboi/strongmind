@@ -7,14 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\GroupClientRequest;
 use App\Http\Requests\GroupRequest;
 use App\Http\Requests\GroupUpdateRequest;
-use App\Models\Group;
 use App\Services\PermissionRoleService;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
-use Symfony\Component\HttpFoundation\Response;
-use Exception;
 
 /**
  * Groups Endpoints

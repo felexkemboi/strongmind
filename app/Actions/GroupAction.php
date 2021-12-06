@@ -48,9 +48,6 @@ class GroupAction
     {
         try{
             $office = Office::findOrFail($request->office_id);
-//            if($office->name === Office::GLOBAL_OFFICE_NAME){
-//            return $this->commonResponse(false,'Global office does not have a country','', Response::HTTP_UNPROCESSABLE_ENTITY); //local testing
-//            }
             if($newGroup = Group::create(array_merge($request->validated(),
                 ['staff_id' => auth()->id(),
                     'last_session' => null,
