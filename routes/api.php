@@ -36,7 +36,7 @@ use App\Http\Controllers\FormController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionOptionsController;
 use App\Http\Controllers\QuestionResponsesController;
-
+use App\Http\Controllers\Groups\GroupSessionController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -187,6 +187,7 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::post('/therapy/activate',   [ClientController::class,'activate']);
     Route::patch('/{id}/update',       [ClientController::class,'update']);
     Route::patch('/{id}/transfer',     [ClientController::class,'transfer']);
+    Route::patch('/bulk-transfer',     [ClientController::class,'bulkTransfer']);
     Route::patch('/bulk-edit',         [ClientController::class,'bulkEdit']);
     Route::get('/{id}/activity',       [ClientController::class,'clientLogs']);
     Route::patch('/{id}/change',       [ClientController::class,'changeChannel']);
@@ -229,6 +230,13 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'groups'], function(){
     Route::delete('/{id}/delete',[GroupController::class,'destroy']);
     Route::patch('/{id}/terminate',[GroupController::class,'terminate']);
     Route::post('/{id}/add_clients',[GroupController::class,'addClients']);
+    Route::get('/{id}/sessions',[GroupSessionController::class,'index']);
+    Route::post('/{id}/sessions/create',[GroupSessionController::class,'store']);
+    Route::group(['prefix' => 'sessions'], function(){
+        Route::get('/{id}/details',[GroupSessionController::class,'show']);
+        Route::patch('/{id}/update',[GroupSessionController::class,'update']);
+        Route::delete('/{id}/delete',[GroupSessionController::class,'destroy']);
+    });
 });
 
 //ClientStatus

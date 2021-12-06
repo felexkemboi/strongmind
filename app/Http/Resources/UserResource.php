@@ -39,7 +39,7 @@ class UserResource extends JsonResource
             'active' => $this->active,
             'office_id' => $this->office_id,
             'last_login' => $this->last_login,
-            'created_at' => $this->created_at,
+            'created_at' => $this->created_at->format('d-m-Y H:i:s'),
             'roles' => AuthHelper::userRoles($this->id),
             'permissions_list' => AuthHelper::UserPermissions($this->id),
         ];

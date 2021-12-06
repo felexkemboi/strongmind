@@ -57,7 +57,7 @@ class Group extends Model
      */
     public function sessions(): HasMany
     {
-        return $this->hasMany(GroupSession::class,'id');
+        return $this->hasMany(GroupSession::class,'group_id','id');
     }
 
     /**
@@ -114,5 +114,15 @@ class Group extends Model
     public function office(): BelongsTo
     {
         return $this->belongsTo(Office::class,'office_id');
+    }
+
+    public function clients(): HasMany
+    {
+        return $this->hasMany(GroupClient::class,'id');
+    }
+
+    public function attendance(): HasMany
+    {
+        return $this->hasMany(SessionAttendance::class,'id','group_id');
     }
 }

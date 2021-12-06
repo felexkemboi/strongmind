@@ -12,6 +12,7 @@ use App\Models\Client;
 use App\Models\Group;
 use App\Models\GroupClient;
 use App\Models\Office;
+use App\Services\GroupService;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -28,18 +29,11 @@ class GroupAction
     public function listGroups(): JsonResponse
     {
         try{
-            $groups = Group::with('sessions')->latest()
+            $groups = Group::with('sessions')
+                ->latest()
                 ->get()
                 ->transform(function ($group){
-                return [
-                    'id' => $group->id,
-                    'name' => $group->name,
-                    'sessions' => $group->sessions->transform(function($session){
-                        return $session->session_date;
-                    }),
-                    'last_session' => $group->last_session !== null ? Carbon::parse($group->last_session)->format('d M Y') : null,
-                    'ongoing' => $group->ongoing === Group::SESSION_ONGOING ? 'Ongoing' : 'Terminated'
-                ];
+                    return GroupService::getGroupData($group);
             });
             return $this->commonResponse(true,'Success',$groups, Response::HTTP_OK);
         }catch (QueryException $queryException){
@@ -53,22 +47,26 @@ class GroupAction
     public function createGroup(GroupRequest $request): JsonResponse
     {
         try{
+            $office = Office::findOrFail($request->office_id);
+//            if($office->name === Office::GLOBAL_OFFICE_NAME){
+//            return $this->commonResponse(false,'Global office does not have a country','', Response::HTTP_UNPROCESSABLE_ENTITY); //local testing
+//            }
             if($newGroup = Group::create(array_merge($request->validated(),
                 ['staff_id' => auth()->id(),
-                    'last_session' => $request->last_session !== null ? Carbon::parse($request->last_session)->format('d M Y') : null,
+                    'last_session' => null,
                 ]))){
-                $office = Office::find($request->office_id);
-                if($office){
-                    $countryCode = CountryHelper::getCountyCodeByOffice($office->id);
-                    $newGroup->update([
-                        'group_id' => $countryCode->long_code.'-'.Carbon::now()->format('y').'-'.$newGroup->id
-                    ]);
-                }
-                $groupItem = Group::with('sessions')->findOrFail($newGroup->id);
-                return $this->commonResponse(true,'Group Created Successfully',$groupItem, Response::HTTP_CREATED);
+                $countryCode = CountryHelper::getCountyCodeByOffice($office->id);
+                $newGroup->update([
+                    'group_id' => $countryCode->long_code.'-'.Carbon::now()->format('y').'-'.$newGroup->id
+                ]);
+                $groupItem = Group::with('sessions','staff')->findOrFail($newGroup->id);
+                return $this->commonResponse(true,'Group Created Successfully',GroupService::viewGroupDetails($newGroup), Response::HTTP_CREATED);
             }
             return $this->commonResponse(false,'Failed to create group','', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }catch (QueryException $queryException){
+        }catch (ModelNotFoundException $exception){
+            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_NOT_FOUND);
+        }
+        catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
             return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -78,8 +76,8 @@ class GroupAction
     public function viewGroupItem(int $id): JsonResponse
     {
         try{
-            $group = Group::with('sessions')->findOrFail($id);
-            return $this->commonResponse(false,'Success',$group,Response::HTTP_OK);
+            $group = Group::with('sessions','staff','groupType','attendance')->findOrFail($id);
+            return $this->commonResponse(false,'Success',GroupService::viewGroupDetails($group),Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (ModelNotFoundException $exception){
@@ -96,10 +94,10 @@ class GroupAction
         try{
             $group = Group::with('sessions')->findOrFail($id);
             if($group->ongoing === Group::SESSION_TERMINATED){
-                return $this->commonResponse(false,'Group Session is terminated, no action required',$group, Response::HTTP_UNPROCESSABLE_ENTITY);
+                return $this->commonResponse(false,'Group Session is terminated, no action required',GroupService::getGroupData($group), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $group->update(['ongoing' => Group::SESSION_TERMINATED]);
-            return $this->commonResponse(true,'Group terminated successfully',$group, Response::HTTP_OK);
+            return $this->commonResponse(true,'Group terminated successfully',GroupService::viewGroupDetails($group), Response::HTTP_OK);
         }
         catch (ModelNotFoundException $exception){
             return $this->commonResponse(false,'Group Does Not Exist','', Response::HTTP_NOT_FOUND);
@@ -137,7 +135,7 @@ class GroupAction
                 'group_allocation_date' => $request->group_allocation_date !== null ? Carbon::parse($request->group_allocation_date)->format('d M Y') : $group->group_allocation_date,
                 'group_id' => $request->office_id !== null ? $countryCode->long_code.'-'.Carbon::now()->format('y').'-'.$group->id : $group->group_id
             ]));
-            return $this->commonResponse(true, 'Group Updated Successfully', $group, Response::HTTP_OK);
+            return $this->commonResponse(true, 'Group Updated Successfully', GroupService::viewGroupDetails($group), Response::HTTP_OK);
         }
         catch (ModelNotFoundException $exception) {
             return $this->commonResponse(false, $exception->getMessage(), '', Response::HTTP_NOT_FOUND);
@@ -168,7 +166,7 @@ class GroupAction
     public function addClientsToGroup(GroupClientRequest $request, int $id): JsonResponse
     {
         try{
-            $group = Group::with('sessions')->findOrFail($id);
+            $group = Group::with('sessions','clients')->findOrFail($id);
             $clients = Client::whereIn('id', $request->client_id);
             foreach ($clients as $client){
                 GroupClient::create(
@@ -178,7 +176,10 @@ class GroupAction
                     ]
                 );
             }
-            return $this->commonResponse(true,'Clients Added Successfully','', Response::HTTP_CREATED);
+            $group->update([
+                'total_clients' => $group->clients->count()
+            ]);
+            return $this->commonResponse(true,'Clients Added Successfully',GroupService::viewGroupDetails($group), Response::HTTP_CREATED);
         }catch (ModelNotFoundException $exception){
             return $this->commonResponse(false,'Group Does Not Exist','', Response::HTTP_NOT_FOUND);
         }
