@@ -116,11 +116,17 @@ class Group extends Model
         return $this->belongsTo(Office::class,'office_id');
     }
 
+    /**
+     * @return HasMany
+     */
     public function clients(): HasMany
     {
-        return $this->hasMany(GroupClient::class,'id');
+        return $this->hasMany(GroupClient::class,'group_id','id');
     }
 
+    /**
+     * @return HasMany
+     */
     public function attendance(): HasMany
     {
         return $this->hasMany(SessionAttendance::class,'id','group_id');

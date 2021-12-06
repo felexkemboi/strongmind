@@ -227,6 +227,7 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'groups'], function(){
     Route::delete('/{id}/delete',[GroupController::class,'destroy']);
     Route::patch('/{id}/terminate',[GroupController::class,'terminate']);
     Route::post('/{id}/add_clients',[GroupController::class,'addClients']);
+    Route::get('/{id}/clients',[GroupController::class,'listClients']);
     Route::get('/{id}/sessions',[GroupSessionController::class,'index']);
     Route::post('/{id}/sessions/create',[GroupSessionController::class,'store']);
     Route::group(['prefix' => 'sessions'], function(){

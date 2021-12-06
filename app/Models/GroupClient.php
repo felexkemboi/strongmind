@@ -23,7 +23,7 @@ class GroupClient extends Model
      */
     public function group(): BelongsTo
     {
-        return $this->belongsTo(Group::CREATED_AT,'group_id');
+        return $this->belongsTo(Group::class,'group_id');
     }
 
     /**
