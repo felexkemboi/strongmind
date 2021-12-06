@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Groups;
 
 use App\Actions\GroupAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GroupClientRequest;
 use App\Http\Requests\GroupRequest;
 use App\Http\Requests\GroupUpdateRequest;
 use App\Models\Group;
@@ -130,5 +131,20 @@ class GroupController extends Controller
     {
         $this->permissionRoleService->verifyUserHasPermissionTo('terminate group');
         return $this->groupAction->terminateGroup($id);
+    }
+
+    /**
+     * Add Clients To Group
+     * @param GroupClientRequest $request
+     * @param int $id
+     * @return JsonResponse
+     * @urlParam id integer required . The Group ID . Example: 1
+     * @bodyParam client_id array required . The Client ID's . Example [1,2,3]
+     * @authenticated
+     */
+    public function addClients(GroupClientRequest $request,int $id): JsonResponse
+    {
+        $this->permissionRoleService->verifyUserHasPermissionTo('add clients to a group');
+        return $this->groupAction->addClientsToGroup($request, $id);
     }
 }
