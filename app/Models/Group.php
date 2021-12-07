@@ -129,6 +129,6 @@ class Group extends Model
      */
     public function attendance(): HasMany
     {
-        return $this->hasMany(SessionAttendance::class,'id','group_id');
+        return $this->hasMany(SessionAttendance::class,'id');
     }
 }

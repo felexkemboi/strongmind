@@ -6,8 +6,10 @@ namespace App\Services;
 
 use App\Http\Resources\GroupTypeResource;
 use App\Models\Client;
+use App\Models\ClientBioData;
 use App\Models\Group;
 use App\Models\GroupSession;
+use App\Models\SessionAttendance;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -54,16 +56,30 @@ class GroupService
                         ];
                     }),
                 ],
-            'attendance' => $group->attendance->transform(function($attendance){
+            'attendance' => $group->attendance->transform(function($attendance) use($group){
+                $client = ClientBioData::select('first_name','last_name')->where(function(Builder $query) use($attendance){
+                    $query->where('client_id', $attendance->client_id);
+                })->first();
+                $sessions = $group->sessions;
+                $groupAttendance = SessionAttendance::where(function(Builder $query) use($attendance){
+                    $query->where('session_id', $attendance->session_id);
+                })->first();
+                $groupSessions = GroupSession::where(function(Builder $query) use($group){
+                    $query->where('group_id', $group->id);
+                })->get();
+                $sessionData = [];
+                foreach($groupSessions as $session){
+                    //foreach($groupAttendance as $groupAttendanceInfo){
+                        $sessionData[] = [
+                            'sessionDate' => Carbon::parse($session->session_date)->format('d M Y'),
+                            'sessionId'   => $session->id,
+                            'attended'    => $groupAttendance->attended
+                        ];
+                    //}
+                }
                 return [
-                    'clientName' => Client::where(function(Builder $query) use($attendance){
-                        $query->where('id', $attendance->client_id);
-                    })->pluck('name'),
-                    'sessionDate' => GroupSession::where(function(Builder $query) use($attendance){
-                        $query->where('id', $attendance->sesion_id);
-                    })->pluck('session_date'),
-                    'sessionId' => $attendance->session_id,
-                    'attended'  => $attendance->attended
+                    'clientName' => $client->first_name .' '. $client->last_name,
+                    'sessions'  => $sessionData
                 ];
             })
         ];

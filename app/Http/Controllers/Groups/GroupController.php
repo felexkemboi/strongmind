@@ -161,6 +161,7 @@ class GroupController extends Controller
      * @urlParam id integer required . The Group ID . Example: 1
      * @return JsonResponse
      * @authenticated
+     * @hideFromAPIDocumentation
      */
     public function listGroupClientsByStaff(int $id): JsonResponse
     {

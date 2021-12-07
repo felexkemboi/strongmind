@@ -462,6 +462,13 @@
         "description": ""
     },
     {
+        "name": "view session attendance details",
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
+    },
+    {
         "name": "list clients session attendance",
         "guard_name": "api",
         "module": "Groups",
