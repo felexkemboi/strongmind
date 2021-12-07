@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
+ * Manage Group Sessions
  * Class GroupSessionController
  * @package App\Http\Controllers\Groups
  * @group Groups

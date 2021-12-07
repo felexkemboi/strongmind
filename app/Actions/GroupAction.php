@@ -235,20 +235,20 @@ class GroupAction
         try {
             $group = Group::with('clients','sessions','attendance')->findOrFail($id);
             $groupClientData = $group->clients->transform(function($client) use($group){
-                $clientBioData = ClientBioData::select('first_name','last_name')->firstWhere(function(Builder $query) use($client){
-                    $query->where('client_id', $client->id);
+                $clientBioData = ClientBioData::select('id','first_name','last_name')->firstWhere(function(Builder $query) use($client){
+                    $query->where('client_id', $client->client_id);
                 });
-                //dd($clientBioData);
                 return [
                     'group_id' => $group->id,
                     'client_id' => $clientBioData->id,
                     'name' => $clientBioData->first_name .' '.$clientBioData->last_name,
-                    'sessions' => $group->sessions->filter(function($session) use($group){
+                    'sessions' => $group->sessions->filter(function($session) use($group, $client){
                         return $session->group_id === $group->id;
                     })->transform(function($session) use($clientBioData, $group){
                         $attendance = $group->attendance->filter(function($attendance) use($session, $clientBioData){
                             return $attendance->session_id === $session->id && $attendance->client_id === $clientBioData->id;
                         })->first();
+                        //dd($attendance->attended);
                         return [
                             'sessionId' => $session->id,
                             'sessionDate' => $session->session_date !== null ? Carbon::parse($session->session_date)->format('d M Y') : null,
