@@ -8,14 +8,11 @@ use App\Helpers\CountryHelper;
 use App\Http\Requests\GroupClientRequest;
 use App\Http\Requests\GroupRequest;
 use App\Http\Requests\GroupUpdateRequest;
-use App\Http\Requests\SessionAttendanceRequest;
 use App\Models\Client;
 use App\Models\ClientBioData;
 use App\Models\Group;
 use App\Models\GroupClient;
-use App\Models\GroupSession;
 use App\Models\Office;
-use App\Models\SessionAttendance;
 use App\Services\GroupService;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
@@ -62,7 +59,7 @@ class GroupAction
                     'group_id' => $countryCode->long_code.'-'.Carbon::now()->format('y').'-'.$newGroup->id
                 ]);
                 $groupItem = Group::with('sessions','staff','groupType','attendance')->findOrFail($newGroup->id);
-                return $this->commonResponse(true,'Group Created Successfully',GroupService::viewGroupDetails($newGroup), Response::HTTP_CREATED);
+                return $this->commonResponse(true,'Group Created Successfully',GroupService::viewGroupDetails($groupItem), Response::HTTP_CREATED);
             }
             return $this->commonResponse(false,'Failed to create group','', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (ModelNotFoundException $exception){

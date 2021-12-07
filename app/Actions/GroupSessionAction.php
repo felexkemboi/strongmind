@@ -56,7 +56,7 @@ class GroupSessionAction
             $group = Group::with('clients','sessions')->findOrFail($id);
             $newSession = GroupSession::create([
                 'group_id' => $group->id,
-                'session_date' => Carbon::parse($request->session_date)->format('d M Y'),
+                'session_date' => $request->session_date,
                 'total_clients' => $group->clients->count(),
                 'total_present' => 0
             ]);

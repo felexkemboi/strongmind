@@ -51,6 +51,12 @@ class RoleAction
             if($newRole = Role::create(array_merge($request->validated(),
                 ['guard_name' => PermissionRoleService::API_GUARD, 'role_code' => strtoupper($request->role_code)]
             ))){
+                //assign permissions
+                $role = Role::findById($newRole->id, PermissionRoleService::API_GUARD);
+                $permissions = Permission::whereIn('id', $request->permission_id)->get();
+                foreach ($permissions as $permission){
+                    $role->givePermissionTo($permission);
+                }
                 return $this->commonResponse(true,'Role Created Successfully',$this->permissionRoleService->fetchRoleData($newRole), Response::HTTP_CREATED);
             }
             return $this->commonResponse(false,'Failed to create role','', Response::HTTP_UNPROCESSABLE_ENTITY);

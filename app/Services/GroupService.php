@@ -23,7 +23,7 @@ class GroupService
             'id' => $group->id,
             'name' => $group->name,
             'sessions' => $group->sessions->transform(function($session){
-                return ['date' => Carbon::parse($session->session_date)->format('d M Y') ];
+                return ['date' => $session->session_date];
             }),
             'last_session' => $group->last_session !== null ? Carbon::parse($group->last_session)->format('d M Y') : null,
             'ongoing' => $group->ongoing === Group::SESSION_ONGOING ? 'Ongoing' : 'Terminated'
@@ -40,7 +40,7 @@ class GroupService
             'name' => $group->name,
             'group_id' => $group->group_id,
             'sessions' => $group->sessions->transform(function($session){
-                return ['date' => Carbon::parse($session->session_date)->format('d M Y') ];
+                return ['date' => $session->session_date];
             }),
             'last_session' => $group->last_session !== null ? Carbon::parse($group->last_session)->format('d M Y') : null,
             'ongoing' => $group->ongoing === Group::SESSION_ONGOING ? 'Ongoing' : 'Terminated',
@@ -60,22 +60,21 @@ class GroupService
                 $client = ClientBioData::select('first_name','last_name')->where(function(Builder $query) use($attendance){
                     $query->where('client_id', $attendance->client_id);
                 })->first();
-                $sessions = $group->sessions;
                 $groupAttendance = SessionAttendance::where(function(Builder $query) use($attendance){
                     $query->where('session_id', $attendance->session_id);
                 })->first();
                 $groupSessions = GroupSession::where(function(Builder $query) use($group){
                     $query->where('group_id', $group->id);
-                })->get();
+                })->get()->filter(function ($query) use($attendance){
+                    return $query->where('id',$attendance->session_id);
+                });
                 $sessionData = [];
                 foreach($groupSessions as $session){
-                    //foreach($groupAttendance as $groupAttendanceInfo){
                         $sessionData[] = [
-                            'sessionDate' => Carbon::parse($session->session_date)->format('d M Y'),
+                            'sessionDate' => $session->session_date,
                             'sessionId'   => $session->id,
                             'attended'    => $groupAttendance->attended
                         ];
-                    //}
                 }
                 return [
                     'clientName' => $client->first_name .' '. $client->last_name,
