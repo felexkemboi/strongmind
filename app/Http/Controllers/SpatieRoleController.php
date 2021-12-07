@@ -44,6 +44,7 @@ class SpatieRoleController extends Controller
      * @bodyParam name string required . The role name
      * @bodyParam role_code string required . The Role Code
      * @bodyParam description text. The role description
+     * @bodyParam permission_id array required . An array of permissions . Example : [1,2,3]
      * @return JsonResponse
      * @authenticated
      */

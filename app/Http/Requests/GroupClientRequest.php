@@ -25,7 +25,7 @@ class GroupClientRequest extends FormRequest
     {
         return [
             'client_id' => ['array','required','min:1'],
-            'client_id.*' => ['integer','required','not_in:0','distinct','exists:clients,id','unique:group_clients,client_id']
+            'client_id.*' => ['integer','required','not_in:0','distinct','exists:clients,id']
         ];
     }
 }
