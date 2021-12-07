@@ -14,6 +14,7 @@ use App\Models\SessionAttendance;
 use App\Services\GroupService;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -159,7 +160,10 @@ class GroupSessionAction
     {
         try{
             $groupSession = GroupSession::findOrFail($id);
-            return $this->commonResponse(true,'success', new GroupSessionResource($groupSession),Response::HTTP_OK);
+            $attendanceData = SessionAttendance::where(function (Builder $query) use($groupSession){
+                $query->where('session_id',$groupSession->id);
+            })->get();
+            return $this->commonResponse(true,'success', $attendanceData,Response::HTTP_OK);
         }catch (ModelNotFoundException $modelNotFoundException){
             return $this->commonResponse(false,'Group Session Does Not Exist','', Response::HTTP_NOT_FOUND);
         }

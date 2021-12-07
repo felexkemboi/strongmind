@@ -8,6 +8,12 @@ use App\Http\Requests\SessionAttendanceRequest;
 use App\Services\PermissionRoleService;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * Manage Group Attendance
+ * Class GroupAttendanceController
+ * @package App\Http\Controllers\Groups
+ * @group Groups
+ */
 class GroupAttendanceController extends Controller
 {
     public $permissionRoleService;
@@ -37,6 +43,13 @@ class GroupAttendanceController extends Controller
         return $this->groupSectionAction->recordSessionAttendance($request, $id);
     }
 
+    /**
+     * Display Session Details with Attendance
+     * @param int $id
+     * @urlParam id integer required . The SessionID.
+     * @return JsonResponse
+     * @authenticated
+     */
     public function show(int $id): JsonResponse
     {
         $this->permissionRoleService->verifyUserHasPermissionTo('view session attendance details');
