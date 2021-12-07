@@ -23,7 +23,10 @@ class GroupService
             'id' => $group->id,
             'name' => $group->name,
             'sessions' => $group->sessions->transform(function($session){
-                return ['date' => $session->session_date];
+                return [
+                    'id' => $session->id,
+                    'date' => $session->session_date
+                ];
             }),
             'last_session' => $group->last_session !== null ? Carbon::parse($group->last_session)->format('d M Y') : null,
             'ongoing' => $group->ongoing === Group::SESSION_ONGOING ? 'Ongoing' : 'Terminated'
@@ -40,7 +43,10 @@ class GroupService
             'name' => $group->name,
             'group_id' => $group->group_id,
             'sessions' => $group->sessions->transform(function($session){
-                return ['date' => $session->session_date];
+                return [
+                    'id' => $session->id,
+                    'date' => $session->session_date
+                ];
             }),
             'last_session' => $group->last_session !== null ? Carbon::parse($group->last_session)->format('d M Y') : null,
             'ongoing' => $group->ongoing === Group::SESSION_ONGOING ? 'Ongoing' : 'Terminated',
