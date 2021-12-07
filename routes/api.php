@@ -33,6 +33,9 @@ use App\Http\Controllers\ClientMaritalStatusController;
 use App\Http\Controllers\ClientPhoneOwnershipController;
 use App\Http\Controllers\ModeOfDeliveryController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuestionOptionsController;
+use App\Http\Controllers\QuestionResponsesController;
 use App\Http\Controllers\Groups\GroupSessionController;
 /*
 |--------------------------------------------------------------------------
@@ -276,6 +279,7 @@ Route::group(['prefix' => 'grouptype','middleware' => 'auth:sanctum'], function(
 });
 
 Route::resource('deliverymodes',ModeOfDeliveryController::class)->middleware('auth:sanctum');
+
 //Forms
 Route::group(['prefix' => 'forms','middleware' => 'auth:sanctum'], function(){
     Route::get('/all',           [FormController::class, 'index']);
@@ -283,3 +287,29 @@ Route::group(['prefix' => 'forms','middleware' => 'auth:sanctum'], function(){
     Route::put('{id}/update',    [FormController::class, 'update']);
     Route::delete('{id}/delete', [FormController::class, 'destroy']);
 });
+
+//Questions
+Route::group(['prefix' => 'questions'], function(){ //,'middleware' => 'auth:sanctum'
+    Route::get('/all',           [QuestionController::class, 'index']);
+    Route::post('/create',       [QuestionController::class, 'create']);
+    Route::put('{id}/update',    [QuestionController::class, 'update']);
+    Route::delete('{id}/delete', [QuestionController::class, 'destroy']);
+});
+
+//Question Options
+Route::group(['prefix' => 'questions-options','middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',           [QuestionOptionsController::class, 'index']);
+    Route::post('/create',       [QuestionOptionsController::class, 'create']);
+    Route::put('{id}/update',    [QuestionOptionsController::class, 'update']);
+    Route::delete('{id}/delete', [QuestionOptionsController::class, 'destroy']);
+});
+
+
+//Question Responses
+Route::group(['prefix' => 'questions-responses','middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',           [QuestionResponsesController::class, 'index']);
+    Route::post('/create',       [QuestionResponsesController::class, 'create']);
+    Route::put('{id}/update',    [QuestionResponsesController::class, 'update']);
+    Route::delete('{id}/delete', [QuestionResponsesController::class, 'destroy']);
+});
+
