@@ -8,13 +8,18 @@ use App\Helpers\CountryHelper;
 use App\Http\Requests\GroupClientRequest;
 use App\Http\Requests\GroupRequest;
 use App\Http\Requests\GroupUpdateRequest;
+use App\Http\Requests\SessionAttendanceRequest;
 use App\Models\Client;
+use App\Models\ClientBioData;
 use App\Models\Group;
 use App\Models\GroupClient;
+use App\Models\GroupSession;
 use App\Models\Office;
+use App\Models\SessionAttendance;
 use App\Services\GroupService;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -48,9 +53,6 @@ class GroupAction
     {
         try{
             $office = Office::findOrFail($request->office_id);
-//            if($office->name === Office::GLOBAL_OFFICE_NAME){
-//            return $this->commonResponse(false,'Global office does not have a country','', Response::HTTP_UNPROCESSABLE_ENTITY); //local testing
-//            }
             if($newGroup = Group::create(array_merge($request->validated(),
                 ['staff_id' => auth()->id(),
                     'last_session' => null,
@@ -59,7 +61,7 @@ class GroupAction
                 $newGroup->update([
                     'group_id' => $countryCode->long_code.'-'.Carbon::now()->format('y').'-'.$newGroup->id
                 ]);
-                $groupItem = Group::with('sessions','staff')->findOrFail($newGroup->id);
+                $groupItem = Group::with('sessions','staff','groupType','attendance')->findOrFail($newGroup->id);
                 return $this->commonResponse(true,'Group Created Successfully',GroupService::viewGroupDetails($newGroup), Response::HTTP_CREATED);
             }
             return $this->commonResponse(false,'Failed to create group','', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -92,7 +94,7 @@ class GroupAction
     public function terminateGroup(int $id): JsonResponse
     {
         try{
-            $group = Group::with('sessions')->findOrFail($id);
+            $group = Group::with('sessions','staff','groupType','attendance')->findOrFail($id);
             if($group->ongoing === Group::SESSION_TERMINATED){
                 return $this->commonResponse(false,'Group Session is terminated, no action required',GroupService::getGroupData($group), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
@@ -113,7 +115,7 @@ class GroupAction
     public function updateGroupItem(GroupUpdateRequest $request, int $id): JsonResponse
     {
         try {
-            $group = Group::with('sessions')->findOrFail($id);
+            $group = Group::with('sessions','staff','groupType','attendance')->findOrFail($id);
             $office_id = $request->office_id ?? $group->office_id;
             $office = Office::findOrFail($office_id);
             $countryCode = null;
@@ -150,7 +152,7 @@ class GroupAction
     public function deleteGroup(int $id): JsonResponse
     {
         try{
-            $group = Group::with('sessions')->findOrFail($id);
+            $group = Group::with('sessions','staff','groupType','attendance')->findOrFail($id);
             $group->delete();
             return $this->commonResponse(true,'Group Deleted Successfully','', Response::HTTP_OK);
         }catch (ModelNotFoundException $exception){
@@ -166,8 +168,8 @@ class GroupAction
     public function addClientsToGroup(GroupClientRequest $request, int $id): JsonResponse
     {
         try{
-            $group = Group::with('sessions','clients')->findOrFail($id);
-            $clients = Client::whereIn('id', $request->client_id);
+            $group = Group::with('sessions','clients','staff','groupType','attendance')->findOrFail($id);
+            $clients = Client::whereIn('id', $request->client_id)->get();
             foreach ($clients as $client){
                 GroupClient::create(
                     [
@@ -189,4 +191,81 @@ class GroupAction
             return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function listClientsByGroupId(int $id): JsonResponse
+    {
+        try{
+            $group = Group::with('clients','sessions','attendance')->findOrFail($id);
+            $groupClientData = $group->clients->transform(function($client) use($group){
+                $clientBioData = ClientBioData::select('id','first_name','last_name')->firstWhere(function(Builder $query) use($client) {
+                    $query->where('client_id', $client->client_id);
+                });
+                return [
+                    'group_id' => $group->id,
+                    'client_id' => $clientBioData->id,
+                    'name' => $clientBioData->first_name .' '.$clientBioData->last_name,
+                    'sessions' => $group->sessions->filter(function($session) use($group){
+                        return $session->group_id === $group->id;
+                    })->transform(function($session) use($clientBioData, $group){
+                        $attendance = $group->attendance->filter(function($attendance) use($session, $clientBioData){
+                            return $attendance->session_id === $session->id && $attendance->client_id === $clientBioData->id;
+                        })->first();
+                        return [
+                            'sessionId' => $session->id,
+                            'sessionDate' => $session->session_date !== null ? Carbon::parse($session->session_date)->format('d M Y') : null,
+                            'attended' => $attendance->attended ?? null,
+                            'reason' => $attendance->reason ?? null
+                        ];
+                    })
+                ];
+            });
+            return $this->commonResponse(true,'success',$groupClientData, Response::HTTP_OK);
+        }catch (ModelNotFoundException $exception){
+            return $this->commonResponse(false,'Group Does Not Exist','', Response::HTTP_NOT_FOUND);
+        }
+        catch (QueryException $exception){
+            return $this->commonResponse(false,$exception->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (Exception $exception){
+            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function listClientsByStaff(int $id): JsonResponse
+    {
+        try {
+            $group = Group::with('clients','sessions','attendance')->findOrFail($id);
+            $groupClientData = $group->clients->transform(function($client) use($group){
+                $clientBioData = ClientBioData::select('first_name','last_name')->firstWhere(function(Builder $query) use($client){
+                    $query->where('client_id', $client->id);
+                });
+                //dd($clientBioData);
+                return [
+                    'group_id' => $group->id,
+                    'client_id' => $clientBioData->id,
+                    'name' => $clientBioData->first_name .' '.$clientBioData->last_name,
+                    'sessions' => $group->sessions->filter(function($session) use($group){
+                        return $session->group_id === $group->id;
+                    })->transform(function($session) use($clientBioData, $group){
+                        $attendance = $group->attendance->filter(function($attendance) use($session, $clientBioData){
+                            return $attendance->session_id === $session->id && $attendance->client_id === $clientBioData->id;
+                        })->first();
+                        return [
+                            'sessionId' => $session->id,
+                            'sessionDate' => $session->session_date !== null ? Carbon::parse($session->session_date)->format('d M Y') : null,
+                            'attended' => $attendance->attended ?? null,
+                            'reason' => $attendance->reason ?? null
+                        ];
+                    })
+                ];
+            });
+            return $this->commonResponse(true,'success',$groupClientData, Response::HTTP_OK);
+        } catch (ModelNotFoundException $exception) {
+            return $this->commonResponse(false, 'Group Does Not Exist', '', Response::HTTP_NOT_FOUND);
+        } catch (QueryException $exception) {
+            return $this->commonResponse(false, $exception->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $exception) {
+            return $this->commonResponse(false, $exception->getMessage(), '', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

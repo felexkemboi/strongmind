@@ -5,9 +5,13 @@ namespace App\Actions;
 
 
 use App\Http\Requests\GroupSessionRequest;
+use App\Http\Requests\SessionAttendanceRequest;
 use App\Http\Resources\GroupSessionResource;
+use App\Models\Client;
 use App\Models\Group;
 use App\Models\GroupSession;
+use App\Models\SessionAttendance;
+use App\Services\GroupService;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -92,8 +96,9 @@ class GroupSessionAction
         try{
             $groupSession = GroupSession::findOrFail($id);
             $groupSession->update([
-                'last_session' => $request->session_date !== null ? Carbon::parse($request->session_date)->format('d M Y') : $groupSession->session_date
+                'session_date' => $request->session_date !== null ? Carbon::parse($request->session_date)->format('d M Y') : $groupSession->session_date
             ]);
+            return $this->commonResponse(true,'Group Session Updated Successfully','', Response::HTTP_OK);
         }catch (ModelNotFoundException $modelNotFoundException){
             return $this->commonResponse(false,'Group Session Does Not Exist','', Response::HTTP_NOT_FOUND);
         }
@@ -122,17 +127,30 @@ class GroupSessionAction
         }
     }
 
-    public function recordSessionAttendance(int $id): JsonResponse
+    public function recordSessionAttendance(SessionAttendanceRequest $sessionAttendanceRequest, int $id): JsonResponse
     {
         try{
-            //to be continued
-        }catch (ModelNotFoundException $modelNotFoundException){
-            return $this->commonResponse(false,'Group Session Does Not Exist','', Response::HTTP_NOT_FOUND);
+            $session = GroupSession::findOrFail($id);
+            $group = Group::with('sessions','clients','staff','attendance','groupType')->findOrFail($session->id);
+            $clients = Client::whereIn('id', $sessionAttendanceRequest->client_id)->get();
+            if($sessionAttendanceRequest->attended === false && $sessionAttendanceRequest->reason === null){
+                return $this->commonResponse(false,'Please state some reason for non-attendance','', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+            foreach ($clients as $client){
+                SessionAttendance::create([
+                    'session_id' => $session->id,
+                    'client_id' => $client->id,
+                    'attended' => $sessionAttendanceRequest->attended,
+                    'reason'   => $sessionAttendanceRequest->reason
+                ]);
+            }
+            return $this->commonResponse(true,'Session Attendance recorded successfully',GroupService::viewGroupDetails($group), Response::HTTP_CREATED);
+        }catch (ModelNotFoundException $exception){
+            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_NOT_FOUND);
         }
-        catch (QueryException $queryException){
-            return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
+        catch (QueryException $exception){
+            return $this->commonResponse(false,$exception->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
-            Log::critical('Failed to list groups. ERROR: '.$exception->getTraceAsString());
             return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -140,7 +158,8 @@ class GroupSessionAction
     public function listSessionAttendance(int $id): JsonResponse
     {
         try{
-            //to be continued
+            $groupSession = GroupSession::findOrFail($id);
+            return $this->commonResponse(true,'success', new GroupSessionResource($groupSession),Response::HTTP_OK);
         }catch (ModelNotFoundException $modelNotFoundException){
             return $this->commonResponse(false,'Group Session Does Not Exist','', Response::HTTP_NOT_FOUND);
         }

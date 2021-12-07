@@ -7,14 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\GroupClientRequest;
 use App\Http\Requests\GroupRequest;
 use App\Http\Requests\GroupUpdateRequest;
-use App\Models\Group;
 use App\Services\PermissionRoleService;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
-use Symfony\Component\HttpFoundation\Response;
-use Exception;
 
 /**
  * Groups Endpoints
@@ -146,5 +140,32 @@ class GroupController extends Controller
     {
         $this->permissionRoleService->verifyUserHasPermissionTo('add clients to a group');
         return $this->groupAction->addClientsToGroup($request, $id);
+    }
+
+    /**
+     * List Clients By Group
+     * @param int $id
+     * @urlParam id integer required . The Group ID . Example: 1
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function listClients(int $id): JsonResponse
+    {
+        $this->permissionRoleService->verifyUserHasPermissionTo('list clients by group');
+        return $this->groupAction->listClientsByGroupId($id);
+    }
+
+    /**
+     * List Group Clients By Staff
+     * @param int $id
+     * @urlParam id integer required . The Group ID . Example: 1
+     * @return JsonResponse
+     * @authenticated
+     * @hideFromAPIDocumentation
+     */
+    public function listGroupClientsByStaff(int $id): JsonResponse
+    {
+        $this->permissionRoleService->verifyUserHasPermissionTo('list group clients by staff member');
+        return $this->groupAction->listClientsByStaff($id);
     }
 }

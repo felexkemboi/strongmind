@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class GroupClientRequest extends FormRequest
+class SessionAttendanceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,10 @@ class GroupClientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'client_id' => ['array','required','min:1'],
-            'client_id.*' => ['integer','required','not_in:0','distinct','exists:clients,id','unique:group_clients,client_id']
+            'client_id' => ['array','min:1','required'],
+            'client_id.*' => ['integer','required','not_in:0','exists:clients,id','distinct'],
+            'reason' => ['string','min:3','max:255','nullable'],
+            'attended' => ['boolean','required']
         ];
     }
 }
