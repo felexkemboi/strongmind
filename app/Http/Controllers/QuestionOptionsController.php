@@ -6,12 +6,11 @@ use App\Models\QuestionOptions;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateQuestionOptionsRequest;
 
-/*
- *
+/**
  * Class QuestionOptionsController
  * @package App\Http\Controllers
  * @group Dynamic Fields
- *
+ * APIs for managing Question Options
 */
 
 class QuestionOptionsController extends Controller

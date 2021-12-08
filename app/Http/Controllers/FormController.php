@@ -39,8 +39,7 @@ class FormController extends Controller
      * @param CreateFormRequest $request
      * @return JsonResponse
      * @bodyParam name string required The Form's Name
-     * @bodyParam status_id string  The Form's status
-     * @bodyParam published_at date  The Form's published date
+     * @bodyParam status_id integer  The Form's status
      * @authenticated
      */
 
@@ -50,7 +49,7 @@ class FormController extends Controller
             $form = new Form();
             $form->name = $request->name;
             $form->status_id = $request->status_id ?? '';
-            $form->published_at = $request->published_at ?? '';
+            $form->published_at = $request->published_at ?? now();
             if ($form->save()) {
                 return $this->commonResponse(true, 'Form created successfully!', '', Response::HTTP_CREATED);
             }
