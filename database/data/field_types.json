@@ -1,0 +1,23 @@
+[
+
+    {
+        "name": "Numeric",
+        "type": "numeric"
+    },
+    {
+        "name": "Text",
+        "type": "text"
+    },
+    {
+        "name": "Multiple",
+        "type": "multiple"
+    },
+    {
+        "name": "Date Time",
+        "type": "datetime"
+    },
+    {
+        "name": "Date",
+        "type": "date"
+    }
+]

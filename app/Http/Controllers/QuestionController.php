@@ -36,9 +36,9 @@ class QuestionController extends Controller
      * @param CreateQuestionRequest $request
      * @return JsonResponse
      * @bodyParam description string required The Question's description
-     * @bodyParam form_id  integer The form the question belongs to
-     * @bodyParam field_type_id  integer If the form of the question
-     * @bodyParam required  boolean  If the form is required
+     * @bodyParam form_id  integer required The form the question belongs to
+     * @bodyParam field_type_id  integer required  If the form of the question
+     * @bodyParam required  boolean required   If the form is required
      * @bodyParam question_options_id  integer Options of the question
      * @bodyParam multiple_selection  boolean Options of the question
      * @authenticated
