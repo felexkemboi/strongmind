@@ -295,7 +295,7 @@ Route::group(['prefix' => 'forms','middleware' => 'auth:sanctum'], function(){
 });
 
 //Questions
-Route::group(['prefix' => 'questions'], function(){ //,'middleware' => 'auth:sanctum'
+Route::group(['prefix' => 'questions','middleware' => 'auth:sanctum'], function(){ 
     Route::get('/all',           [QuestionController::class, 'index']);
     Route::post('/create',       [QuestionController::class, 'create']);
     Route::put('{id}/update',    [QuestionController::class, 'update']);

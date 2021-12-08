@@ -11,12 +11,11 @@ use App\Http\Requests\CreateQuestionResponseRequest;
 use App\Http\Requests\EditQuestionResponseRequest;
 use App\Models\QuestionResponses;
 
-/*
- *
+/**
  * Class QuestionResponsesController
  * @package App\Http\Controllers
  * @group Dynamic Fields
- *
+ * APIs for managing Question Responses
 */
 
 class QuestionResponsesController extends Controller

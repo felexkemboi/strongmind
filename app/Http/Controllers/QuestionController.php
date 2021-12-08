@@ -10,12 +10,11 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateQuestionRequest;
 use App\Http\Requests\EditQuestionRequest;
 
-/*
- *
+/**
  * Class QuestionController
  * @package App\Http\Controllers
  * @group Dynamic Fields
- *
+ * APIs for managing Questions
 */
 
 class QuestionController extends Controller
