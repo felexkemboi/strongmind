@@ -25,8 +25,7 @@ class CreateFormRequest extends FormRequest
     {
         return [
             'name' => ['required','string','unique:forms,name','min:3','max:30'],
-            'status_id' => ['integer','not_in:0','exists:client_status,id'],
-            'published_at' => ['date'],
+            'status_id' => ['integer','not_in:0','exists:statuses,id'],
         ];
     }
 }

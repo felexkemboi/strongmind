@@ -117,12 +117,14 @@ class QuestionResponsesController extends Controller
      */
     public function destroy(int $questionResponseId): JsonResponse
     {
-        $questionResponse = QuestionResponse::findorFail($questionResponseId);
-        if ($questionResponse) {
-            $questionResponse->delete();
-            return $this->commonResponse(true, 'Question Response deleted', '', Response::HTTP_OK);
-        } else {
-            return $this->commonResponse(false, 'Question Response not found!', '', Response::HTTP_NOT_FOUND);
+
+        $questionResponse = QuestionResponse::find($questionResponseId);
+        if($questionResponse){
+            if ($questionResponse->delete()) {
+                return $this->commonResponse(true, 'Question Response deleted', '', Response::HTTP_OK);
+            }
+            return $this->commonResponse(false, 'Failed to delete the Question Response', '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+        return $this->commonResponse(false, 'Question Response not found!', '', Response::HTTP_NOT_FOUND);
     }
 }

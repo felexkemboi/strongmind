@@ -118,11 +118,12 @@ class FormController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $form = Form::find($id);
-        if ($form) {
-            $form->delete();
-            return $this->commonResponse(true, 'Form deleted', '', Response::HTTP_OK);
-        } else {
-            return $this->commonResponse(false, 'Form not found!', '', Response::HTTP_NOT_FOUND);
+        if($form){
+            if ($form->delete()) {
+                return $this->commonResponse(true, 'Form deleted', '', Response::HTTP_OK);
+            }
+            return $this->commonResponse(false, 'Failed to delete the form', '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+        return $this->commonResponse(false, 'Form not found!', '', Response::HTTP_NOT_FOUND);
     }
 }
