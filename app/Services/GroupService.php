@@ -55,6 +55,7 @@ class GroupService
                  [
                     'id' => $user->id,
                     'name' => $user->name,
+                     'profile_pic_url' => $user->profile_pic_url,
                     'roles' => $user->roles->transform(function($role){
                         return [
                             'id' => $role->id,
