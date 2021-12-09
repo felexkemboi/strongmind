@@ -14,6 +14,7 @@ use App\Models\Group;
 use App\Models\GroupClient;
 use App\Models\Office;
 use App\Services\GroupService;
+use App\Support\Collection;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -37,7 +38,7 @@ class GroupAction
                 ->transform(function ($group){
                     return GroupService::getGroupData($group);
             });
-            return $this->commonResponse(true,'Success',$groups, Response::HTTP_OK);
+            return $this->commonResponse(true,'Success', (new Collection($groups))->paginate(10), Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
