@@ -14,7 +14,7 @@ use App\Models\QuestionResponses;
 /**
  * Class QuestionResponsesController
  * @package App\Http\Controllers
- * @group Dynamic Fields
+ * @group Forms
  * APIs for managing Question Responses
 */
 

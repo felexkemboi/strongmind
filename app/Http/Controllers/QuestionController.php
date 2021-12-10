@@ -13,7 +13,7 @@ use App\Http\Requests\EditQuestionRequest;
 /**
  * Class QuestionController
  * @package App\Http\Controllers
- * @group Dynamic Fields
+ * @group Forms
  * APIs for managing Questions
 */
 

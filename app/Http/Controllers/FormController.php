@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
  *
  * Class FormController
  * @package App\Http\Controllers
- * @group Dynamic Fields
+ * @group Forms
  *
  */
 
