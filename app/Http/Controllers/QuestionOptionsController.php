@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Class QuestionOptionsController
  * @package App\Http\Controllers
- * @group Dynamic Fields
+ * @group Forms
  * APIs for managing Question Options
 */
 

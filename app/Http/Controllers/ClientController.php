@@ -106,6 +106,7 @@ class ClientController extends Controller
      * @authenticated
      */
 
+
     public function create(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -144,6 +145,7 @@ class ClientController extends Controller
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             try {
+
                 $client = new Client;
                 $client->name = $request->name;
                 $client->phone_number = $request->phone_number;
