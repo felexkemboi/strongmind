@@ -80,6 +80,8 @@ class UserController extends Controller
             $users = $users->where('active', $active);
         }
 
+        $users = $users->latest();
+
         if($request->has('sort') &&  $request->filled('sort')){
            if(!$this->sort_array($sort, $sort_params)){
                 return $this->commonResponse(false,'Invalid Sort Parameter','',Response::HTTP_UNPROCESSABLE_ENTITY);
