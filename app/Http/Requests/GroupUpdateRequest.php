@@ -24,9 +24,17 @@ class GroupUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required','string','min:3','max:30'],
+            'name' => ['nullable','string','min:3','max:30'],
             'group_type_id' => ['nullable','integer','not_in:0','exists:group_types,id'],
-            'last_session' => ['nullable','datetime'],
+            'last_session' => ['nullable','date'],
+            'office_id' => ['nullable','integer','not_in:0','exists:offices,id'],
+            'project_id' => ['nullable','integer','not_in:0','exists:programs,id'],
+            'cycle_id'  => ['integer','nullable','not_in:0','exists:cycle,id'],
+            'fascilitator_id' => ['integer','nullable','not_in:0','exists:users,id'],
+            'supervisor_id' => ['integer','nullable','not_in:0','exists:users,id'],
+            'therapy_mode_id' => ['integer','nullable','not_in:0','exists:therapy_mode,id'],
+            'mode_of_delivery_id' => ['integer','nullable','not_in:0','exists:modes_of_delivery,id'],
+            'group_allocation_date' => ['nullable','date']
         ];
     }
 }

@@ -4,8 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Services\PermissionRoleService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Exceptions\RoleAlreadyExists;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 class RoleTableSeeder extends Seeder
@@ -18,29 +20,24 @@ class RoleTableSeeder extends Seeder
     public function run()
     {
         //DB::table('spatie_roles')->truncate();
-        $roles_data = array(
-            array(
-                'name' => 'admin',
-                'guard_name' => PermissionRoleService::API_GUARD
-            ),
-        );
-
-        for($i =0, $iMax = count($roles_data); $i < $iMax; $i++){
-            $existingRole = Role::where(function($query) use($roles_data, $i){
-                $query->where('name',$roles_data[$i]['name']);
-            })->exists();
-            if(!$existingRole){
-                Role::insert($roles_data);
+        $rolesData = [
+            'name' => 'admin',
+            'guard_name' => PermissionRoleService::API_GUARD,
+            'role_code' => 'ADM',
+            'description' => 'admin role'
+        ];
+        $adminRole = Role::findByName($rolesData['name'],PermissionRoleService::API_GUARD);
+        if(!$adminRole){
+            Role::create($rolesData);
+        }else{
+            $user = User::firstWhere('email','admin@strongminds.org');
+            $user->assignRole($adminRole); //assign this user an admin role with all permissions
+            $permissions = Permission::get()->filter(function ($permission){
+                return $permission->guard_name === PermissionRoleService::API_GUARD;
+            });
+            foreach ($permissions as $permission){
+                $adminRole->givePermissionTo($permission);
             }
-        }
-        $user = User::firstWhere('email','admin@strongminds.org');
-        $adminRole = Role::findByName($roles_data[0]['name'],PermissionRoleService::API_GUARD);
-        $user->assignRole($adminRole); //assign this user an admin role with all permissions
-        $permissions = Permission::get()->filter(function ($permission){
-            return $permission->guard_name === PermissionRoleService::API_GUARD;
-        });
-        foreach ($permissions as $permission){
-            $adminRole->givePermissionTo($permission);
         }
     }
 }

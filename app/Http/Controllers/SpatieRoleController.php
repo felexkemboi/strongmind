@@ -41,7 +41,10 @@ class SpatieRoleController extends Controller
      *
      * @param RoleRequest $request
      * @param RoleAction $roleAction
-     * @bodyParam name string required.
+     * @bodyParam name string required . The role name
+     * @bodyParam role_code string required . The Role Code
+     * @bodyParam description text. The role description
+     * @bodyParam permission_id array required . An array of permissions . Example : [1,2,3]
      * @return JsonResponse
      * @authenticated
      */
@@ -71,7 +74,10 @@ class SpatieRoleController extends Controller
      * @param RoleUpdateRequest $request
      * @param int $id
      * @param RoleAction $roleAction
-     * @bodyParam name string required.
+     * @bodyParam name string required .
+     * @bodyParam role_code string. The Role's Role Code
+     * @bodyParam description string. The Role's Description
+     * @bodyParam permission_id integer. An Array of permission_id(s) e.g [1,2,3]
      * @return JsonResponse
      * @authenticated
      */

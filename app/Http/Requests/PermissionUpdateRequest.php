@@ -24,7 +24,9 @@ class PermissionUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|min:3|max:60',
+            'name' => ['nullable','string','min:3','max:60'],
+            'description' => ['nullable','string','min:3','max:255'],
+            'module' => ['nullable','string','min:3','max:60']
         ];
     }
 }

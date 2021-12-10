@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\ClientStatus;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateClientStatusRequest;
 
@@ -28,8 +30,14 @@ class ClientStatusController extends Controller
 
     public function index(): JsonResponse
     {
-        $statuses = ClientStatus::all();
-        return $this->commonResponse(true, 'success', $statuses, Response::HTTP_OK);
+        try {
+            $statuses = ClientStatus::all();
+            return $this->commonResponse(true, 'success', $statuses, Response::HTTP_OK);
+        }catch (QueryException $queryException){
+            return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (Exception $exception){
+            return $this->commonResponse(false, $exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -51,7 +59,7 @@ class ClientStatusController extends Controller
         } catch (QueryException $ex) {
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $ex) {
-            return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -64,29 +72,34 @@ class ClientStatusController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $clientsatus = ClientStatus::find($id);
-        if ($clientsatus) {
-            return $this->commonResponse(true, 'success', $clientsatus, Response::HTTP_OK);
-        } else {
-            return $this->commonResponse(false, 'Client Status Not Found!', '', Response::HTTP_NOT_FOUND);
+        try{
+            $clientStatus = ClientStatus::findOrFail($id);
+            return $this->commonResponse(true, 'success', $clientStatus, Response::HTTP_OK);
+        }catch (QueryException $queryException){
+            return $this->commonResponse(false, $queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (ModelNotFoundException $modelNotFoundException){
+            return $this->commonResponse(false,$modelNotFoundException->getMessage(),'', Response::HTTP_NOT_FOUND);
+        }catch (Exception $exception){
+            return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
      * Edit Client Status
      * @param CreateClientStatusRequest $request
-     * @bodyParam name string required The Client Status' Name
+     * @param int $id
      * @return JsonResponse
+     * @bodyParam name string required The Client Status' Name
      * @authenticated
      */
 
     public function update(CreateClientStatusRequest $request, int $id): JsonResponse
     {
         try {
-            $clientsatus = ClientStatus::find($id);
-            if($clientsatus){
-                $clientsatus->name = $request->name;
-                if ($clientsatus->save()) {
+            $clientStatus = ClientStatus::find($id);
+            if($clientStatus){
+                $clientStatus->name = $request->name;
+                if ($clientStatus->save()) {
                     return $this->commonResponse(true, 'Client Status updated successfully!', '', Response::HTTP_CREATED);
                 }
             }
@@ -94,7 +107,7 @@ class ClientStatusController extends Controller
         } catch (QueryException $ex) {
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $ex) {
-            return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -107,12 +120,16 @@ class ClientStatusController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $clientsatus = ClientStatus::find($id);
-        if ($clientsatus) {
-            $clientsatus->delete();
+        try{
+            $clientStatus = ClientStatus::findOrFail($id);
+            $clientStatus->delete();
             return $this->commonResponse(true, 'Client Status deleted', '', Response::HTTP_OK);
-        } else {
-            return $this->commonResponse(false, 'Client Status not found!', '', Response::HTTP_NOT_FOUND);
+        }catch (QueryException $queryException){
+            return $this->commonResponse(false, $queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (ModelNotFoundException $modelNotFoundException){
+            return $this->commonResponse(false, $modelNotFoundException->getMessage(),'', RedirectResponse::HTTP_NOT_FOUND);
+        }catch (Exception $exception){
+            return $this->commonResponse(false, $exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

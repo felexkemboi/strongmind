@@ -6,6 +6,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Office;
 use App\Models\Timezone;
 use App\Models\User;
+use App\Services\PermissionRoleService;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
@@ -18,9 +19,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Silber\Bouncer\Database\Role;
 use Symfony\Component\HttpFoundation\Response;
 use function Clue\StreamFilter\fun;
+use Spatie\Permission\Models\Role;
+
 
 /**
  * Class UserController
@@ -29,6 +31,13 @@ use function Clue\StreamFilter\fun;
  */
 class UserController extends Controller
 {
+    public $permissionRoleService;
+
+    public function __construct(PermissionRoleService $permissionRoleService)
+    {
+        $this->permissionRoleService = $permissionRoleService;
+    }
+
     /**
      * All Users
      * @group Teams
@@ -45,8 +54,10 @@ class UserController extends Controller
         $users = User::query();
         $name=$request->get('name');
         $role=$request->get('role');
+        $active=$request->get('active');
         $paginate=$request->get('paginate');
         $sort = $request->get('sort');
+        $pagination_items = (int)$request->input('pagination_items',10);
         $sort_params = ['desc','asc'];
         $invited = $request->get('accepted');
         if ($request->has('name') && $request->filled('name')) {
@@ -64,6 +75,11 @@ class UserController extends Controller
         if ($request->has('role') && $request->filled('role')) {
             $users = $users->whereIn('id', $this->getUserIds($role));
         }
+
+        if ($request->has('active') && $request->filled('active')) {
+            $users = $users->where('active', $active);
+        }
+
         if($request->has('sort') &&  $request->filled('sort')){
            if(!$this->sort_array($sort, $sort_params)){
                 return $this->commonResponse(false,'Invalid Sort Parameter','',Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -73,7 +89,7 @@ class UserController extends Controller
 
         if($request->has('paginate') &&  $request->filled('paginate')){
             if($paginate ===  '1'){
-                $users=$users->where('is_admin', '<>', 1)->paginate(10);
+                $users=$users->where('is_admin', '<>', 1)->paginate($pagination_items);
 
                 return $this->commonResponse(true, 'success', UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
             }
@@ -82,7 +98,7 @@ class UserController extends Controller
             return $this->commonResponse(true, 'success', UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
         }
 
-        $users=$users->where('is_admin', '<>', 1)->paginate(10);
+        $users=$users->where('is_admin', '<>', 1)->paginate($pagination_items);
 
         return $this->commonResponse(true, 'success', UserResource::collection($users)->response()->getData(true), Response::HTTP_OK);
     }
@@ -225,7 +241,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'nullable',
-            'email' => 'required',
+            'email' => 'nullable',
             'office_id' => 'nullable',
             'phone_number' => 'nullable',
             'gender' => 'nullable',
@@ -233,18 +249,30 @@ class UserController extends Controller
             'city' => 'nullable',
             'languages' => 'nullable|array',
             'timezone_id' => 'nullable',
-            'role_id' => 'nullable',
+            'role_id' => 'nullable|exists:spatie_roles,id',
         ]);
         try {
             if ($validator->fails()) {
                 return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
-            $data = $validator->validated();
             //Get user
              $user=User::find($id);
             if (!$user) {
                 return $this->commonResponse(false, 'User not found!', '', Response::HTTP_NOT_FOUND);
             }
+            $data = [
+                'name' => $request->name ?? $user->name,
+                'email' => $request->email ?? $user->email,
+                'office_id' => $request->office_id ?? $user->office_id,
+                'phone_number' => $request->phone_number ?? $user->phone_number,
+                'gender' => $request->gender ?? $user->gender,
+                'region' => $request->region ?? $user->region,
+                'city' => $request->city ?? $user->city,
+                'languages' => $request->input('languages') ?? $user->languages,
+                'timezone_id' => $request->timezone_id ?? $user->timezone_id,
+                'role_id' => $request->role_id ?? $user->role_id
+            ];
+
             if ($request->has('timezone_id') && $request->filled('timezone_id')) {
                 $timezone = Timezone::find($request->timezone_id);
                 if (!$timezone) {
@@ -259,19 +287,18 @@ class UserController extends Controller
             }
 
             $user->update($data);
-            $user->fresh();
             if ($request->has('role_id') && $request->filled('role_id')) {
-                $role = Role::firstwhere('id', $data['role_id']);
-
+                $role = Role::findById($data['role_id'], $this->permissionRoleService::API_GUARD);
                 if ($role) {
-                    //delete existing role
-                    DB::table('assigned_roles')->where('entity_id', $user->id)
-                ->delete();
-                    $user->assign($role->name);
+                    if($user->hasRole($role)){
+                        return $this->commonResponse(false,'User already has the specified role', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+                    $user->syncRoles($role);
+                }else{
+                    return $this->commonResponse(false,'Role Does Not Exist','',Response::HTTP_NOT_FOUND);
                 }
             }
-
-
+            $user->fresh();
             return $this->commonResponse(true, 'Profile updated successfully!', new UserResource($user), Response::HTTP_CREATED);
         } catch (QueryException $ex) {
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
