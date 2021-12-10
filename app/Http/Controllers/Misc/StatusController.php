@@ -117,9 +117,9 @@ class StatusController extends Controller
         $record = Status::find($id);
         if ($record) {
             $record->delete();
-            return $this->commonResponse(true, 'Record deleted!', '', Response::HTTP_OK);
+            return $this->commonResponse(true, 'Status deleted!', '', Response::HTTP_OK);
         } else {
-            return $this->commonResponse(false, 'Record not found!', '', Response::HTTP_NOT_FOUND);
+            return $this->commonResponse(false, 'Status not found!', '', Response::HTTP_NOT_FOUND);
         }
     }
 
