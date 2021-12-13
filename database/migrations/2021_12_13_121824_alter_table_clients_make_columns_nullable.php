@@ -16,7 +16,6 @@ class AlterTableClientsMakeColumnsNullable extends Migration
         Schema::table('clients', function (Blueprint $table) {
             $table->string('name')->nullable()->change();
             $table->string('patient_id')->nullable()->change();
-            $table->integer('phone_number')->nullable()->change();
             $table->foreignId('country_id')->nullable()->change();
             $table->string('gender')->nullable()->change();
             $table->string('region')->nullable()->change();
