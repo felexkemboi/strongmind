@@ -111,32 +111,32 @@ class ClientController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'nullable|string|min:3|max:60|unique:clients',
-            'first_name' => 'required|string|min:3|max:60',
-            'last_name' => 'required|string|min:3|max:60',
-            'other_name' => 'required|string|min:3|max:60',
+            'first_name' => 'nullable|string|min:3|max:60',
+            'last_name' => 'nullable|string|min:3|max:60',
+            'other_name' => 'nullable|string|min:3|max:60',
             'nick_name' => 'nullable|string|min:3|max:60',
-            'gender' => 'required|string|in:Male,Female,Other',
+            'gender' => 'nullable|string|in:Male,Female,Other',
             'phone_number' => 'required|string|unique:clients', //min:10|max:13
-            'country_id' => 'required|integer|exists:countries,id',
-            'region' => 'required|string|min:3|max:20',
-            'city' => 'required|string|min:3|max:20',
-            'timezone_id' => 'required|integer|exists:timezones,id',
-            'date_of_birth' => 'date|required',
+            'country_id' => 'nullable|integer|exists:countries,id',
+            'region' => 'nullable|string|min:3|max:20',
+            'city' => 'nullable|string|min:3|max:20',
+            'timezone_id' => 'nullable|integer|exists:timezones,id',
+            'date_of_birth' => 'date|nullable',
             'nationality' => 'string|nullable|exists:countries,name',
-            'status_id' => 'required|exists:statuses,id|integer',
-            'channel_id' => 'required|integer|exists:channels,id',
-            'languages' => 'required|string|min:3|max:30',
-            'project_id' => 'required|integer|not_in:0|exists:programs,id',
-            'education_level_id' => 'required|integer|not_in:0|exists:client_education_levels,id',
-            'marital_status_id' => 'required|integer|not_in:0|exists:client_marital_statuses,id',
-            'phone_ownership_id' => 'required|integer|not_in:0|exists:client_phone_ownerships,id',
-            'is_disabled' => 'required|boolean',
-            'district_id' => 'required|integer|not_in:0|exists:client_districts,id',
+            'status_id' => 'nullable|exists:statuses,id|integer',
+            'channel_id' => 'nullable|integer|exists:channels,id',
+            'languages' => 'nullable|string|min:3|max:30',
+            'project_id' => 'nullable|integer|not_in:0|exists:programs,id',
+            'education_level_id' => 'nullable|integer|not_in:0|exists:client_education_levels,id',
+            'marital_status_id' => 'nullable|integer|not_in:0|exists:client_marital_statuses,id',
+            'phone_ownership_id' => 'nullable|integer|not_in:0|exists:client_phone_ownerships,id',
+            'is_disabled' => 'nullable|boolean',
+            'district_id' => 'nullable|integer|not_in:0|exists:client_districts,id',
             'province_id' => 'nullable|integer|not_in:0|exists:client_municipalities,id',
-            'sub_county_id' => 'required|integer|not_in:0|exists:client_sub_counties,id',
+            'sub_county_id' => 'nullable|integer|not_in:0|exists:client_sub_counties,id',
             'parish_ward_id' => 'nullable|integer|not_in:0|exists:client_parishes,id',
             'village_id' => 'nullable|integer|not_in:0|exists:client_villages,id',
-            'program_type_id' => 'required|integer|not_in:0|exists:program_types,id',
+            'program_type_id' => 'nullable|integer|not_in:0|exists:program_types,id',
             'referredThrough' => 'nullable|string|min:2|max:60',
             'referralType' => 'nullable|string|min:3|max:60',
         ]);
@@ -145,7 +145,6 @@ class ClientController extends Controller
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             try {
-
                 $client = new Client;
                 $client->name = $request->name;
                 $client->phone_number = $request->phone_number;
@@ -157,16 +156,21 @@ class ClientController extends Controller
                 $client->languages = $request->input('languages'); //TODO comma separate these if multiple languages are provided
                 $client->status_id = $request->status_id;
                 $client->channel_id = $request->channel_id;
-                $client->referredThrough = $request->referredThrough;
-                $client->referralType = $request->referralType;
+                $client->referredThrough = $request->influence;
+                $client->referralType = $request->type;
+                $client->talk_to = $request->talkto;
+                $client->age = $request->age;
+                $client->contact_through = $request->contact_through;
 
                 $client->age = Carbon::parse($request->date_of_birth)->diff(Carbon::now())->y;
                 if($client->save()){
                     $this->addClientBioData($request, $client);
                     $countryCode = CountryHelper::getCountryCode($request->country_id);
                     $yearVal = Carbon::now()->format('y');
-                    $patient_id = $countryCode->long_code.'-'.$yearVal.'-'.'0000'.$client->id; //random_int(0,4).$client->id;
-                    $client->update(['patient_id' => $patient_id]); //TODO change format to CountryCode-ProgramCode-Year-Cycle-Number
+                    if($request->country_id){
+                        $patient_id = $countryCode->long_code.'-'.$yearVal.'-'.'0000'.$client->id; //random_int(0,4).$client->id;
+                        $client->update(['patient_id' => $patient_id]); //TODO change format to CountryCode-ProgramCode-Year-Cycle-Number
+                    }
                     return $this->commonResponse(true, 'Client created successfully!', new ClientResource($client), Response::HTTP_CREATED);
                 }
                 return $this->commonResponse(false,'Failed to create client','', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -349,7 +353,6 @@ class ClientController extends Controller
 
     public function bulkTransfer(TransferClientsRequest $request): JsonResponse
     {
-        \Log::debug($request);
         try{
             foreach (explode(',', $request->client_ids) as $client_id) {
                 $client = Client::find((int)$client_id);
