@@ -396,27 +396,28 @@ class ClientController extends Controller
         if($validator->fails()){
             return $this->commonResponse(false,Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+
+        $clientIds = explode(',', $request->client_id);
+
         try{
-            $clientIds = explode(',', $request->client_id);
+
             for($i = 0, $iMax = count($clientIds); $i < $iMax; $i++){
-                $client = Client::firstWhere('id', $clientIds[$i]);
+                $client = Client::find($clientIds[$i]);
+
                 if(!$client){
-                    return $this->commonResponse(false,'Client with ID '.$clientIds[$i].' Not Found','', Response::HTTP_NOT_FOUND);
+                    continue;
                 }
-                if($client->update([
-                    'gender' => $request->gender ?? $client[$i]->gender,
-                    'age' => $request->age ?? $client[$i]->age,
-                    'region' => $request->region ?? $client[$i]->region
-                ])){
+
+                if($client->update([ 'gender' => $request->gender ?? $client->gender, 'age' => $request->age ?? $client->age, 'region' => $request->region ?? $client->region])){
                     $user = Auth::user();
                     activity('client')
                         ->performedOn($client)
                         ->causedBy($user)
                         ->log('Changed gender to '.$request->gender.', age to '.$request->age.', region to '.$request->region);
-                    return $this->commonResponse(true,'Clients Updated successfully','', Response::HTTP_OK);
                 }
-                return $this->commonResponse(false,'Failed to update clients','', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
+            return $this->commonResponse(true,'Clients Updated successfully','', Response::HTTP_OK);
+
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){

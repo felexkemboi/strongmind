@@ -81,7 +81,7 @@ class QuestionController extends Controller
     }
 
     /**
-     * Create  Question
+     * Edit  Question
      * @param EditQuestionRequest $request
      * @return JsonResponse
      * @bodyParam description string required The Question's description
