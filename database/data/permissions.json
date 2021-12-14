@@ -36,14 +36,6 @@
         "module": "Administration"
     },
     {
-        "name": "activate country",
-        "module": "Administration"
-    },
-    {
-        "name": "deactivate country",
-        "module": "Administration"
-    },
-    {
         "name": "invite member",
         "module": "Member"
     },
@@ -124,47 +116,35 @@
         "module": "Miscellaneous"
     },
     {
-        "name": "create program",
+        "name": "list projects",
         "module": "Programs"
     },
     {
-        "name": "list programs",
+        "name": "view project",
         "module": "Programs"
     },
     {
-        "name": "view program",
+        "name": "edit project",
         "module": "Programs"
     },
     {
-        "name": "edit program",
+        "name": "update project",
         "module": "Programs"
     },
     {
-        "name": "update program",
+        "name": "delete project",
         "module": "Programs"
     },
     {
-        "name": "delete program",
+        "name": "add project member",
         "module": "Programs"
     },
     {
-        "name": "add program member",
+        "name": "deactivate project membership",
         "module": "Programs"
     },
     {
-        "name": "activate program membership",
-        "module": "Programs"
-    },
-    {
-        "name": "deactivate program membership",
-        "module": "Programs"
-    },
-    {
-        "name": "view program members",
-        "module": "Programs"
-    },
-    {
-        "name": "send program invitations",
+        "name": "view project members",
         "module": "Programs"
     },
     {
