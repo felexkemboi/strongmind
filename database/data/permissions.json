@@ -1,5 +1,13 @@
 [
     {
+        "name": "view permissions",
+        "module": "Auth"
+    },
+    {
+        "name": "view roles",
+        "module": "Auth"
+    },
+    {
         "name": "create role",
         "module": "Auth"
     },
