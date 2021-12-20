@@ -92,7 +92,7 @@ class GroupService
         ];
     }
 
-    public static function getSessions(int $id)
+    public static function getSessionsWithAttendance(int $id)
     {
         $group = Group::find($id);
         return $group->sessions->transform(function($session){

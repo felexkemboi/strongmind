@@ -23,7 +23,7 @@ class GroupResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'sessions' => GroupService::getSessions($this->id),
+            'sessions' => GroupService::getSessionsWithAttendance($this->id),
             'ongoing' => $this->ongoing === Group::SESSION_ONGOING ? 'Ongoing' : 'Terminated',
             'last_session' => $this->last_session,
             'group_type_id' => $this->group_type_id,
