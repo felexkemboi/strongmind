@@ -8,6 +8,7 @@ use App\Http\Requests\GroupSessionRequest;
 use App\Http\Requests\SessionAttendanceRequest;
 use App\Http\Resources\GroupSessionResource;
 use App\Models\Client;
+use App\Models\ClientBioData;
 use App\Models\Group;
 use App\Models\GroupSession;
 use App\Models\SessionAttendance;
@@ -79,7 +80,7 @@ class GroupSessionAction
     public function viewSessionDetails(int $id): JsonResponse
     {
         try{
-            $groupSession = GroupSession::findOrFail($id);
+            $groupSession = GroupSession::with('attendance','group')->findOrFail($id);
             return $this->commonResponse(true,'success',new GroupSessionResource($groupSession), Response::HTTP_OK);
         }catch (ModelNotFoundException $modelNotFoundException){
             return $this->commonResponse(false,'Group Session Does Not Exist','', Response::HTTP_NOT_FOUND);
@@ -131,8 +132,8 @@ class GroupSessionAction
     public function recordSessionAttendance(SessionAttendanceRequest $sessionAttendanceRequest, int $id): JsonResponse
     {
         try{
+            $recorded = false;
             $session = GroupSession::findOrFail($id);
-            $group = Group::with('sessions','clients','staff','attendance','groupType')->findOrFail($session->id);
             $clients = Client::whereIn('id', $sessionAttendanceRequest->client_id)->get();
             if($sessionAttendanceRequest->attended === false && $sessionAttendanceRequest->reason === null){
                 return $this->commonResponse(false,'Please state some reason for non-attendance','', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -144,8 +145,14 @@ class GroupSessionAction
                     'attended' => $sessionAttendanceRequest->attended,
                     'reason'   => $sessionAttendanceRequest->reason
                 ]);
+                $recorded = true;
             }
-            return $this->commonResponse(true,'Session Attendance recorded successfully',GroupService::viewGroupDetails($group), Response::HTTP_CREATED);
+            if($recorded === true){
+                $session->update([
+                    'total_present' => $session->total_present + count($clients)
+                ]);
+            }
+            return $this->commonResponse(true,'Session Attendance recorded successfully', new GroupSessionResource($session), Response::HTTP_CREATED);
         }catch (ModelNotFoundException $exception){
             return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_NOT_FOUND);
         }
@@ -160,10 +167,24 @@ class GroupSessionAction
     {
         try{
             $groupSession = GroupSession::findOrFail($id);
-            $attendanceData = SessionAttendance::where(function (Builder $query) use($groupSession){
-                $query->where('session_id',$groupSession->id);
-            })->get();
-            return $this->commonResponse(true,'success', $attendanceData,Response::HTTP_OK);
+            $attendance = $groupSession->attendance->transform(function($data){
+                $client = ClientBioData::select('first_name','last_name','other_name')->firstWhere(function (Builder $query) use($data){
+                    $query->where('client_id', $data->client_id);
+                });
+                return [
+                    'attendanceId'  => $data->id,
+                    'clientId'      => $data->client_id,
+                    'clientName'    => $client->first_name .' '.$client->last_name.' '.$client->other_name,
+                    'attended'      => $data->attended,
+                    'reason'        => $data->reason
+                ];
+            });
+            $sessionAttendanceData = [
+                'sessionId'     => $groupSession->id,
+                'sessionDate'   => $groupSession->session_date,
+                'attendance'    => $attendance
+            ];
+            return $this->commonResponse(true,'success', $sessionAttendanceData,Response::HTTP_OK);
         }catch (ModelNotFoundException $modelNotFoundException){
             return $this->commonResponse(false,'Group Session Does Not Exist','', Response::HTTP_NOT_FOUND);
         }
