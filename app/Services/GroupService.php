@@ -91,4 +91,28 @@ class GroupService
                 ],
         ];
     }
+
+    public static function getSessions(int $id)
+    {
+        $group = Group::find($id);
+        return $group->sessions->transform(function($session){
+            $attendance = $session->attendance->transform(function ($data){
+                $client = ClientBioData::firstWhere(function (Builder $query) use($data){
+                    $query->where('client_id', $data->client_id);
+                });
+                return [
+                    'attendanceId'  => $data->id,
+                    'clientId'      => $data->client_id,
+                    'clientName'    => $client->first_name .' '.$client->last_name.' '.$client->other_name,
+                    'attended'      => $data->attended,
+                    'reason'        => $data->reason
+                ];
+            });
+            return [
+                'id' => $session->id,
+                'date' => $session->session_date,
+                'attendance' => $attendance
+            ];
+        });
+    }
 }

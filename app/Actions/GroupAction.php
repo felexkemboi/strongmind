@@ -8,13 +8,13 @@ use App\Helpers\CountryHelper;
 use App\Http\Requests\GroupClientRequest;
 use App\Http\Requests\GroupRequest;
 use App\Http\Requests\GroupUpdateRequest;
+use App\Http\Resources\GroupResource;
 use App\Models\Client;
 use App\Models\ClientBioData;
 use App\Models\Group;
 use App\Models\GroupClient;
 use App\Models\Office;
 use App\Services\GroupService;
-use App\Support\Collection;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -32,13 +32,8 @@ class GroupAction
     public function listGroups(): JsonResponse
     {
         try{
-            $groups = Group::with('sessions')
-                ->latest()
-                ->get()
-                ->transform(function ($group){
-                    return GroupService::getGroupData($group);
-            });
-            return $this->commonResponse(true,'Success', (new Collection($groups))->paginate(10), Response::HTTP_OK);
+            $testGroups = Group::with('sessions','groupType')->latest()->paginate(10);
+            return $this->commonResponse(true,'Success', GroupResource::collection($testGroups)->response()->getData(true), Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
