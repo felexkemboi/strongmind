@@ -420,6 +420,13 @@
         "description": ""
     },
     {
+        "name":"view session attendance",
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
+    },
+    {
         "name":"update group session",
         "guard_name": "api",
         "module": "Groups",

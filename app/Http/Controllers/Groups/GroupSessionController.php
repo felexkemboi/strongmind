@@ -107,7 +107,7 @@ class GroupSessionController extends Controller
      */
     public function listAttendance($id): JsonResponse
     {
-        $this->permissionRoleService->verifyUserHasPermissionTo('');
+        $this->permissionRoleService->verifyUserHasPermissionTo('view session attendance');
         return $this->groupSessionAction->listSessionAttendance($id);
     }
 }
