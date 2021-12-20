@@ -23,9 +23,22 @@ class GroupService
             'id' => $group->id,
             'name' => $group->name,
             'sessions' => $group->sessions->transform(function($session){
+                $attendance = $session->attendance->transform(function ($data){
+                    $client = ClientBioData::firstWhere(function (Builder $query) use($data){
+                        $query->where('client_id', $data->client_id);
+                    });
+                    return [
+                        'attendanceId'  => $data->id,
+                        'clientId'      => $data->client_id,
+                        'clientName'    => $client->first_name .' '.$client->last_name.' '.$client->other_name,
+                        'attended'      => $data->attended,
+                        'reason'        => $data->reason
+                    ];
+                });
                 return [
                     'id' => $session->id,
-                    'date' => $session->session_date
+                    'date' => $session->session_date,
+                    'attendance' => $attendance
                 ];
             }),
             'last_session' => $group->last_session !== null ? Carbon::parse($group->last_session)->format('d M Y') : null,
