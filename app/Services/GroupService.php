@@ -94,7 +94,7 @@ class GroupService
 
     public static function getSessionsWithAttendance(int $id)
     {
-        $group = Group::find($id);
+        $group = Group::with('sessions')->find($id);
         return $group->sessions->transform(function($session){
             $attendance = $session->attendance->transform(function ($data){
                 $client = ClientBioData::firstWhere(function (Builder $query) use($data){
