@@ -13,7 +13,9 @@ use App\Models\Client;
 use App\Models\ClientBioData;
 use App\Models\Group;
 use App\Models\GroupClient;
+use App\Models\GroupSession;
 use App\Models\Office;
+use App\Models\SessionAttendance;
 use App\Services\GroupService;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
@@ -190,24 +192,28 @@ class GroupAction
         try{
             $group = Group::with('clients','sessions','attendance')->findOrFail($id);
             $groupClientData = $group->clients->transform(function($client) use($group){
-                $clientBioData = ClientBioData::select('id','first_name','last_name')->firstWhere(function(Builder $query) use($client) {
+                $clientBioData = ClientBioData::select('client_id','first_name','last_name')->firstWhere(function(Builder $query) use($client) {
                     $query->where('client_id', $client->client_id);
                 });
                 return [
-                    'group_id' => $group->id,
-                    'client_id' => $clientBioData->id,
-                    'name' => $clientBioData->first_name .' '.$clientBioData->last_name,
+                    'groupId' => $group->id,
+                    'clientId' => $clientBioData->client_id,
+                    'clientName' => $clientBioData->first_name .' '.$clientBioData->last_name,
                     'sessions' => $group->sessions->filter(function($session) use($group){
                         return $session->group_id === $group->id;
                     })->transform(function($session) use($clientBioData, $group){
                         $attendance = $group->attendance->filter(function($attendance) use($session, $clientBioData){
-                            return $attendance->session_id === $session->id && $attendance->client_id === $clientBioData->id;
-                        })->first();
+                            return $attendance->session_id === $session->id && $attendance->client_id === $clientBioData->client_id;
+                        })->transform(function($data){
+                            return [
+                                'attended' => $data->attended ,
+                                'reason' => $data->reason
+                            ];
+                        });
                         return [
                             'sessionId' => $session->id,
-                            'sessionDate' => $session->session_date !== null ? Carbon::parse($session->session_date)->format('d M Y') : null,
-                            'attended' => $attendance->attended ?? null,
-                            'reason' => $attendance->reason ?? null
+                            'sessionDate' => $session->session_date ,
+                            'attendance' => $attendance
                         ];
                     })
                 ];
@@ -228,25 +234,28 @@ class GroupAction
         try {
             $group = Group::with('clients','sessions','attendance')->findOrFail($id);
             $groupClientData = $group->clients->transform(function($client) use($group){
-                $clientBioData = ClientBioData::select('id','first_name','last_name')->firstWhere(function(Builder $query) use($client){
+                $clientBioData = ClientBioData::select('client_id','first_name','last_name')->firstWhere(function(Builder $query) use($client){
                     $query->where('client_id', $client->client_id);
                 });
                 return [
                     'group_id' => $group->id,
-                    'client_id' => $clientBioData->id,
+                    'client_id' => $clientBioData->client_id,
                     'name' => $clientBioData->first_name .' '.$clientBioData->last_name,
-                    'sessions' => $group->sessions->filter(function($session) use($group, $client){
+                    'sessions' => $group->sessions->filter(function($session) use($group){
                         return $session->group_id === $group->id;
                     })->transform(function($session) use($clientBioData, $group){
                         $attendance = $group->attendance->filter(function($attendance) use($session, $clientBioData){
-                            return $attendance->session_id === $session->id && $attendance->client_id === $clientBioData->id;
-                        })->first();
-                        //dd($attendance->attended);
+                            return $attendance->session_id === $session->id && $attendance->client_id === $clientBioData->client_id;
+                        })->transform(function($data){
+                            return [
+                                'attended' => $data->attended ,
+                                'reason' => $data->reason
+                            ];
+                        });
                         return [
                             'sessionId' => $session->id,
-                            'sessionDate' => $session->session_date !== null ? Carbon::parse($session->session_date)->format('d M Y') : null,
-                            'attended' => $attendance->attended ?? null,
-                            'reason' => $attendance->reason ?? null
+                            'sessionDate' => $session->session_date,
+                            'attendance' => $attendance
                         ];
                     })
                 ];

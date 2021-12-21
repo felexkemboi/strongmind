@@ -32,15 +32,8 @@ class GroupSessionAction
     {
         try{
             $group = Group::with('sessions')->findOrFail($id);
-            $sessions = $group->sessions->transform(function($session){
-                return [
-                    'group_id' => $session->group_id,
-                    'session_date' => Carbon::parse($session->session_date)->format('d M Y'),
-                    'total_clients' => $session->total_clients,
-                    'total_present' => $session->total_present
-                ];
-            });
-            return $this->commonResponse(true,'success', $sessions,Response::HTTP_OK);
+            $sessionData = GroupService::getSessionsWithAttendance($group->id);
+            return $this->commonResponse(true,'success', $sessionData,Response::HTTP_OK);
         }catch (ModelNotFoundException $modelNotFoundException){
             return $this->commonResponse(false,'Group Does Not Exist','', Response::HTTP_NOT_FOUND);
         }
