@@ -9,6 +9,7 @@ use App\Http\Requests\GroupRequest;
 use App\Http\Requests\GroupUpdateRequest;
 use App\Services\PermissionRoleService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Groups Endpoints
@@ -29,14 +30,19 @@ class GroupController extends Controller
 
     /**
      * List Groups
-     *
+     * @queryParam name string. Search by group name
+     * @queryParam staff string. Search by staff name
+     * @queryParam last_session date. Search by date
+     * @queryParam sort string. Sort by either name(string) , last_session(date) or dateOfCreation(date)
+     * @queryParam pagination_items integer. Paginate by specified number of items
+     * @param Request $request
      * @return JsonResponse
      * @authenticated
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $this->permissionRoleService->verifyUserHasPermissionTo('list groups');
-        return $this->groupAction->listGroups();
+        return $this->groupAction->listGroups($request);
     }
 
     /**
