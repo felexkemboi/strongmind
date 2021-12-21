@@ -16,8 +16,10 @@ use App\Models\GroupClient;
 use App\Models\GroupSession;
 use App\Models\Office;
 use App\Models\SessionAttendance;
+use App\Models\User;
 use App\Services\GroupService;
 use App\Traits\ApiResponser;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -31,11 +33,70 @@ class GroupAction
 {
     use ApiResponser;
 
-    public function listGroups(): JsonResponse
+    public function listGroups(Request $request): JsonResponse
     {
         try{
-            $testGroups = Group::with('sessions','groupType')->latest()->paginate(10);
-            return $this->commonResponse(true,'Success', GroupResource::collection($testGroups)->response()->getData(true), Response::HTTP_OK);
+            $groups = Group::query()->with('sessions','groupType');
+            $filter = $request->get('filter');
+            $name = $request->get('name');
+            $lastSession = $request->get('last_session');
+            $staff = $request->get('staff');
+            $sort   = $request->get('sort');
+            $filterParams = ['staff','ongoing','group_member'];
+            $sortParams = ['name','last_session','date'];
+            $paginationItems = $request->get('pagination_items');
+
+            //get the user id and name from staff_id
+            $user = User::select('id','name')->firstWhere(function (Builder $query) use($staff){
+                $query->where('name','ILIKE','%'.$staff.'%');
+            });
+
+            //search by name
+            if($request->has('name') && $request->filled('name')){
+                $groups = $groups->where(function (Builder $query) use($name){
+                    $query->where('name','ILIKE','%'.$name.'%');
+                });
+            }
+
+            //search by last_session
+            if($request->has('last_session') && $request->filled('last_session')){
+                $groups = $groups->where(function (Builder $query) use($lastSession){
+                    $query->where('last_session','=', Carbon::parse($lastSession)->format('d M Y'));
+                });
+            }
+
+            //search by staff name
+            if($request->has('staff') && $request->filled('staff')){
+                if($user){
+                    $groups =  $groups->where(function(Builder $query) use($user){
+                        $query->where('staff_id','=',$user->id);
+                    });
+                }else{
+                    return $this->commonResponse(false,'Staff Not Found','', Response::HTTP_NOT_FOUND);
+                }
+            }
+
+            if($request->has('sort') && $request->filled('sort')){
+                //sort by name
+                if($sort === $sortParams[0]){
+                    $groups = $groups->orderBy('name','DESC');
+                }elseif ($sort === $sortParams[1]){ //sort by last_session
+                    $groups = $groups->orderBy('last_session','DESC');
+                }elseif ($sort === $sortParams[2]){ //sort by creation date
+                    $groups = $groups->orderBy('created_at','DESC');
+                }
+            }
+
+            //custom pagination
+            if($request->has('pagination_items') && $request->filled('pagination_items')){
+                $groups = Group::query()->with('sessions','groupType')->latest()->paginate((int)$paginationItems);
+                return $this->commonResponse(true,'Success',
+                    GroupResource::collection($groups)->response()->getData(true),
+                    Response::HTTP_OK);
+            }
+
+            $groups = $groups->latest()->paginate(10);
+            return $this->commonResponse(true,'Success', GroupResource::collection($groups)->response()->getData(true), Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
@@ -248,7 +309,7 @@ class GroupAction
                             return $attendance->session_id === $session->id && $attendance->client_id === $clientBioData->client_id;
                         })->transform(function($data){
                             return [
-                                'attended' => $data->attended ,
+                                'attended' => $data->attended,
                                 'reason' => $data->reason
                             ];
                         });
