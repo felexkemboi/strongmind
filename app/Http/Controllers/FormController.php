@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\Form;
+use App\Models\FieldType;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\QueryException;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,6 +34,20 @@ class FormController extends Controller
         $forms = Form::all();
         return $this->commonResponse(true, 'success', $forms, Response::HTTP_OK);
     }
+
+    /**
+     * All Field Types
+     * @authenticated
+     * @return JsonResponse
+     */
+
+    public function fieldTypes(): JsonResponse
+    {
+        $field_types = FieldType::all();
+        return $this->commonResponse(true, 'success', $field_types, Response::HTTP_OK);
+    }
+
+
 
     /**
      * Create  Form

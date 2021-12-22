@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\QuestionOptions;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateQuestionOptionsRequest;
+use App\Http\Requests\EditQuestionOptionRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Database\QueryException;
 use Symfony\Component\HttpFoundation\Response;
+use Exception;
 
 /**
  * Class QuestionOptionsController
@@ -65,9 +68,9 @@ class QuestionOptionsController extends Controller
      * @urlParam id integer required The ID of the Question Example:1
      * @authenticated
      */
-    public function show(QuestionOption $questionOption): JsonResponse
+    public function show(QuestionOptions $questionOptionId): JsonResponse
     {
-        $questionOption = QuestionOption::findorFail($questionOptionId);
+        $questionOption = QuestionOptions::findorFail($questionOptionId);
         if ($questionOption) {
             return $this->commonResponse(true, 'success', $questionOption, Response::HTTP_OK);
         } else {
@@ -77,7 +80,7 @@ class QuestionOptionsController extends Controller
 
     /**
      * Edit  QuestionOption
-     * @param EditQuestionOptionRequest $request
+     * @param CreateQuestionOptionsRequest $request
      * @return JsonResponse
      * @bodyParam value string required The Response value
      * @bodyParam score  integer The score of the response
@@ -85,10 +88,10 @@ class QuestionOptionsController extends Controller
      * @authenticated
      */
 
-    public function update(EditQuestionOptionRequest $request, int $questionOptionId): JsonResponse
+    public function update(CreateQuestionOptionsRequest $request, int $questionOptionId): JsonResponse
     {
         try {
-            $questionOption = QuestionOption::findorFail($questionOptionId);
+            $questionOption = QuestionOptions::findorFail($questionOptionId);
             if($questionOption){
                 $questionOption->value = $request->value;
                 $questionOption->score = $request->score;
