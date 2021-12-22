@@ -289,17 +289,20 @@ Route::resource('deliverymodes',ModeOfDeliveryController::class)->middleware('au
 //Forms
 Route::group(['prefix' => 'forms','middleware' => 'auth:sanctum'], function(){
     Route::get('/all',           [FormController::class, 'index']);
+    Route::get('/{id}',          [FormController::class,'show']);
+    Route::get('/{id}/questions',[FormController::class, 'questions']);
     Route::post('/create',       [FormController::class, 'create']);
     Route::put('{id}/update',    [FormController::class, 'update']);
     Route::delete('{id}/delete', [FormController::class, 'destroy']);
+
 });
 
 //Questions
-Route::group(['prefix' => 'questions','middleware' => 'auth:sanctum'], function(){ 
-    Route::get('/all',           [QuestionController::class, 'index']);
-    Route::post('/create',       [QuestionController::class, 'create']);
-    Route::put('{id}/update',    [QuestionController::class, 'update']);
-    Route::delete('{id}/delete', [QuestionController::class, 'destroy']);
+Route::group(['prefix' => 'questions','middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',                   [QuestionController::class, 'index']);
+    Route::post('/create',               [QuestionController::class, 'create']);
+    Route::put('{id}/update',            [QuestionController::class, 'update']);
+    Route::delete('{id}/delete',         [QuestionController::class, 'destroy']);
 });
 
 //Question Options
