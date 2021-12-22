@@ -79,6 +79,24 @@ class FormController extends Controller
     }
 
     /**
+     * Get Questions
+     * @param  Form  $form
+     * @return JsonResponse
+     * @urlParam id integer required The ID of the Form Example:1
+     * @authenticated
+     */
+    public function questions(int  $id): JsonResponse
+    {
+        $form = Form::findorFail($id);
+        if ($form) {
+            $questions = $form->questions;
+            return $this->commonResponse(true, 'success', $questions, Response::HTTP_OK);
+        } else {
+            return $this->commonResponse(false, 'Question Not Found!', '', Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    /**
      * Edit Form
      * @param CreateFormRequest $request
      * @return JsonResponse
@@ -96,7 +114,7 @@ class FormController extends Controller
                 $form->name = $request->name;
                 $form->status_id = $request->status_id;
                 $form->published_at = $request->published_at;
-                if ($clientsatus->save()) {
+                if ($form->save()) {
                     return $this->commonResponse(true, 'Form updated successfully!', '', Response::HTTP_CREATED);
                 }
             }
