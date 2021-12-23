@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateQuestionResponseRequest;
 use App\Http\Requests\EditQuestionResponseRequest;
 use App\Models\QuestionResponses;
+use Exception;
 
 /**
  * Class QuestionResponsesController
@@ -29,7 +30,7 @@ class QuestionResponsesController extends Controller
     public function index(): JsonResponse
     {
         $options = QuestionResponses::all();
-        return $this->commonResponse(true, 'success', options, Response::HTTP_OK);
+        return $this->commonResponse(true, 'success', $options, Response::HTTP_OK);
     }
 
     /**
@@ -45,7 +46,7 @@ class QuestionResponsesController extends Controller
     public function create(CreateQuestionResponseRequest $request): JsonResponse
     {
         try {
-            $option = new QuestionResponse();
+            $option = new QuestionResponses();
             $option->value = $request->value;
             $option->score = $request->score;
             $option->question_id = $request->question_id;
@@ -67,9 +68,9 @@ class QuestionResponsesController extends Controller
      * @urlParam id integer required The ID of the Question Example:1
      * @authenticated
      */
-    public function show(QuestionResponse $questionResponseId): JsonResponse
+    public function show(QuestionResponses $questionResponseId): JsonResponse
     {
-        $questionResponse = QuestionResponse::findorFail($questionResponseId);
+        $questionResponse = QuestionResponses::findorFail($questionResponseId);
         if ($questionResponse) {
             return $this->commonResponse(true, 'success', $questionResponse, Response::HTTP_OK);
         } else {
@@ -90,13 +91,13 @@ class QuestionResponsesController extends Controller
     public function update(EditQuestionResponseRequest $request, int $questionResponseId): JsonResponse
     {
         try {
-            $questionResponse = QuestionResponse::findorFail($questionOptionId);
+            $questionResponse = QuestionResponses::findorFail($questionResponseId);
             if($questionResponse){
                 $questionResponse->value = $request->value;
                 $questionResponse->option_id = $request->option_id;
-                $questionOption->question_id = $request->question_id;
-                $questionOption->client_id = $request->client_id;
-                if ($questionOption->save()) {
+                $questionResponse->question_id = $request->question_id;
+                $questionResponse->client_id = $request->client_id;
+                if ($questionResponse->save()) {
                     return $this->commonResponse(true, 'Question Response updated successfully!', '', Response::HTTP_CREATED);
                 }
             }
@@ -118,7 +119,7 @@ class QuestionResponsesController extends Controller
     public function destroy(int $questionResponseId): JsonResponse
     {
 
-        $questionResponse = QuestionResponse::find($questionResponseId);
+        $questionResponse = QuestionResponses::find($questionResponseId);
         if($questionResponse){
             if ($questionResponse->delete()) {
                 return $this->commonResponse(true, 'Question Response deleted', '', Response::HTTP_OK);

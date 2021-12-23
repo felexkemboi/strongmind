@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Form;
 use App\Models\Question;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\QueryException;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateQuestionRequest;
 use App\Http\Requests\EditQuestionRequest;
-
+use Exception;
 /**
  * Class QuestionController
  * @package App\Http\Controllers
