@@ -64,7 +64,6 @@ class FormController extends Controller
             $form = new Form();
             $form->name = $request->name;
             $form->status_id = $request->status_id ?? '';
-            $form->published_at = $request->published_at ?? now();
             if ($form->save()) {
                 return $this->commonResponse(true, 'Form created successfully!', '', Response::HTTP_CREATED);
             }
@@ -88,6 +87,25 @@ class FormController extends Controller
         $form = Form::find($id);
         if ($form) {
             return $this->commonResponse(true, 'success', $form, Response::HTTP_OK);
+        } else {
+            return $this->commonResponse(false, 'Form Not Found!', '', Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    /**
+     * Publish form
+     * @param  Form  $form
+     * @return JsonResponse
+     * @urlParam id integer required The ID of the Form Example:1
+     * @authenticated
+     */
+    public function publish($id): JsonResponse
+    {
+        $form = Form::findorFail($id);
+        if ($form) {
+            $form->published_at =  now();
+            $form->save();
+            return $this->commonResponse(true, 'Form successfully Published', $form, Response::HTTP_OK);
         } else {
             return $this->commonResponse(false, 'Form Not Found!', '', Response::HTTP_NOT_FOUND);
         }
