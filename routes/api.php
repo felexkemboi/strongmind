@@ -294,6 +294,7 @@ Route::group(['prefix' => 'forms','middleware' => 'auth:sanctum'], function(){
     Route::get('/{id}/questions',[FormController::class, 'questions']);
     Route::post('/create',       [FormController::class, 'create']);
     Route::put('{id}/update',    [FormController::class, 'update']);
+    Route::put('{id}/publish',   [FormController::class, 'publish']);
     Route::delete('{id}/delete', [FormController::class, 'destroy']);
 
 });
