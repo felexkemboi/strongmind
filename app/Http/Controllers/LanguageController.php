@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateLanguageRequest;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Exception;
 
 /**
@@ -47,7 +46,7 @@ class LanguageController extends Controller
     {
         try {
             $language = new Language();
-            $language->name = Str::lower($request->name);
+            $language->name = $request->name;
             if ($language->save()) {
                 return $this->commonResponse(true, 'Language created successfully!', $language, Response::HTTP_CREATED);
             }
@@ -73,7 +72,7 @@ class LanguageController extends Controller
         try {
             $language = Language::find($id);
             if($language){
-                $language->name = Str::lower($request->name);
+                $language->name = $request->name;
                 if ($language->save()) {
                     return $this->commonResponse(true, 'Language updated successfully!', $language, Response::HTTP_CREATED);
                 }

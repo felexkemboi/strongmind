@@ -2,32 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ClientUpdateRequest;
+use Exception;
+
+use App\Models\User;
+use Carbon\Carbon;
+use App\Models\Client;
+use Illuminate\Support\Arr;
+use App\Models\Misc\Status;
+use Illuminate\Support\Str;
+use App\Models\Misc\Channel;
+use Illuminate\Http\Request;
 use App\Models\ClientBioData;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Auth;
 use App\Helpers\CountryHelper;
 use App\Helpers\ImportClients;
-use App\Http\Resources\ClientResource;
-use App\Models\User;
 use App\Services\ClientService;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Arr;
-use Exception;
-use App\Models\Client;
-use Spatie\Activitylog\Models\Activity as ActivityLog;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\TransferClient;
+use App\Http\Resources\ClientResource;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Builder;
+use App\Http\Requests\ClientUpdateRequest;
 use App\Http\Requests\TransferClientsRequest;
-use App\Models\Misc\Channel;
-use App\Models\Misc\Status;
+use Symfony\Component\HttpFoundation\Response;
+use Spatie\Activitylog\Models\Activity as ActivityLog;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
 /**
@@ -252,7 +254,7 @@ class ClientController extends Controller
             if(!$client){
                 return $this->commonResponse(false,'Client Not Found','', Response::HTTP_NOT_FOUND);
             }
-            
+
             $clientData = [
                 'name' => $request->name ?? $client->name,
                 'gender' => $request->gender ?? $client->gender,
@@ -266,7 +268,7 @@ class ClientController extends Controller
                 'channel_id'  => $request->channel_id ?? $client->channel_id,
                 'referredThrough' => $client->referredThrough ?? $request->referredThrough,
                 'referralType' => $client->referralType ?? $request->referralType,
-                'languages' => $request->languages ?? $client->languages,
+                'languages' => Str::lower($request->languages) ?? $client->languages,
             ];
 
             if($client->update($clientData)){
