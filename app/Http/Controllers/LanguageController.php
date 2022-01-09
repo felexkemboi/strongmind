@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateLanguageRequest;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Exception;
 
 /**
@@ -46,9 +47,9 @@ class LanguageController extends Controller
     {
         try {
             $language = new Language();
-            $language->name = $request->name;
+            $language->name = Str::lower($request->name);
             if ($language->save()) {
-                return $this->commonResponse(true, 'Language created successfully!', '', Response::HTTP_CREATED);
+                return $this->commonResponse(true, 'Language created successfully!', $language, Response::HTTP_CREATED);
             }
             return $this->commonResponse(false, 'Failed to create Language', '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (QueryException $ex) {
@@ -72,9 +73,9 @@ class LanguageController extends Controller
         try {
             $language = Language::find($id);
             if($language){
-                $language->name = $request->name;
+                $language->name = Str::lower($request->name);
                 if ($language->save()) {
-                    return $this->commonResponse(true, 'Language updated successfully!', '', Response::HTTP_CREATED);
+                    return $this->commonResponse(true, 'Language updated successfully!', $language, Response::HTTP_CREATED);
                 }
             }
             return $this->commonResponse(false, 'Failed to update Language', 'Language Not Found', Response::HTTP_UNPROCESSABLE_ENTITY);

@@ -220,6 +220,7 @@ class ClientController extends Controller
      * @bodyParam other_name string . The Client's Other Name
      * @bodyParam nick_name string . The  Clients' Nick Name
      * @bodyParam nationality string . The Client's Nationality
+     * @bodyParam languages string required . The Client's Languages(comma separated)
      * @bodyParam project_id integer . The Client's Project ID . Example 1
      * @bodyParam education_level_id integer . The Client's Educational Level . Example 1
      * @bodyParam marital_status_id integer . The Client's Marital Status . Example 1
@@ -251,6 +252,7 @@ class ClientController extends Controller
             if(!$client){
                 return $this->commonResponse(false,'Client Not Found','', Response::HTTP_NOT_FOUND);
             }
+            
             $clientData = [
                 'name' => $request->name ?? $client->name,
                 'gender' => $request->gender ?? $client->gender,
@@ -264,6 +266,7 @@ class ClientController extends Controller
                 'channel_id'  => $request->channel_id ?? $client->channel_id,
                 'referredThrough' => $client->referredThrough ?? $request->referredThrough,
                 'referralType' => $client->referralType ?? $request->referralType,
+                'languages' => $request->languages ?? $client->languages,
             ];
 
             if($client->update($clientData)){
