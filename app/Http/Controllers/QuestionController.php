@@ -26,7 +26,7 @@ class QuestionController extends Controller
 
     public function index(): JsonResponse
     {
-        $questions = Question::all();
+        $questions = Question::with('fieldType')->get();
         return $this->commonResponse(true, 'success', $questions, Response::HTTP_OK);
     }
 
