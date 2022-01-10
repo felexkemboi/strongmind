@@ -17,7 +17,6 @@ class FieldTypeSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('field_type')->truncate();
         $types = array(
             array(
                 'name' => 'Numeric',
@@ -55,7 +54,6 @@ class FieldTypeSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             )
         );
-        // FieldType::insert($types);
         foreach ($types as $obj) {
             FieldType::create(
                 $obj
