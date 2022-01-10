@@ -26,6 +26,8 @@ class RoleTableSeeder extends Seeder
             'role_code' => 'ADM',
             'description' => 'admin role'
         ];
+        Role::create($rolesData);
+        
         $adminRole = Role::findByName($rolesData['name'],PermissionRoleService::API_GUARD);
         if(!$adminRole){
             Role::create($rolesData);
