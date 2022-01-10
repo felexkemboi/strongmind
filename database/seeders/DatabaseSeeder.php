@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             ProgramMemberTypeSeeder::class,
             //ProgramMemberTableSeeder::class
+            FieldTypeSeeder::class,
             PermissionTableSeeder::class,
             RoleTableSeeder::class,
             ClientPhoneOwnershipTableSeeder::class,
