@@ -17,6 +17,7 @@ class FieldTypeSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('field_type')->truncate();
         $types = array(
             array(
                 'name' => 'Numeric',
