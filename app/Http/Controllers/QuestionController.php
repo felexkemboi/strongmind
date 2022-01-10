@@ -70,8 +70,9 @@ class QuestionController extends Controller
      * @urlParam id integer required The ID of the Question Example:1
      * @authenticated
      */
-    public function show(Question $question): JsonResponse
+    public function show(int $id): JsonResponse
     {
+        $question = Question::with('fieldType')->firstWhere('id',$id);
         if ($question) {
             return $this->commonResponse(true, 'success', $question, Response::HTTP_OK);
         } else {

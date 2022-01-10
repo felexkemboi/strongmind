@@ -17,6 +17,8 @@ class Question extends Model
     use HasFactory;//, SoftDeletes;
 
     protected $table = 'questions';
+    protected $with = ['fieldType'];
+
 
     protected $fillable = [
         'description',
