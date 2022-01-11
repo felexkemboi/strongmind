@@ -24,8 +24,8 @@ class SessionAttendanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'client_id' => ['array','min:1','required'],
-            'client_id.*' => ['integer','required','not_in:0','exists:clients,id','distinct'],
+            'client_id' => ['string','required'],
+            //'client_id.*' => ['integer','required','not_in:0','exists:clients,id','distinct'],
             'reason' => ['string','min:3','max:255','nullable'],
             'attended' => ['boolean','required']
         ];
