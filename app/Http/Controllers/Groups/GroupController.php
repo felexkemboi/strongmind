@@ -160,7 +160,7 @@ class GroupController extends Controller
             }
             return $this->commonResponse(true, 'Success', $activitiesList, Response::HTTP_OK);
         }
-        return $this->commonResponse(true, 'Success', 'Client has no Logs', Response::HTTP_OK);
+        return $this->commonResponse(true, 'Success', 'Group has no Logs', Response::HTTP_OK);
     }
     /**
      * Add Clients To Group
