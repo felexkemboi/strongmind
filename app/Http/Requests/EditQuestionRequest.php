@@ -28,7 +28,7 @@ class EditQuestionRequest extends FormRequest
             'multiple_selection'  => 'boolean',
             'description'         => 'string|required',
             'form_id'             => 'integer|not_in:0|exists:forms,id',
-            'field_type_id'       => 'integer|not_in:0|exists:field_type,id',
+            'field_type_id'       => 'integer|required|not_in:0|required|exists:field_type,id',
             'question_options_id' => 'integer|not_in:0|exists:questionsoptions,id',
 
         ];

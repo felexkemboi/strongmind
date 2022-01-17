@@ -303,7 +303,8 @@ Route::group(['prefix' => 'forms','middleware' => 'auth:sanctum'], function(){
 //Questions
 Route::group(['prefix' => 'questions','middleware' => 'auth:sanctum'], function(){
     Route::get('/all',                   [QuestionController::class, 'index']);
-    Route::get('/{id}',                  [QuestionController::class,'show']);
+    Route::get('/{id}',                  [QuestionController::class, 'show']);
+    Route::get('/{id}/question-options', [QuestionController::class, 'questionOptions']);
     Route::post('/create',               [QuestionController::class, 'create']);
     Route::put('{id}/update',            [QuestionController::class, 'update']);
     Route::delete('{id}/delete',         [QuestionController::class, 'destroy']);
@@ -311,11 +312,11 @@ Route::group(['prefix' => 'questions','middleware' => 'auth:sanctum'], function(
 
 //Question Options
 Route::group(['prefix' => 'questions-options','middleware' => 'auth:sanctum'], function(){
-    Route::get('/all',           [QuestionOptionsController::class, 'index']);
-    Route::post('/create',       [QuestionOptionsController::class, 'create']);
-    Route::get('/{id}',          [QuestionOptionsController::class,'show']);
-    Route::put('{id}/update',    [QuestionOptionsController::class, 'update']);
-    Route::delete('{id}/delete', [QuestionOptionsController::class, 'destroy']);
+    Route::get('/all',            [QuestionOptionsController::class, 'index']);
+    Route::post('/create',        [QuestionOptionsController::class, 'create']);
+    Route::get('/{id}',           [QuestionOptionsController::class, 'show']);
+    Route::put('{id}/update',     [QuestionOptionsController::class, 'update']);
+    Route::delete('{id}/delete',  [QuestionOptionsController::class, 'destroy']);
 });
 
 

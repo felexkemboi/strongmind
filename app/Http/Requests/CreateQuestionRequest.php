@@ -25,7 +25,7 @@ class CreateQuestionRequest extends FormRequest
     {
         return [
             'description'         => 'string|required',
-            'field_type_id'       => 'integer|not_in:0|required|exists:field_type,id',
+            'field_type_id'       => 'integer|required|not_in:0|required|exists:field_type,id',
             'required'            => 'boolean|required',
             'question_options_id' => 'integer|not_in:0|exists:questionsoptions,id',
             'form_id'             => 'integer||required|not_in:0|exists:forms,id',
