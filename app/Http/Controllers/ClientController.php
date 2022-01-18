@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
+// use Auth;
+use Exception;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Client;
+use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 use App\Helpers\CountryHelper;
 use App\Helpers\ImportClients;
-use App\Http\Resources\ClientResource;
-use App\Models\User;
 use App\Services\ClientService;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Arr;
-use Exception;
-use App\Models\Client;
-use Spatie\Activitylog\Models\Activity as ActivityLog;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\ClientResource;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
+use Spatie\Activitylog\Models\Activity as ActivityLog;
 
 /**
  * Class ClientController
@@ -217,10 +218,10 @@ class ClientController extends Controller
         $validator = Validator::make($request->all(),[
             'staff_id' => 'required|integer|exists:users,id'
         ]);
-        if($validator->fails())
-        {
+        if($validator->fails()){
             return $this->commonResponse(false,Arr::flatten($validator->messages()->get('*')),'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+
         try{
             $client = Client::with('timezone','country','status','channel','staff')->find($id);
             if(!$client){
@@ -239,7 +240,7 @@ class ClientController extends Controller
                     ->performedOn($client)
                     ->causedBy($user)
                     ->log('Client transferred to '.$user->name);
-                return $this->commonResponse(false,'Client transferred successfully','', Response::HTTP_OK);
+                return $this->commonResponse(false,'Client transferred successfully', $client, Response::HTTP_OK);
             }
             return $this->commonResponse(false,'Failed to transfer client','', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (QueryException  $queryException){
@@ -317,8 +318,7 @@ class ClientController extends Controller
         } else {
             try {
 
-                Client::whereIn('id', $request->clients)
-                    ->update(['client_type' =>  'therapy','therapy' =>  1]);
+                Client::whereIn('id', $request->clients)->update(['client_type' =>  'therapy','therapy' =>  1]);
                 $user = Auth::user();
                 foreach ($request->clients as $client) {
                     $clientRecords = Client::findorFail($client);
@@ -337,18 +337,18 @@ class ClientController extends Controller
     }
 
     /**
-     * Get clients from other sources 
+     * Get client activity log
      * @group Clients
      * @param Request $request
-     * @bodyParam id int required . The Client's id
+     * @urlParam id int required  The Client's id
      * @return JsonResponse
      * @authenticated
      */
 
-    public function clientLogs(int $id) 
+    public function clientLogs(int $id)
     {
         $activities = ActivityLog::all();
-        $activities = $activities->where('subject_id', $id);
+        $activities = $activities->where('subject_id', $id)->where('log_name', 'client');
         if(!$activities->isEmpty()){
             $activitiesList = collect();
             foreach($activities as $activity){
@@ -361,7 +361,7 @@ class ClientController extends Controller
         }
         return $this->commonResponse(true, 'Success', 'Client has no Logs', Response::HTTP_OK);
     }
-    
+
      /*
      * Bulk load Clients
      * @param Request $request
@@ -407,9 +407,9 @@ class ClientController extends Controller
                     }else{
                         $failed_saved->push($user);
                     }
-                    
-        
-                } catch  (\Exception $e) { 
+
+
+                } catch  (\Exception $e) {
                     $failed_saved->push($user);
                     continue;
                 }
