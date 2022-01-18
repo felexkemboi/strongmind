@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Models\Office;
 use App\Models\User;
+use App\Services\PermissionRoleService;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -12,10 +13,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Testing\TestResponse;
 use Postmark\PostmarkClient;
-use Silber\Bouncer\Database\Role;
+//use Silber\Bouncer\Database\Role;
+use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\SetPasswordRequest;
 
 /**
  * Class InviteController
@@ -25,6 +27,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class InviteController extends Controller
 {
+    public $permissionRoleService;
+
+    public function __construct(PermissionRoleService $permissionRoleService){
+        $this->permissionRoleService = $permissionRoleService;
+    }
     /**
      * Invite member
      * @param Request $request
@@ -50,7 +57,7 @@ class InviteController extends Controller
             $email = explode(',',$request->email);
             $invite_token = hash('sha256', utf8_encode(Str::uuid()));
             $action_url = config('app.set_password_url') . "?invite=$invite_token";
-            $role = Role::find($request->role_id);
+            $role = Role::findById($request->role_id, $this->permissionRoleService::API_GUARD);
             //if multiple emails are submitted
             if(count($email) > 1)
             {
@@ -80,7 +87,7 @@ class InviteController extends Controller
                     ]
                 );
                 if ($role) {
-                    $user->assign($role->name);
+                    $user->assignRole($role);
                 }
                 $client = new PostmarkClient(config('postmark.token'));
                 $client->sendEmailWithTemplate(
@@ -104,48 +111,39 @@ class InviteController extends Controller
 
     /**
      * Set Password
-     * @param Request $request
+     * @param SetPasswordRequest $request
      * @return JsonResponse
-     * @bodyParam  password string required  Password.
-     * @bodyParam  invite string required Invite Id.
-     *
+     * @bodyParam  password string required  User Password
+     * @bodyParam  invite string required Invite Id
+     * @bodyParam  name string required Name
+     * @authenticated
      */
-    public function setPassword(Request $request): JsonResponse
+    public function setPassword(SetPasswordRequest $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'password' => 'required|min:6',
-            'invite' => 'required',
+        try {
 
-        ]);
-        if ($validator->fails()) {
-            return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
-        } else {
-            try {
-                $user = User::firstWhere('invite_id', $request->invite);
-                if (!$user) {
-                    return $this->commonResponse(false, 'Invite ID invalid!', '', Response::HTTP_NOT_FOUND);
-                } else {
-                    $user->update([
-                        'password' => bcrypt($request->password),
-                        'invite_accepted' => 1,
-                        'active' => 1,
-                        'invite_id' => '',
-                    ]);
-                    $user->fresh();
-                    $office=Office::firstWhere('id',$user->office_id);
-                    $new_count=($office->member_count)+1;
-                    $office->update(['member_count' => $new_count]);
-                    $result = [
-                        'user' => new UserResource($user),
-                        'accessToken' => $user->createToken('strongminds')->plainTextToken,
-                    ];
-                    return $this->commonResponse(true, 'Password set successfully!', $result, Response::HTTP_CREATED);
-                }
-            } catch (QueryException $ex) {
-                return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
-            } catch (Exception $ex) {
-                return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
-            }
+            $user = User::firstWhere('invite_id', $request->invite);
+            $user->update([
+                'password' => bcrypt($request->password),
+                'name' => $request->name,
+                'invite_accepted' => 1,
+                'active' => 1,
+                'invite_id' => '',
+            ]);
+
+            $user->fresh();
+            $office=Office::firstWhere('id',$user->office_id);
+            $new_count=($office->member_count)+1;
+            $office->update(['member_count' => $new_count]);
+            $result = [
+                'user' => new UserResource($user),
+                'accessToken' => $user->createToken('strongminds')->plainTextToken,
+            ];
+            return $this->commonResponse(true, 'Password set successfully!', $result, Response::HTTP_CREATED);
+        } catch (QueryException $ex) {
+            return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $ex) {
+            return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
     }
@@ -158,7 +156,7 @@ class InviteController extends Controller
     private function sendMultipleInvites(Request $request): JsonResponse
     {
         $email = explode(',',$request->email);
-        $role = Role::find($request->role_id);
+        $role = Role::findById($request->role_id, $this->permissionRoleService::API_GUARD);
         $client = new PostmarkClient(config('postmark.token'));
         try{
             foreach($email as $member)
@@ -184,7 +182,7 @@ class InviteController extends Controller
                     'active' => 0
                 ]);
                 if ($role) {
-                    $user->assign($role->name);
+                    $user->assignRole($role);
                 }
                 $client->sendEmailWithTemplate(
                     config('mail.from.address'),

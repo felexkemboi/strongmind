@@ -10,11 +10,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Silber\Bouncer\Database\HasRolesAndAbilities;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRolesAndAbilities;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
     public const INVITE_ACCEPTED = 1;
     public const INVITE_NOT_ACCEPTED = 0;
     public const STATUS_ACTIVE = 1;

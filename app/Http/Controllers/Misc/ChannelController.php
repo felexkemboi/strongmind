@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Class ChannelController
  * @package App\Http\Controllers\Misc
- * @group Misc
+ * @group Dynamic Fields
  */
 class ChannelController extends Controller
 {

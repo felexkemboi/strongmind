@@ -6,18 +6,18 @@ use App\Support\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
-use App\Models\Programs\Program;
+use App\Models\Programs\Project;
 use App\Models\Programs\ProgramMember;
 
-class ProgramHelper
+class ProjectHelper
 {
     /**
      * @param $userId
      * @return \Illuminate\Support\Collection|null
      */
-    public static function userPrograms($userId)
+    public static function userProjects($userId)
     {
-        $userPrograms =  DB::table('programs')
+        $userProjects =  DB::table('programs')
             ->select('programs.id as id', 'programs.name as name','programs.office_id as office_id','programs.program_code as program_code',
                 'programs.program_type_id as program_type_id', 'programs.member_count as member_count'
             )->join('program_members','program_members.program_id','=','programs.id')
@@ -28,13 +28,13 @@ class ProgramHelper
             ->distinct()
             ->orderBy('programs.id','DESC')
             ->get();
-        if($userPrograms->isEmpty()){
+        if($userProjects->isEmpty()){
             return [];
         }
-        return $userPrograms;
+        return $userProjects;
     }
 
-    public static function members($programId)
+    public static function members($projectId)
     {
         return DB::table('users')
             ->select('users.id','users.name','users.email','users.profile_pic','users.phone_number',
@@ -42,11 +42,12 @@ class ProgramHelper
                 'program_members.member_type_id')
             ->join('program_members','program_members.user_id','=','users.id')
             ->join('programs','programs.id','=','program_members.program_id')
-            ->where(function($query) use($programId) {
-                $query->where('programs.id', $programId)
-                    ->where('program_members.program_id', '=', $programId);
+            ->where(function($query) use($projectId) {
+                $query->where('programs.id', $projectId)
+                    ->where('program_members.program_id', '=', $projectId);
             })
             ->whereNotNull('program_members.member_type_id')
+            ->where('program_members.status', ProgramMember::MEMBERSHIP_ACTIVE)
             ->get();
     }
 }

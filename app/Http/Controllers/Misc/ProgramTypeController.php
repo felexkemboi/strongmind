@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Class ProgramTypeController
  * @package App\Http\Controllers\Misc
- * @group Misc
+ * @group Dynamic Fields
  */
 class ProgramTypeController extends Controller
 {

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Programs\Program;
+use App\Models\Programs\Project;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Office extends Model
 {
     protected $guarded = [];
+
+    public const GLOBAL_OFFICE_NAME = 'Global';
 
     public function country(): BelongsTo
     {
@@ -23,7 +25,7 @@ class Office extends Model
 
     public function programs(): HasMany
     {
-        return $this->hasMany(Program::class, 'office_id');
+        return $this->hasMany(Project::class, 'office_id');
     }
 
     protected static function boot()

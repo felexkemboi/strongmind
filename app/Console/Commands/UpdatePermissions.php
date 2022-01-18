@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
-use Bouncer;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
-use Silber\Bouncer\Database\Ability;
+use Spatie\Permission\Models\Permission;
 
 class UpdatePermissions extends Command
 {
@@ -36,24 +36,47 @@ class UpdatePermissions extends Command
 
     public function handle()
     {
+        /*
         Bouncer::refresh();
         $user=User::firstWhere('email','admin@strongminds.org');
         Bouncer::allow($user)->everything();
+
         $t = file_get_contents("database/data/permissions.json");
         $permissions = json_decode($t, true);
-        foreach($permissions as $key){
-
-            $slug = Str::slug($key['name']);
-            $ability_exists = Ability::firstWhere('name', $slug);
-            if (!$ability_exists) {
-                $ability = new Ability;
-                $ability->name = $slug;
-                $ability->title = $key['name'];
-                $ability->module_name = $key['module'];
-                $ability->save();
+        **/
+        //DB::table('spatie_permissions')->truncate();
+        $data = file_get_contents('database/data/spatie_permissions.json');
+        $permissions_data = json_decode($data, true);
+        foreach ($permissions_data as $key){
+            $permissionsArray = [
+                'name'          => $key['name'],
+                'guard_name'    => $key['guard_name'],
+                'module'        => $key['module'],
+                'slug'          => Str::slug($key['name'],'-'),
+                'description'   => $key['description']
+            ];
+            try{
+                $existingPermission = Permission::where(function(Builder $query) use($permissionsArray){
+                    $query->where('name',$permissionsArray['name']);
+                })->first();
+                if($existingPermission){
+                    if($existingPermission->module === null || $existingPermission->slug === null || $existingPermission->description === null){
+                        $existingPermission->update([
+                            'module' => $permissionsArray['module'],
+                            'slug'   => $permissionsArray['slug'],
+                            'description' => $permissionsArray['description']
+                        ]);
+                        $this->info('Permissions Updated successfully');
+                    }
+                }else{
+                    Permission::insert($permissionsArray);
+                }
+            }catch (QueryException $queryException){
+                $this->error($queryException->errorInfo[2]);
+            }catch (\Exception $exception){
+                $this->error($exception->getMessage());
             }
         }
-        $this->info('Permissions Updated successfully!');
-
+        $this->info('Permissions Added successfully!');
     }
 }

@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Programs\ProjectResource;
 use App\Http\Resources\UserResource;
-use App\Support\Collection;
 use Exception;
 use App\Models\User;
 use App\Models\Office;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Http\Resources\Programs\ProgramResource;
 use App\Http\Resources\OfficeResource;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
@@ -51,8 +50,8 @@ class OfficeController extends Controller
     public function create(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'country_id' => 'nullable',
-            'name' => 'required|unique:offices',
+            'country_id' => 'required|integer|not_in:0|exists:countries,id',
+            'name' => 'required|unique:offices|min:3|max:30',
         ]);
         if ($validator->fails()) {
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -82,22 +81,29 @@ class OfficeController extends Controller
     public function update(Request $request, $id): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'country_id' => 'nullable',
-            'name' => 'required',
+            'country_id' => 'nullable|integer|not_in:0|exists:countries,id',
+            'name' => 'required|string|min:3|max:20',
             'active' => 'nullable',
         ]);
         if ($validator->fails()) {
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             try {
-                $office = Office::find($id);
+                $office = Office::findOrFail($id);
                 if ($office) {
-                    $office->update($validator->validated());
+                    $office->update([
+                        'name' => $request->name ?? $office->name,
+                        'country_id' => $request->country_id ?? $office->country_id,
+                        'active'     => $request->active ?? $office->active
+                    ]);
                     return $this->commonResponse(true, 'Office updated successfully!', new OfficeResource($office), Response::HTTP_CREATED);
                 } else {
                     return $this->commonResponse(false, 'Office not found!', '', Response::HTTP_NOT_FOUND);
                 }
-            } catch (QueryException $ex) {
+            }catch (ModelNotFoundException $exception){
+                return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_NOT_FOUND);
+            }
+            catch (QueryException $ex) {
                 return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
             } catch (Exception $ex) {
                 return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -136,7 +142,7 @@ class OfficeController extends Controller
     }
 
     /**
-     * List All Office Programs
+     * List All Office Projects
      * @param $id
      * @urlParam id integer required Office ID . Example:1
      * @return JsonResponse
@@ -150,8 +156,8 @@ class OfficeController extends Controller
             if(!$office){
                 return $this->commonResponse(false,'Office Not Found','',Response::HTTP_NOT_FOUND);
             }else{
-                $programs = $office->programs;
-                return $this->commonResponse(true,'Success',ProgramResource::collection($programs), Response::HTTP_OK);
+                $projects = $office->programs;
+                return $this->commonResponse(true,'Success',ProjectResource::collection($projects), Response::HTTP_OK);
             }
         }catch(QueryException $exception){
             return $this->commonResponse(false, $exception->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);

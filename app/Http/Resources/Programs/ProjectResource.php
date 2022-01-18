@@ -2,12 +2,12 @@
 
 namespace App\Http\Resources\Programs;
 
-use App\Helpers\ProgramHelper;
+use App\Helpers\ProjectHelper;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProgramResource extends JsonResource
+class ProjectResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -27,7 +27,7 @@ class ProgramResource extends JsonResource
             'colour_option' => $this->colour_option,
             'office' => $this->office,
             'programType' => $this->programType,
-            'members' => ProgramHelper::members($this->id),
+            'members' => ProjectHelper::members($this->id),
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
         ];

@@ -1,0 +1,98 @@
+[
+    {
+        "id": 1,
+        "name": "ABIM",
+        "slug": "",
+        "country_id": 229
+    },
+    {
+        "id": 2,
+        "name": "ADJUMANI",
+        "slug": "",
+        "country_id": 229
+    },
+    {
+        "id": 3,
+        "name": "AGAGO",
+        "slug": "",
+        "country_id": 229
+    },
+    {
+        "id": 4,
+        "name": "ALEBTONG",
+        "slug": "",
+        "country_id": 229
+    },
+    {
+        "id": 5,
+        "name": "AMOLATAR",
+        "slug": "",
+        "country_id": 229
+    },
+    {
+        "id": 6,
+        "name": "AMUDAT",
+        "slug": "",
+        "country_id": 229
+    },
+    {
+        "id": 7,
+        "name": "AMURIA",
+        "slug": "",
+        "country_id": 229
+    },
+    {
+        "id": 8,
+        "name": "AMURU",
+        "slug": "",
+        "country_id": 229
+    },
+    {
+        "id": 9,
+        "name": "APAC",
+        "slug": "",
+        "country_id": 229
+    },
+    {
+        "id": 10,
+        "name": "ARUA",
+        "slug": "",
+        "country_id": 229
+    },
+    {
+        "id": 11,
+        "name": "BUDAKA",
+        "slug": "",
+        "country_id": 229
+    },
+    {
+        "id": 12,
+        "name": "BUDUDA",
+        "slug": "",
+        "country_id": 229
+    },
+    {
+        "id": 13,
+        "name": "BUGIRI",
+        "slug": "",
+        "country_id": 229
+    },
+    {
+        "id": 14,
+        "name": "BULAMBULI",
+        "slug": "",
+        "country_id": 229
+    },
+    {
+        "id": 15,
+        "name": "BUSHENYI",
+        "slug": "",
+        "country_id": 229
+    },
+    {
+        "id": 16,
+        "name": "BUKEDEA",
+        "slug": "",
+        "country_id": 229
+    }
+]

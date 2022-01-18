@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Misc\Channel;
 use App\Models\Misc\Status;
+use App\Models\Programs\Project;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -39,11 +40,11 @@ class Client extends Model
         'status_id',
         'channel_id',
         'staff_id',
-        'active'
+        'active',
     ];
 
     protected static $logAttributes = ['client_type','staff_id','name','therapy','patient_id','phone_number','city','languages','status_id','channel_id','active'];
-    
+
     protected static $logFillable = true;
 
     protected static $logOnlyDirty = true;
@@ -127,8 +128,23 @@ class Client extends Model
         return $this->hasMany(ClientNote::class,'client_id','id');
     }
 
+    /**
+     * @return BelongsTo
+     */
+    public function bioData(): BelongsTo
+    {
+        return $this->belongsTo(ClientBioData::class,'id','client_id');
+    }
+
     public function getLanguagesAttribute($value)
     {
         return explode(',', $value);
     }
+
+    // public function delete()
+    // {
+    //     $this->bioData()->delete();
+
+    //     return parent::delete();
+    // }
 }
