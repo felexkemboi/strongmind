@@ -72,8 +72,9 @@ class QuestionController extends Controller
      * @urlParam id integer required The ID of the Question Example:1
      * @authenticated
      */
-    public function show(Question $question): JsonResponse
+    public function show(int $id): JsonResponse
     {
+        $question = Question::find($id);
         if ($question) {
             return $this->commonResponse(true, 'success', $question, Response::HTTP_OK);
         } else {
@@ -85,13 +86,14 @@ class QuestionController extends Controller
      * Edit  Question
      * @param EditQuestionRequest $request
      * @return JsonResponse
-     * @bodyParam description string required The Question's description
-     * @bodyParam hint   string required The Question's hint
-     * @bodyParam form_id  integer The form the question belongs to
-     * @bodyParam field_type_id  integer If the form of the question
-     * @bodyParam required  boolean  If the form is required
-     * @bodyParam question_options_id  integer Options of the question
-     * @bodyParam multiple_selection  boolean Options of the question
+     * @urlParam id                    integer required The ID of the Question Example:1
+     * @bodyParam description          string  required The Question's description
+     * @bodyParam hint                 string           The Question's hint
+     * @bodyParam form_id              integer          The form the question belongs to
+     * @bodyParam field_type_id        integer          If the form of the question
+     * @bodyParam required             boolean          If the question is required
+     * @bodyParam question_options_id  integer          Options of the question
+     * @bodyParam multiple_selection   boolean          Options of the question
      * @authenticated
      */
 
@@ -107,7 +109,7 @@ class QuestionController extends Controller
                 $question->required = $request->required;
                 $question->multiple_selection = $request->multiple_selection;
                 if ($question->save()) {
-                    return $this->commonResponse(true, 'Question updated successfully!', '', Response::HTTP_CREATED);
+                    return $this->commonResponse(true, 'Question updated successfully!', $question, Response::HTTP_CREATED);
                 }
             }
             return $this->commonResponse(false, 'Failed to update Question', 'Question Not Found', Response::HTTP_UNPROCESSABLE_ENTITY);
