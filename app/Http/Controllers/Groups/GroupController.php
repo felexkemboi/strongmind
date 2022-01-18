@@ -10,6 +10,10 @@ use App\Http\Requests\GroupUpdateRequest;
 use App\Services\PermissionRoleService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Spatie\Activitylog\Models\Activity as ActivityLog;
+use Symfony\Component\HttpFoundation\Response;
+use App\Models\User;
+
 
 /**
  * Groups Endpoints
@@ -133,6 +137,31 @@ class GroupController extends Controller
         return $this->groupAction->terminateGroup($id);
     }
 
+    /**
+     *  Group Logs
+     *
+     * @urlParam  id integer required .
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function groupLogs(int $id): JsonResponse
+    {
+        $activities = ActivityLog::orderBy('created_at', 'desc')
+                        ->where('subject_id', $id)
+                        ->where('log_name', 'group')
+                        ->get();
+        if(!$activities->isEmpty()){
+            $activitiesList = collect();
+            foreach($activities as $activity){
+                if($activity->causer_id){
+                    $activitiesList->push(['description' => $activity->description, 'date' => $activity->created_at , 'user' => User::findorFail($activity->causer_id)->name, 'profile' => User::findorFail($activity->causer_id)->profile_pic_url]);
+                }
+                $activitiesList->push(['description' => $activity->description, 'date' => $activity->created_at , 'user' => '','profile' => '']);
+            }
+            return $this->commonResponse(true, 'Success', $activitiesList, Response::HTTP_OK);
+        }
+        return $this->commonResponse(true, 'Success', 'Group has no Logs', Response::HTTP_OK);
+    }
     /**
      * Add Clients To Group
      * @param GroupClientRequest $request

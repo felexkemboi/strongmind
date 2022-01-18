@@ -3,31 +3,29 @@
 
 namespace App\Actions;
 
-
-use App\Helpers\CountryHelper;
-use App\Http\Requests\GroupClientRequest;
-use App\Http\Requests\GroupRequest;
-use App\Http\Requests\GroupUpdateRequest;
-use App\Http\Resources\GroupResource;
-use App\Models\Client;
-use App\Models\ClientBioData;
-use App\Models\Group;
-use App\Models\GroupClient;
-use App\Models\GroupSession;
-use App\Models\Office;
-use App\Models\SessionAttendance;
+use Exception;
+use Carbon\Carbon;
 use App\Models\User;
-use App\Services\GroupService;
+use App\Models\Group;
+use App\Models\Office;
+use App\Models\Client;
+use App\Models\GroupClient;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use App\Models\ClientBioData;
+use App\Helpers\CountryHelper;
+use App\Services\GroupService;
+use Illuminate\Http\JsonResponse;
+use App\Http\Requests\GroupRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\GroupResource;
+use Illuminate\Database\QueryException;
+use App\Http\Requests\GroupUpdateRequest;
+use App\Http\Requests\GroupClientRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
-use Exception;
 
 class GroupAction
 {
@@ -118,6 +116,11 @@ class GroupAction
                     'group_id' => $countryCode->long_code.'-'.Carbon::now()->format('y').'-'.$newGroup->id
                 ]);
                 $groupItem = Group::with('sessions','staff','groupType','attendance')->findOrFail($newGroup->id);
+                $user = Auth::user();
+                activity('group')
+                ->performedOn($groupItem)
+                ->causedBy($user)
+                ->log('Created group '.$groupItem->name);
                 return $this->commonResponse(true,'Group Created Successfully',GroupService::viewGroupDetails($groupItem), Response::HTTP_CREATED);
             }
             return $this->commonResponse(false,'Failed to create group','', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -155,6 +158,11 @@ class GroupAction
                 return $this->commonResponse(false,'Group Session is terminated, no action required',GroupService::getGroupData($group), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $group->update(['ongoing' => Group::SESSION_TERMINATED]);
+            $user = Auth::user();
+            activity('group')
+            ->performedOn($group)
+            ->causedBy($user)
+            ->log('Terminated group '.$group->name);
             return $this->commonResponse(true,'Group terminated successfully',GroupService::viewGroupDetails($group), Response::HTTP_OK);
         }
         catch (ModelNotFoundException $exception){
@@ -193,6 +201,11 @@ class GroupAction
                 'group_allocation_date' => $request->group_allocation_date !== null ? Carbon::parse($request->group_allocation_date)->format('d M Y') : $group->group_allocation_date,
                 'group_id' => $request->office_id !== null ? $countryCode->long_code.'-'.Carbon::now()->format('y').'-'.$group->id : $group->group_id
             ]));
+            $user = Auth::user();
+            activity('group')
+            ->performedOn($group)
+            ->causedBy($user)
+            ->log('Updated group '.$group->name);
             return $this->commonResponse(true, 'Group Updated Successfully', GroupService::viewGroupDetails($group), Response::HTTP_OK);
         }
         catch (ModelNotFoundException $exception) {
@@ -210,6 +223,11 @@ class GroupAction
         try{
             $group = Group::with('sessions','staff','groupType','attendance')->findOrFail($id);
             $group->delete();
+            $user = Auth::user();
+            activity('group')
+            ->performedOn($group)
+            ->causedBy($user)
+            ->log('Deleted group '.$group->name);
             return $this->commonResponse(true,'Group Deleted Successfully','', Response::HTTP_OK);
         }catch (ModelNotFoundException $exception){
             return $this->commonResponse(false,'Group Does Not Exist','', Response::HTTP_NOT_FOUND);
@@ -225,7 +243,11 @@ class GroupAction
     {
         try{
             $group = Group::with('sessions','clients','staff','groupType','attendance')->findOrFail($id);
-            $clients = Client::whereIn('id', $request->client_id)->get();
+            $clientIds = [];
+            foreach (explode(',', $request->client_id) as $client_id) {
+                array_push($clientIds,(int)$client_id);
+            }
+            $clients = Client::whereIn('id', $clientIds)->get();
             foreach ($clients as $client){
                 GroupClient::create(
                     [
@@ -237,6 +259,11 @@ class GroupAction
             $group->update([
                 'total_clients' => $group->clients->count()
             ]);
+            $user = Auth::user();
+            activity('group')
+            ->performedOn($group)
+            ->causedBy($user)
+            ->log('Add clients to group '.$group->name);
             return $this->commonResponse(true,'Clients Added Successfully',GroupService::viewGroupDetails($group), Response::HTTP_CREATED);
         }catch (ModelNotFoundException $exception){
             return $this->commonResponse(false,'Group Does Not Exist','', Response::HTTP_NOT_FOUND);

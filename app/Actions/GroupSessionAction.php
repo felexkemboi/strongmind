@@ -127,7 +127,12 @@ class GroupSessionAction
         try{
             $recorded = false;
             $session = GroupSession::findOrFail($id);
-            $clients = Client::whereIn('id', $sessionAttendanceRequest->client_id)->get();
+            $clientIds = [];
+            foreach (explode(',', $sessionAttendanceRequest->client_id) as $client_id) {
+                array_push($clientIds,(int)$client_id);
+            }
+
+            $clients = Client::whereIn('id', $clientIds)->get();
             if($sessionAttendanceRequest->attended === false && $sessionAttendanceRequest->reason === null){
                 return $this->commonResponse(false,'Please state some reason for non-attendance','', Response::HTTP_UNPROCESSABLE_ENTITY);
             }

@@ -228,6 +228,7 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'groups'], function(){
     Route::post('/create',                [GroupController::class,'store']);
     Route::get('/',                       [GroupController::class,'index']);
     Route::get('/{id}',                   [GroupController::class,'show']);
+    Route::get('/{id}/activities',        [GroupController::class,'groupLogs']);
     Route::patch('/{id}/update',          [GroupController::class,'update']);
     Route::delete('/{id}/delete',         [GroupController::class,'destroy']);
     Route::patch('/{id}/terminate',       [GroupController::class,'terminate']);

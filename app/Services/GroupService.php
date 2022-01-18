@@ -8,6 +8,7 @@ use App\Http\Resources\GroupTypeResource;
 use App\Models\Client;
 use App\Models\ClientBioData;
 use App\Models\Group;
+use App\Models\GroupClient;
 use App\Models\GroupSession;
 use App\Models\SessionAttendance;
 use App\Models\User;
@@ -51,27 +52,17 @@ class GroupService
         $user = User::where(function(Builder $query) use($group){
             return $query->where('id', $group->staff_id);
         })->first();
+        $clients = GroupClient::where('group_id', $group->id)->get();
         return [
             'id' => $group->id,
             'name' => $group->name,
             'group_id' => $group->group_id,
-            'sessions' => $group->sessions->transform(function($session){
-                $attendance = $session->attendance->transform(function ($data){
-                    $client = ClientBioData::select('first_name','last_name','other_name')->firstWhere(function (Builder $query) use($data){
-                        $query->where('client_id', $data->client_id);
-                    });
-                    return [
-                        'attendanceId'  => $data->id,
-                        'clientId'      => $data->client_id,
-                        'clientName'    => $client->first_name .' '.$client->last_name.' '.$client->other_name,
-                        'attended'      => $data->attended,
-                        'reason'        => $data->reason
-                    ];
-                });
+            'attendance' => $clients->transform(function($client){
+                $clientDetails = ClientBioData::where('client_id',$client->client_id)->firstOrFail();
+                $sessions =  SessionAttendance::select('session_id','attended','reason','created_at')->where('client_id',$client->client_id)->get();
                 return [
-                    'id' => $session->id,
-                    'date' => $session->session_date,
-                    'attendance' => $attendance
+                    'clientName' => $clientDetails->first_name .' '.$clientDetails->last_name.' '.$clientDetails->other_name,
+                    'sessions' => $sessions
                 ];
             }),
             'last_session' => $group->last_session !== null ? Carbon::parse($group->last_session)->format('d M Y') : null,

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Exception;
 
-use App\Models\User;
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Client;
 use Illuminate\Support\Arr;
 use App\Models\Misc\Status;
@@ -481,6 +481,7 @@ class ClientController extends Controller
     {
         $activities = ActivityLog::orderBy('created_at', 'desc')
                         ->where('subject_id', $id)
+                        ->where('log_name', 'client')
                         ->get();
         if(!$activities->isEmpty()){
             $activitiesList = collect();

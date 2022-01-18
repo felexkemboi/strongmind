@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Form;
 use App\Models\FormType;
+use App\Models\FieldType;
 use App\Models\QuestionOptions;
 
 class Question extends Model
@@ -16,6 +17,8 @@ class Question extends Model
     use HasFactory;//, SoftDeletes;
 
     protected $table = 'questions';
+    protected $with = ['fieldType'];
+
 
     protected $fillable = [
         'description',
@@ -34,7 +37,12 @@ class Question extends Model
 
     public function formType(): BelongsTo
     {
-        return $this->belongsTo(FormType::class, 'field_type_id');
+        return $this->belongsTo(FormType::class, 'form_type_id');
+    }
+
+    public function fieldType(): BelongsTo
+    {
+        return $this->belongsTo(FieldType::class, 'field_type_id');
     }
 
     public function questionOptions(): HasMany

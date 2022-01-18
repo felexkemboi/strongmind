@@ -32,7 +32,7 @@ class GroupAttendanceController extends Controller
      * @param int $id
      * @return JsonResponse
      * @urlParam id integer required . The Session ID
-     * @bodyParam client_id array required . The Client ID(s) . Example: [1,2,3]
+     * @bodyParam client_id string required . The Client ID(s) . Example: [1,2,3]
      * @bodyParam reason string. The Reason for client no-n-attendance .
      * @bodyParam attended boolean required . Whether client attended session or not . false|true
      * @authenticated

@@ -26,7 +26,7 @@ class QuestionController extends Controller
 
     public function index(): JsonResponse
     {
-        $questions = Question::all();
+        $questions = Question::with('fieldType')->get();
         return $this->commonResponse(true, 'success', $questions, Response::HTTP_OK);
     }
 
@@ -74,7 +74,7 @@ class QuestionController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $question = Question::find($id);
+        $question = Question::with('fieldType')->firstWhere('id',$id);
         if ($question) {
             return $this->commonResponse(true, 'success', $question, Response::HTTP_OK);
         } else {
