@@ -24,9 +24,10 @@ class CreateQuestionOptionsRequest extends FormRequest
     public function rules()
     {
         return [
-            'score'          => 'integer|required',
             'value'          => 'string|required',
             'question_id'    => 'integer|not_in:0|exists:questions,id',
+            'score'          => 'integer',
+
         ];
     }
 }

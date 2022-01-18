@@ -11,14 +11,14 @@ use App\Models\Form;
 use App\Models\FormType;
 use App\Models\FieldType;
 use App\Models\QuestionOptions;
+use App\Models\QuestionResponses;
 
 class Question extends Model
 {
     use HasFactory;//, SoftDeletes;
 
     protected $table = 'questions';
-    protected $with = ['fieldType'];
-
+    protected $with = ['fieldType','responses'];
 
     protected $fillable = [
         'description',
@@ -40,6 +40,11 @@ class Question extends Model
         return $this->belongsTo(FormType::class, 'form_type_id');
     }
 
+    public function responses(): HasMany
+    {
+        return $this->hasMany(QuestionResponses::class, 'question_id');
+    }
+
     public function fieldType(): BelongsTo
     {
         return $this->belongsTo(FieldType::class, 'field_type_id');
@@ -47,6 +52,6 @@ class Question extends Model
 
     public function questionOptions(): HasMany
     {
-        return $this->hasMany(QuestionOptions::class, 'question_options_id');
+        return $this->hasMany(QuestionOptions::class, 'question_id');
     }
 }

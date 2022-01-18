@@ -26,7 +26,7 @@ class QuestionController extends Controller
 
     public function index(): JsonResponse
     {
-        $questions = Question::with('fieldType')->get();
+        $questions = Question::all(); //with('fieldType')->get();
         return $this->commonResponse(true, 'success', $questions, Response::HTTP_OK);
     }
 
@@ -135,6 +135,24 @@ class QuestionController extends Controller
             return $this->commonResponse(true, 'Question deleted', '', Response::HTTP_OK);
         } else {
             return $this->commonResponse(false, 'Question not found!', '', Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    /**
+     * Get QuestionOptions
+     * @param  Question  $question
+     * @return JsonResponse
+     * @urlParam id integer required The ID of the Question Example:1
+     * @authenticated
+     */
+    public function questionOptions(int $id): JsonResponse
+    {
+        $question = Question::with('fieldType')->firstWhere('id',$id);
+        if ($question) {
+            $options = $question->questionOptions;
+            return $this->commonResponse(true, 'success', $options, Response::HTTP_OK);
+        } else {
+            return $this->commonResponse(false, 'Question Not Found!', '', Response::HTTP_NOT_FOUND);
         }
     }
 }
