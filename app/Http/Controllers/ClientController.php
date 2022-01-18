@@ -336,7 +336,7 @@ class ClientController extends Controller
                     ->performedOn($client)
                     ->causedBy($user)
                     ->log('Client transferred to '.$user->name);
-                return $this->commonResponse(true,'Client transferred successfully','', Response::HTTP_OK);
+                return $this->commonResponse(false,'Client transferred successfully', $client, Response::HTTP_OK);
             }
             return $this->commonResponse(false,'Failed to transfer client','', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (QueryException  $queryException){
@@ -449,8 +449,7 @@ class ClientController extends Controller
         } else {
             try {
 
-                Client::whereIn('id', $request->clients)
-                    ->update(['client_type' =>  'therapy','therapy' =>  1]);
+                Client::whereIn('id', $request->clients)->update(['client_type' =>  'therapy','therapy' =>  1]);
                 $user = Auth::user();
                 foreach ($request->clients as $client) {
                     $clientRecords = Client::findorFail($client);
@@ -469,9 +468,10 @@ class ClientController extends Controller
     }
 
     /**
-     * Get clients from other sources
+     * Get client activity log
      * @group Clients
-     * @param int $id
+     * @param Request $request
+     * @urlParam id int required  The Client's id
      * @return JsonResponse
      * @bodyParam id int required . The Client's id
      * @authenticated
@@ -479,6 +479,7 @@ class ClientController extends Controller
 
     public function clientLogs(int $id)
     {
+
         $activities = ActivityLog::orderBy('created_at', 'desc')
                         ->where('subject_id', $id)
                         ->where('log_name', 'client')
