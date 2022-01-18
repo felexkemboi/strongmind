@@ -24,9 +24,10 @@ class EditQuestionRequest extends FormRequest
     public function rules()
     {
         return [
-            'required'            => 'boolean',
-            'multiple_selection'  => 'boolean',
             'description'         => 'string|required',
+            'hint'                => 'string',
+            'multiple_selection'  => 'boolean',
+            'required'            => 'boolean',
             'form_id'             => 'integer|not_in:0|exists:forms,id',
             'field_type_id'       => 'integer|not_in:0|exists:field_type,id',
             'question_options_id' => 'integer|not_in:0|exists:questionsoptions,id',
