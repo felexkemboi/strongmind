@@ -434,7 +434,7 @@ class ClientController extends Controller
     /**
      * Activate  Clients
      * @param Request $request
-     * @bodyParam users required . The Client IDs . Example [1,2]
+     * @bodyParam users required  The Client IDs . Example [1,2]
      * @return JsonResponse
      * @authenticated
      */
@@ -471,7 +471,7 @@ class ClientController extends Controller
      * Get client activity log
      * @group Clients
      * @param Request $request
-     * @bodyParam id int required  The Client's id
+     * @urlParam id int required  The Client's id
      * @return JsonResponse
      * @authenticated
      */
