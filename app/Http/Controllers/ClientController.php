@@ -434,7 +434,7 @@ class ClientController extends Controller
     /**
      * Activate  Clients
      * @param Request $request
-     * @bodyParam users required . The Client IDs . Example [1,2]
+     * @bodyParam users required  The Client IDs . Example [1,2]
      * @return JsonResponse
      * @authenticated
      */
