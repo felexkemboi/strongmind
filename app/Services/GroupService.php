@@ -67,7 +67,10 @@ class GroupService
                 ];
             }),
             'sessions' =>  $sessions->transform(function($session){
-                $sessionsAttendance =  SessionAttendance::select('client_id','attended')->where('session_id',$session->id)->get();
+                $sessionsAttendance =  SessionAttendance::select('client_id','attended')
+                        ->where('session_id',$session->id)
+                        ->where('attended',1)
+                        ->get();
 
                 $attendance = $sessionsAttendance->transform(function($sessionDetail){
 
