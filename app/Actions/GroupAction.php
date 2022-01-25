@@ -134,7 +134,7 @@ class GroupAction
     public function viewGroupItem(int $id): JsonResponse
     {
         try{
-            $group = Group::with('sessions','staff','groupType','attendance')->findOrFail($id);
+            $group = Group::with('sessions','staff','groupType','attendance','clients')->findOrFail($id);
             return $this->commonResponse(false,'Success',GroupService::viewGroupDetails($group),Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -224,20 +224,33 @@ class GroupAction
     public function addClientsToGroup(GroupClientRequest $request, int $id): JsonResponse
     {
         try{
-            $group = Group::with('sessions','clients','staff','groupType','attendance')->findOrFail($id);
-            $clients = Client::whereIn('id', $request->client_id)->get();
+            $group = Group::findOrFail($id);
+            $clientIds = [];
+            foreach (explode(',', $request->client_id) as $client_id) {
+                array_push($clientIds,(int)$client_id);
+            }
+
+            $clients = Client::whereIn('id', $clientIds)->get();
+            $existing = GroupClient::select('client_id')->where('group_id', $id)->get();
+            $existingClients = [];
+            foreach ($existing as $client){
+                array_push($existingClients,$client->client_id);
+            }
+
             foreach ($clients as $client){
-                GroupClient::create(
-                    [
-                        'client_id' => $client->id,
-                        'group_id'  => $group->id
-                    ]
-                );
+                if (!in_array($client->id, $existingClients)){
+                    GroupClient::create(
+                        [
+                            'client_id' => $client->id,
+                            'group_id'  => $group->id
+                        ]
+                    );
+                }
             }
             $group->update([
                 'total_clients' => $group->clients->count()
             ]);
-            return $this->commonResponse(true,'Clients Added Successfully',GroupService::viewGroupDetails($group), Response::HTTP_CREATED);
+            return $this->commonResponse(true,'Clients Added Successfully',$group, Response::HTTP_CREATED); //GroupService::viewGroupDetails($group)
         }catch (ModelNotFoundException $exception){
             return $this->commonResponse(false,'Group Does Not Exist','', Response::HTTP_NOT_FOUND);
         }

@@ -53,16 +53,34 @@ class GroupService
             return $query->where('id', $group->staff_id);
         })->first();
         $clients = GroupClient::where('group_id', $group->id)->get();
+        $sessions = GroupSession::select('id','created_at')->where('group_id',$group->id)->get();
         return [
             'id' => $group->id,
             'name' => $group->name,
             'group_id' => $group->group_id,
-            'attendance' => $clients->transform(function($client){
+            'clients' => $clients->transform(function($client){
+
                 $clientDetails = ClientBioData::where('client_id',$client->client_id)->firstOrFail();
-                $sessions =  SessionAttendance::select('session_id','attended','reason','created_at')->where('client_id',$client->client_id)->get();
                 return [
+                    'clientId' => $client->client_id,
                     'clientName' => $clientDetails->first_name .' '.$clientDetails->last_name.' '.$clientDetails->other_name,
-                    'sessions' => $sessions
+                ];
+            }),
+            'sessions' =>  $sessions->transform(function($session){
+                $sessionsAttendance =  SessionAttendance::select('client_id','attended')->where('session_id',$session->id)->get();
+
+                $attendance = $sessionsAttendance->transform(function($sessionDetail){
+
+                    $clientDetails = ClientBioData::where('client_id',$sessionDetail->client_id)->firstOrFail();
+                    return [
+                        'clientName' => $clientDetails->first_name .' '.$clientDetails->last_name.' '.$clientDetails->other_name,
+                        'attended' => $sessionDetail->attended
+                    ];
+                });
+                return [
+                    'session_id' => $session->id,
+                    'created_at' => $session->created_at,
+                    'attendance' => $attendance,
                 ];
             }),
             'last_session' => $group->last_session !== null ? Carbon::parse($group->last_session)->format('d M Y') : null,
