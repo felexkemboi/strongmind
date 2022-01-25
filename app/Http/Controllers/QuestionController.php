@@ -34,13 +34,13 @@ class QuestionController extends Controller
      * Create  Question
      * @param CreateQuestionRequest $request
      * @return JsonResponse
-     * @bodyParam description string required The Question's description
-     * @bodyParam hint   string required The Question's hint
-     * @bodyParam form_id  integer required The form the question belongs to
-     * @bodyParam field_type_id  integer required  If the form of the question
-     * @bodyParam required  boolean required   If the form is required
-     * @bodyParam question_options_id  integer Options of the question
-     * @bodyParam multiple_selection  boolean Options of the question
+     * @bodyParam description          string   required The Question's description
+     * @bodyParam hint                 string   required The Question's hint
+     * @bodyParam form_id              integer  required The form the question belongs to
+     * @bodyParam field_type_id        integer  required  If the form of the question
+     * @bodyParam required             boolean  required   If the form is required
+     * @bodyParam question_options_id  integer  Options of the question
+     * @bodyParam multiple_selection   boolean  Options of the question
      * @authenticated
      */
 
@@ -55,7 +55,7 @@ class QuestionController extends Controller
             $question->required = $request->required;
             $question->multiple_selection = $request->multiple_selection;
             if ($question->save()) {
-                return $this->commonResponse(true, 'Question created successfully!', '', Response::HTTP_CREATED);
+                return $this->commonResponse(true, 'Question created successfully!', $question, Response::HTTP_CREATED);
             }
             return $this->commonResponse(false, 'Failed to create Question', '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (QueryException $ex) {

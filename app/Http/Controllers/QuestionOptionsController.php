@@ -36,7 +36,7 @@ class QuestionOptionsController extends Controller
      * @param CreateQuestionOptionsRequest $request
      * @return JsonResponse
      * @bodyParam value string required The Response value
-     * @bodyParam score  integer  optional The score of the response
+     * @bodyParam score  integer   The score of the response
      * @bodyParam question_id  integer required If the form of the question
      * @authenticated
      */
@@ -61,14 +61,14 @@ class QuestionOptionsController extends Controller
 
     /**
      * Get QuestionOption by Id
-     * @param  QuestionOption  $questionOption
+     * @param  QuestionOptions  $questionOption
      * @return JsonResponse
      * @urlParam id integer required The ID of the Question Example:1
      * @authenticated
      */
-    public function show(QuestionOptions $questionOptionId): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        $questionOption = QuestionOptions::findorFail($questionOptionId);
+        $questionOption = QuestionOptions::findorFail($id);
         if ($questionOption) {
             return $this->commonResponse(true, 'success', $questionOption, Response::HTTP_OK);
         } else {
