@@ -24,8 +24,9 @@ class GroupClientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'client_id' => ['string'],
-            'client_id.*' => ['integer','required','not_in:0','distinct','exists:clients,id']
+            'client_id' => 'string|required',
+            // 'client_id' => ['array','required','min:1'],
+            // 'client_id.*' => ['integer','required','not_in:0','distinct','exists:clients,id']
         ];
     }
 }

@@ -75,7 +75,7 @@ class GroupController extends Controller
     /**
      * Display Group Details
      *
-     * @param int $id
+     * @urlParam  id integer required
      * @return JsonResponse
      * @authenticated
      */
@@ -178,8 +178,8 @@ class GroupController extends Controller
      * @param GroupClientRequest $request
      * @param int $id
      * @return JsonResponse
-     * @urlParam id integer required . The Group ID . Example: 1
-     * @bodyParam client_id array required . The Client ID's . Example [1,2,3]
+     * @urlParam id integer required  The Group ID  Example: 1
+     * @bodyParam client_id string required  The Client ID's(comma separated) . Example 1,2,3
      * @authenticated
      */
     public function addClients(GroupClientRequest $request,int $id): JsonResponse
