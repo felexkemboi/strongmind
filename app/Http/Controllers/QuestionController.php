@@ -26,7 +26,7 @@ class QuestionController extends Controller
 
     public function index(): JsonResponse
     {
-        $questions = Question::with('fieldType')->get();
+        $questions = Question::all(); //with('fieldType')->get();
         return $this->commonResponse(true, 'success', $questions, Response::HTTP_OK);
     }
 
@@ -35,6 +35,7 @@ class QuestionController extends Controller
      * @param CreateQuestionRequest $request
      * @return JsonResponse
      * @bodyParam description string required The Question's description
+     * @bodyParam hint   string required The Question's hint
      * @bodyParam form_id  integer required The form the question belongs to
      * @bodyParam field_type_id  integer required  If the form of the question
      * @bodyParam required  boolean required   If the form is required
@@ -48,6 +49,7 @@ class QuestionController extends Controller
         try {
             $question = new Question();
             $question->description = $request->description;
+            $question->hint = $request->hint;
             $question->form_id = $request->form_id;
             $question->field_type_id = $request->field_type_id;
             $question->required = $request->required;
@@ -84,12 +86,14 @@ class QuestionController extends Controller
      * Edit  Question
      * @param EditQuestionRequest $request
      * @return JsonResponse
-     * @bodyParam description string required The Question's description
-     * @bodyParam form_id  integer The form the question belongs to
-     * @bodyParam field_type_id  integer If the form of the question
-     * @bodyParam required  boolean  If the form is required
-     * @bodyParam question_options_id  integer Options of the question
-     * @bodyParam multiple_selection  boolean Options of the question
+     * @urlParam id                    integer required The ID of the Question Example:1
+     * @bodyParam description          string  required The Question's description
+     * @bodyParam hint                 string           The Question's hint
+     * @bodyParam form_id              integer          The form the question belongs to
+     * @bodyParam field_type_id        integer          If the form of the question
+     * @bodyParam required             boolean          If the question is required
+     * @bodyParam question_options_id  integer          Options of the question
+     * @bodyParam multiple_selection   boolean          Options of the question
      * @authenticated
      */
 
@@ -99,12 +103,13 @@ class QuestionController extends Controller
             $question = Question::findorFail($questionId);
             if($question){
                 $question->description = $request->description;
+                $question->hint = $request->hint;
                 $question->form_id = $request->form_id;
                 $question->field_type_id = $request->field_type_id;
                 $question->required = $request->required;
                 $question->multiple_selection = $request->multiple_selection;
                 if ($question->save()) {
-                    return $this->commonResponse(true, 'Question updated successfully!', '', Response::HTTP_CREATED);
+                    return $this->commonResponse(true, 'Question updated successfully!', $question, Response::HTTP_CREATED);
                 }
             }
             return $this->commonResponse(false, 'Failed to update Question', 'Question Not Found', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -130,6 +135,24 @@ class QuestionController extends Controller
             return $this->commonResponse(true, 'Question deleted', '', Response::HTTP_OK);
         } else {
             return $this->commonResponse(false, 'Question not found!', '', Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    /**
+     * Get QuestionOptions
+     * @param  Question  $question
+     * @return JsonResponse
+     * @urlParam id integer required The ID of the Question Example:1
+     * @authenticated
+     */
+    public function questionOptions(int $id): JsonResponse
+    {
+        $question = Question::with('fieldType')->firstWhere('id',$id);
+        if ($question) {
+            $options = $question->questionOptions;
+            return $this->commonResponse(true, 'success', $options, Response::HTTP_OK);
+        } else {
+            return $this->commonResponse(false, 'Question Not Found!', '', Response::HTTP_NOT_FOUND);
         }
     }
 }

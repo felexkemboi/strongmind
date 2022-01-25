@@ -9,8 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Database\QueryException;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateFormRequest;
-
-use Illuminate\Http\Request;
+use App\Http\Requests\EditFormRequest;
 
 /**
  * APIs for managing FormController
@@ -54,6 +53,7 @@ class FormController extends Controller
      * @param CreateFormRequest $request
      * @return JsonResponse
      * @bodyParam name string required The Form's Name
+     * @bodyParam assessment boolean required  The Form's status
      * @bodyParam status_id integer  The Form's status
      * @authenticated
      */
@@ -63,9 +63,10 @@ class FormController extends Controller
         try {
             $form = new Form();
             $form->name = $request->name;
+            $form->assessment = $request->assessment;
             $form->status_id = $request->status_id ?? '';
             if ($form->save()) {
-                return $this->commonResponse(true, 'Form created successfully!', '', Response::HTTP_CREATED);
+                return $this->commonResponse(true, 'Form created successfully!', $form, Response::HTTP_CREATED);
             }
             return $this->commonResponse(false, 'Failed to create Form', '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (QueryException $ex) {
@@ -133,22 +134,22 @@ class FormController extends Controller
      * Edit Form
      * @param CreateFormRequest $request
      * @return JsonResponse
+     * @urlParam id integer required The ID of the Form Example:1
      * @bodyParam name string required The Form's Name
-     * @bodyParam status_id string  The Form's status
-     * @bodyParam published_at date required The Form's published date
+     * @bodyParam status_id integer  The Form's status
      * @authenticated
      */
 
-    public function update(CreateFormRequest $request, int $id): JsonResponse
+    public function update(EditFormRequest $request, int $id): JsonResponse
     {
         try {
             $form = Form::find($id);
             if($form){
                 $form->name = $request->name;
                 $form->status_id = $request->status_id;
-                $form->published_at = $request->published_at;
+                $form->assessment = $request->assessment;
                 if ($form->save()) {
-                    return $this->commonResponse(true, 'Form updated successfully!', '', Response::HTTP_CREATED);
+                    return $this->commonResponse(true, 'Form updated successfully!', $form, Response::HTTP_CREATED);
                 }
             }
             return $this->commonResponse(false, 'Failed to update Form', 'Form Not Found', Response::HTTP_UNPROCESSABLE_ENTITY);

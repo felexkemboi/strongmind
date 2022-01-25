@@ -21,6 +21,7 @@ class Form extends Model
     protected $fillable = [
         'name',
         'status_id',
+        'assessment',
         'form_id',
         'published_at'
     ];
