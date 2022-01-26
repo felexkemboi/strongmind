@@ -60,23 +60,6 @@ class QuestionOptionsController extends Controller
     }
 
     /**
-     * Get QuestionOption by Id
-     * @param  QuestionOption  $questionOption
-     * @return JsonResponse
-     * @urlParam id integer required The ID of the Question Example:1
-     * @authenticated
-     */
-    public function show(QuestionOptions $questionOptionId): JsonResponse
-    {
-        $questionOption = QuestionOptions::findorFail($questionOptionId);
-        if ($questionOption) {
-            return $this->commonResponse(true, 'success', $questionOption, Response::HTTP_OK);
-        } else {
-            return $this->commonResponse(false, 'Question Option Not Found!', '', Response::HTTP_NOT_FOUND);
-        }
-    }
-
-    /**
      * Edit  QuestionOption
      * @param CreateQuestionOptionsRequest $request
      * @return JsonResponse
