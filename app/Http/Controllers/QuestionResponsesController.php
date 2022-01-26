@@ -62,7 +62,7 @@ class QuestionResponsesController extends Controller
     }
 
     /**
-     * Get Question by Id
+     * Get QuestionResponse by Id
      * @param  QuestionResponse  $questionOption
      * @return JsonResponse
      * @urlParam id integer required The ID of the Question Example:1
