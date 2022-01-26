@@ -14,7 +14,7 @@ class AddHintToQuestionsTable extends Migration
     public function up()
     {
         Schema::table('questions', function (Blueprint $table) {
-            $table->string('hint')->after('description');
+            $table->string('hint')->after('description')->default('');
         });
     }
 
