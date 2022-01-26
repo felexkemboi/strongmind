@@ -15,10 +15,10 @@ use App\Models\QuestionResponses;
 
 class Question extends Model
 {
-    use HasFactory;//, SoftDeletes;
+    use HasFactory;
 
     protected $table = 'questions';
-    protected $with = ['fieldType','responses'];
+    protected $with = ['fieldType','responses', 'questionOptions'];
 
     protected $fillable = [
         'description',
@@ -52,6 +52,10 @@ class Question extends Model
 
     public function questionOptions(): HasMany
     {
+        return $this->hasMany(QuestionOptions::class, 'question_id');
+    }
+
+    public function getQuestionOptionsAttribute() {
         return $this->hasMany(QuestionOptions::class, 'question_id');
     }
 }
