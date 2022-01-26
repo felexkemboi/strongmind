@@ -14,7 +14,7 @@ class AddAssessmentToFormsTable extends Migration
     public function up()
     {
         Schema::table('forms', function (Blueprint $table) {
-            $table->boolean('assessment')->after('name');
+            $table->boolean('assessment')->after('name')->default(0);
         });
     }
 
