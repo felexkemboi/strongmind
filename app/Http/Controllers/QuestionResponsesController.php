@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateQuestionResponseRequest;
 use App\Http\Requests\EditQuestionResponseRequest;
 use App\Models\QuestionResponses;
+use App\Models\Form;
 use Exception;
 
 /**
@@ -38,7 +39,6 @@ class QuestionResponsesController extends Controller
      * @param CreateQuestionResponseRequest $request
      * @return JsonResponse
      * @bodyParam value string required The Response value
-     * @bodyParam score  integer The score of the response
      * @bodyParam question_id  integer required If the form of the question
      * @authenticated
      */
@@ -48,9 +48,18 @@ class QuestionResponsesController extends Controller
         try {
             $option = new QuestionResponses();
             $option->value = $request->value;
-            $option->score = $request->score;
             $option->question_id = $request->question_id;
             if ($option->save()) {
+                $question = Question::findorFail($request->question_id);
+                $form = Form::findorFail($question->id);
+                if(!$form->response_count){
+                    $form->response_count = 1;
+                    $form->save();
+                    return $this->commonResponse(true, 'Question Response created successfully!', '', Response::HTTP_CREATED);
+                }
+                $count = $form->response_count + 1;
+                $form->response_count = $count;
+                $form->save();
                 return $this->commonResponse(true, 'Question Response created successfully!', '', Response::HTTP_CREATED);
             }
             return $this->commonResponse(false, 'Failed to create Question Response', '', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -122,6 +131,15 @@ class QuestionResponsesController extends Controller
         $questionResponse = QuestionResponses::find($questionResponseId);
         if($questionResponse){
             if ($questionResponse->delete()) {
+
+                $question = Question::findorFail($questionResponse->question_id);
+                $form = Form::findorFail($question->id);
+                if($form->response_count){
+                    $count = $form->response_count - 1;
+                    $form->response_count = $count;
+                    $form->save();
+                    return $this->commonResponse(true, 'Question Response created successfully!', '', Response::HTTP_CREATED);
+                }
                 return $this->commonResponse(true, 'Question Response deleted', '', Response::HTTP_OK);
             }
             return $this->commonResponse(false, 'Failed to delete the Question Response', '', Response::HTTP_UNPROCESSABLE_ENTITY);
