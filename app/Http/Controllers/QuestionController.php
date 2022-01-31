@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Question;
+use App\Models\QuestionOptions;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\QueryException;
 use Symfony\Component\HttpFoundation\Response;
@@ -147,9 +148,9 @@ class QuestionController extends Controller
      */
     public function questionOptions(int $id): JsonResponse
     {
-        $question = Question::with('fieldType')->firstWhere('id',$id);
-        if ($question) {
-            $options = $question->questionOptions;
+        // $question = Question::with('fieldType')->firstWhere('id',$id);
+        $options = QuestionOptions::where('question_id', $id)->get();
+        if ($options) {
             return $this->commonResponse(true, 'success', $options, Response::HTTP_OK);
         } else {
             return $this->commonResponse(false, 'Question Not Found!', '', Response::HTTP_NOT_FOUND);

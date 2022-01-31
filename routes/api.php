@@ -203,14 +203,14 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
 
     //Client Locations
     Route::group(['prefix' => 'locations'], function(){
-        Route::get('/districts',[ClientLocationController::class,'districts']);
-        Route::get('/sub_counties',[ClientLocationController::class,'subCounties']);
+        Route::get('/districts',     [ClientLocationController::class,'districts']);
+        Route::get('/sub_counties',  [ClientLocationController::class,'subCounties']);
         Route::get('/municipalities',[ClientLocationController::class,'municipalities']);
-        Route::get('/villages',[ClientLocationController::class,'villages']);
-        Route::get('/parish',[ClientLocationController::class,'parish']);
+        Route::get('/villages',      [ClientLocationController::class,'villages']);
+        Route::get('/parish',        [ClientLocationController::class,'parish']);
     });
     //extra client bio-data endpoints
-    Route::get('/education/all',[ClientEducationController::class,'__invoke']);
+    Route::get('/education/all',       [ClientEducationController::class,'__invoke']);
     Route::get('/marital_statuses/all',[ClientMaritalStatusController::class,'__invoke']);
     Route::get('/phone_ownerships/all',[ClientPhoneOwnershipController::class,'__invoke']);
 });
