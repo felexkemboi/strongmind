@@ -136,19 +136,9 @@ class GroupSessionAction
             if($sessionAttendanceRequest->attended === false && $sessionAttendanceRequest->reason === null){
                 return $this->commonResponse(false,'Please state some reason for non-attendance','', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
+
             foreach ($clients as $client){
-                SessionAttendance::create([
-                    'session_id' => $session->id,
-                    'client_id' => $client->id,
-                    'attended' => $sessionAttendanceRequest->attended,
-                    'reason'   => $sessionAttendanceRequest->reason
-                ]);
-                $recorded = true;
-            }
-            if($recorded === true){
-                $session->update([
-                    'total_present' => $session->total_present + count($clients)
-                ]);
+                $this->recordAttendance($client,$session,$sessionAttendanceRequest);
             }
             return $this->commonResponse(true,'Session Attendance recorded successfully', new GroupSessionResource($session), Response::HTTP_CREATED);
         }catch (ModelNotFoundException $exception){
@@ -191,6 +181,30 @@ class GroupSessionAction
         }catch (Exception $exception){
             Log::critical('Failed to list groups. ERROR: '.$exception->getTraceAsString());
             return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+    public function recordAttendance($client,$session,$sessionAttendanceRequest){
+        $attendance = SessionAttendance::where('client_id',$client->id)
+                ->where('session_id', $session->id)
+                ->first();
+
+        if($attendance){
+            $attendance->update([
+                'session_id' => $session->id,
+                'client_id' => $client->id,
+                'attended' => $sessionAttendanceRequest->attended,
+                'reason'   => $sessionAttendanceRequest->reason
+            ]);
+        }else{
+            SessionAttendance::create([
+                'session_id' => $session->id,
+                'client_id' => $client->id,
+                'attended' => $sessionAttendanceRequest->attended,
+                'reason'   => $sessionAttendanceRequest->reason
+            ]);
+            $session->update([
+                'total_present' => $session->total_present + 1
+            ]);
         }
     }
 }

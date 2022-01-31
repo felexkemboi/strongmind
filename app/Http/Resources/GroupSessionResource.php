@@ -29,7 +29,7 @@ class GroupSessionResource extends JsonResource
                 return [
                     'attendanceId'  => $data->id,
                     'clientId'      => $data->client_id,
-                    'clientName'    => $client->first_name .' '.$client->last_name.' '.$client->other_name,
+                    'clientName'    => isset($client) ? $client->first_name.' '.$client->last_name : '',
                     'attended'      => $data->attended,
                     'reason'        => $data->reason
                 ];

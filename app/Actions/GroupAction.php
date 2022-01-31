@@ -37,6 +37,7 @@ class GroupAction
             $groups = Group::query()->with('sessions','groupType');
             $filter = $request->get('filter');
             $name = $request->get('name');
+            $project = $request->get('project_id');
             $lastSession = $request->get('last_session');
             $staff = $request->get('staff');
             $sort   = $request->get('sort');
@@ -60,6 +61,13 @@ class GroupAction
             if($request->has('last_session') && $request->filled('last_session')){
                 $groups = $groups->where(function (Builder $query) use($lastSession){
                     $query->where('last_session','=', Carbon::parse($lastSession)->format('d M Y'));
+                });
+            }
+
+            //filter by project
+            if($request->has('project_id') && $request->filled('project_id')){
+                $groups = $groups->where(function (Builder $query) use($project){
+                    $query->where('project_id','=', $project);
                 });
             }
 
@@ -138,7 +146,7 @@ class GroupAction
     {
         try{
             $group = Group::with('sessions','staff','groupType','attendance','clients')->findOrFail($id);
-            return $this->commonResponse(false,'Success',GroupService::viewGroupDetails($group),Response::HTTP_OK);
+            return $this->commonResponse(false,'Success',  new GroupResource($group) ,Response::HTTP_OK); ///// new UserResource($user, $apple = true);GroupService::viewGroupDetails($group)
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (ModelNotFoundException $exception){
@@ -250,12 +258,14 @@ class GroupAction
             $existing = GroupClient::select('client_id')->where('group_id', $id)->get();
             $existingClients = [];
 
+
             foreach ($existing as $client){
                 array_push($existingClients,$client->client_id);
             }
 
             $clients = Client::whereIn('id', $clientIds)->get();
             $group = Group::findOrFail($id);
+            $addedCount = 0;
 
             foreach ($clients as $client){
                 if (!in_array($client->id, $existingClients)){
@@ -265,16 +275,24 @@ class GroupAction
                             'group_id'  => $group->id
                         ]
                     );
+                    $addedCount = $addedCount + 1;
                 }
             }
-            $group->update([
-                'total_clients' => $group->clients->count()
-            ]);
             $user = Auth::user();
             activity('group')
-            ->performedOn($group)
-            ->causedBy($user)
-            ->log('Add clients to group '.$group->name);
+                ->performedOn($group)
+                ->causedBy($user)
+                ->log('Add clients to group '.$group->name);
+
+            if(!$group->total_clients){
+                $group->total_clients = $addedCount;
+                $group->save();
+                return $this->commonResponse(true, 'Clients Added Successfully!', '', Response::HTTP_CREATED);
+            }
+            $count = $group->total_clients + $addedCount;
+            $group->total_clients = $count;
+            $group->save();
+
             return $this->commonResponse(true,'Clients Added Successfully',GroupService::viewGroupDetails($group), Response::HTTP_CREATED);
         }catch (ModelNotFoundException $exception){
             return $this->commonResponse(false,'Group Does Not Exist','', Response::HTTP_NOT_FOUND);

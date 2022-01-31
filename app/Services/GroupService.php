@@ -31,7 +31,7 @@ class GroupService
                     return [
                         'attendanceId'  => $data->id,
                         'clientId'      => $data->client_id,
-                        'clientName'    => $client->first_name .' '.$client->last_name.' '.$client->other_name,
+                        'clientName'    => isset($client) ? $client->first_name.' '.$client->last_name : '',
                         'attended'      => $data->attended,
                         'reason'        => $data->reason
                     ];
@@ -60,31 +60,34 @@ class GroupService
             'group_id' => $group->group_id,
             'clients' => $clients->transform(function($client){
 
-                $clientDetails = ClientBioData::where('client_id',$client->client_id)->firstOrFail();
+                $clientDetails = ClientBioData::where('client_id',$client->client_id)->first();
                 return [
                     'clientId' => $client->client_id,
-                    'clientName' => $clientDetails->first_name .' '.$clientDetails->last_name.' '.$clientDetails->other_name,
+                    'clientName' => isset($clientDetails) ? $clientDetails->first_name.' '.$clientDetails->last_name : '',
                 ];
             }),
             'sessions' =>  $sessions->transform(function($session){
-                $sessionsAttendance =  SessionAttendance::select('client_id','attended')
-                        ->where('session_id',$session->id)
-                        ->where('attended',1)
-                        ->get();
+                if(isset($session)) {
+                    $sessionsAttendance =  SessionAttendance::select('client_id','attended')
+                    ->where('session_id',$session->id)
+                    ->where('attended',1)
+                    ->get();
 
-                $attendance = $sessionsAttendance->transform(function($sessionDetail){
+                    $attendance = $sessionsAttendance->transform(function($sessionDetail){
 
-                    $clientDetails = ClientBioData::where('client_id',$sessionDetail->client_id)->firstOrFail();
+                        $clientDetails = ClientBioData::where('client_id',$sessionDetail->client_id)->firstOrFail();
+                        return [
+                            'clientName' => isset($clientDetails) ? $clientDetails->first_name .' '.$clientDetails->last_name : '',
+                            'attended' => isset($clientDetails) ? $sessionDetail->attended : 0,
+                        ];
+                    });
                     return [
-                        'clientName' => $clientDetails->first_name .' '.$clientDetails->last_name.' '.$clientDetails->other_name,
-                        'attended' => $sessionDetail->attended
+                        'session_id' => $session->id,
+                        'created_at' => $session->created_at,
+                        'attendance' => $attendance,
                     ];
-                });
-                return [
-                    'session_id' => $session->id,
-                    'created_at' => $session->created_at,
-                    'attendance' => $attendance,
-                ];
+                }
+                return [];
             }),
             'last_session' => $group->last_session !== null ? Carbon::parse($group->last_session)->format('d M Y') : null,
             'ongoing' => $group->ongoing === Group::SESSION_ONGOING ? 'Ongoing' : 'Terminated',
@@ -115,7 +118,7 @@ class GroupService
                 return [
                     'attendanceId'  => $data->id,
                     'clientId'      => $data->client_id,
-                    'clientName'    => $client->first_name .' '.$client->last_name.' '.$client->other_name,
+                    'clientName'    => isset($client) ? $client->first_name.' '.$client->last_name : '',
                     'attended'      => $data->attended,
                     'reason'        => $data->reason
                 ];
