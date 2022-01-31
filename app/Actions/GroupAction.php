@@ -146,7 +146,7 @@ class GroupAction
     {
         try{
             $group = Group::with('sessions','staff','groupType','attendance','clients')->findOrFail($id);
-            return $this->commonResponse(false,'Success',  new GroupResource($group) ,Response::HTTP_OK); ///// new UserResource($user, $apple = true);GroupService::viewGroupDetails($group)
+            return $this->commonResponse(false,'Success',  GroupService::viewGroupDetails($group) ,Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (ModelNotFoundException $exception){
