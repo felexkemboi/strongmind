@@ -35,7 +35,7 @@ class GroupController extends Controller
     /**
      * List Groups
      * @queryParam name string. Search by group name
-     * @queryParam project_id integer required  The Group Project ID . Example: 1
+     * @queryParam project_id integer  The Group Project ID . Example: 1
      * @queryParam staff string. Search by staff name
      * @queryParam last_session date. Search by date
      * @queryParam sort string. Sort by either name(string) , last_session(date) or dateOfCreation(date)
