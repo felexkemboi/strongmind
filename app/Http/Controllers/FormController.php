@@ -171,10 +171,14 @@ class FormController extends Controller
     {
         $form = Form::find($id);
         if($form){
-            if ($form->delete()) {
-                return $this->commonResponse(true, 'Form deleted', '', Response::HTTP_OK);
+
+            if (!$form->response_count > 0 ) {
+                if ($form->delete()) {
+                    return $this->commonResponse(true, 'Form deleted', '', Response::HTTP_OK);
+                }
+                return $this->commonResponse(false, 'Failed to delete the form', '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
-            return $this->commonResponse(false, 'Failed to delete the form', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->commonResponse(false, 'Failed to delete the form', 'The form has responses', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         return $this->commonResponse(false, 'Form not found!', '', Response::HTTP_NOT_FOUND);
     }
