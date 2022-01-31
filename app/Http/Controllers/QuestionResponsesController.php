@@ -40,27 +40,35 @@ class QuestionResponsesController extends Controller
      * @return JsonResponse
      * @bodyParam value string required The Response value
      * @bodyParam question_id  integer required If the form of the question
+     * @bodyParam client_id  integer  required The client
      * @authenticated
      */
 
     public function create(CreateQuestionResponseRequest $request): JsonResponse
     {
         try {
-            $option = new QuestionResponses();
-            $option->value = $request->value;
-            $option->question_id = $request->question_id;
-            if ($option->save()) {
-                $question = Question::findorFail($request->question_id);
-                $form = Form::findorFail($question->id);
+
+            $question = Question::findorFail($request->question_id);
+            $form = Form::findorFail($question->form_id);
+
+            $response = new QuestionResponses();
+            $response->value = $request->value;
+            $response->question_id = $request->question_id;
+            $response->client_id = $request->client_id;
+            $response->form_id = $form->id;
+            $response->option_id = $question->question_options_id;
+
+            if ($response->save()) {
+
                 if(!$form->response_count){
                     $form->response_count = 1;
                     $form->save();
-                    return $this->commonResponse(true, 'Question Response created successfully!', '', Response::HTTP_CREATED);
+                    return $this->commonResponse(true, 'Question Response created successfully!', $question, Response::HTTP_CREATED);
                 }
                 $count = $form->response_count + 1;
                 $form->response_count = $count;
                 $form->save();
-                return $this->commonResponse(true, 'Question Response created successfully!', '', Response::HTTP_CREATED);
+                return $this->commonResponse(true, 'Question Response created successfully!', $question, Response::HTTP_CREATED);
             }
             return $this->commonResponse(false, 'Failed to create Question Response', '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (QueryException $ex) {

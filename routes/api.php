@@ -289,14 +289,17 @@ Route::resource('deliverymodes',ModeOfDeliveryController::class)->middleware('au
 
 //Forms
 Route::group(['prefix' => 'forms','middleware' => 'auth:sanctum'], function(){
-    Route::get('/all',           [FormController::class, 'index']);
-    Route::get('/field-types',   [FormController::class, 'fieldTypes']);
-    Route::get('/{id}',          [FormController::class,'show']);
-    Route::get('/{id}/questions',[FormController::class, 'questions']);
-    Route::post('/create',       [FormController::class, 'create']);
-    Route::put('{id}/update',    [FormController::class, 'update']);
-    Route::put('{id}/publish',   [FormController::class, 'publish']);
-    Route::delete('{id}/delete', [FormController::class, 'destroy']);
+    Route::get('/all',                      [FormController::class, 'index']);
+    Route::get('/field-types',              [FormController::class, 'fieldTypes']);
+    Route::get('/{id}',                     [FormController::class,'show']);
+    Route::get('/{id}/questions',           [FormController::class, 'questions']);
+    Route::post('/create',                  [FormController::class, 'create']);
+    Route::post('/{id}/create-responses',   [FormController::class, 'createResponse']);
+    Route::get ('/{id}/responses',          [FormController::class, 'getResponses']);
+    Route::put('{id}/update',               [FormController::class, 'update']);
+    Route::put('{id}/publish',              [FormController::class, 'publish']);
+    Route::delete('{id}/delete',            [FormController::class, 'destroy']);
+
 
 });
 
