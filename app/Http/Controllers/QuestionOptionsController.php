@@ -49,7 +49,8 @@ class QuestionOptionsController extends Controller
             $option->score = $request->score ?? $request->score ;
             $option->question_id = $request->question_id;
             if ($option->save()) {
-                return $this->commonResponse(true, 'Question Option created successfully!', '', Response::HTTP_CREATED);
+                $options = QuestionOptions::where('question_id', $request->question_id)->get();
+                return $this->commonResponse(true, 'Question Option created successfully!', $options, Response::HTTP_CREATED);
             }
             return $this->commonResponse(false, 'Failed to create Question Option', '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (QueryException $ex) {
