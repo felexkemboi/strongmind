@@ -141,52 +141,61 @@ class FormController extends Controller
      * @param  CreateResponsesRequest  $request
      * @return JsonResponse
      * @urlParam id integer required The ID of the Form Example:1
-     * @bodyParam value string required
-     * @bodyParam question_id int required
-     * @bodyParam client_id int  required
-     * @bodyParam option_id int
      * @authenticated
      */
     public function createResponse(Request $request, $id): JsonResponse
     {
-        // foreach ($request->responses as $response) {
-        //     $response = new QuestionResponses();
-        //     $response->value = $response->value;
-        //     $response->question_id = $response->question_id;
-        //     $response->client_id = $response->client_id;
-        //     $response->form_id = $form->id;
-        //     $response->option_id = $response->option_id;
-        //     if ($response->save()) {
-        //         if (!$form->response_count) {
-        //             $form->response_count = 1;
-        //             $form->save();
-        //         }
-        //         $form->response_count = $form->response_count + 1;
-        //         $form->save();
-        //     }
-
-        // }
-
         $form = Form::find($id);
+        $responses = collect([
+            [
+                'value'       => bin2hex(random_bytes(5)),
+                'question_id' => rand(4,9),
+                'client_id'   => rand(15,30),
+                'option_id'   => rand(2,8),
+                'session_id'   => rand(2,8),
+                'group_id'   => rand(2,8),
+            ],
+            [
+                'value'       => bin2hex(random_bytes(5)),
+                'question_id' => rand(4,9),
+                'client_id'   => rand(15,30),
+                'option_id'   => rand(2,8),
+                'session_id'   => rand(2,8),
+                'group_id'   => rand(2,8),
+            ],
+            [
+                'value'       => bin2hex(random_bytes(5)),
+                'question_id' => rand(4,9),
+                'client_id'   => rand(15,30),
+                'option_id'   => rand(2,8),
+                'session_id'   => rand(2,8),
+                'group_id'   => rand(2,8),
+            ]
+        ]);
+        $responses = json_decode($responses);
 
-        $response = new QuestionResponses();
-        $response->value = $request->value;
-        $response->question_id = $request->question_id;
-        $response->client_id = $request->client_id;
-        $response->form_id = $form->id;
-        $response->option_id = $request->option_id;
-        if ($response->save()) {
-            if (!$form->response_count) {
-                $form->response_count = 1;
+        foreach ($responses as $record) {
+            $response = new QuestionResponses();
+            $response->value = $record->value;
+            $response->question_id = $record->question_id;
+            $response->client_id = $record->client_id;
+            $response->session_id = $record->session_id;
+            $response->group_id = $record->group_id;
+            $response->form_id = $form->id;
+            $response->option_id = $record->option_id;
+            if ($response->save()) {
+                if (!$form->response_count) {
+                    $form->response_count = 1;
+                    $form->save();
+                }
+                $form->response_count = $form->response_count + 1;
                 $form->save();
             }
-            $form->response_count = $form->response_count + 1;
-            $form->save();
+
         }
 
         return $this->commonResponse(true, 'Success', 'Responses Added Successfully', Response::HTTP_OK);
     }
-
     /**
      * Get Question Responses
      * @param  Form  $form
@@ -196,18 +205,24 @@ class FormController extends Controller
      */
     public function getResponses(Form $form): JsonResponse
     {
-        $responses = QuestionResponses::where('form_id', $form->id)->get();
-        $payload = collect();
-        foreach ($responses as $response) {
-            $question = Question::find($response->question_id);
-            $option = QuestionOptions::find($response->option_id);
-            $client   = ClientBioData::select('first_name','last_name')->firstWhere('client_id', $response->client_id);
-            $payload->push([
-                'value' => $response->value,
-                'question' => $question->description,
-                'client' => $client ? $client->first_name .' '.$client->last_name : '',
-                'question_option' => $option ? $option->value : '' ,
-            ]);
+        $clients = QuestionResponses::select('client_id')->where('form_id', $form->id)->distinct()->get();
+        $payload = array();
+        foreach ($clients as $client) {
+            $clientDetails   = ClientBioData::select('first_name','last_name')->firstWhere('client_id', $client['client_id']);
+            $responses = QuestionResponses::where('form_id', $form->id)->where('client_id', $client['client_id'])->get();
+            $clientResponses = array();
+            foreach ($responses as $response) {
+                $question = Question::find($response->question_id);
+                $questionOption = QuestionOptions::find($response->option_id);
+                $clientResponse = array(
+                    'value' => $response->value,
+                    'question' => $question ? $question->description : '',
+                    'question_option' => $questionOption ? $questionOption->value : '',
+                );
+                array_push($clientResponses,$clientResponse);
+            }
+            $clients = array('client' => $clientDetails ? $clientDetails->first_name : '', 'responses' => $clientResponses );
+            array_push($payload,$clients);
         }
 
         if ($payload) {
