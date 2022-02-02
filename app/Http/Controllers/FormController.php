@@ -218,6 +218,8 @@ class FormController extends Controller
                     'value' => $response->value,
                     'question' => $question ? $question->description : '',
                     'question_option' => $questionOption ? $questionOption->value : '',
+                    'question_id' => $response->question_id ? (int)$response->question_id : '',
+                    'question_option_id' => $response->option_id ? (int)$response->option_id : '',
                 );
                 array_push($clientResponses,$clientResponse);
             }
