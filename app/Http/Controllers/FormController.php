@@ -138,7 +138,6 @@ class FormController extends Controller
 
     /**
      * Add Question Responses
-     * @param  CreateResponsesRequest  $request
      * @return JsonResponse
      * @urlParam id integer required The ID of the Form Example:1
      * @authenticated
@@ -146,35 +145,9 @@ class FormController extends Controller
     public function createResponse(Request $request, $id): JsonResponse
     {
         $form = Form::find($id);
-        $responses = collect([
-            [
-                'value'       => bin2hex(random_bytes(5)),
-                'question_id' => rand(4,9),
-                'client_id'   => rand(15,30),
-                'option_id'   => rand(2,8),
-                'session_id'   => rand(2,8),
-                'group_id'   => rand(2,8),
-            ],
-            [
-                'value'       => bin2hex(random_bytes(5)),
-                'question_id' => rand(4,9),
-                'client_id'   => rand(15,30),
-                'option_id'   => rand(2,8),
-                'session_id'   => rand(2,8),
-                'group_id'   => rand(2,8),
-            ],
-            [
-                'value'       => bin2hex(random_bytes(5)),
-                'question_id' => rand(4,9),
-                'client_id'   => rand(15,30),
-                'option_id'   => rand(2,8),
-                'session_id'   => rand(2,8),
-                'group_id'   => rand(2,8),
-            ]
-        ]);
-        $responses = json_decode($responses);
+        // $responses = json_decode($request->responses);
 
-        foreach ($responses as $record) {
+        foreach ($request->responses as $record) {
             $response = new QuestionResponses();
             $response->value = $record->value;
             $response->question_id = $record->question_id;
