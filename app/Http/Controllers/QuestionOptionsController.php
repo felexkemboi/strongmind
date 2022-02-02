@@ -66,7 +66,6 @@ class QuestionOptionsController extends Controller
      * @return JsonResponse
      * @bodyParam value string required The Response value
      * @bodyParam score  integer The score of the response
-     * @bodyParam question_id  integer required If the form of the question
      * @authenticated
      */
 

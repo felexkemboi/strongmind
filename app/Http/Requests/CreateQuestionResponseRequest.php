@@ -24,10 +24,10 @@ class CreateQuestionResponseRequest extends FormRequest
     public function rules()
     {
         return [
-            'value'          => 'string|required',
-            'question_id'    => 'integer|not_in:0|exists:questions,id',
-            'client_id'      => 'integer|not_in:0|exists:clients,id',
-            'option_id'      => 'integer|not_in:0|exists:questionsoptions,id',
+            'value'                   => 'string|required',
+            'question_id'             => 'required|integer|not_in:0|exists:questions,id',
+            'client_id'               => 'required|integer|not_in:0|exists:clients,id',
+            'question_option_id'      => 'not_in:0|exists:questionsoptions,id',
         ];
     }
 }
