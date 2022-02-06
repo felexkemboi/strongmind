@@ -49,9 +49,13 @@ class GroupSessionAction
     {
         try{
             $group = Group::with('clients','sessions')->findOrFail($id);
+            $date_input = getDate(strtotime($request->session_date));
+
+            $time = Carbon::create($date_input['year'], $date_input['mon'], $date_input['mday'], $date_input['hours'], $date_input['minutes'], $date_input['seconds'])->format('Y-m-d H:i:s');
+
             $newSession = GroupSession::create([
                 'group_id' => $group->id,
-                'session_date' => $request->session_date,
+                'session_date' => $time,
                 'total_clients' => $group->clients->count(),
                 'total_present' => 0
             ]);
