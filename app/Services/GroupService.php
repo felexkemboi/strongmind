@@ -53,7 +53,7 @@ class GroupService
             return $query->where('id', $group->staff_id);
         })->first();
         $clients = GroupClient::where('group_id', $group->id)->get();
-        $sessions = GroupSession::select('id','created_at')->where('group_id',$group->id)->get();
+        $sessions = GroupSession::select('id','created_at','session_date')->where('group_id',$group->id)->get();
         return [
             'id' => $group->id,
             'name' => $group->name,
@@ -75,7 +75,7 @@ class GroupService
 
                     $attendance = $sessionsAttendance->transform(function($sessionDetail){
 
-                        $clientDetails = ClientBioData::where('client_id',$sessionDetail->client_id)->firstOrFail();
+                        $clientDetails = ClientBioData::where('client_id',$sessionDetail->client_id)->first();
                         return [
                             'clientName' => isset($clientDetails) ? $clientDetails->first_name .' '.$clientDetails->last_name : '',
                             'attended' => isset($clientDetails) ? $sessionDetail->attended : 0,
@@ -85,6 +85,7 @@ class GroupService
                         'session_id' => $session->id,
                         'created_at' => $session->created_at,
                         'attendance' => $attendance,
+                        'session_date' => $session->session_date,
                     ];
                 }
                 return [];
