@@ -8,6 +8,7 @@ use App\Models\Question;
 use App\Models\QuestionResponses;
 use Illuminate\Http\Request;
 use App\Models\FieldType;
+use App\Models\ClientForm;
 use App\Models\QuestionOptions;
 use App\Models\ClientBioData;
 use Illuminate\Http\JsonResponse;
@@ -145,17 +146,20 @@ class FormController extends Controller
     public function createResponse(Request $request, $id): JsonResponse
     {
         $form = Form::find($id);
-        // $responses = json_decode($request->responses);
-
+        $totalScore = 0;
         foreach ($request->responses as $record) {
+
             $response = new QuestionResponses();
-            $response->value = $record->value;
-            $response->question_id = $record->question_id;
-            $response->client_id = $record->client_id;
-            $response->session_id = $record->session_id;
-            $response->group_id = $record->group_id;
+            $response->score = $record['score'];
+            $response->value = $record['value'];
+            $response->question_id = $record['question_id'];
+            $response->client_id = $record['client_id'];
+            $response->session_id = $record['session_id'];
+            $response->group_id = $record['group_id'];
             $response->form_id = $form->id;
-            $response->option_id = $record->option_id;
+            $response->option_id = $record['option_id'];
+            $response->status_id = $form->status_id;
+
             if ($response->save()) {
                 if (!$form->response_count) {
                     $form->response_count = 1;
@@ -164,48 +168,84 @@ class FormController extends Controller
                 $form->response_count = $form->response_count + 1;
                 $form->save();
             }
+            if($record['score']){
+                $totalScore = $totalScore + (int)$record['score'];
+            }
 
         }
+
+        $clientForm = new ClientForm();
+        if($form->assessment){
+            $clientForm->score = $totalScore;
+        }
+        $clientForm->status_id = $form->status_id;
+        $clientForm->completed = $request->completed;
+        $clientForm->client_id = $request->responses[0]['client_id'];
+        $clientForm->form_id = $form->id;
+        $clientForm->save();
 
         return $this->commonResponse(true, 'Success', 'Responses Added Successfully', Response::HTTP_OK);
     }
     /**
-     * Get Question Responses
+     * Get Form Question Responses
      * @param  Form  $form
      * @return JsonResponse
      * @urlParam id integer required The ID of the Form Example:1
      * @authenticated
      */
-    public function getResponses(Form $form): JsonResponse
+    public function getResponses(int $id): JsonResponse
     {
-        $clients = QuestionResponses::select('client_id')->where('form_id', $form->id)->distinct()->get();
-        $payload = array();
-        foreach ($clients as $client) {
-            $clientDetails   = ClientBioData::select('first_name','last_name')->firstWhere('client_id', $client['client_id']);
-            $responses = QuestionResponses::where('form_id', $form->id)->where('client_id', $client['client_id'])->get();
-            $clientResponses = array();
-            foreach ($responses as $response) {
-                $question = Question::find($response->question_id);
-                $questionOption = QuestionOptions::find($response->option_id);
-                $clientResponse = array(
-                    'value' => $response->value,
-                    'question' => $question ? $question->description : '',
-                    'question_option' => $questionOption ? $questionOption->value : '',
-                    'question_id' => $response->question_id ? (int)$response->question_id : '',
-                    'question_option_id' => $response->option_id ? (int)$response->option_id : '',
-                );
-                array_push($clientResponses,$clientResponse);
+        $form = Form::find($id);
+        if ($form) {
+            $clients = QuestionResponses::select('client_id')->where('form_id', $form->id)->distinct()->get();
+            $payload = array();
+            foreach ($clients as $client) {
+                $clientDetails   = ClientBioData::select('first_name','last_name')->firstWhere('client_id', $client['client_id']);
+                $responses = QuestionResponses::where('form_id', $form->id)->where('client_id', $client['client_id'])->get();
+                $clientResponses = array();
+                foreach ($responses as $response) {
+                    $question = Question::find($response->question_id);
+                    $questionOption = QuestionOptions::find($response->option_id);
+                    $clientResponse = array(
+                        'value' => $response->value,
+                        'question' => $question ? $question->description : '',
+                        'question_option' => $questionOption ? $questionOption->value : '',
+                        'question_id' => $response->question_id ? (int)$response->question_id : '',
+                        'question_option_id' => $response->option_id ? (int)$response->option_id : '',
+                    );
+                    array_push($clientResponses,$clientResponse);
+                }
+                $clients = array('client' => $clientDetails ? $clientDetails->first_name : '', 'responses' => $clientResponses );
+                array_push($payload,$clients);
             }
-            $clients = array('client' => $clientDetails ? $clientDetails->first_name : '', 'responses' => $clientResponses );
-            array_push($payload,$clients);
-        }
-
-        if ($payload) {
             return $this->commonResponse(true, 'success', $payload, Response::HTTP_OK);
-        } else {
-            return $this->commonResponse(false, 'Question Responses Not Found!', '', Response::HTTP_NOT_FOUND);
         }
+        return $this->commonResponse(false, 'Form Not Found!', '', Response::HTTP_NOT_FOUND);
     }
+
+    /**
+     * Get Client Forms
+     * @param  Form  $form
+     * @return JsonResponse
+     * @queryParam status_id int  The Status ID
+     * @urlParam id integer required The ID of the Client Example:1
+     * @authenticated
+     */
+    public function clientForms(Request $request, int $id): JsonResponse
+    {
+
+        $status_id = $request->status_id;
+        $clientForms = ClientForm::select('form_id','score','completed','created_at')
+                ->where('client_id', $id)
+                ->when($status_id, function ($query, $status_id) {
+                    return $query->where('status_id',$status_id);
+                })
+                ->get();
+
+        return $this->commonResponse(true, 'Success', $clientForms, Response::HTTP_OK);
+
+    }
+
 
     /**
      * Edit Form

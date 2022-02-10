@@ -19,6 +19,10 @@ class QuestionResponses extends Model
         'question_id',
         'option_id',
         'client_id',
+        'score',
+        'session_id',
+        'group_id',
+        'status_id'
     ];
 
     public function Question(): BelongsTo
