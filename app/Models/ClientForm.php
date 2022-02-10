@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ClientForm extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory; //, SoftDeletes;
 
     protected $table = 'client_form';
     protected $fillable = [
@@ -19,13 +19,24 @@ class ClientForm extends Model
         'status',
         'score'
     ];
+    protected $appends = ['form_name'];
+    protected $hidden = ['form'];
+
+
+    /**'
+     * @return BelongsTo
+     */
+    public function getFormNameAttribute()
+    {
+        return $this->form->name;
+    }
 
     /**'
      * @return BelongsTo
      */
     public function form(): BelongsTo
     {
-        return $this->belongsTo(Form::class,'group_id');
+        return $this->belongsTo(Form::class,'form_id');
     }
 
     /**'

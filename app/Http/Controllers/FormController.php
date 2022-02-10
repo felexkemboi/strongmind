@@ -146,18 +146,20 @@ class FormController extends Controller
     public function createResponse(Request $request, $id): JsonResponse
     {
         $form = Form::find($id);
-
+        $totalScore = 0;
         foreach ($request->responses as $record) {
-            $response = new QuestionResponses();
 
-            $response->score = $record->score;
-            $response->value = $record->value;
-            $response->question_id = $record->question_id;
-            $response->client_id = $record->client_id;
-            $response->session_id = $record->session_id;
-            $response->group_id = $record->group_id;
+            $response = new QuestionResponses();
+            $response->score = $record['score'];
+            $response->value = $record['value'];
+            $response->question_id = $record['question_id'];
+            $response->client_id = $record['client_id'];
+            $response->session_id = $record['session_id'];
+            $response->group_id = $record['group_id'];
             $response->form_id = $form->id;
-            $response->option_id = $record->option_id;
+            $response->option_id = $record['option_id'];
+            $response->status_id = $form->status_id;
+
             if ($response->save()) {
                 if (!$form->response_count) {
                     $form->response_count = 1;
@@ -166,15 +168,21 @@ class FormController extends Controller
                 $form->response_count = $form->response_count + 1;
                 $form->save();
             }
-            $clientForm = ClientForm::where('client_id',$response->client_id)->where('form_id', $form->id);
-
-            if($form->assessment){
-                $clientForm->score = $clientForm->score + $record->score;
+            if($record['score']){
+                $totalScore = $totalScore + (int)$record['score'];
             }
-            $clientForm->status = $record->status;
-            $clientForm->save();
 
         }
+
+        $clientForm = new ClientForm();
+        if($form->assessment){
+            $clientForm->score = $totalScore;
+        }
+        $clientForm->status_id = $form->status_id;
+        $clientForm->completed = $request->completed;
+        $clientForm->client_id = $request->responses[0]['client_id'];
+        $clientForm->form_id = $form->id;
+        $clientForm->save();
 
         return $this->commonResponse(true, 'Success', 'Responses Added Successfully', Response::HTTP_OK);
     }
@@ -214,6 +222,30 @@ class FormController extends Controller
         }
         return $this->commonResponse(false, 'Form Not Found!', '', Response::HTTP_NOT_FOUND);
     }
+
+    /**
+     * Get Client Forms
+     * @param  Form  $form
+     * @return JsonResponse
+     * @queryParam status_id int  The Status ID
+     * @urlParam id integer required The ID of the Client Example:1
+     * @authenticated
+     */
+    public function clientForms(Request $request, int $id): JsonResponse
+    {
+
+        $status_id = $request->status_id;
+        $clientForms = ClientForm::select('form_id','score','completed','created_at')
+                ->where('client_id', $id)
+                ->when($status_id, function ($query, $status_id) {
+                    return $query->where('status_id',$status_id);
+                })
+                ->get();
+
+        return $this->commonResponse(true, 'Success', $clientForms, Response::HTTP_OK);
+
+    }
+
 
     /**
      * Edit Form
