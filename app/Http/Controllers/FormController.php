@@ -31,13 +31,26 @@ class FormController extends Controller
 {
     /**
      * All Forms
-     * @authenticated
      * @return JsonResponse
+     * @queryParam published integer  Filter wether Published/Not Published(Either 1,0)
+     * @authenticated
      */
-
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $forms = Form::all();
+
+        $published = $request->published;
+        $forms = Form::select()
+                ->when(
+                    $published == '1',
+                    function ($query) {
+                    return $query->whereNotNull('published_at');
+                })
+                ->when(
+                    $published == '0',
+                    function ($query) {
+                    return $query->whereNull('published_at');
+                })
+                ->get();
         return $this->commonResponse(true, 'success', $forms, Response::HTTP_OK);
     }
 
