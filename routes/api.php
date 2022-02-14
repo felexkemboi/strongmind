@@ -309,6 +309,7 @@ Route::group(['prefix' => 'questions','middleware' => 'auth:sanctum'], function(
     Route::get('/all',                   [QuestionController::class, 'index']);
     Route::get('/{id}',                  [QuestionController::class, 'show']);
     Route::get('/{id}/question-options', [QuestionController::class, 'questionOptions']);
+    Route::get('/{id}/responses',        [QuestionController::class, 'responses']);
     Route::post('/create',               [QuestionController::class, 'create']);
     Route::put('{id}/update',            [QuestionController::class, 'update']);
     Route::delete('{id}/delete',         [QuestionController::class, 'destroy']);
