@@ -213,6 +213,9 @@ class FormController extends Controller
         if ($form) {
             $clients = QuestionResponses::select('client_id')->where('form_id', $form->id)->distinct()->get();
             $clientForm = ClientForm::select('score')->where('form_id', $form->id)->get();
+            //
+
+
             $payload = array();
             foreach ($clients as $client) {
                 $clientDetails   = ClientBioData::select('first_name','last_name')->firstWhere('client_id', $client['client_id']);
@@ -230,7 +233,7 @@ class FormController extends Controller
                     );
                     array_push($clientResponses,$clientResponse);
                 }
-                $clients = array('score' => $clientForm[0]->score, 'client' => $clientDetails ? $clientDetails->first_name : $clientDetails->email, 'responses' => $clientResponses);
+                $clients = array('score' => $clientForm[0]->score, 'client' => !$clientDetails ? '' : ($clientDetails->first_name ? $clientDetails->first_name  : $clientDetails->email), 'responses' => $clientResponses);
                 array_push($payload,$clients);
             }
             return $this->commonResponse(true, 'success', $payload, Response::HTTP_OK);
