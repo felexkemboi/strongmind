@@ -28,7 +28,7 @@ class ClientForm extends Model
      */
     public function getFormNameAttribute()
     {
-        return $this->form->name;
+        return $this->form ? $this->form->name : '';
     }
 
     /**'
