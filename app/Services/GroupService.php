@@ -77,6 +77,7 @@ class GroupService
 
                         $clientDetails = ClientBioData::where('client_id',$sessionDetail->client_id)->first();
                         return [
+                            'clientId' => $sessionDetail->client_id ? $sessionDetail->client_id : '',
                             'clientName' => isset($clientDetails) ? $clientDetails->first_name .' '.$clientDetails->last_name : '',
                             'attended' => isset($clientDetails) ? $sessionDetail->attended : 0,
                         ];
