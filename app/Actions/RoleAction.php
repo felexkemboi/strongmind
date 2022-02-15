@@ -98,12 +98,18 @@ class RoleAction
                 'role_code' => $request->role_code ?? $role->role_code,
                 'description' => $request->description ?? $role->description
             ])){
-                for($i = 0, $iMax = count($request->permission_id); $i < $iMax; $i++){
-                    $permission = Permission::findById($request->permission_id[$i],PermissionRoleService::API_GUARD);
-                    if(!$role->hasPermissionTo($permission)){
-                        $role->givePermissionTo($permission);
-                    }
-                }
+                $permissions = Permission::whereIn('id', $request->permission_id)->get();
+                $role->syncPermissions($permissions);
+
+
+                // for($i = 0, $iMax = count($request->permission_id); $i < $iMax; $i++){
+                //     $permission = Permission::findById($request->permission_id[$i],PermissionRoleService::API_GUARD);
+                //     if($role->hasPermissionTo($permission)){
+                //         $role->revokePermissionTo('edit articles');
+                //     }else{
+                //         $role->givePermissionTo($permission);
+                //     }
+                // }
                 return $this->commonResponse(true,'Role Updated Successfully',$this->permissionRoleService->fetchRoleData($role), Response::HTTP_OK);
             }
             return $this->commonResponse(false,'Failed to update role','', Response::HTTP_UNPROCESSABLE_ENTITY);

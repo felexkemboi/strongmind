@@ -20,7 +20,7 @@ class CreateFieldTypeTable extends Migration
             $table->timestamps();
         });
     }
-
+    
     /**
      * Reverse the migrations.
      *

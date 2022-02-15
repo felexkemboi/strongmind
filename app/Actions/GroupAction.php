@@ -3,42 +3,106 @@
 
 namespace App\Actions;
 
-
-use App\Helpers\CountryHelper;
-use App\Http\Requests\GroupClientRequest;
-use App\Http\Requests\GroupRequest;
-use App\Http\Requests\GroupUpdateRequest;
-use App\Models\Client;
-use App\Models\ClientBioData;
-use App\Models\Group;
-use App\Models\GroupClient;
-use App\Models\Office;
-use App\Services\GroupService;
-use App\Support\Collection;
-use App\Traits\ApiResponser;
+use Exception;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Group;
+use App\Models\Office;
+use App\Models\Client;
+use App\Models\GroupClient;
+use App\Traits\ApiResponser;
+use Illuminate\Http\Request;
+use App\Models\ClientBioData;
+use App\Helpers\CountryHelper;
+use App\Services\GroupService;
+use Illuminate\Http\JsonResponse;
+use App\Http\Requests\GroupRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\GroupResource;
+use Illuminate\Database\QueryException;
+use App\Http\Requests\GroupUpdateRequest;
+use App\Http\Requests\GroupClientRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
-use Exception;
 
 class GroupAction
 {
     use ApiResponser;
 
-    public function listGroups(): JsonResponse
+    public function listGroups(Request $request): JsonResponse
     {
         try{
-            $groups = Group::with('sessions')
-                ->latest()
-                ->get()
-                ->transform(function ($group){
-                    return GroupService::getGroupData($group);
+            $groups = Group::query()->with('sessions','groupType');
+            $filter = $request->get('filter');
+            $name = $request->get('name');
+            $project = $request->get('project_id');
+            $lastSession = $request->get('last_session');
+            $staff = $request->get('staff');
+            $sort   = $request->get('sort');
+            $filterParams = ['staff','ongoing','group_member'];
+            $sortParams = ['name','last_session','date'];
+            $paginationItems = $request->get('pagination_items');
+
+            //get the user id and name from staff_id
+            $user = User::select('id','name')->firstWhere(function (Builder $query) use($staff){
+                $query->where('name','ILIKE','%'.$staff.'%');
             });
-            return $this->commonResponse(true,'Success', (new Collection($groups))->paginate(10), Response::HTTP_OK);
+
+            //search by name
+            if($request->has('name') && $request->filled('name')){
+                $groups = $groups->where(function (Builder $query) use($name){
+                    $query->where('name','ILIKE','%'.$name.'%');
+                });
+            }
+
+            //search by last_session
+            if($request->has('last_session') && $request->filled('last_session')){
+                $groups = $groups->where(function (Builder $query) use($lastSession){
+                    $query->where('last_session','=', Carbon::parse($lastSession)->format('d M Y'));
+                });
+            }
+
+            //filter by project
+            if($request->has('project_id') && $request->filled('project_id')){
+                $groups = $groups->where(function (Builder $query) use($project){
+                    $query->where('project_id','=', $project);
+                });
+            }
+
+            //search by staff name
+            if($request->has('staff') && $request->filled('staff')){
+                if($user){
+                    $groups =  $groups->where(function(Builder $query) use($user){
+                        $query->where('staff_id','=',$user->id);
+                    });
+                }else{
+                    return $this->commonResponse(false,'Staff Not Found','', Response::HTTP_NOT_FOUND);
+                }
+            }
+
+            if($request->has('sort') && $request->filled('sort')){
+                //sort by name
+                if($sort === $sortParams[0]){
+                    $groups = $groups->orderBy('name','DESC');
+                }elseif ($sort === $sortParams[1]){ //sort by last_session
+                    $groups = $groups->orderBy('last_session','DESC');
+                }elseif ($sort === $sortParams[2]){ //sort by creation date
+                    $groups = $groups->orderBy('created_at','DESC');
+                }
+            }
+
+            //custom pagination
+            if($request->has('pagination_items') && $request->filled('pagination_items')){
+                $groups = Group::query()->with('sessions','groupType')->latest()->paginate((int)$paginationItems);
+                return $this->commonResponse(true,'Success',
+                    GroupResource::collection($groups)->response()->getData(true),
+                    Response::HTTP_OK);
+            }
+
+            $groups = $groups->latest()->paginate(10);
+            return $this->commonResponse(true,'Success', GroupResource::collection($groups)->response()->getData(true), Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
@@ -60,6 +124,11 @@ class GroupAction
                     'group_id' => $countryCode->long_code.'-'.Carbon::now()->format('y').'-'.$newGroup->id
                 ]);
                 $groupItem = Group::with('sessions','staff','groupType','attendance')->findOrFail($newGroup->id);
+                $user = Auth::user();
+                activity('group')
+                ->performedOn($groupItem)
+                ->causedBy($user)
+                ->log('Created group '.$groupItem->name);
                 return $this->commonResponse(true,'Group Created Successfully',GroupService::viewGroupDetails($groupItem), Response::HTTP_CREATED);
             }
             return $this->commonResponse(false,'Failed to create group','', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -76,8 +145,8 @@ class GroupAction
     public function viewGroupItem(int $id): JsonResponse
     {
         try{
-            $group = Group::with('sessions','staff','groupType','attendance')->findOrFail($id);
-            return $this->commonResponse(false,'Success',GroupService::viewGroupDetails($group),Response::HTTP_OK);
+            $group = Group::with('sessions','staff','groupType','attendance','clients')->findOrFail($id);
+            return $this->commonResponse(false,'Success',  GroupService::viewGroupDetails($group) ,Response::HTTP_OK);
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (ModelNotFoundException $exception){
@@ -97,6 +166,11 @@ class GroupAction
                 return $this->commonResponse(false,'Group Session is terminated, no action required',GroupService::getGroupData($group), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $group->update(['ongoing' => Group::SESSION_TERMINATED]);
+            $user = Auth::user();
+            activity('group')
+            ->performedOn($group)
+            ->causedBy($user)
+            ->log('Terminated group '.$group->name);
             return $this->commonResponse(true,'Group terminated successfully',GroupService::viewGroupDetails($group), Response::HTTP_OK);
         }
         catch (ModelNotFoundException $exception){
@@ -135,6 +209,11 @@ class GroupAction
                 'group_allocation_date' => $request->group_allocation_date !== null ? Carbon::parse($request->group_allocation_date)->format('d M Y') : $group->group_allocation_date,
                 'group_id' => $request->office_id !== null ? $countryCode->long_code.'-'.Carbon::now()->format('y').'-'.$group->id : $group->group_id
             ]));
+            $user = Auth::user();
+            activity('group')
+            ->performedOn($group)
+            ->causedBy($user)
+            ->log('Updated group '.$group->name);
             return $this->commonResponse(true, 'Group Updated Successfully', GroupService::viewGroupDetails($group), Response::HTTP_OK);
         }
         catch (ModelNotFoundException $exception) {
@@ -152,6 +231,11 @@ class GroupAction
         try{
             $group = Group::with('sessions','staff','groupType','attendance')->findOrFail($id);
             $group->delete();
+            $user = Auth::user();
+            activity('group')
+            ->performedOn($group)
+            ->causedBy($user)
+            ->log('Deleted group '.$group->name);
             return $this->commonResponse(true,'Group Deleted Successfully','', Response::HTTP_OK);
         }catch (ModelNotFoundException $exception){
             return $this->commonResponse(false,'Group Does Not Exist','', Response::HTTP_NOT_FOUND);
@@ -166,19 +250,49 @@ class GroupAction
     public function addClientsToGroup(GroupClientRequest $request, int $id): JsonResponse
     {
         try{
-            $group = Group::with('sessions','clients','staff','groupType','attendance')->findOrFail($id);
-            $clients = Client::whereIn('id', $request->client_id)->get();
-            foreach ($clients as $client){
-                GroupClient::create(
-                    [
-                        'client_id' => $client->id,
-                        'group_id'  => $group->id
-                    ]
-                );
+            $clientIds = [];
+            foreach (explode(',', $request->client_id) as $client_id) {
+                array_push($clientIds,(int)$client_id);
             }
-            $group->update([
-                'total_clients' => $group->clients->count()
-            ]);
+
+            $existing = GroupClient::select('client_id')->where('group_id', $id)->get();
+            $existingClients = [];
+
+
+            foreach ($existing as $client){
+                array_push($existingClients,$client->client_id);
+            }
+
+            $clients = Client::whereIn('id', $clientIds)->get();
+            $group = Group::findOrFail($id);
+            $addedCount = 0;
+
+            foreach ($clients as $client){
+                if (!in_array($client->id, $existingClients)){
+                    GroupClient::create(
+                        [
+                            'client_id' => $client->id,
+                            'group_id'  => $group->id
+                        ]
+                    );
+                    $addedCount = $addedCount + 1;
+                }
+            }
+            $user = Auth::user();
+            activity('group')
+                ->performedOn($group)
+                ->causedBy($user)
+                ->log('Add clients to group '.$group->name);
+
+            if(!$group->total_clients){
+                $group->total_clients = $addedCount;
+                $group->save();
+                return $this->commonResponse(true, 'Clients Added Successfully!', '', Response::HTTP_CREATED);
+            }
+            $count = $group->total_clients + $addedCount;
+            $group->total_clients = $count;
+            $group->save();
+
             return $this->commonResponse(true,'Clients Added Successfully',GroupService::viewGroupDetails($group), Response::HTTP_CREATED);
         }catch (ModelNotFoundException $exception){
             return $this->commonResponse(false,'Group Does Not Exist','', Response::HTTP_NOT_FOUND);
@@ -195,24 +309,28 @@ class GroupAction
         try{
             $group = Group::with('clients','sessions','attendance')->findOrFail($id);
             $groupClientData = $group->clients->transform(function($client) use($group){
-                $clientBioData = ClientBioData::select('id','first_name','last_name')->firstWhere(function(Builder $query) use($client) {
+                $clientBioData = ClientBioData::select('client_id','first_name','last_name')->firstWhere(function(Builder $query) use($client) {
                     $query->where('client_id', $client->client_id);
                 });
                 return [
-                    'group_id' => $group->id,
-                    'client_id' => $clientBioData->id,
-                    'name' => $clientBioData->first_name .' '.$clientBioData->last_name,
+                    'groupId' => $group->id,
+                    'clientId' => $clientBioData->client_id,
+                    'clientName' => $clientBioData->first_name .' '.$clientBioData->last_name,
                     'sessions' => $group->sessions->filter(function($session) use($group){
                         return $session->group_id === $group->id;
                     })->transform(function($session) use($clientBioData, $group){
                         $attendance = $group->attendance->filter(function($attendance) use($session, $clientBioData){
-                            return $attendance->session_id === $session->id && $attendance->client_id === $clientBioData->id;
-                        })->first();
+                            return $attendance->session_id === $session->id && $attendance->client_id === $clientBioData->client_id;
+                        })->transform(function($data){
+                            return [
+                                'attended' => $data->attended ,
+                                'reason' => $data->reason
+                            ];
+                        });
                         return [
                             'sessionId' => $session->id,
-                            'sessionDate' => $session->session_date !== null ? Carbon::parse($session->session_date)->format('d M Y') : null,
-                            'attended' => $attendance->attended ?? null,
-                            'reason' => $attendance->reason ?? null
+                            'sessionDate' => $session->session_date ,
+                            'attendance' => $attendance
                         ];
                     })
                 ];
@@ -233,25 +351,28 @@ class GroupAction
         try {
             $group = Group::with('clients','sessions','attendance')->findOrFail($id);
             $groupClientData = $group->clients->transform(function($client) use($group){
-                $clientBioData = ClientBioData::select('id','first_name','last_name')->firstWhere(function(Builder $query) use($client){
+                $clientBioData = ClientBioData::select('client_id','first_name','last_name')->firstWhere(function(Builder $query) use($client){
                     $query->where('client_id', $client->client_id);
                 });
                 return [
                     'group_id' => $group->id,
-                    'client_id' => $clientBioData->id,
+                    'client_id' => $clientBioData->client_id,
                     'name' => $clientBioData->first_name .' '.$clientBioData->last_name,
-                    'sessions' => $group->sessions->filter(function($session) use($group, $client){
+                    'sessions' => $group->sessions->filter(function($session) use($group){
                         return $session->group_id === $group->id;
                     })->transform(function($session) use($clientBioData, $group){
                         $attendance = $group->attendance->filter(function($attendance) use($session, $clientBioData){
-                            return $attendance->session_id === $session->id && $attendance->client_id === $clientBioData->id;
-                        })->first();
-                        //dd($attendance->attended);
+                            return $attendance->session_id === $session->id && $attendance->client_id === $clientBioData->client_id;
+                        })->transform(function($data){
+                            return [
+                                'attended' => $data->attended,
+                                'reason' => $data->reason
+                            ];
+                        });
                         return [
                             'sessionId' => $session->id,
-                            'sessionDate' => $session->session_date !== null ? Carbon::parse($session->session_date)->format('d M Y') : null,
-                            'attended' => $attendance->attended ?? null,
-                            'reason' => $attendance->reason ?? null
+                            'sessionDate' => $session->session_date,
+                            'attendance' => $attendance
                         ];
                     })
                 ];

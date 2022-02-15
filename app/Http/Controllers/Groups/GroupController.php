@@ -9,6 +9,11 @@ use App\Http\Requests\GroupRequest;
 use App\Http\Requests\GroupUpdateRequest;
 use App\Services\PermissionRoleService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Spatie\Activitylog\Models\Activity as ActivityLog;
+use Symfony\Component\HttpFoundation\Response;
+use App\Models\User;
+
 
 /**
  * Groups Endpoints
@@ -29,14 +34,20 @@ class GroupController extends Controller
 
     /**
      * List Groups
-     *
+     * @queryParam name string. Search by group name
+     * @queryParam project_id integer  The Group Project ID . Example: 1
+     * @queryParam staff string. Search by staff name
+     * @queryParam last_session date. Search by date
+     * @queryParam sort string. Sort by either name(string) , last_session(date) or dateOfCreation(date)
+     * @queryParam pagination_items integer. Paginate by specified number of items
+     * @param Request $request
      * @return JsonResponse
      * @authenticated
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $this->permissionRoleService->verifyUserHasPermissionTo('list groups');
-        return $this->groupAction->listGroups();
+        return $this->groupAction->listGroups($request);
     }
 
     /**
@@ -65,7 +76,7 @@ class GroupController extends Controller
     /**
      * Display Group Details
      *
-     * @param int $id
+     * @urlParam  id integer required
      * @return JsonResponse
      * @authenticated
      */
@@ -128,12 +139,48 @@ class GroupController extends Controller
     }
 
     /**
+     *  Group Logs
+     *
+     * @urlParam  id integer required .
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function groupLogs(int $id): JsonResponse
+    {
+        $activities = ActivityLog::orderBy('created_at', 'desc')
+                        ->where('subject_id', $id)
+                        ->where('log_name', 'group')
+                        ->get();
+        if(!$activities->isEmpty()){
+            $activitiesList = collect();
+            foreach ($activities as $activity) {
+                if ($activity->causer_id) {
+                    $activitiesList->push([
+                        'description' => $activity->description,
+                        'date' => $activity->created_at ,
+                        'user' => User::findorFail($activity->causer_id)->name,
+                        'profile' => User::findorFail($activity->causer_id)->profile_pic_url
+                    ]);
+                } else {
+                    $activitiesList->push([
+                        'description' => $activity->description,
+                        'date' => $activity->created_at ,
+                        'user' => '',
+                        'profile' => ''
+                    ]);
+                }
+            }
+            return $this->commonResponse(true, 'Success', $activitiesList, Response::HTTP_OK);
+        }
+        return $this->commonResponse(true, 'Success', 'Group has no Logs', Response::HTTP_OK);
+    }
+    /**
      * Add Clients To Group
      * @param GroupClientRequest $request
      * @param int $id
      * @return JsonResponse
-     * @urlParam id integer required . The Group ID . Example: 1
-     * @bodyParam client_id array required . The Client ID's . Example [1,2,3]
+     * @urlParam id integer required  The Group ID  Example: 1
+     * @bodyParam client_id string required  The Client ID's(comma separated) . Example 1,2,3
      * @authenticated
      */
     public function addClients(GroupClientRequest $request,int $id): JsonResponse

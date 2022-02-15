@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\ClientBioData;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class GroupSessionResource extends JsonResource
@@ -15,11 +17,23 @@ class GroupSessionResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id' => $this->id,
-            'group_id' => $this->group_id,
-            'session_date' => $this->session_date,
-            'total_clients' => $this->total_clients,
-            'total_present' => $this->total_present
+            'sessionId' => $this->id,
+            'groupId' => $this->group_id,
+            'sessionDate' => $this->session_date,
+            'totalClients' => $this->total_clients,
+            'totalPresent' => $this->total_present,
+            'attendance' => $this->attendance->transform(function ($data){
+                $client = ClientBioData::select('first_name','last_name','other_name')->firstWhere(function (Builder $query) use($data){
+                    $query->where('client_id', $data->client_id);
+                });
+                return [
+                    'attendanceId'  => $data->id,
+                    'clientId'      => $data->client_id,
+                    'clientName'    => isset($client) ? $client->first_name.' '.$client->last_name : '',
+                    'attended'      => $data->attended,
+                    'reason'        => $data->reason
+                ];
+            })
         ];
     }
 }

@@ -2,25 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserResource;
 use App\Models\Office;
 use App\Models\Timezone;
 use App\Models\User;
-use App\Services\PermissionRoleService;
 use Exception;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\QueryException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use App\Http\Resources\UserResource;
+use App\Services\PermissionRoleService;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
-use function Clue\StreamFilter\fun;
 use Spatie\Permission\Models\Role;
 
 
@@ -42,6 +40,7 @@ class UserController extends Controller
      * All Users
      * @group Teams
      * @queryParam name string Search by name. No-example
+     * @queryParam accepted_invited string Specify whether 1 or 0
      * @queryParam role integer Filter by role. 1
      * @queryParam paginate string required . Specify whether 1 or 0
      * @param Request $request
@@ -59,19 +58,16 @@ class UserController extends Controller
         $sort = $request->get('sort');
         $pagination_items = (int)$request->input('pagination_items',10);
         $sort_params = ['desc','asc'];
-        $invited = $request->get('accepted');
+        $accepted_invite = $request->get('accepted_invited');
+
         if ($request->has('name') && $request->filled('name')) {
             $users = $users->where('name', 'ilike', '%'.$name.'%');
-            if($request->has('accepted') && $request->filled('accepted')){
-                if($invited === "true"){
-                    $users = $users->where('invite_accepted',User::INVITE_ACCEPTED);
-                }else if($invited === "false"){
-                    $users = $users->where('invite_accepted', User::INVITE_NOT_ACCEPTED);
-                }else{
-                    return $this->commonResponse(false,'Invalid search parameter on invites','', Response::HTTP_UNPROCESSABLE_ENTITY);
-                }
-            }
         }
+
+        if($request->has('accepted_invited') && $request->filled('accepted_invited')){
+            $users = $users->where('invite_accepted',(int)$accepted_invite);
+        }
+
         if ($request->has('role') && $request->filled('role')) {
             $users = $users->whereIn('id', $this->getUserIds($role));
         }
@@ -79,7 +75,7 @@ class UserController extends Controller
         if ($request->has('active') && $request->filled('active')) {
             $users = $users->where('active', $active);
         }
-
+        
         $users = $users->latest();
 
         if($request->has('sort') &&  $request->filled('sort')){

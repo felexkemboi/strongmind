@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\QuestionOptions;
-use Illuminate\Http\Request;
-use App\Http\Requests\CreateQuestionOptionsRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Database\QueryException;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\CreateQuestionOptionsRequest;
 
 /**
  * Class QuestionOptionsController
@@ -35,7 +36,7 @@ class QuestionOptionsController extends Controller
      * @param CreateQuestionOptionsRequest $request
      * @return JsonResponse
      * @bodyParam value string required The Response value
-     * @bodyParam score  integer  required The score of the response
+     * @bodyParam score  integer   The score of the response
      * @bodyParam question_id  integer required If the form of the question
      * @authenticated
      */
@@ -45,10 +46,11 @@ class QuestionOptionsController extends Controller
         try {
             $option = new QuestionOptions();
             $option->value = $request->value;
-            $option->score = $request->score;
+            $option->score = $request->score ?? $request->score ;
             $option->question_id = $request->question_id;
             if ($option->save()) {
-                return $this->commonResponse(true, 'Question Option created successfully!', '', Response::HTTP_CREATED);
+                $options = QuestionOptions::where('question_id', $request->question_id)->get();
+                return $this->commonResponse(true, 'Question Option created successfully!', $options, Response::HTTP_CREATED);
             }
             return $this->commonResponse(false, 'Failed to create Question Option', '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (QueryException $ex) {
@@ -59,39 +61,21 @@ class QuestionOptionsController extends Controller
     }
 
     /**
-     * Get Question by Id
-     * @param  QuestionOption  $questionOption
-     * @return JsonResponse
-     * @urlParam id integer required The ID of the Question Example:1
-     * @authenticated
-     */
-    public function show(QuestionOption $questionOption): JsonResponse
-    {
-        $questionOption = QuestionOption::findorFail($questionOptionId);
-        if ($questionOption) {
-            return $this->commonResponse(true, 'success', $questionOption, Response::HTTP_OK);
-        } else {
-            return $this->commonResponse(false, 'Question Option Not Found!', '', Response::HTTP_NOT_FOUND);
-        }
-    }
-
-    /**
      * Edit  QuestionOption
-     * @param EditQuestionOptionRequest $request
+     * @param CreateQuestionOptionsRequest $request
      * @return JsonResponse
      * @bodyParam value string required The Response value
      * @bodyParam score  integer The score of the response
-     * @bodyParam question_id  integer required If the form of the question
      * @authenticated
      */
 
-    public function update(EditQuestionOptionRequest $request, int $questionOptionId): JsonResponse
+    public function update(CreateQuestionOptionsRequest $request, int $questionOptionId): JsonResponse
     {
         try {
-            $questionOption = QuestionOption::findorFail($questionOptionId);
+            $questionOption = QuestionOptions::findorFail($questionOptionId);
             if($questionOption){
                 $questionOption->value = $request->value;
-                $questionOption->score = $request->score;
+                $questionOption->score = $request->score ?? $request->score;
                 $questionOption->question_id = $request->question_id;
                 if ($questionOption->save()) {
                     return $this->commonResponse(true, 'Question updated successfully!', '', Response::HTTP_CREATED);

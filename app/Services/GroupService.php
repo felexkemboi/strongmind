@@ -8,6 +8,7 @@ use App\Http\Resources\GroupTypeResource;
 use App\Models\Client;
 use App\Models\ClientBioData;
 use App\Models\Group;
+use App\Models\GroupClient;
 use App\Models\GroupSession;
 use App\Models\SessionAttendance;
 use App\Models\User;
@@ -23,9 +24,22 @@ class GroupService
             'id' => $group->id,
             'name' => $group->name,
             'sessions' => $group->sessions->transform(function($session){
+                $attendance = $session->attendance->transform(function ($data){
+                    $client = ClientBioData::firstWhere(function (Builder $query) use($data){
+                        $query->where('client_id', $data->client_id);
+                    });
+                    return [
+                        'attendanceId'  => $data->id,
+                        'clientId'      => $data->client_id,
+                        'clientName'    => isset($client) ? $client->first_name.' '.$client->last_name : '',
+                        'attended'      => $data->attended,
+                        'reason'        => $data->reason
+                    ];
+                });
                 return [
                     'id' => $session->id,
-                    'date' => $session->session_date
+                    'date' => $session->session_date,
+                    'attendance' => $attendance
                 ];
             }),
             'last_session' => $group->last_session !== null ? Carbon::parse($group->last_session)->format('d M Y') : null,
@@ -38,15 +52,44 @@ class GroupService
         $user = User::where(function(Builder $query) use($group){
             return $query->where('id', $group->staff_id);
         })->first();
+        $clients = GroupClient::where('group_id', $group->id)->get();
+        $sessions = GroupSession::select('id','created_at','session_date')->where('group_id',$group->id)->get();
         return [
             'id' => $group->id,
             'name' => $group->name,
             'group_id' => $group->group_id,
-            'sessions' => $group->sessions->transform(function($session){
+            'clients' => $clients->transform(function($client){
+
+                $clientDetails = ClientBioData::where('client_id',$client->client_id)->first();
                 return [
-                    'id' => $session->id,
-                    'date' => $session->session_date
+                    'clientId' => $client->client_id,
+                    'clientName' => isset($clientDetails) ? $clientDetails->first_name.' '.$clientDetails->last_name : '',
                 ];
+            }),
+            'sessions' =>  $sessions->transform(function($session){
+                if(isset($session)) {
+                    $sessionsAttendance =  SessionAttendance::select('client_id','attended')
+                    ->where('session_id',$session->id)
+                    ->where('attended',1)
+                    ->get();
+
+                    $attendance = $sessionsAttendance->transform(function($sessionDetail){
+
+                        $clientDetails = ClientBioData::where('client_id',$sessionDetail->client_id)->first();
+                        return [
+                            'clientId' => $sessionDetail->client_id ? $sessionDetail->client_id : '',
+                            'clientName' => isset($clientDetails) ? $clientDetails->first_name .' '.$clientDetails->last_name : '',
+                            'attended' => isset($clientDetails) ? $sessionDetail->attended : 0,
+                        ];
+                    });
+                    return [
+                        'session_id' => $session->id,
+                        'created_at' => $session->created_at,
+                        'attendance' => $attendance,
+                        'session_date' => $session->session_date,
+                    ];
+                }
+                return [];
             }),
             'last_session' => $group->last_session !== null ? Carbon::parse($group->last_session)->format('d M Y') : null,
             'ongoing' => $group->ongoing === Group::SESSION_ONGOING ? 'Ongoing' : 'Terminated',
@@ -63,31 +106,30 @@ class GroupService
                         ];
                     }),
                 ],
-            'attendance' => $group->attendance->transform(function($attendance) use($group){
-                $client = ClientBioData::select('first_name','last_name')->where(function(Builder $query) use($attendance){
-                    $query->where('client_id', $attendance->client_id);
-                })->first();
-                $groupAttendance = SessionAttendance::where(function(Builder $query) use($attendance){
-                    $query->where('session_id', $attendance->session_id);
-                })->first();
-                $groupSessions = GroupSession::where(function(Builder $query) use($group){
-                    $query->where('group_id', $group->id);
-                })->get()->filter(function ($query) use($attendance){
-                    return $query->where('id',$attendance->session_id);
-                });
-                $sessionData = [];
-                foreach($groupSessions as $session){
-                        $sessionData[] = [
-                            'sessionDate' => $session->session_date,
-                            'sessionId'   => $session->id,
-                            'attended'    => $groupAttendance->attended
-                        ];
-                }
-                return [
-                    'clientName' => $client->first_name .' '. $client->last_name,
-                    'sessions'  => $sessionData
-                ];
-            })
         ];
+    }
+
+    public static function getSessionsWithAttendance(int $id)
+    {
+        $group = Group::with('sessions')->find($id);
+        return $group->sessions->transform(function($session){
+            $attendance = $session->attendance->transform(function ($data){
+                $client = ClientBioData::firstWhere(function (Builder $query) use($data){
+                    $query->where('client_id', $data->client_id);
+                });
+                return [
+                    'attendanceId'  => $data->id,
+                    'clientId'      => $data->client_id,
+                    'clientName'    => isset($client) ? $client->first_name.' '.$client->last_name : '',
+                    'attended'      => $data->attended,
+                    'reason'        => $data->reason
+                ];
+            });
+            return [
+                'id' => $session->id,
+                'date' => $session->session_date,
+                'attendance' => $attendance
+            ];
+        });
     }
 }

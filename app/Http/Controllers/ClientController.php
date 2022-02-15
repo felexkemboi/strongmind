@@ -2,32 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ClientUpdateRequest;
+use Exception;
+
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Client;
+use Illuminate\Support\Arr;
+use App\Models\Misc\Status;
+use Illuminate\Support\Str;
+use App\Models\Misc\Channel;
+use Illuminate\Http\Request;
 use App\Models\ClientBioData;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Auth;
 use App\Helpers\CountryHelper;
 use App\Helpers\ImportClients;
-use App\Http\Resources\ClientResource;
-use App\Models\User;
 use App\Services\ClientService;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Arr;
-use Exception;
-use App\Models\Client;
-use Spatie\Activitylog\Models\Activity as ActivityLog;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\TransferClient;
+use App\Http\Resources\ClientResource;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Builder;
+use App\Http\Requests\ClientUpdateRequest;
 use App\Http\Requests\TransferClientsRequest;
-use App\Models\Misc\Channel;
-use App\Models\Misc\Status;
+use Symfony\Component\HttpFoundation\Response;
+use Spatie\Activitylog\Models\Activity as ActivityLog;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
 /**
@@ -111,32 +113,32 @@ class ClientController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'nullable|string|min:3|max:60|unique:clients',
-            'first_name' => 'required|string|min:3|max:60',
-            'last_name' => 'required|string|min:3|max:60',
-            'other_name' => 'required|string|min:3|max:60',
+            'first_name' => 'nullable|string|min:3|max:60',
+            'last_name' => 'nullable|string|min:3|max:60',
+            'other_name' => 'nullable|string|min:3|max:60',
             'nick_name' => 'nullable|string|min:3|max:60',
-            'gender' => 'required|string|in:Male,Female,Other',
+            'gender' => 'nullable|string|in:Male,Female,Other',
             'phone_number' => 'required|string|unique:clients', //min:10|max:13
-            'country_id' => 'required|integer|exists:countries,id',
-            'region' => 'required|string|min:3|max:20',
-            'city' => 'required|string|min:3|max:20',
-            'timezone_id' => 'required|integer|exists:timezones,id',
-            'date_of_birth' => 'date|required',
+            'country_id' => 'nullable|integer|exists:countries,id',
+            'region' => 'nullable|string|min:3|max:20',
+            'city' => 'nullable|string|min:3|max:20',
+            'timezone_id' => 'nullable|integer|exists:timezones,id',
+            'date_of_birth' => 'date|nullable',
             'nationality' => 'string|nullable|exists:countries,name',
-            'status_id' => 'required|exists:statuses,id|integer',
-            'channel_id' => 'required|integer|exists:channels,id',
-            'languages' => 'required|string|min:3|max:30',
-            'project_id' => 'required|integer|not_in:0|exists:programs,id',
-            'education_level_id' => 'required|integer|not_in:0|exists:client_education_levels,id',
-            'marital_status_id' => 'required|integer|not_in:0|exists:client_marital_statuses,id',
-            'phone_ownership_id' => 'required|integer|not_in:0|exists:client_phone_ownerships,id',
-            'is_disabled' => 'required|boolean',
-            'district_id' => 'required|integer|not_in:0|exists:client_districts,id',
+            'status_id' => 'nullable|exists:statuses,id|integer',
+            'channel_id' => 'nullable|integer|exists:channels,id',
+            'languages' => 'nullable|string|min:3|max:30',
+            'project_id' => 'nullable|integer|not_in:0|exists:programs,id',
+            'education_level_id' => 'nullable|integer|not_in:0|exists:client_education_levels,id',
+            'marital_status_id' => 'nullable|integer|not_in:0|exists:client_marital_statuses,id',
+            'phone_ownership_id' => 'nullable|integer|not_in:0|exists:client_phone_ownerships,id',
+            'is_disabled' => 'nullable|boolean',
+            'district_id' => 'nullable|integer|not_in:0|exists:client_districts,id',
             'province_id' => 'nullable|integer|not_in:0|exists:client_municipalities,id',
-            'sub_county_id' => 'required|integer|not_in:0|exists:client_sub_counties,id',
+            'sub_county_id' => 'nullable|integer|not_in:0|exists:client_sub_counties,id',
             'parish_ward_id' => 'nullable|integer|not_in:0|exists:client_parishes,id',
             'village_id' => 'nullable|integer|not_in:0|exists:client_villages,id',
-            'program_type_id' => 'required|integer|not_in:0|exists:program_types,id',
+            'program_type_id' => 'nullable|integer|not_in:0|exists:program_types,id',
             'referredThrough' => 'nullable|string|min:2|max:60',
             'referralType' => 'nullable|string|min:3|max:60',
         ]);
@@ -145,7 +147,6 @@ class ClientController extends Controller
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             try {
-
                 $client = new Client;
                 $client->name = $request->name;
                 $client->phone_number = $request->phone_number;
@@ -157,16 +158,21 @@ class ClientController extends Controller
                 $client->languages = $request->input('languages'); //TODO comma separate these if multiple languages are provided
                 $client->status_id = $request->status_id;
                 $client->channel_id = $request->channel_id;
-                $client->referredThrough = $request->referredThrough;
-                $client->referralType = $request->referralType;
+                $client->referredThrough = $request->influence;
+                $client->referralType = $request->type;
+                $client->talk_to = $request->talkto;
+                $client->age = $request->age;
+                $client->contact_through = $request->contact_through;
 
                 $client->age = Carbon::parse($request->date_of_birth)->diff(Carbon::now())->y;
                 if($client->save()){
                     $this->addClientBioData($request, $client);
                     $countryCode = CountryHelper::getCountryCode($request->country_id);
                     $yearVal = Carbon::now()->format('y');
-                    $patient_id = $countryCode->long_code.'-'.$yearVal.'-'.'0000'.$client->id; //random_int(0,4).$client->id;
-                    $client->update(['patient_id' => $patient_id]); //TODO change format to CountryCode-ProgramCode-Year-Cycle-Number
+                    if($request->country_id){
+                        $patient_id = $countryCode->long_code.'-'.$yearVal.'-'.'0000'.$client->id; //random_int(0,4).$client->id;
+                        $client->update(['patient_id' => $patient_id]); //TODO change format to CountryCode-ProgramCode-Year-Cycle-Number
+                    }
                     return $this->commonResponse(true, 'Client created successfully!', new ClientResource($client), Response::HTTP_CREATED);
                 }
                 return $this->commonResponse(false,'Failed to create client','', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -216,6 +222,7 @@ class ClientController extends Controller
      * @bodyParam other_name string . The Client's Other Name
      * @bodyParam nick_name string . The  Clients' Nick Name
      * @bodyParam nationality string . The Client's Nationality
+     * @bodyParam languages string required . The Client's Languages(comma separated)
      * @bodyParam project_id integer . The Client's Project ID . Example 1
      * @bodyParam education_level_id integer . The Client's Educational Level . Example 1
      * @bodyParam marital_status_id integer . The Client's Marital Status . Example 1
@@ -247,6 +254,7 @@ class ClientController extends Controller
             if(!$client){
                 return $this->commonResponse(false,'Client Not Found','', Response::HTTP_NOT_FOUND);
             }
+
             $clientData = [
                 'name' => $request->name ?? $client->name,
                 'gender' => $request->gender ?? $client->gender,
@@ -260,6 +268,7 @@ class ClientController extends Controller
                 'channel_id'  => $request->channel_id ?? $client->channel_id,
                 'referredThrough' => $client->referredThrough ?? $request->referredThrough,
                 'referralType' => $client->referralType ?? $request->referralType,
+                'languages' => Str::lower($request->languages) ?? $client->languages,
             ];
 
             if($client->update($clientData)){
@@ -327,7 +336,7 @@ class ClientController extends Controller
                     ->performedOn($client)
                     ->causedBy($user)
                     ->log('Client transferred to '.$user->name);
-                return $this->commonResponse(true,'Client transferred successfully','', Response::HTTP_OK);
+                return $this->commonResponse(false,'Client transferred successfully', $client, Response::HTTP_OK);
             }
             return $this->commonResponse(false,'Failed to transfer client','', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (QueryException  $queryException){
@@ -349,7 +358,6 @@ class ClientController extends Controller
 
     public function bulkTransfer(TransferClientsRequest $request): JsonResponse
     {
-        \Log::debug($request);
         try{
             foreach (explode(',', $request->client_ids) as $client_id) {
                 $client = Client::find((int)$client_id);
@@ -393,27 +401,28 @@ class ClientController extends Controller
         if($validator->fails()){
             return $this->commonResponse(false,Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+
+        $clientIds = explode(',', $request->client_id);
+
         try{
-            $clientIds = explode(',', $request->client_id);
+
             for($i = 0, $iMax = count($clientIds); $i < $iMax; $i++){
-                $client = Client::firstWhere('id', $clientIds[$i]);
+                $client = Client::find($clientIds[$i]);
+
                 if(!$client){
-                    return $this->commonResponse(false,'Client with ID '.$clientIds[$i].' Not Found','', Response::HTTP_NOT_FOUND);
+                    continue;
                 }
-                if($client->update([
-                    'gender' => $request->gender ?? $client[$i]->gender,
-                    'age' => $request->age ?? $client[$i]->age,
-                    'region' => $request->region ?? $client[$i]->region
-                ])){
+
+                if($client->update([ 'gender' => $request->gender ?? $client->gender, 'age' => $request->age ?? $client->age, 'region' => $request->region ?? $client->region])){
                     $user = Auth::user();
                     activity('client')
                         ->performedOn($client)
                         ->causedBy($user)
                         ->log('Changed gender to '.$request->gender.', age to '.$request->age.', region to '.$request->region);
-                    return $this->commonResponse(true,'Clients Updated successfully','', Response::HTTP_OK);
                 }
-                return $this->commonResponse(false,'Failed to update clients','', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
+            return $this->commonResponse(true,'Clients Updated successfully','', Response::HTTP_OK);
+
         }catch (QueryException $queryException){
             return $this->commonResponse(false,$queryException->errorInfo[2],'', Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
@@ -425,7 +434,7 @@ class ClientController extends Controller
     /**
      * Activate  Clients
      * @param Request $request
-     * @bodyParam users required . The Client IDs . Example [1,2]
+     * @bodyParam users required  The Client IDs . Example [1,2]
      * @return JsonResponse
      * @authenticated
      */
@@ -440,8 +449,7 @@ class ClientController extends Controller
         } else {
             try {
 
-                Client::whereIn('id', $request->clients)
-                    ->update(['client_type' =>  'therapy','therapy' =>  1]);
+                Client::whereIn('id', $request->clients)->update(['client_type' =>  'therapy','therapy' =>  1]);
                 $user = Auth::user();
                 foreach ($request->clients as $client) {
                     $clientRecords = Client::findorFail($client);
@@ -460,26 +468,39 @@ class ClientController extends Controller
     }
 
     /**
-     * Get clients from other sources
+     * Get client activity log
      * @group Clients
-     * @param int $id
+     * @param Request $request
+     * @urlParam id int required  The Client's id
      * @return JsonResponse
-     * @bodyParam id int required . The Client's id
      * @authenticated
      */
 
     public function clientLogs(int $id)
     {
+
         $activities = ActivityLog::orderBy('created_at', 'desc')
                         ->where('subject_id', $id)
+                        ->where('log_name', 'client')
                         ->get();
         if(!$activities->isEmpty()){
             $activitiesList = collect();
             foreach($activities as $activity){
                 if($activity->causer_id){
-                    $activitiesList->push(['description' => $activity->description, 'date' => $activity->created_at , 'user' => User::findorFail($activity->causer_id)->name, 'profile' => User::findorFail($activity->causer_id)->profile_pic_url]);
+                    $activitiesList->push([
+                        'description' => $activity->description,
+                        'date' => $activity->created_at ,
+                        'user' => User::findorFail($activity->causer_id)->name,
+                        'profile' => User::findorFail($activity->causer_id)->profile_pic_url
+                    ]);
+                }else{
+                    $activitiesList->push([
+                        'description' => $activity->description,
+                        'date' => $activity->created_at ,
+                        'user' => '',
+                        'profile' => ''
+                    ]);
                 }
-                $activitiesList->push(['description' => $activity->description, 'date' => $activity->created_at , 'user' => '','profile' => '']);
             }
             return $this->commonResponse(true, 'Success', $activitiesList, Response::HTTP_OK);
         }

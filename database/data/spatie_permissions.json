@@ -1,40 +1,5 @@
 [
     {
-        "name": "view permissions",
-        "guard_name": "api",
-        "module": "Auth",
-        "slug": "",
-        "description": "view all permissions"
-    },
-    {
-        "name": "create permission",
-        "guard_name": "api",
-        "module": "Auth",
-        "slug": "",
-        "description": ""
-    },
-    {
-        "name": "view permission details",
-        "guard_name": "api",
-        "module": "Auth",
-        "slug": "",
-        "description": ""
-    },
-    {
-        "name": "delete permission",
-        "guard_name": "api",
-        "module": "Auth",
-        "slug": "",
-        "description": ""
-    },
-    {
-        "name": "update permission",
-        "guard_name": "api",
-        "module": "Auth",
-        "slug": "",
-        "description": ""
-    },
-    {
         "name": "view roles",
         "guard_name": "api",
         "module": "Auth",
@@ -99,20 +64,6 @@
     },
     {
         "name": "view office programs",
-        "guard_name": "api",
-        "module": "Administration",
-        "slug": "",
-        "description": ""
-    },
-    {
-        "name": "activate country",
-        "guard_name": "api",
-        "module": "Administration",
-        "slug": "",
-        "description": ""
-    },
-    {
-        "name": "deactivate country",
         "guard_name": "api",
         "module": "Administration",
         "slug": "",
@@ -266,56 +217,49 @@
         "description": ""
     },
     {
-        "name": "list programs",
+        "name": "list projects",
         "guard_name": "api",
         "module": "Projects",
         "slug": "",
         "description": ""
     },
     {
-        "name": "view program",
+        "name": "view project",
         "guard_name": "api",
         "module": "Projects",
         "slug": "",
         "description": ""
     },
     {
-        "name": "edit program",
+        "name": "edit project",
         "guard_name": "api",
         "module": "Projects",
         "slug": "",
         "description": ""
     },
     {
-        "name": "update program",
+        "name": "update project",
         "guard_name": "api",
         "module": "Projects",
         "slug": "",
         "description": ""
     },
     {
-        "name": "delete program",
+        "name": "delete project",
         "guard_name": "api",
         "module": "Projects",
         "slug": "",
         "description": ""
     },
     {
-        "name": "add program member",
+        "name": "add project member",
         "guard_name": "api",
         "module": "Projects",
         "slug": "",
         "description": ""
     },
     {
-        "name": "activate program membership",
-        "guard_name": "api",
-        "module": "Projects",
-        "slug": "",
-        "description": ""
-    },
-    {
-        "name": "deactivate program membership",
+        "name": "deactivate project membership",
         "guard_name": "api",
         "module": "Projects",
         "slug": "",
@@ -323,13 +267,6 @@
     },
     {
         "name": "view program members",
-        "guard_name": "api",
-        "module": "Projects",
-        "slug": "",
-        "description": ""
-    },
-    {
-        "name": "send program invitations",
         "guard_name": "api",
         "module": "Projects",
         "slug": "",
@@ -483,6 +420,13 @@
         "description": ""
     },
     {
+        "name":"view session attendance",
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
+    },
+    {
         "name":"update group session",
         "guard_name": "api",
         "module": "Groups",
@@ -528,6 +472,83 @@
         "name": "delete mode of delivery",
         "guard_name": "api",
         "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "list forms",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "create form",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view form",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "update form",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "delete form",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "list questions",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "create question",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view question",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "update question",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "delete question",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view questionresponse",
+        "guard_name": "api",
+        "module": "Forms",
         "slug": "",
         "description": ""
     }

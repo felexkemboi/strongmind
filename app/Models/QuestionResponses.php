@@ -3,25 +3,26 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Client;
-use App\Models\FormType;
 use App\Models\QuestionOptions;
 
 class QuestionResponses extends Model
 {
     use HasFactory;
 
-    protected $table = 'questions';
+    protected $table = 'questionresponses';
 
     protected $fillable = [
         'value',
         'question_id',
         'option_id',
         'client_id',
+        'score',
+        'session_id',
+        'group_id',
+        'status_id'
     ];
 
     public function Question(): BelongsTo
@@ -29,7 +30,7 @@ class QuestionResponses extends Model
         return $this->belongsTo(Question::class, 'question_id');
     }
 
-    public function Option(): BelongsTo
+    public function Option(): hasMany
     {
         return $this->hasMany(QuestionOptions::class, 'option_id');
     }
