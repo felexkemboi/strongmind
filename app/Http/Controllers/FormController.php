@@ -218,7 +218,7 @@ class FormController extends Controller
 
             $payload = array();
             foreach ($clients as $client) {
-                $clientDetails   = ClientBioData::select('first_name','last_name','email')->firstWhere('client_id', $client['client_id']);
+                $clientDetails   = Client::select('name','patient_id')->firstWhere('id', $client['client_id']);
                 $responses = QuestionResponses::where('form_id', $form->id)->where('client_id', $client['client_id'])->get();
                 $clientResponses = array();
                 foreach ($responses as $response) {
@@ -233,7 +233,7 @@ class FormController extends Controller
                     );
                     array_push($clientResponses,$clientResponse);
                 }
-                $clients = array('score' => $clientForm[0] ? $clientForm[0]->score : 0, 'client' => !$clientDetails ? '' : ($clientDetails->first_name ? $clientDetails->first_name  : $clientDetails->email), 'responses' => $clientResponses);
+                $clients = array('score' => $clientForm[0] ? $clientForm[0]->score : 0, 'client' => !$clientDetails ? '' : ($clientDetails->name ? $clientDetails->name  : $clientDetails->patient_id), 'responses' => $clientResponses);
                 array_push($payload,$clients);
             }
             return $this->commonResponse(true, 'success', $payload, Response::HTTP_OK);
