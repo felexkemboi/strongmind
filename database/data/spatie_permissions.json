@@ -474,5 +474,82 @@
         "module": "Dynamic Fields",
         "slug": "",
         "description": ""
+    },
+    {
+        "name": "list forms",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "create form",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view form",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "update form",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "delete form",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "list questions",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "create question",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view question",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "update question",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "delete question",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view questionresponse",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
     }
 ]
