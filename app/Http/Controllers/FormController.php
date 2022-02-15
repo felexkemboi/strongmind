@@ -11,13 +11,11 @@ use Illuminate\Http\Request;
 use App\Models\FieldType;
 use App\Models\ClientForm;
 use App\Models\QuestionOptions;
-use App\Models\ClientBioData;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\QueryException;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateFormRequest;
 use App\Http\Requests\EditFormRequest;
-use App\Http\Requests\CreateResponsesRequest;
 
 /**
  * APIs for managing FormController
@@ -213,9 +211,6 @@ class FormController extends Controller
         if ($form) {
             $clients = QuestionResponses::select('client_id')->where('form_id', $form->id)->distinct()->get();
             $clientForm = ClientForm::select('score')->where('form_id', $form->id)->get();
-            //
-
-
             $payload = array();
             foreach ($clients as $client) {
                 $clientDetails   = Client::select('name','patient_id')->firstWhere('id', $client['client_id']);
