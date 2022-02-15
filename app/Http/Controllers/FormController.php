@@ -161,25 +161,34 @@ class FormController extends Controller
         $totalScore = 0;
         foreach ($request->responses as $record) {
 
-            $response = new QuestionResponses();
-            $response->score = $record['score'];
-            $response->value = $record['value'];
-            $response->question_id = $record['question_id'];
-            $response->client_id = $record['client_id'];
-            $response->session_id = $record['session_id'];
-            $response->group_id = $record['group_id'];
-            $response->form_id = $form->id;
-            $response->option_id = $record['option_id'];
-            $response->status_id = $form->status_id;
+            $existingResponse = QuestionResponses::where([['client_id', '=', $record['client_id']],['question_id', '=', $record['question_id']]])->first();
 
-            if ($response->save()) {
-                if (!$form->response_count) {
-                    $form->response_count = 1;
+            if ($existingResponse !== null) {
+                $existingResponse->update([
+                    'score' => $record['score'],
+                    'value' => $record['value'],
+                ]);
+            } else {
+                $response = new QuestionResponses();
+                $response->score = $record['score'];
+                $response->value = $record['value'];
+                $response->question_id = $record['question_id'];
+                $response->client_id = $record['client_id'];
+                $response->session_id = $record['session_id'];
+                $response->group_id = $record['group_id'];
+                $response->form_id = $form->id;
+                $response->option_id = $record['option_id'];
+                $response->status_id = $form->status_id;
+                if ($response->save()) {
+                    if (!$form->response_count) {
+                        $form->response_count = 1;
+                        $form->save();
+                    }
+                    $form->response_count = $form->response_count + 1;
                     $form->save();
                 }
-                $form->response_count = $form->response_count + 1;
-                $form->save();
             }
+
             if($record['score']){
                 $totalScore = $totalScore + (int)$record['score'];
             }
@@ -210,7 +219,11 @@ class FormController extends Controller
         $form = Form::find($id);
         if ($form) {
             $clients = QuestionResponses::select('client_id')->where('form_id', $form->id)->distinct()->get();
-            $clientForm = ClientForm::select('score')->where('form_id', $form->id)->get();
+            $clientForm = ClientForm::select('score','created_at')->where('form_id', $id)->orderBy('created_at','desc')->get(); // all(); //select('score')->where('form_id', $form->id);//->orderBy('created_at','desc');//->firstWhere('form_id', $form->id)->get();
+            $score = 0;
+            if(count($clientForm) > 0){
+                $score = $clientForm[0]->score;
+            }
             $payload = array();
             foreach ($clients as $client) {
                 $clientDetails   = Client::select('name','patient_id')->firstWhere('id', $client['client_id']);
@@ -228,7 +241,7 @@ class FormController extends Controller
                     );
                     array_push($clientResponses,$clientResponse);
                 }
-                $clients = array('score' => $clientForm[0] ? $clientForm[0]->score : 0, 'client' => !$clientDetails ? '' : ($clientDetails->name ? $clientDetails->name  : $clientDetails->patient_id), 'responses' => $clientResponses);
+                $clients = array('score' => $score, 'clientId' => $client['client_id'],'clientName' => !$clientDetails ? '' : ($clientDetails->name ? $clientDetails->name  : $clientDetails->patient_id), 'responses' => $clientResponses);
                 array_push($payload,$clients);
             }
             return $this->commonResponse(true, 'success', $payload, Response::HTTP_OK);
