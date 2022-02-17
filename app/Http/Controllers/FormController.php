@@ -280,7 +280,7 @@ class FormController extends Controller
      * @queryParam  client_id integer  The ID of the Client Example:1
      * @authenticated
      */
-    public function filterResponses(Request $request, int $id): JsonResponse
+    public function getClientFormResponses(Request $request, int $id): JsonResponse
     {
         $form = Form::find($id);
         $clientId = $request->client_id;

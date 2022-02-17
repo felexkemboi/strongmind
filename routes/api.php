@@ -296,7 +296,7 @@ Route::group(['prefix' => 'forms','middleware' => 'auth:sanctum'], function(){
     Route::post('/create',                  [FormController::class, 'create']);
     Route::post('/{id}/create-responses',   [FormController::class, 'createResponse']);
     Route::get ('/{id}/responses',          [FormController::class, 'getResponses']);
-    Route::get ('/{id}/filtered-responses', [FormController::class, 'filterResponses']);
+    Route::get ('/{id}/filtered-responses', [FormController::class, 'getClientFormResponses']);
     Route::get ('/{id}/client-forms',       [FormController::class, 'clientForms']);
     Route::put('{id}/update',               [FormController::class, 'update']);
     Route::put('{id}/publish',              [FormController::class, 'publish']);
