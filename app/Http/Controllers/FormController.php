@@ -163,6 +163,7 @@ class FormController extends Controller
 
             $existingResponse = QuestionResponses::where([['client_id', '=', $record['client_id']],['question_id', '=', $record['question_id']]])->first();
 
+
             if ($existingResponse !== null) {
                 $existingResponse->update([
                     'score' => $record['score'],
@@ -179,6 +180,7 @@ class FormController extends Controller
                 $response->form_id = $form->id;
                 $response->option_id = $record['option_id'];
                 $response->status_id = $form->status_id;
+
                 if ($response->save()) {
                     if (!$form->response_count) {
                         $form->response_count = 1;
@@ -192,7 +194,6 @@ class FormController extends Controller
             if($record['score']){
                 $totalScore = $totalScore + (int)$record['score'];
             }
-
         }
 
         $clientForm = new ClientForm();
@@ -224,24 +225,46 @@ class FormController extends Controller
             if(count($clientForm) > 0){
                 $score = $clientForm[0]->score;
             }
+
             $payload = array();
             foreach ($clients as $client) {
                 $clientDetails   = Client::select('name','patient_id')->firstWhere('id', $client['client_id']);
                 $responses = QuestionResponses::where('form_id', $form->id)->where('client_id', $client['client_id'])->get();
                 $clientResponses = array();
+                $mutiplechoiceResponses = array();
                 foreach ($responses as $response) {
                     $question = Question::find($response->question_id);
-                    $questionOption = QuestionOptions::find($response->option_id);
-                    $clientResponse = array(
-                        'value' => $response->value,
-                        'question' => $question ? $question->description : '',
-                        'question_option' => $questionOption ? $questionOption->value : '',
-                        'question_id' => $response->question_id ? (int)$response->question_id : '',
-                        'question_option_id' => $response->option_id ? (int)$response->option_id : '',
-                    );
-                    array_push($clientResponses,$clientResponse);
+                    if($response->option_id){
+                        $questionId = (string)$response->question_id;
+                        if(isset($mutiplechoiceResponses[$questionId])){
+                            $mutiplechoiceResponses[$questionId]['value'] .= ', '.$response->value;
+                        }else{
+                            $clientResponse = array(
+                                'value' => $response->value,
+                                'question' => $question ? $question->description : '',
+                                'question_id' => $response->question_id ? (int)$response->question_id : '',
+                            );
+                            $mutiplechoiceResponses[$questionId] = $clientResponse;
+                        }
+                    }else{
+                        $clientResponse = array(
+                            'value' => $response->value,
+                            'question' => $question ? $question->description : '',
+                            'question_id' => $response->question_id ? (int)$response->question_id : '',
+                        );
+                        array_push($clientResponses,$clientResponse);
+                    }
                 }
-                $clients = array('score' => $score, 'clientId' => $client['client_id'],'clientName' => !$clientDetails ? '' : ($clientDetails->name ? $clientDetails->name  : $clientDetails->patient_id), 'responses' => $clientResponses);
+
+                $responses = array_merge($clientResponses,$mutiplechoiceResponses);
+
+                $clients = array(
+                    'score' => $score,
+                    'clientId' => $client['client_id'],
+                    'clientName' => !$clientDetails ? '' : ($clientDetails->name ? $clientDetails->name  : $clientDetails->patient_id),
+                    'responses' => $responses
+                );
+
                 array_push($payload,$clients);
             }
             return $this->commonResponse(true, 'success', $payload, Response::HTTP_OK);
