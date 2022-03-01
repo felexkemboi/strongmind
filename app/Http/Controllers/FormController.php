@@ -391,6 +391,9 @@ class FormController extends Controller
         if($form){
 
             if (!$form->response_count > 0 ) {
+                $form->update([
+                    'name' => $form->name.'-deleted-'.now(),
+                ]);
                 if ($form->delete()) {
                     return $this->commonResponse(true, 'Form deleted', '', Response::HTTP_OK);
                 }
