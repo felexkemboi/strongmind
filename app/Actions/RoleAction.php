@@ -9,7 +9,6 @@ use App\Services\PermissionRoleService;
 use App\Traits\ApiResponser;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 use Spatie\Permission\Exceptions\RoleAlreadyExists;
@@ -48,10 +47,7 @@ class RoleAction
     public function createRole(RoleRequest $request): JsonResponse
     {
         try{
-            if($newRole = Role::create(array_merge($request->validated(),
-                ['guard_name' => PermissionRoleService::API_GUARD, 'role_code' => strtoupper($request->role_code)]
-            ))){
-                //assign permissions
+            if($newRole = Role::create(['name' => $request->name,'role_code' => strtoupper($request->role_code),'guard_name' => PermissionRoleService::API_GUARD, 'description' => $request->description])){
                 $role = Role::findById($newRole->id, PermissionRoleService::API_GUARD);
                 $permissions = Permission::whereIn('id', $request->permission_id)->get();
                 foreach ($permissions as $permission){
@@ -100,16 +96,6 @@ class RoleAction
             ])){
                 $permissions = Permission::whereIn('id', $request->permission_id)->get();
                 $role->syncPermissions($permissions);
-
-
-                // for($i = 0, $iMax = count($request->permission_id); $i < $iMax; $i++){
-                //     $permission = Permission::findById($request->permission_id[$i],PermissionRoleService::API_GUARD);
-                //     if($role->hasPermissionTo($permission)){
-                //         $role->revokePermissionTo('edit articles');
-                //     }else{
-                //         $role->givePermissionTo($permission);
-                //     }
-                // }
                 return $this->commonResponse(true,'Role Updated Successfully',$this->permissionRoleService->fetchRoleData($role), Response::HTTP_OK);
             }
             return $this->commonResponse(false,'Failed to update role','', Response::HTTP_UNPROCESSABLE_ENTITY);

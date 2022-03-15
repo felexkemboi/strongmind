@@ -28,7 +28,7 @@ class QuestionController extends Controller
 
     public function index(): JsonResponse
     {
-        $questions = Question::all(); //with('fieldType')->get();
+        $questions = Question::all(); 
         return $this->commonResponse(true, 'success', $questions, Response::HTTP_OK);
     }
 
@@ -44,7 +44,7 @@ class QuestionController extends Controller
      * @bodyParam question_options_id  integer  Options of the question
      * @bodyParam multiple_selection   boolean  Options of the question
      * @authenticated
-     */
+    */
 
     public function create(CreateQuestionRequest $request): JsonResponse
     {
