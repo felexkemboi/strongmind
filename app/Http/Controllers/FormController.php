@@ -32,12 +32,14 @@ class FormController extends Controller
      * All Forms
      * @return JsonResponse
      * @queryParam published integer  Filter wether Published/Not Published(Either 1,0)
+     * @queryParam status_id integer  Filter by the status
      * @authenticated
      */
     public function index(Request $request): JsonResponse
     {
 
         $published = $request->published;
+        $status = $request->status_id;
         $forms = Form::select()
                 ->when(
                     $published == '1',
@@ -48,6 +50,11 @@ class FormController extends Controller
                     $published == '0',
                     function ($query) {
                     return $query->whereNull('published_at');
+                })
+                ->when(
+                    $status,
+                    function ($query) use ($status) {
+                    return $query->where('status_id', '=', $status);
                 })
                 ->get();
         return $this->commonResponse(true, 'success', $forms, Response::HTTP_OK);
@@ -83,7 +90,7 @@ class FormController extends Controller
             $form = new Form();
             $form->name = $request->name;
             $form->assessment = $request->assessment;
-            $form->status_id = $request->status_id ?? '';
+            $form->status_id = $request->status_id ? $request->status_id : '';
             if ($form->save()) {
                 return $this->commonResponse(true, 'Form created successfully!', $form, Response::HTTP_CREATED);
             }
