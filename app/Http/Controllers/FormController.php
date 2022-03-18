@@ -32,12 +32,14 @@ class FormController extends Controller
      * All Forms
      * @return JsonResponse
      * @queryParam published integer  Filter wether Published/Not Published(Either 1,0)
+     * @queryParam status_id integer  Filter by the status
      * @authenticated
      */
     public function index(Request $request): JsonResponse
     {
 
         $published = $request->published;
+        $status = $request->status_id;
         $forms = Form::select()
                 ->when(
                     $published == '1',
@@ -48,6 +50,11 @@ class FormController extends Controller
                     $published == '0',
                     function ($query) {
                     return $query->whereNull('published_at');
+                })
+                ->when(
+                    $status,
+                    function ($query) use ($status) {
+                    return $query->where('status_id', '=', $status);
                 })
                 ->get();
         return $this->commonResponse(true, 'success', $forms, Response::HTTP_OK);
@@ -83,7 +90,7 @@ class FormController extends Controller
             $form = new Form();
             $form->name = $request->name;
             $form->assessment = $request->assessment;
-            $form->status_id = $request->status_id ?? '';
+            $form->status_id = $request->status_id ? $request->status_id : '';
             if ($form->save()) {
                 return $this->commonResponse(true, 'Form created successfully!', $form, Response::HTTP_CREATED);
             }
@@ -273,6 +280,58 @@ class FormController extends Controller
     }
 
     /**
+     * Client Form  Responses
+     * @param  Form  $form
+     * @return JsonResponse
+     * @urlParam id integer required The ID of the Form Example:1
+     * @queryParam  client_id integer  The ID of the Client Example:1
+     * @authenticated
+     */
+    public function getClientFormResponses(Request $request, int $id): JsonResponse
+    {
+        $form = Form::find($id);
+        $clientId = $request->client_id;
+        if ($form) {
+            $clients = QuestionResponses::select('client_id')
+                            ->where('form_id', $form->id)
+                            ->when($clientId, function ($query, $clientId) {
+                                return $query->where('client_id',$clientId);
+                            })
+                            ->distinct()
+                            ->get();
+
+            $clientForm = ClientForm::select('score','created_at')->where('form_id', $id)->orderBy('created_at','desc')->get();
+            $score = 0;
+            if(count($clientForm) > 0){
+                $score = $clientForm[0]->score;
+            }
+            $payload = array();
+            foreach ($clients as $client) {
+                $clientDetails   = Client::select('name','patient_id')->firstWhere('id', $client['client_id']);
+                $responses = QuestionResponses::where('form_id', $form->id)->where('client_id', $client['client_id'])->get();
+                $clientResponses = array();
+                foreach ($responses as $response) {
+                    $question = Question::find($response->question_id);
+                    $questionOption = QuestionOptions::find($response->option_id);
+                    $clientResponse = array(
+                        'value' => $response->value,
+                        'question' => $question ? $question->description : '',
+                        'question_option' => $questionOption ? $questionOption->value : '',
+                        'question_id' => $response->question_id ? (int)$response->question_id : '',
+                    );
+                    array_push($clientResponses,$clientResponse);
+                }
+                $clients = array('score' => $score, 'clientId' => $client['client_id'],'clientName' => !$clientDetails ? '' : ($clientDetails->name ? $clientDetails->name  : $clientDetails->patient_id), 'responses' => $clientResponses);
+                array_push($payload,$clients);
+            }
+            return $this->commonResponse(true, 'success', $payload, Response::HTTP_OK);
+        }
+        return $this->commonResponse(false, 'Form Not Found!', '', Response::HTTP_NOT_FOUND);
+    }
+
+
+
+    /**
      * Get Client Forms
      * @param  Form  $form
      * @return JsonResponse
@@ -339,6 +398,9 @@ class FormController extends Controller
         if($form){
 
             if (!$form->response_count > 0 ) {
+                $form->update([
+                    'name' => $form->name.'-deleted-'.now(),
+                ]);
                 if ($form->delete()) {
                     return $this->commonResponse(true, 'Form deleted', '', Response::HTTP_OK);
                 }

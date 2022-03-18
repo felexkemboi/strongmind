@@ -28,7 +28,7 @@ class QuestionController extends Controller
 
     public function index(): JsonResponse
     {
-        $questions = Question::all(); //with('fieldType')->get();
+        $questions = Question::all(); 
         return $this->commonResponse(true, 'success', $questions, Response::HTTP_OK);
     }
 
@@ -37,21 +37,21 @@ class QuestionController extends Controller
      * @param CreateQuestionRequest $request
      * @return JsonResponse
      * @bodyParam description          string   required The Question's description
-     * @bodyParam hint                 string   required The Question's hint
+     * @bodyParam hint                 string   The Question's hint
      * @bodyParam form_id              integer  required The form the question belongs to
      * @bodyParam field_type_id        integer  required  If the form of the question
      * @bodyParam required             boolean  required   If the form is required
      * @bodyParam question_options_id  integer  Options of the question
      * @bodyParam multiple_selection   boolean  Options of the question
      * @authenticated
-     */
+    */
 
     public function create(CreateQuestionRequest $request): JsonResponse
     {
         try {
             $question = new Question();
             $question->description = $request->description;
-            $question->hint = $request->hint;
+            $question->hint = $request->hint ? $request->hint : '';
             $question->form_id = $request->form_id;
             $question->field_type_id = $request->field_type_id;
             $question->required = $request->required;
@@ -105,7 +105,7 @@ class QuestionController extends Controller
             $question = Question::findorFail($questionId);
             if($question){
                 $question->description = $request->description;
-                $question->hint = $request->hint;
+                $question->hint = $request->hint ? $request->hint : '';
                 $question->form_id = $request->form_id;
                 $question->field_type_id = $request->field_type_id;
                 $question->required = $request->required;
