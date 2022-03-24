@@ -80,7 +80,7 @@ class CycleController extends Controller
      * @param CreateCycleRequest $request
      * @param int $id
      * @return JsonResponse
-     * @bodyParam name string required The Cycle' Name
+     * @bodyParam name string required The Cycle' Name it can be  C1,C2,C3,C4
      * @authenticated
      */
 
