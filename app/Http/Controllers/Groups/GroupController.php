@@ -155,11 +155,12 @@ class GroupController extends Controller
             $activitiesList = collect();
             foreach ($activities as $activity) {
                 if ($activity->causer_id) {
+                    $user = User::find($activity->causer_id);
                     $activitiesList->push([
                         'description' => $activity->description,
                         'date' => $activity->created_at ,
-                        'user' => User::findorFail($activity->causer_id)->name,
-                        'profile' => User::findorFail($activity->causer_id)->profile_pic_url
+                        'user' => $user ? $user->name : '',
+                        'profile' => $user ? $user->profile_pic_url : ''
                     ]);
                 } else {
                     $activitiesList->push([
