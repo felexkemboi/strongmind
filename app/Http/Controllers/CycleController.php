@@ -34,8 +34,8 @@ class CycleController extends Controller
      * Create  Cycle
      * @param CreateCycleRequest $request
      * @return JsonResponse
-     * @bodyParam year date required . The Cycle's Year
-     * @bodyParam cycle_code string required . The Cycle's Code
+     * @bodyParam year date required  The Cycle's Year
+     * @bodyParam cycle_code string required  The Cycle's Code can be C1,C2,C3,C4
      * @authenticated
      */
     public function create(CreateCycleRequest $request): JsonResponse

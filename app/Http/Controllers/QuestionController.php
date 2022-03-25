@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Question;
 use App\Models\QuestionOptions;
+use App\Models\QuestionResponses;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\QueryException;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +28,7 @@ class QuestionController extends Controller
 
     public function index(): JsonResponse
     {
-        $questions = Question::all(); //with('fieldType')->get();
+        $questions = Question::all(); 
         return $this->commonResponse(true, 'success', $questions, Response::HTTP_OK);
     }
 
@@ -36,21 +37,21 @@ class QuestionController extends Controller
      * @param CreateQuestionRequest $request
      * @return JsonResponse
      * @bodyParam description          string   required The Question's description
-     * @bodyParam hint                 string   required The Question's hint
+     * @bodyParam hint                 string   The Question's hint
      * @bodyParam form_id              integer  required The form the question belongs to
      * @bodyParam field_type_id        integer  required  If the form of the question
      * @bodyParam required             boolean  required   If the form is required
      * @bodyParam question_options_id  integer  Options of the question
      * @bodyParam multiple_selection   boolean  Options of the question
      * @authenticated
-     */
+    */
 
     public function create(CreateQuestionRequest $request): JsonResponse
     {
         try {
             $question = new Question();
             $question->description = $request->description;
-            $question->hint = $request->hint;
+            $question->hint = $request->hint ? $request->hint : '';
             $question->form_id = $request->form_id;
             $question->field_type_id = $request->field_type_id;
             $question->required = $request->required;
@@ -104,7 +105,7 @@ class QuestionController extends Controller
             $question = Question::findorFail($questionId);
             if($question){
                 $question->description = $request->description;
-                $question->hint = $request->hint;
+                $question->hint = $request->hint ? $request->hint : '';
                 $question->form_id = $request->form_id;
                 $question->field_type_id = $request->field_type_id;
                 $question->required = $request->required;
@@ -140,7 +141,7 @@ class QuestionController extends Controller
     }
 
     /**
-     * Get QuestionOptions
+     * Get Question QuestionOptions
      * @param  Question  $question
      * @return JsonResponse
      * @urlParam id integer required The ID of the Question Example:1
@@ -148,7 +149,6 @@ class QuestionController extends Controller
      */
     public function questionOptions(int $id): JsonResponse
     {
-        // $question = Question::with('fieldType')->firstWhere('id',$id);
         $options = QuestionOptions::where('question_id', $id)->get();
         if ($options) {
             return $this->commonResponse(true, 'success', $options, Response::HTTP_OK);
@@ -156,4 +156,22 @@ class QuestionController extends Controller
             return $this->commonResponse(false, 'Question Not Found!', '', Response::HTTP_NOT_FOUND);
         }
     }
+
+    /**
+     * Get Question Responses
+     * @param  Question  $question
+     * @return JsonResponse
+     * @urlParam id integer required The ID of the Question Example:1
+     * @authenticated
+     */
+    public function responses(int $id): JsonResponse
+    {
+        $responses = QuestionResponses::where('question_id', $id)->get();
+        if ($responses) {
+            return $this->commonResponse(true, 'success', $responses, Response::HTTP_OK);
+        } else {
+            return $this->commonResponse(false, 'Question Not Found!', '', Response::HTTP_NOT_FOUND);
+        }
+    }
 }
+

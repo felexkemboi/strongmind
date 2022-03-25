@@ -486,12 +486,13 @@ class ClientController extends Controller
         if(!$activities->isEmpty()){
             $activitiesList = collect();
             foreach($activities as $activity){
+                $user = User::find($activity->causer_id);
                 if($activity->causer_id){
                     $activitiesList->push([
                         'description' => $activity->description,
-                        'date' => $activity->created_at ,
-                        'user' => User::findorFail($activity->causer_id)->name,
-                        'profile' => User::findorFail($activity->causer_id)->profile_pic_url
+                        'date' => $activity->created_at,
+                        'user' => $user ? $user->name : '',
+                        'profile' => $user ? $user->profile_pic_url : ''
                     ]);
                 }else{
                     $activitiesList->push([
