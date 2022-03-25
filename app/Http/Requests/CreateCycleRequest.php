@@ -24,7 +24,6 @@ class CreateCycleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //'name' => 'nullable|unique:client_status,name',
             'year' => 'required|max:'.date("Y"),
             'cycle_code' => 'required|string|in:C1,C2,C3,C4'
         ];
