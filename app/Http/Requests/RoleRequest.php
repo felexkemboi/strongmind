@@ -25,7 +25,11 @@ class RoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|min:3|max:60,unique:spatie_roles,name',
+            'name' => ['required','string','min:3','max:60','unique:spatie_roles,name'],
+            'role_code' => ['string','unique:spatie_roles,role_code','required','min:2','max:30'],
+            'description' => ['string','nullable','min:3','max:60'],
+            'permission_id' => ['array','required','min:1'],
+            'permission_id.*' => ['integer','required','not_in:0','exists:spatie_permissions,id']
         ];
     }
 }

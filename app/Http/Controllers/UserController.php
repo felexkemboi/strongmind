@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserResource;
 use App\Models\Office;
 use App\Models\Timezone;
 use App\Models\User;
 use Exception;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\QueryException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use App\Http\Resources\UserResource;
+use App\Services\PermissionRoleService;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
-use function Clue\StreamFilter\fun;
 use Spatie\Permission\Models\Role;
 
 
@@ -30,10 +29,18 @@ use Spatie\Permission\Models\Role;
  */
 class UserController extends Controller
 {
+    public $permissionRoleService;
+
+    public function __construct(PermissionRoleService $permissionRoleService)
+    {
+        $this->permissionRoleService = $permissionRoleService;
+    }
+
     /**
      * All Users
      * @group Teams
      * @queryParam name string Search by name. No-example
+     * @queryParam accepted_invited string Specify whether 1 or 0
      * @queryParam role integer Filter by role. 1
      * @queryParam paginate string required . Specify whether 1 or 0
      * @param Request $request
@@ -51,19 +58,16 @@ class UserController extends Controller
         $sort = $request->get('sort');
         $pagination_items = (int)$request->input('pagination_items',10);
         $sort_params = ['desc','asc'];
-        $invited = $request->get('accepted');
+        $accepted_invite = $request->get('accepted_invited');
+
         if ($request->has('name') && $request->filled('name')) {
             $users = $users->where('name', 'ilike', '%'.$name.'%');
-            if($request->has('accepted') && $request->filled('accepted')){
-                if($invited === "true"){
-                    $users = $users->where('invite_accepted',User::INVITE_ACCEPTED);
-                }else if($invited === "false"){
-                    $users = $users->where('invite_accepted', User::INVITE_NOT_ACCEPTED);
-                }else{
-                    return $this->commonResponse(false,'Invalid search parameter on invites','', Response::HTTP_UNPROCESSABLE_ENTITY);
-                }
-            }
         }
+
+        if($request->has('accepted_invited') && $request->filled('accepted_invited')){
+            $users = $users->where('invite_accepted',(int)$accepted_invite);
+        }
+
         if ($request->has('role') && $request->filled('role')) {
             $users = $users->whereIn('id', $this->getUserIds($role));
         }
@@ -71,6 +75,8 @@ class UserController extends Controller
         if ($request->has('active') && $request->filled('active')) {
             $users = $users->where('active', $active);
         }
+        
+        $users = $users->latest();
 
         if($request->has('sort') &&  $request->filled('sort')){
            if(!$this->sort_array($sort, $sort_params)){
@@ -233,7 +239,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'nullable',
-            'email' => 'required',
+            'email' => 'nullable',
             'office_id' => 'nullable',
             'phone_number' => 'nullable',
             'gender' => 'nullable',
@@ -247,12 +253,24 @@ class UserController extends Controller
             if ($validator->fails()) {
                 return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
-            $data = $validator->validated();
             //Get user
              $user=User::find($id);
             if (!$user) {
                 return $this->commonResponse(false, 'User not found!', '', Response::HTTP_NOT_FOUND);
             }
+            $data = [
+                'name' => $request->name ?? $user->name,
+                'email' => $request->email ?? $user->email,
+                'office_id' => $request->office_id ?? $user->office_id,
+                'phone_number' => $request->phone_number ?? $user->phone_number,
+                'gender' => $request->gender ?? $user->gender,
+                'region' => $request->region ?? $user->region,
+                'city' => $request->city ?? $user->city,
+                'languages' => $request->input('languages') ?? $user->languages,
+                'timezone_id' => $request->timezone_id ?? $user->timezone_id,
+                'role_id' => $request->role_id ?? $user->role_id
+            ];
+
             if ($request->has('timezone_id') && $request->filled('timezone_id')) {
                 $timezone = Timezone::find($request->timezone_id);
                 if (!$timezone) {
@@ -270,16 +288,16 @@ class UserController extends Controller
             if ($request->has('role_id') && $request->filled('role_id')) {
                 $role = Role::firstwhere('id', $data['role_id']);
 
-
                 if ($role) {
+                    if($user->hasRole($role)){
+                        return $this->commonResponse(false,'User already has the specified role', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
                     $user->syncRoles($role);
+                }else{
+                    return $this->commonResponse(false,'Role Does Not Exist','',Response::HTTP_NOT_FOUND);
                 }
             }
-
             $user->fresh();
-
-
-
             return $this->commonResponse(true, 'Profile updated successfully!', new UserResource($user), Response::HTTP_CREATED);
         } catch (QueryException $ex) {
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);

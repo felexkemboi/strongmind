@@ -28,6 +28,7 @@ class ClientUpdateRequest extends FormRequest
             'gender' => 'nullable|string|in:Male,Female',
             'phone_number' => 'nullable', //min:10|max:13
             'country_id' => 'nullable|integer|exists:countries,id',
+            'languages' => 'nullable|string|min:3|max:30',
             'region' => 'nullable|string|min:3|max:20',
             'city' => 'nullable|string|min:3|max:20',
             'timezone_id' => 'nullable|integer|exists:timezones,id',

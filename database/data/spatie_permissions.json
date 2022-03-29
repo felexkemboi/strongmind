@@ -1,270 +1,555 @@
 [
     {
-        "name": "view permissions",
-        "guard_name": "api"
-    },
-    {
-        "name": "create permission",
-        "guard_name": "api"
-    },
-    {
-        "name": "view permission details",
-        "guard_name": "api"
-    },
-    {
-        "name": "delete permission",
-        "guard_name": "api"
-    },
-    {
-        "name": "update permission",
-        "guard_name": "api"
-    },
-    {
         "name": "view roles",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Auth",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "create role",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Auth",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "edit role",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Auth",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "view role details",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Auth",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "delete role",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Auth",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "view offices",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Administration",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "create office",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Administration",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "edit office",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Administration",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "View office users",
-        "guard_name": "api"
-    },
-    {
-        "name": "activate country",
-        "guard_name": "api"
-    },
-    {
-        "name": "deactivate country",
-        "guard_name": "api"
-    },
-    {
-        "name": "invite member",
-        "guard_name": "api"
-    },
-    {
-        "name": "view members",
-        "guard_name": "api"
-    },
-    {
-        "name": "edit member",
-        "guard_name": "api"
-    },
-    {
-        "name": "delete member",
-        "guard_name": "api"
-    },
-    {
-        "name": "view group types",
-        "guard_name": "api"
-    },
-    {
-        "name": "create group type",
-        "guard_name": "api"
-    },
-    {
-        "name": "edit group type",
-        "guard_name": "api"
-    },
-    {
-        "name": "delete group type",
-        "guard_name": "api"
-    },
-    {
-        "name": "view program types",
-        "guard_name": "api"
-    },
-    {
-        "name": "create program type",
-        "guard_name": "api"
-    },
-    {
-        "name": "edit program type",
-        "guard_name": "api"
-    },
-    {
-        "name": "delete program type",
-        "guard_name": "api"
-    },
-    {
-        "name": "view channels",
-        "guard_name": "api"
-    },
-    {
-        "name": "create channel",
-        "guard_name": "api"
-    },
-    {
-        "name": "edit channel",
-        "guard_name": "api"
-    },
-    {
-        "name": "delete channel",
-        "guard_name": "api"
-    },
-    {
-        "name": "view statuses",
-        "guard_name": "api"
-    },
-    {
-        "name": "create status",
-        "guard_name": "api"
-    },
-    {
-        "name": "edit status",
-        "guard_name": "api"
-    },
-    {
-        "name": "delete status",
-        "guard_name": "api"
-    },
-    {
-        "name": "create program",
-        "guard_name": "api"
-    },
-    {
-        "name": "list programs",
-        "guard_name": "api"
-    },
-    {
-        "name": "view program",
-        "guard_name": "api"
-    },
-    {
-        "name": "edit program",
-        "guard_name": "api"
-    },
-    {
-        "name": "update program",
-        "guard_name": "api"
-    },
-    {
-        "name": "delete program",
-        "guard_name": "api"
-    },
-    {
-        "name": "add program member",
-        "guard_name": "api"
-    },
-    {
-        "name": "activate program membership",
-        "guard_name": "api"
-    },
-    {
-        "name": "deactivate program membership",
-        "guard_name": "api"
-    },
-    {
-        "name": "view program members",
-        "guard_name": "api"
-    },
-    {
-        "name": "send program invitations",
-        "guard_name": "api"
-    },
-    {
-        "name": "create program member type",
-        "guard_name": "api"
-    },
-    {
-        "name": "list program member types",
-        "guard_name": "api"
-    },
-    {
-        "name": "view program member type",
-        "guard_name": "api"
-    },
-    {
-        "name": "edit program member type",
-        "guard_name": "api"
-    },
-    {
-        "name": "update program member type",
-        "guard_name": "api"
-    },
-    {
-        "name": "delete program member type",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Administration",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "view office programs",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Administration",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "invite member",
+        "guard_name": "api",
+        "module": "Member",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view members",
+        "guard_name": "api",
+        "module": "Member",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "edit member",
+        "guard_name": "api",
+        "module": "Member",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "delete member",
+        "guard_name": "api",
+        "module": "Member",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view group types",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "create group type",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "edit group type",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "delete group type",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view program types",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "create program type",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "edit program type",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "delete program type",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view channels",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "create channel",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "edit channel",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "delete channel",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view statuses",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "create status",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "edit status",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "delete status",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "create project",
+        "guard_name": "api",
+        "module": "Projects",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "list projects",
+        "guard_name": "api",
+        "module": "Projects",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view project",
+        "guard_name": "api",
+        "module": "Projects",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "edit project",
+        "guard_name": "api",
+        "module": "Projects",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "update project",
+        "guard_name": "api",
+        "module": "Projects",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "delete project",
+        "guard_name": "api",
+        "module": "Projects",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "add project member",
+        "guard_name": "api",
+        "module": "Projects",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "deactivate project membership",
+        "guard_name": "api",
+        "module": "Projects",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view program members",
+        "guard_name": "api",
+        "module": "Projects",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "create program member type",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "list program member types",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view program member type",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "edit program member type",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "update program member type",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "delete program member type",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "list groups",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "view group item",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "update group",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "create group",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "delete group",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "terminate group",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "list group clients by staff member",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "add clients to a group",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "list clients by group",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "create session in a group",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "take session attendance of a group",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "list groups with their respective sessions",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view session attendance details",
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
     },
     {
         "name": "list clients session attendance",
-        "guard_name": "api"
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name":"view session details",
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name":"view session attendance",
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name":"update group session",
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name":"delete group session",
+        "guard_name": "api",
+        "module": "Groups",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "list modes of delivery",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "create mode of delivery",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view mode of delivery item",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "update mode of delivery",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "delete mode of delivery",
+        "guard_name": "api",
+        "module": "Dynamic Fields",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "list forms",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "create form",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view form",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "update form",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "delete form",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "list questions",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "create question",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view question",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "update question",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "delete question",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
+    },
+    {
+        "name": "view questionresponse",
+        "guard_name": "api",
+        "module": "Forms",
+        "slug": "",
+        "description": ""
     }
 ]

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Models\Office;
 use App\Models\User;
+use App\Services\PermissionRoleService;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -13,7 +14,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Postmark\PostmarkClient;
-use Silber\Bouncer\Database\Role;
+//use Silber\Bouncer\Database\Role;
+use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\SetPasswordRequest;
 
@@ -25,6 +27,11 @@ use App\Http\Requests\SetPasswordRequest;
  */
 class InviteController extends Controller
 {
+    public $permissionRoleService;
+
+    public function __construct(PermissionRoleService $permissionRoleService){
+        $this->permissionRoleService = $permissionRoleService;
+    }
     /**
      * Invite member
      * @param Request $request
@@ -50,7 +57,7 @@ class InviteController extends Controller
             $email = explode(',',$request->email);
             $invite_token = hash('sha256', utf8_encode(Str::uuid()));
             $action_url = config('app.set_password_url') . "?invite=$invite_token";
-            $role = Role::find($request->role_id);
+            $role = Role::findById($request->role_id, $this->permissionRoleService::API_GUARD);
             //if multiple emails are submitted
             if(count($email) > 1)
             {
@@ -80,7 +87,7 @@ class InviteController extends Controller
                     ]
                 );
                 if ($role) {
-                    $user->assign($role->name);
+                    $user->assignRole($role);
                 }
                 $client = new PostmarkClient(config('postmark.token'));
                 $client->sendEmailWithTemplate(
@@ -123,7 +130,7 @@ class InviteController extends Controller
                 'active' => 1,
                 'invite_id' => '',
             ]);
-            
+
             $user->fresh();
             $office=Office::firstWhere('id',$user->office_id);
             $new_count=($office->member_count)+1;
@@ -149,7 +156,7 @@ class InviteController extends Controller
     private function sendMultipleInvites(Request $request): JsonResponse
     {
         $email = explode(',',$request->email);
-        $role = Role::find($request->role_id);
+        $role = Role::findById($request->role_id, $this->permissionRoleService::API_GUARD);
         $client = new PostmarkClient(config('postmark.token'));
         try{
             foreach($email as $member)
@@ -175,7 +182,7 @@ class InviteController extends Controller
                     'active' => 0
                 ]);
                 if ($role) {
-                    $user->assign($role->name);
+                    $user->assignRole($role);
                 }
                 $client->sendEmailWithTemplate(
                     config('mail.from.address'),

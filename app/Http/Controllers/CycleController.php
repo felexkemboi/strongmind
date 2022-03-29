@@ -34,23 +34,24 @@ class CycleController extends Controller
      * Create  Cycle
      * @param CreateCycleRequest $request
      * @return JsonResponse
-     * @bodyParam year date required . The Cycle's Year
-     * @bodyParam cycle_code string required . The Cycle's Code
+     * @bodyParam year date required  The Cycle's Year
+     * @bodyParam cycle_code string required  The Cycle's Code can be C1,C2,C3,C4
      * @authenticated
      */
     public function create(CreateCycleRequest $request): JsonResponse
     {
         try {
-            $cycle = new Cycle();
-            $code = $request->cycle_code;
-            $year = $request->year;
-            $cycle->name = $year.' '.$code;
-            $cycle->cycle_code = $code;
-            $cycle->year = $year;
-            if ($cycle->save()) {
-                return $this->commonResponse(true, 'Cycle created successfully!', '', Response::HTTP_CREATED);
+            $cycle = Cycle::where('year',$request->year)->where('cycle_code', $request->cycle_code)->exists();
+            if(!$cycle){
+                $cycle = new Cycle();
+                $cycle->cycle_code = $request->cycle_code;
+                $cycle->year = $request->year;
+                $cycle->name = $request->year.' '.$request->cycle_code;
+                if ($cycle->save()) {
+                    return $this->commonResponse(true, 'Cycle created successfully!', $cycle, Response::HTTP_CREATED);
+                }
             }
-            return $this->commonResponse(false, 'Failed to create Cycle', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->commonResponse(false, 'Failed to create Cycle', 'Cycle of year '.$request->year.' and Cycle Code '.$request->cycle_code. ' already exist!', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (QueryException $ex) {
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $ex) {
@@ -78,9 +79,8 @@ class CycleController extends Controller
     /**
      * Edit Cycle
      * @param CreateCycleRequest $request
-     * @param int $id
+     * @urlParam id integer required The ID of the Cycle.Example:1
      * @return JsonResponse
-     * @bodyParam name string required The Cycle' Name
      * @authenticated
      */
 
@@ -89,10 +89,18 @@ class CycleController extends Controller
         try {
             $cycle = Cycle::find($id);
             if($cycle){
-                $cycle->name = $request->name;
-                if ($cycle->save()) {
-                    return $this->commonResponse(true, 'Cycle updated successfully!', '', Response::HTTP_CREATED);
+                $cycleExist = Cycle::where('year',$request->year)->where('cycle_code', $request->cycle_code)->whereNotIn('id', [$id])->exists();
+                if(!$cycleExist){
+
+                    if($cycle->update([
+                        'cycle_code' => $request->cycle_code,
+                        'year' => $request->year,
+                        'name' => $request->year.' '.$request->cycle_code
+                    ])) {
+                        return $this->commonResponse(true, 'Cycle Updated successfully!', $cycle, Response::HTTP_CREATED);
+                    }
                 }
+                return $this->commonResponse(false, 'Failed to Update Cycle', 'Cycle of year '.$request->year.' and Cycle Code '.$request->cycle_code. ' already exist!', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             return $this->commonResponse(false, 'Failed to update Cycle', 'Cycle Not Found', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (QueryException $ex) {

@@ -31,6 +31,13 @@ use App\Http\Controllers\ClientLocationController;
 use App\Http\Controllers\ClientEducationController;
 use App\Http\Controllers\ClientMaritalStatusController;
 use App\Http\Controllers\ClientPhoneOwnershipController;
+use App\Http\Controllers\ModeOfDeliveryController;
+use App\Http\Controllers\FormController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuestionOptionsController;
+use App\Http\Controllers\QuestionResponsesController;
+use App\Http\Controllers\Groups\GroupSessionController;
+use App\Http\Controllers\Groups\GroupAttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,7 +80,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::resource('permissions', SpatiePermissionController::class);
     Route::resource('roles',SpatieRoleController::class);
 });
-//Roles and permissions
+/*
+//Roles and permissions based on Bouncer Package which has since been shifted to the new implementation with Spatie package as above
 Route::prefix('permission')->group(function () {
     Route::get('all',     [PermissionController::class, 'index'])->middleware('auth:sanctum');
     Route::post('create', [PermissionController::class, 'create'])->middleware('auth:sanctum');
@@ -86,7 +94,7 @@ Route::prefix('role')->group(function () {
     Route::put('update/{id}',    [RoleController::class, 'updateRole'])->middleware('auth:sanctum');
     Route::delete('delete/{id}', [RoleController::class, 'deleteRole'])->middleware('auth:sanctum');
 });
-
+**/
 //Authentication
 Route::prefix('auth')->group(function () {
     Route::post('login',             [LoginController::class,'loginUser']);
@@ -181,6 +189,7 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::post('/therapy/activate',   [ClientController::class,'activate']);
     Route::patch('/{id}/update',       [ClientController::class,'update']);
     Route::patch('/{id}/transfer',     [ClientController::class,'transfer']);
+    Route::patch('/bulk-transfer',     [ClientController::class,'bulkTransfer']);
     Route::patch('/bulk-edit',         [ClientController::class,'bulkEdit']);
     Route::get('/{id}/activity',       [ClientController::class,'clientLogs']);
     Route::patch('/{id}/change',       [ClientController::class,'changeChannel']);
@@ -194,14 +203,14 @@ Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
 
     //Client Locations
     Route::group(['prefix' => 'locations'], function(){
-        Route::get('/districts',[ClientLocationController::class,'districts']);
-        Route::get('/sub_counties',[ClientLocationController::class,'subCounties']);
+        Route::get('/districts',     [ClientLocationController::class,'districts']);
+        Route::get('/sub_counties',  [ClientLocationController::class,'subCounties']);
         Route::get('/municipalities',[ClientLocationController::class,'municipalities']);
-        Route::get('/villages',[ClientLocationController::class,'villages']);
-        Route::get('/parish',[ClientLocationController::class,'parish']);
+        Route::get('/villages',      [ClientLocationController::class,'villages']);
+        Route::get('/parish',        [ClientLocationController::class,'parish']);
     });
     //extra client bio-data endpoints
-    Route::get('/education/all',[ClientEducationController::class,'__invoke']);
+    Route::get('/education/all',       [ClientEducationController::class,'__invoke']);
     Route::get('/marital_statuses/all',[ClientMaritalStatusController::class,'__invoke']);
     Route::get('/phone_ownerships/all',[ClientPhoneOwnershipController::class,'__invoke']);
 });
@@ -216,12 +225,25 @@ Route::group(['prefix' => 'language','middleware' => 'auth:sanctum'], function()
 
 //Groups
 Route::group(['middleware' => 'auth:sanctum','prefix' => 'groups'], function(){
-    Route::post('/create',[GroupController::class,'store']);
-    Route::get('/',[GroupController::class,'index']);
-    Route::get('/{id}',[GroupController::class,'show']);
-    Route::patch('/{id}/update',[GroupController::class,'update']);
-    Route::delete('/{id}/delete',[GroupController::class,'destroy']);
-    Route::patch('/{id}/terminate',[GroupController::class,'terminate']);
+    Route::post('/create',                [GroupController::class,'store']);
+    Route::get('/',                       [GroupController::class,'index']);
+    Route::get('/{id}',                   [GroupController::class,'show']);
+    Route::get('/{id}/activities',        [GroupController::class,'groupLogs']);
+    Route::patch('/{id}/update',          [GroupController::class,'update']);
+    Route::delete('/{id}/delete',         [GroupController::class,'destroy']);
+    Route::patch('/{id}/terminate',       [GroupController::class,'terminate']);
+    Route::post('/{id}/add_clients',      [GroupController::class,'addClients']);
+    Route::get('/{id}/clients',           [GroupController::class,'listClients']);
+    Route::get('/{id}/clients/staff',     [GroupController::class,'listGroupClientsByStaff']);
+    Route::get('/{id}/sessions',          [GroupSessionController::class,'index']);
+    Route::post('/{id}/sessions/create',  [GroupSessionController::class,'store']);
+    Route::group(['prefix' => 'sessions'], function(){
+        Route::get('/{id}/details',       [GroupSessionController::class,'show']);
+        Route::patch('/{id}/update',      [GroupSessionController::class,'update']);
+        Route::delete('/{id}/delete',     [GroupSessionController::class,'destroy']);
+        Route::post('/{id}/attendance',   [GroupAttendanceController::class,'index']);
+        Route::get('/{id}/attendance',    [GroupAttendanceController::class,'show']);
+    });
 });
 
 //ClientStatus
@@ -261,4 +283,52 @@ Route::group(['prefix' => 'grouptype','middleware' => 'auth:sanctum'], function(
     Route::post('/create',       [GroupTypeController::class, 'create']);
     Route::put('{id}/update',    [GroupTypeController::class, 'update']);
     Route::delete('{id}/delete', [GroupTypeController::class, 'destroy']);
+});
+
+Route::resource('deliverymodes',ModeOfDeliveryController::class)->middleware('auth:sanctum');
+
+//Forms
+Route::group(['prefix' => 'forms','middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',                      [FormController::class, 'index']);
+    Route::get('/field-types',              [FormController::class, 'fieldTypes']);
+    Route::get('/{id}',                     [FormController::class,'show']);
+    Route::get('/{id}/questions',           [FormController::class, 'questions']);
+    Route::post('/create',                  [FormController::class, 'create']);
+    Route::post('/{id}/create-responses',   [FormController::class, 'createResponse']);
+    Route::get ('/{id}/responses',          [FormController::class, 'getResponses']);
+    Route::get ('/{id}/filtered-responses', [FormController::class, 'getClientFormResponses']);
+    Route::get ('/{id}/client-forms',       [FormController::class, 'clientForms']);
+    Route::put('{id}/update',               [FormController::class, 'update']);
+    Route::put('{id}/publish',              [FormController::class, 'publish']);
+    Route::delete('{id}/delete',            [FormController::class, 'destroy']);
+
+
+});
+
+//Questions
+Route::group(['prefix' => 'questions','middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',                   [QuestionController::class, 'index']);
+    Route::get('/{id}',                  [QuestionController::class, 'show']);
+    Route::get('/{id}/question-options', [QuestionController::class, 'questionOptions']);
+    Route::get('/{id}/responses',        [QuestionController::class, 'responses']);
+    Route::post('/create',               [QuestionController::class, 'create']);
+    Route::put('{id}/update',            [QuestionController::class, 'update']);
+    Route::delete('{id}/delete',         [QuestionController::class, 'destroy']);
+});
+
+//Question Options
+Route::group(['prefix' => 'questions-options','middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',            [QuestionOptionsController::class, 'index']);
+    Route::post('/create',        [QuestionOptionsController::class, 'create']);
+    Route::put('{id}/update',     [QuestionOptionsController::class, 'update']);
+    Route::delete('{id}/delete',  [QuestionOptionsController::class, 'destroy']);
+});
+
+
+//Question Responses
+Route::group(['prefix' => 'questions-responses','middleware' => 'auth:sanctum'], function(){
+    Route::get('/all',           [QuestionResponsesController::class, 'index']);
+    Route::post('/create',       [QuestionResponsesController::class, 'create']);
+    Route::put('{id}/update',    [QuestionResponsesController::class, 'update']);
+    Route::delete('{id}/delete', [QuestionResponsesController::class, 'destroy']);
 });
