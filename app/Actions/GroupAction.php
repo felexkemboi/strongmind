@@ -254,7 +254,6 @@ class GroupAction
             foreach (explode(',', $request->client_id) as $client_id) {
                 array_push($clientIds,(int)$client_id);
             }
-
             $existing = GroupClient::select('client_id')->where('group_id', $id)->get();
             $existingClients = [];
 
@@ -287,7 +286,7 @@ class GroupAction
             if(!$group->total_clients){
                 $group->total_clients = $addedCount;
                 $group->save();
-                return $this->commonResponse(true, 'Clients Added Successfully!', '', Response::HTTP_CREATED);
+                return $this->commonResponse(true, 'Clients Added Successfully!', GroupService::viewGroupDetails($group), Response::HTTP_CREATED);
             }
             $count = $group->total_clients + $addedCount;
             $group->total_clients = $count;
