@@ -44,12 +44,15 @@ class LeaderShipController extends Controller
     public function create(CreateLeaderShipRequest $request): JsonResponse
     {
         try {
-            $status = new LeaderShip();
-            $status->name = $request->name;
-            if ($status->save()) {
-                return $this->commonResponse(true, 'LeaderShip created successfully!', '', Response::HTTP_CREATED);
+            $leadershipNameExist = LeaderShip::where('name',$request->name)->exists();
+            if(!$leadershipNameExist){
+                $leadership = new LeaderShip();
+                $leadership->name = $request->name;
+                if ($leadership->save()) {
+                    return $this->commonResponse(true, 'LeaderShip created successfully!', $leadership, Response::HTTP_CREATED);
+                }
             }
-            return $this->commonResponse(false, 'Failed to create LeaderShip', '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->commonResponse(false, 'Failed to create LeaderShip', 'Leadership Name already used', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (QueryException $ex) {
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $ex) {
@@ -66,9 +69,9 @@ class LeaderShipController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $clientsatus = LeaderShip::find($id);
-        if ($clientsatus) {
-            return $this->commonResponse(true, 'success', $clientsatus, Response::HTTP_OK);
+        $leadership = LeaderShip::find($id);
+        if ($leadership) {
+            return $this->commonResponse(true, 'success', $leadership, Response::HTTP_OK);
         } else {
             return $this->commonResponse(false, 'LeaderShip Not Found!', '', Response::HTTP_NOT_FOUND);
         }
@@ -86,12 +89,17 @@ class LeaderShipController extends Controller
     public function update(CreateLeaderShipRequest $request, int $id): JsonResponse
     {
         try {
-            $clientsatus = LeaderShip::find($id);
-            if($clientsatus){
-                $clientsatus->name = $request->name;
-                if ($clientsatus->save()) {
-                    return $this->commonResponse(true, 'LeaderShip updated successfully!', '', Response::HTTP_CREATED);
+            $leadership = LeaderShip::find($id);
+            if($leadership){
+                $leadershipNameExist = LeaderShip::where('name',$request->name)->exists();
+                if(!$leadershipNameExist){
+                    if($leadership->update([
+                        'name' => $request->name
+                    ])) {
+                        return $this->commonResponse(true, 'Leadership Updated successfully!', $leadership, Response::HTTP_CREATED);
+                    }
                 }
+                return $this->commonResponse(true, 'Failed to update LeaderShip!', 'Leadership name already exist', Response::HTTP_CREATED);
             }
             return $this->commonResponse(false, 'Failed to update LeaderShip', 'LeaderShip Not Found', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (QueryException $ex) {
@@ -110,9 +118,9 @@ class LeaderShipController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $clientsatus = LeaderShip::find($id);
-        if ($clientsatus) {
-            $clientsatus->delete();
+        $leadership = LeaderShip::find($id);
+        if ($leadership) {
+            $leadership->delete();
             return $this->commonResponse(true, 'LeaderShip deleted', '', Response::HTTP_OK);
         } else {
             return $this->commonResponse(false, 'LeaderShip not found!', '', Response::HTTP_NOT_FOUND);

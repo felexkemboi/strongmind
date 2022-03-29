@@ -268,7 +268,6 @@ class UserController extends Controller
 
             $user->update($data);
             if ($request->has('role_id') && $request->filled('role_id')) {
-                \Log::debug($request->role_id);
                 $role = Role::firstwhere('id', $data['role_id']);
 
 
