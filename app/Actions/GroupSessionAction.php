@@ -129,7 +129,6 @@ class GroupSessionAction
     public function recordSessionAttendance(SessionAttendanceRequest $sessionAttendanceRequest, int $id): JsonResponse
     {
         try{
-            $recorded = false;
             $session = GroupSession::findOrFail($id);
             $clientIds = [];
             foreach (explode(',', $sessionAttendanceRequest->client_id) as $client_id) {
@@ -164,8 +163,8 @@ class GroupSessionAction
                     $query->where('client_id', $data->client_id);
                 });
                 return [
-                    'attendanceId'  => $data->id,
                     'clientId'      => $data->client_id,
+                    'attendanceId'  => $data->id,
                     'clientName'    => $client->first_name .' '.$client->last_name.' '.$client->other_name,
                     'attended'      => $data->attended,
                     'reason'        => $data->reason
@@ -197,7 +196,7 @@ class GroupSessionAction
                 'session_id' => $session->id,
                 'client_id' => $client->id,
                 'attended' => $sessionAttendanceRequest->attended,
-                'reason'   => $sessionAttendanceRequest->reason
+                'reason'   => $sessionAttendanceRequest->reason,
             ]);
         }else{
             SessionAttendance::create([
@@ -206,9 +205,9 @@ class GroupSessionAction
                 'attended' => $sessionAttendanceRequest->attended,
                 'reason'   => $sessionAttendanceRequest->reason
             ]);
-            $session->update([
-                'total_present' => $session->total_present + 1
-            ]);
         }
+        $attendanceCount = SessionAttendance::where('session_id', $session->id)->count();
+
+        $session->update(['total_present' => $attendanceCount]);
     }
 }
