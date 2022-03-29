@@ -264,7 +264,6 @@ class GroupAction
 
             $clients = Client::whereIn('id', $clientIds)->get();
             $group = Group::findOrFail($id);
-            $addedCount = 0;
 
             foreach ($clients as $client){
                 if (!in_array($client->id, $existingClients)){
@@ -274,7 +273,6 @@ class GroupAction
                             'group_id'  => $group->id
                         ]
                     );
-                    $addedCount = $addedCount + 1;
                 }
             }
             $user = Auth::user();
@@ -283,13 +281,8 @@ class GroupAction
                 ->causedBy($user)
                 ->log('Add clients to group '.$group->name);
 
-            if(!$group->total_clients){
-                $group->total_clients = $addedCount;
-                $group->save();
-                return $this->commonResponse(true, 'Clients Added Successfully!', GroupService::viewGroupDetails($group), Response::HTTP_CREATED);
-            }
-            $count = $group->total_clients + $addedCount;
-            $group->total_clients = $count;
+            $groupClients = GroupClient::select('client_id')->where('group_id', $id)->count();
+            $group->total_clients = $groupClients;
             $group->save();
 
             return $this->commonResponse(true,'Clients Added Successfully',GroupService::viewGroupDetails($group), Response::HTTP_CREATED);

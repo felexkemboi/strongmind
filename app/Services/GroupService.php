@@ -57,6 +57,7 @@ class GroupService
         return [
             'id' => $group->id,
             'name' => $group->name,
+            'clientsNo' => $clients->count(),
             'group_id' => $group->group_id,
             'clients' => $clients->transform(function($client){
 
