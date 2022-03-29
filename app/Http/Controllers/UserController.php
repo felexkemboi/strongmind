@@ -286,7 +286,8 @@ class UserController extends Controller
 
             $user->update($data);
             if ($request->has('role_id') && $request->filled('role_id')) {
-                $role = Role::findById($data['role_id'], $this->permissionRoleService::API_GUARD);
+                $role = Role::firstwhere('id', $data['role_id']);
+
                 if ($role) {
                     if($user->hasRole($role)){
                         return $this->commonResponse(false,'User already has the specified role', '', Response::HTTP_UNPROCESSABLE_ENTITY);
