@@ -271,7 +271,7 @@ class GroupAction
             activity('group')
                 ->performedOn($group)
                 ->causedBy($user)
-                ->log('Add clients to group '.$group->name);
+                ->log('Clients added to '.$group->name);
 
             $groupClients = GroupClient::select('client_id')->where('group_id', $id)->count();
             $group->total_clients = $groupClients;
