@@ -250,23 +250,14 @@ class GroupAction
     public function addClientsToGroup(GroupClientRequest $request, int $id): JsonResponse
     {
         try{
-            $clientIds = [];
-            foreach (explode(',', $request->client_id) as $client_id) {
-                array_push($clientIds,(int)$client_id);
-            }
-            $existing = GroupClient::select('client_id')->where('group_id', $id)->get();
-            $existingClients = [];
 
+            $existingClients = GroupClient::select('client_id')->where('group_id', $id)->get()->pluck('client_id');
 
-            foreach ($existing as $client){
-                array_push($existingClients,$client->client_id);
-            }
-
-            $clients = Client::whereIn('id', $clientIds)->get();
+            $clients = Client::whereIn('id', $request->client_id)->get();
             $group = Group::findOrFail($id);
 
             foreach ($clients as $client){
-                if (!in_array($client->id, $existingClients)){
+                if (!in_array($client->id, $existingClients->toArray())){
                     GroupClient::create(
                         [
                             'client_id' => $client->id,
@@ -275,6 +266,7 @@ class GroupAction
                     );
                 }
             }
+
             $user = Auth::user();
             activity('group')
                 ->performedOn($group)
