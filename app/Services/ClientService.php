@@ -8,7 +8,6 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\ClientResource;
@@ -27,62 +26,66 @@ class ClientService
     {
 
         try{
-            $id = $request->get('id');
-            $phone = $request->get('phone');
-            $country = (int)$request->get('country');
-            $status = (int)$request->get('status');
-            $channel = (int)$request->get('channel');
-            $clientType = $request->get('client_type');
-            $clientTypes = ['screening','therapy'];
-            $num_records = (int)$request->get('records_per_page');
-            $pagination_records = (int)$request->get('pagination_items');
-            $filter = $request->get('filters');
-            $sort = $request->get('sort');
+            $id = $request->id;
+            $phone = $request->phone;
+            $country = $request->country;
+            $staff = $request->staff;
+            $status = $request->status;
+            $channel = $request->channel;
+            $clientType = $request->client_type;
+            $pagination_records = $request->pagination_items;
+            $filter = $request->filters;
+            $sort = $request->sort;
             $clients = Client::query()->with('timezone', 'country', 'status', 'channel', 'staff', 'notes','bioData');
 
             //search by id
-            if($request->has('id') && $request->filled('id')){
+            if($request->id){
                 $clients = $clients->where(function($query) use($id){
                     $query->where('patient_id','ilike','%'. $id . '%');
                 });
             }
             //search by phone
-            if ($request->has('phone') && $request->filled('phone')) {
+            if ($request->phone) {
                 $clients = $clients->where(function ($query) use ($phone) {
                     $query->where('phone_number', 'ilike', '%'. $phone .'%');
                 });
             }
             //search by country
-            if ($request->has('country') && $request->filled('country')) {
+            if ($request->country) {
                 $clients = $clients->where(function ($query) use ($country) {
                     $query->where('country_id', '=', $country);
                 });
             }
-            //filter by client type
-            if ($request->has('client_type') && $request->filled('client_type')) {
-                    if ($clientType === $clientTypes[0]) {
-                        $clients = $clients->where('client_type', Client::SCREENING_CLIENT_TYPE);
-                    }elseif ($clientType === $clientTypes[1]){
-                        $clients = $clients->where('client_type', Client::THERAPY_CLIENT_TYPE);
-                    }
+
+            //search by country
+            if ($request->staff) {
+                $clients = $clients->where(function ($query) use ($staff) {
+                    $query->where('staff_id', '=', $staff);
+                });
             }
+            //filter by client type
+            if ($request->client_type) {
+                if ($clientType === 'screening') {
+                    $clients = $clients->where('client_type', Client::SCREENING_CLIENT_TYPE);
+                }elseif ($clientType === 'therapy'){
+                    $clients = $clients->where('client_type', Client::THERAPY_CLIENT_TYPE);
+                }
+            }
+
             //search by status id
-            if ($request->has('status') && $request->filled('status')) {
+            if ($request->status) {
                 $clients = $clients->where(function ($query) use ($status) {
                     $query->where('status_id', $status);
                 });
             }
+
             //search by channel id
-            if ($request->has('channel') && $request->filled('channel')) {
+            if ($request->channel) {
                 $clients = $clients->where(function ($query) use ($channel) {
                     $query->where('channel_id', $channel);
                 });
             }
-            //get records based on the specified number
-            if ($request->has('records_per_page') && $request->filled('records_per_page')) {
-                $clients = $clients->limit($num_records)->latest()->get();
-                return $this->commonResponse(true, 'success',ClientResource::collection($clients)->response()->getData(true), Response::HTTP_OK);
-            }
+
             //specify pagination number
             if ($request->has('pagination_items') && $request->filled('pagination_items')) {
                 $clients = Client::with('timezone', 'country', 'status', 'channel', 'staff', 'notes','bioData')->latest()->paginate($pagination_records);
