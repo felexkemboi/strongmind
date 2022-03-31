@@ -38,7 +38,7 @@ class ProjectHelper
     {
         return DB::table('users')
             ->select('users.id','users.name','users.email','users.profile_pic','users.phone_number',
-                'users.gender','users.region','users.city','users.office_id','users.invite_accepted','users.languages',
+                'users.gender','users.profile_pic_url','users.region','users.city','users.office_id','users.invite_accepted','users.languages',
                 'program_members.member_type_id')
             ->join('program_members','program_members.user_id','=','users.id')
             ->join('programs','programs.id','=','program_members.program_id')
