@@ -130,12 +130,8 @@ class GroupSessionAction
     {
         try{
             $session = GroupSession::findOrFail($id);
-            $clientIds = [];
-            foreach (explode(',', $sessionAttendanceRequest->client_id) as $client_id) {
-                array_push($clientIds,(int)$client_id);
-            }
 
-            $clients = Client::whereIn('id', $clientIds)->get();
+            $clients = Client::whereIn('id', $sessionAttendanceRequest->client_id)->get();
             if($sessionAttendanceRequest->attended === false && $sessionAttendanceRequest->reason === null){
                 return $this->commonResponse(false,'Please state some reason for non-attendance','', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
@@ -186,6 +182,7 @@ class GroupSessionAction
             return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
     public function recordAttendance($client,$session,$sessionAttendanceRequest){
         $attendance = SessionAttendance::where('client_id',$client->id)
                 ->where('session_id', $session->id)
