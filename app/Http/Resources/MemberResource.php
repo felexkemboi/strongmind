@@ -24,6 +24,7 @@ class MemberResource extends JsonResource
             'phone_number' => $this->phone_number,
             'profile_pic_url' => $this->profile_pic_url ? $this->profile_pic_url : '',
             'gender' => $this->gender,
+            'member_type_id' => $this->member_type_id,
             'office_id' => $this->office_id,
             'region' => $this->region,
             'city' => $this->city,
