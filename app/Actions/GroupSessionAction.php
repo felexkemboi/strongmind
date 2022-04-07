@@ -129,14 +129,9 @@ class GroupSessionAction
     public function recordSessionAttendance(SessionAttendanceRequest $sessionAttendanceRequest, int $id): JsonResponse
     {
         try{
-            $recorded = false;
             $session = GroupSession::findOrFail($id);
-            $clientIds = [];
-            foreach (explode(',', $sessionAttendanceRequest->client_id) as $client_id) {
-                array_push($clientIds,(int)$client_id);
-            }
 
-            $clients = Client::whereIn('id', $clientIds)->get();
+            $clients = Client::whereIn('id', $sessionAttendanceRequest->client_id)->get();
             if($sessionAttendanceRequest->attended === false && $sessionAttendanceRequest->reason === null){
                 return $this->commonResponse(false,'Please state some reason for non-attendance','', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
@@ -164,8 +159,8 @@ class GroupSessionAction
                     $query->where('client_id', $data->client_id);
                 });
                 return [
-                    'attendanceId'  => $data->id,
                     'clientId'      => $data->client_id,
+                    'attendanceId'  => $data->id,
                     'clientName'    => $client->first_name .' '.$client->last_name.' '.$client->other_name,
                     'attended'      => $data->attended,
                     'reason'        => $data->reason
@@ -187,6 +182,7 @@ class GroupSessionAction
             return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
     public function recordAttendance($client,$session,$sessionAttendanceRequest){
         $attendance = SessionAttendance::where('client_id',$client->id)
                 ->where('session_id', $session->id)
@@ -197,7 +193,7 @@ class GroupSessionAction
                 'session_id' => $session->id,
                 'client_id' => $client->id,
                 'attended' => $sessionAttendanceRequest->attended,
-                'reason'   => $sessionAttendanceRequest->reason
+                'reason'   => $sessionAttendanceRequest->reason,
             ]);
         }else{
             SessionAttendance::create([
@@ -206,9 +202,9 @@ class GroupSessionAction
                 'attended' => $sessionAttendanceRequest->attended,
                 'reason'   => $sessionAttendanceRequest->reason
             ]);
-            $session->update([
-                'total_present' => $session->total_present + 1
-            ]);
         }
+        $attendanceCount = SessionAttendance::where('session_id', $session->id)->count();
+
+        $session->update(['total_present' => $attendanceCount]);
     }
 }

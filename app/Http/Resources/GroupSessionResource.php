@@ -27,8 +27,8 @@ class GroupSessionResource extends JsonResource
                     $query->where('client_id', $data->client_id);
                 });
                 return [
-                    'attendanceId'  => $data->id,
                     'clientId'      => $data->client_id,
+                    'attendanceId'  => $data->id,
                     'clientName'    => isset($client) ? $client->first_name.' '.$client->last_name : '',
                     'attended'      => $data->attended,
                     'reason'        => $data->reason

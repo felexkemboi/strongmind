@@ -53,19 +53,21 @@ class ClientController extends Controller
 
     /**
      * List|Filter|Search|Paginate|Sort Clients
+     * @group Clients
      * @param Request $request
-     * @bodyParam name string . Search by name
-     * @bodyParam phone integer . Search by phone
-     * @bodyParam country integer . Search by country_id
-     * @bodyParam filter string . i.e filter by status,channel,screening,therapy
-     * @bodyParam channel integer . search by channel id
-     * @bodyParam status integer . search by status_id
-     * @bodyParam client_type string . filter by either screening or therapy
-     * @bodyParam pagination_items integer . specify number of records per page
-     * @bodyParam  records_per_page integer . specify the number of records to pull from database
+     * @bodyParam name string  Search by name
+     * @bodyParam phone integer  Search by phone
+     * @bodyParam country integer  Search by country_id
+     * @bodyParam staff integer  Search by staff_id
+     * @bodyParam filter string Filter by status,channel,screening,therapy
+     * @bodyParam channel integer  search by channel id
+     * @bodyParam status integer  search by status_id
+     * @bodyParam client_type string  filter by either screening or therapy
+     * @bodyParam pagination_items integer  specify number of records per page
+     * @bodyParam  records_per_page integer  specify the number of records to pull from database
      * @return JsonResponse
      * @authenticated
-     */
+    */
     public function index(Request $request): JsonResponse
     {
         return $this->clientService->filter($request);

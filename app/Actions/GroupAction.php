@@ -250,47 +250,31 @@ class GroupAction
     public function addClientsToGroup(GroupClientRequest $request, int $id): JsonResponse
     {
         try{
-            $clientIds = [];
-            foreach (explode(',', $request->client_id) as $client_id) {
-                array_push($clientIds,(int)$client_id);
-            }
 
-            $existing = GroupClient::select('client_id')->where('group_id', $id)->get();
-            $existingClients = [];
+            $existingClients = GroupClient::select('client_id')->where('group_id', $id)->get()->pluck('client_id');
 
-
-            foreach ($existing as $client){
-                array_push($existingClients,$client->client_id);
-            }
-
-            $clients = Client::whereIn('id', $clientIds)->get();
+            $clients = Client::whereIn('id', $request->client_id)->get();
             $group = Group::findOrFail($id);
-            $addedCount = 0;
 
             foreach ($clients as $client){
-                if (!in_array($client->id, $existingClients)){
+                if (!in_array($client->id, $existingClients->toArray())){
                     GroupClient::create(
                         [
                             'client_id' => $client->id,
                             'group_id'  => $group->id
                         ]
                     );
-                    $addedCount = $addedCount + 1;
                 }
             }
+
             $user = Auth::user();
             activity('group')
                 ->performedOn($group)
                 ->causedBy($user)
-                ->log('Add clients to group '.$group->name);
+                ->log('Clients added to '.$group->name);
 
-            if(!$group->total_clients){
-                $group->total_clients = $addedCount;
-                $group->save();
-                return $this->commonResponse(true, 'Clients Added Successfully!', '', Response::HTTP_CREATED);
-            }
-            $count = $group->total_clients + $addedCount;
-            $group->total_clients = $count;
+            $groupClients = GroupClient::select('client_id')->where('group_id', $id)->count();
+            $group->total_clients = $groupClients;
             $group->save();
 
             return $this->commonResponse(true,'Clients Added Successfully',GroupService::viewGroupDetails($group), Response::HTTP_CREATED);

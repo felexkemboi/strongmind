@@ -10,6 +10,7 @@ use App\Models\Programs\Project;
 use App\Models\Programs\ProgramMember;
 use App\Models\Programs\ProgramMemberType;
 use App\Models\User;
+use App\Http\Resources\MemberResource;
 use App\Services\ProjectService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
@@ -45,18 +46,8 @@ class ProgramMemberController extends Controller
     {
         try {
             $project = Project::with('office', 'programType')->findOrFail($id);
-            $members = ProgramMember::active()->with( 'users','memberTypes','programs')
-                ->where(function($query) use($project)
-                {
-                    $query->where('program_id', $project->id);
-                })
-                ->latest()
-                ->get()
-                ->transform(function ($member) {
-                    return new ProgramMemberResource($member);
-                })->groupBy('member_type_id');
             $users = ProjectHelper::members($project->id);
-            return $this->commonResponse(true, 'success', $users, Response::HTTP_OK);
+            return $this->commonResponse(true, 'success', MemberResource::collection($users), Response::HTTP_OK);
         }catch (ModelNotFoundException $exception){
             return $this->commonResponse(false,$exception->getMessage(),'', Response::HTTP_NOT_FOUND);
         }
