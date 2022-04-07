@@ -19,7 +19,6 @@ class RoleTableSeeder extends Seeder
      */
     public function run()
     {
-        //DB::table('spatie_roles')->truncate();
         $rolesData = [
             'name' => 'admin',
             'guard_name' => PermissionRoleService::API_GUARD,
@@ -27,18 +26,20 @@ class RoleTableSeeder extends Seeder
             'description' => 'admin role'
         ];
 
-        $adminRole = Role::findByName($rolesData['name'],PermissionRoleService::API_GUARD);
-        if(!$adminRole){
+        try {
+            $adminRole = Role::findByName($rolesData['name'],PermissionRoleService::API_GUARD);
+        } catch (\Exception $e) {
             Role::create($rolesData);
-        }else{
-            $user = User::firstWhere('email','admin@strongminds.org');
-            $user->assignRole($adminRole); //assign this user an admin role with all permissions
-            $permissions = Permission::get()->filter(function ($permission){
-                return $permission->guard_name === PermissionRoleService::API_GUARD;
-            });
-            foreach ($permissions as $permission){
-                $adminRole->givePermissionTo($permission);
-            }
+        }
+
+        $adminRole = Role::findByName($rolesData['name'],PermissionRoleService::API_GUARD);
+        $user = User::firstWhere('email','admin@strongminds.org');
+        $user->assignRole($adminRole); //assign this user an admin role with all permissions
+        $permissions = Permission::get()->filter(function ($permission){
+            return $permission->guard_name === PermissionRoleService::API_GUARD;
+        });
+        foreach ($permissions as $permission){
+            $adminRole->givePermissionTo($permission);
         }
     }
 }
