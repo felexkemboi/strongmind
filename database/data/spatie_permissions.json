@@ -35,6 +35,42 @@
         "description": ""
     },
     {
+        "name": "view permissions",
+        "slug": "view-permissions",
+        "description": "view all permissions",
+        "module": "Auth",
+        "guard_name": "api"
+    },
+    {
+        "name": "create permission",
+        "slug": "create-permission",
+        "description": "",
+        "module": "Auth",
+        "guard_name": "api"
+    },
+    {
+        "name": "view permission details",
+        "slug": "view-permission-details",
+        "description": "",
+        "module": "Auth",
+        "guard_name": "api"
+    },
+    {
+        "name": "delete permission",
+        "slug": "delete-permission",
+        "description": "",
+        "module": "Auth",
+        "guard_name": "api"
+    },
+    {
+        "name": "update permission",
+        "slug": "update-permission",
+        "description": "",
+        "module": "Auth",
+        "guard_name": "api"
+    },
+
+    {
         "name": "view offices",
         "guard_name": "api",
         "module": "Administration",
