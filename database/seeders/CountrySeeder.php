@@ -18,7 +18,9 @@ class CountrySeeder extends Seeder
         $json = File::get("database/data/countries.json");
         $data = json_decode($json);
         foreach ($data as $obj) {
-            $countryExist = Country::where('name', $obj->name)->exists();
+            $countryExist = Country::where('name', $obj->name)
+            ->where('id', $obj->id)
+            ->exists();
             if(!$countryExist){
                 Country::create(array(
                     'id' => $obj->id,
