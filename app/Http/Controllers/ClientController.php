@@ -149,6 +149,7 @@ class ClientController extends Controller
             return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             try {
+                $user = Auth::user();
                 $client = new Client;
                 $client->name = $request->name;
                 $client->phone_number = $request->phone_number;
@@ -165,6 +166,7 @@ class ClientController extends Controller
                 $client->talk_to = $request->talkto;
                 $client->age = $request->age;
                 $client->contact_through = $request->contact_through;
+                $client->staff_id = $user->id;
 
                 $client->age = Carbon::parse($request->date_of_birth)->diff(Carbon::now())->y;
                 if($client->save()){
