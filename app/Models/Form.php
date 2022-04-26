@@ -37,6 +37,13 @@ class Form extends Model
     }
 
     /**
+     * @return HasMany
+     */
+    public function questionResponses(): HasMany
+    {
+        return $this->hasMany(QuestionResponses::class);
+    }
+    /**
      * @return BelongsTo
      */
     public function getStatusAttribute(): BelongsTo
