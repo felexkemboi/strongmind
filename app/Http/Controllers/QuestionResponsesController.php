@@ -61,12 +61,11 @@ class QuestionResponsesController extends Controller
             if ($response->save()) {
 
                 if(!$form->response_count){
-                    $form->response_count = 1;
+                    $form->response_count = $form->questionResponses->count();
                     $form->save();
                     return $this->commonResponse(true, 'Question Response created successfully!', $question, Response::HTTP_CREATED);
                 }
-                $count = $form->response_count + 1;
-                $form->response_count = $count;
+                $form->response_count = $form->questionResponses->count();
                 $form->save();
                 return $this->commonResponse(true, 'Question Response created successfully!', $question, Response::HTTP_CREATED);
             }

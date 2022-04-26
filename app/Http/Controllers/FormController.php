@@ -190,10 +190,10 @@ class FormController extends Controller
 
                 if ($response->save()) {
                     if (!$form->response_count) {
-                        $form->response_count = 1;
+                        $form->response_count = $form->questionResponses->count();
                         $form->save();
                     }
-                    $form->response_count = $form->response_count + 1;
+                    $form->response_count = $form->questionResponses->count();
                     $form->save();
                 }
             }
