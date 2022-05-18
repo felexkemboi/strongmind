@@ -19,6 +19,10 @@ class ClientEducationLevelTableSeeder extends Seeder
         DB::table('client_education_levels')->truncate();
         $educationLevels = array(
             array(
+                'name' => 'None',
+                'slug' => ''
+            ),
+            array(
                 'name' => 'High School',
                 'slug' => ''
             ),
