@@ -28,7 +28,7 @@ class StatusController extends Controller
      */
     public function index(): JsonResponse
     {
-        $statuses = Status::query()->select(['id', 'name', 'slug'])->get();
+        $statuses = Status::query()->select(['id', 'name', 'slug', 'client_entry_phase'])->get();
         return $this->commonResponse(true, 'success', $statuses, Response::HTTP_OK);
     }
 
@@ -37,6 +37,7 @@ class StatusController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @bodyParam  name string required Status Name
+     * @bodyParam client_entry_phase boolean required . Is the status a client phase entry?
      * @authenticated
      */
     public function create(Request $request): JsonResponse
@@ -56,6 +57,7 @@ class StatusController extends Controller
                     $record = Status::create([
                         'name' => $request->get('name'),
                         'slug' => $slug,
+                        'client_entry_phase' => $request->get('client_entry_phase'),
                     ]);
                     return $this->commonResponse(true, 'Record created successfully!', new StatusResource($record), Response::HTTP_CREATED);
                 }
@@ -72,6 +74,7 @@ class StatusController extends Controller
      * @param Request $request
      * @param $id
      * @urlParam id integer required The ID of the status. Example:1
+     * @bodyParam client_entry_phase boolean required . Is the status a client phase entry?
      * @return JsonResponse
      * @bodyParam  name string required Status Name.
      * @authenticated
@@ -93,6 +96,7 @@ class StatusController extends Controller
                     $record->update([
                         'name' => $request->get('name'),
                         'slug' => $slug,
+                        'client_entry_phase' => $request->get('client_entry_phase'),
                     ]);
                     $record->fresh();
                     return $this->commonResponse(true, 'Record updated successfully!', new StatusResource($record), Response::HTTP_CREATED);
