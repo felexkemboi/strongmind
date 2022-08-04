@@ -194,27 +194,42 @@ class ClientController extends Controller
      * Bulk Add Clients(Phone Numbers)
      * @group Clients
      * @param Request $request
-     * @bodyParam phone_numbers string required  The Clients Phone Numbers
+     * @bodyParam phone_numbers file required  The Clients Phone Numbers
      * @return JsonResponse
      * @authenticated
      */
 
     public function createClientsWithPhoneNumbers(Request $request): JsonResponse
     {
+
+        // $file = $request->file('file');
+        $numbers = [];
+
+        if (($open = fopen(storage_path() . "/23.csv", "r")) !== FALSE) {
+
+            while (($data = fgetcsv($open, 1000, ",")) !== FALSE) {
+                $numbers[] = $data;
+
+            }
+
+            fclose($open);
+        }
+
         $user = Auth::user();
         try {
             $created = collect([]);
             $failed = collect([]);
-            foreach (explode(',', $request->phone_numbers) as $phone_number) {
-                $client = Client::firstWhere('phone_number', $phone_number);
+            foreach ($numbers as $number) {
+                $client = Client::firstWhere('phone_number', $number[0]);
                 if(!$client){
                     $client = new Client;
-                    $client->phone_number = $phone_number;
+                    $client->phone_number = $number[0];
+                    Log::debug();
                     $client->staff_id = $user->id;
                     $client->save();
-                    $created->push($phone_number);
+                    $created->push($number[0]);
                 }else{
-                    $failed->push($phone_number);
+                    $failed->push($number[0]);
                 }
             }
 
