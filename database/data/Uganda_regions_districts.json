@@ -1,0 +1,563 @@
+[
+  {
+    "country_id": "1",
+    "Region": "Central region",
+    "District": "Buikwe"
+  },
+  {
+    "country_id": "2",
+    "Region": "Central region",
+    "District": "Bukomansimbi"
+  },
+  {
+    "country_id": "3",
+    "Region": "Central region",
+    "District": "Butambala"
+  },
+  {
+    "country_id": "4",
+    "Region": "Central region",
+    "District": "Buvuma"
+  },
+  {
+    "country_id": "5",
+    "Region": "Central region",
+    "District": "Gomba"
+  },
+  {
+    "country_id": "6",
+    "Region": "Central region",
+    "District": "Kalangala"
+  },
+  {
+    "country_id": "7",
+    "Region": "Central region",
+    "District": "Kalungu"
+  },
+  {
+    "country_id": "8",
+    "Region": "Central region",
+    "District": "Kampala"
+  },
+  {
+    "country_id": "9",
+    "Region": "Central region",
+    "District": "Kayunga"
+  },
+  {
+    "country_id": "10",
+    "Region": "Central region",
+    "District": "Kiboga"
+  },
+  {
+    "country_id": "11",
+    "Region": "Central region",
+    "District": "Kyankwanzi"
+  },
+  {
+    "country_id": "12",
+    "Region": "Central region",
+    "District": "Luweero"
+  },
+  {
+    "country_id": "13",
+    "Region": "Central region",
+    "District": "Lwengo"
+  },
+  {
+    "country_id": "14",
+    "Region": "Central region",
+    "District": "Lyantonde"
+  },
+  {
+    "country_id": "15",
+    "Region": "Central region",
+    "District": "Masaka"
+  },
+  {
+    "country_id": "16",
+    "Region": "Central region",
+    "District": "Mityana"
+  },
+  {
+    "country_id": "17",
+    "Region": "Central region",
+    "District": "Mpigi"
+  },
+  {
+    "country_id": "18",
+    "Region": "Central region",
+    "District": "Mubende"
+  },
+  {
+    "country_id": "19",
+    "Region": "Central region",
+    "District": "Mukono"
+  },
+  {
+    "country_id": "20",
+    "Region": "Central region",
+    "District": "Nakaseke"
+  },
+  {
+    "country_id": "21",
+    "Region": "Central region",
+    "District": "Nakasongola"
+  },
+  {
+    "country_id": "22",
+    "Region": "Central region",
+    "District": "Rakai"
+  },
+  {
+    "country_id": "23",
+    "Region": "Central region",
+    "District": "Sembabule"
+  },
+  {
+    "country_id": "24",
+    "Region": "Central region",
+    "District": "Wakiso"
+  },
+  {
+    "country_id": "25",
+    "Region": "Eastern region",
+    "District": "Amuria"
+  },
+  {
+    "country_id": "26",
+    "Region": "Eastern region",
+    "District": "Budaka"
+  },
+  {
+    "country_id": "27",
+    "Region": "Eastern Region",
+    "District": "Bududa"
+  },
+  {
+    "country_id": "28",
+    "Region": "Eastern Region",
+    "District": "Bugiri"
+  },
+  {
+    "country_id": "29",
+    "Region": "Eastern Region",
+    "District": "Bukedea"
+  },
+  {
+    "country_id": "30",
+    "Region": "Eastern Region",
+    "District": "Bukwa"
+  },
+  {
+    "country_id": "31",
+    "Region": "Eastern Region",
+    "District": "Bulambuli"
+  },
+  {
+    "country_id": "32",
+    "Region": "Eastern Region",
+    "District": "Busia"
+  },
+  {
+    "country_id": "33",
+    "Region": "Eastern Region",
+    "District": "Butaleja"
+  },
+  {
+    "country_id": "34",
+    "Region": "Eastern Region",
+    "District": "Buyende"
+  },
+  {
+    "country_id": "35",
+    "Region": "Eastern Region",
+    "District": "Iganga"
+  },
+  {
+    "country_id": "36",
+    "Region": "Eastern Region",
+    "District": "Jinja"
+  },
+  {
+    "country_id": "37",
+    "Region": "Eastern Region",
+    "District": "Kaberamaido"
+  },
+  {
+    "country_id": "38",
+    "Region": "Eastern Region",
+    "District": "Kaliro"
+  },
+  {
+    "country_id": "39",
+    "Region": "Eastern Region",
+    "District": "Kamuli"
+  },
+  {
+    "country_id": "40",
+    "Region": "Eastern Region",
+    "District": "Kapchorwa"
+  },
+  {
+    "country_id": "41",
+    "Region": "Eastern Region",
+    "District": "Katakwi"
+  },
+  {
+    "country_id": "42",
+    "Region": "Eastern Region",
+    "District": "Kibuku"
+  },
+  {
+    "country_id": "43",
+    "Region": "Eastern Region",
+    "District": "Kumi"
+  },
+  {
+    "country_id": "44",
+    "Region": "Eastern Region",
+    "District": "Kween"
+  },
+  {
+    "country_id": "45",
+    "Region": "Eastern Region",
+    "District": "Luuka"
+  },
+  {
+    "country_id": "46",
+    "Region": "Eastern Region",
+    "District": "Manafwa"
+  },
+  {
+    "country_id": "47",
+    "Region": "Eastern Region",
+    "District": "Mayuge"
+  },
+  {
+    "country_id": "48",
+    "Region": "Eastern Region",
+    "District": "Mbale"
+  },
+  {
+    "country_id": "49",
+    "Region": "Eastern Region",
+    "District": "Namayingo"
+  },
+  {
+    "country_id": "50",
+    "Region": "Eastern Region",
+    "District": "Namutumba"
+  },
+  {
+    "country_id": "51",
+    "Region": "Eastern Region",
+    "District": "Ngora"
+  },
+  {
+    "country_id": "52",
+    "Region": "Eastern Region",
+    "District": "Pallisa"
+  },
+  {
+    "country_id": "53",
+    "Region": "Eastern Region",
+    "District": "Serere"
+  },
+  {
+    "country_id": "54",
+    "Region": "Eastern Region",
+    "District": "Sironko"
+  },
+  {
+    "country_id": "55",
+    "Region": "Eastern Region",
+    "District": "Soroti"
+  },
+  {
+    "country_id": "56",
+    "Region": "Eastern Region",
+    "District": "Tororo"
+  },
+  {
+    "country_id": "57",
+    "Region": "Northern Region",
+    "District": "Abim"
+  },
+  {
+    "country_id": "58",
+    "Region": "Northern Region",
+    "District": "Adjumani"
+  },
+  {
+    "country_id": "59",
+    "Region": "Northern Region",
+    "District": "Agago"
+  },
+  {
+    "country_id": "60",
+    "Region": "Northern Region",
+    "District": "Alebtong"
+  },
+  {
+    "country_id": "61",
+    "Region": "Northern Region",
+    "District": "Amolatar"
+  },
+  {
+    "country_id": "62",
+    "Region": "Northern Region",
+    "District": "Amudat"
+  },
+  {
+    "country_id": "63",
+    "Region": "Northern Region",
+    "District": "Amuru"
+  },
+  {
+    "country_id": "64",
+    "Region": "Northern Region",
+    "District": "Apac"
+  },
+  {
+    "country_id": "65",
+    "Region": "Northern Region",
+    "District": "Arua"
+  },
+  {
+    "country_id": "66",
+    "Region": "Northern Region",
+    "District": "Dokolo"
+  },
+  {
+    "country_id": "67",
+    "Region": "Northern Region",
+    "District": "Gulu"
+  },
+  {
+    "country_id": "68",
+    "Region": "Northern Region",
+    "District": "Kaabong"
+  },
+  {
+    "country_id": "69",
+    "Region": "Northern Region",
+    "District": "Kitgum"
+  },
+  {
+    "country_id": "70",
+    "Region": "Northern Region",
+    "District": "Koboko"
+  },
+  {
+    "country_id": "71",
+    "Region": "Northern Region",
+    "District": "Kole"
+  },
+  {
+    "country_id": "72",
+    "Region": "Northern Region",
+    "District": "Kotido"
+  },
+  {
+    "country_id": "73",
+    "Region": "Northern Region",
+    "District": "Lamwo"
+  },
+  {
+    "country_id": "74",
+    "Region": "Northern Region",
+    "District": "Lira"
+  },
+  {
+    "country_id": "75",
+    "Region": "Northern Region",
+    "District": "Maracha"
+  },
+  {
+    "country_id": "76",
+    "Region": "Northern Region",
+    "District": "Moroto"
+  },
+  {
+    "country_id": "77",
+    "Region": "Northern Region",
+    "District": "Moyo"
+  },
+  {
+    "country_id": "78",
+    "Region": "Northern Region",
+    "District": "Nakapiripirit"
+  },
+  {
+    "country_id": "79",
+    "Region": "Northern Region",
+    "District": "Napak"
+  },
+  {
+    "country_id": "80",
+    "Region": "Northern Region",
+    "District": "Nebbi"
+  },
+  {
+    "country_id": "81",
+    "Region": "Northern Region",
+    "District": "Nwoya"
+  },
+  {
+    "country_id": "82",
+    "Region": "Northern Region",
+    "District": "Otuke"
+  },
+  {
+    "country_id": "83",
+    "Region": "Northern Region",
+    "District": "Oyam"
+  },
+  {
+    "country_id": "84",
+    "Region": "Northern Region",
+    "District": "Pader"
+  },
+  {
+    "country_id": "85",
+    "Region": "Northern Region",
+    "District": "Yumbe"
+  },
+  {
+    "country_id": "86",
+    "Region": "Northern Region",
+    "District": "Zombo"
+  },
+  {
+    "country_id": "87",
+    "Region": "Western Region",
+    "District": "Buhweju"
+  },
+  {
+    "country_id": "88",
+    "Region": "Western Region",
+    "District": "Buliisa"
+  },
+  {
+    "country_id": "89",
+    "Region": "Western Region",
+    "District": "Bundibugyo"
+  },
+  {
+    "country_id": "90",
+    "Region": "Western Region",
+    "District": "Bushenyi"
+  },
+  {
+    "country_id": "91",
+    "Region": "Western Region",
+    "District": "Hoima"
+  },
+  {
+    "country_id": "92",
+    "Region": "Western Region",
+    "District": "Ibanda"
+  },
+  {
+    "country_id": "93",
+    "Region": "Western Region",
+    "District": "Isingiro"
+  },
+  {
+    "country_id": "94",
+    "Region": "Western Region",
+    "District": "Kabale"
+  },
+  {
+    "country_id": "95",
+    "Region": "Western Region",
+    "District": "Kabarole"
+  },
+  {
+    "country_id": "96",
+    "Region": "Western Region",
+    "District": "Kamwenge"
+  },
+  {
+    "country_id": "97",
+    "Region": "Western Region",
+    "District": "Kanungu"
+  },
+  {
+    "country_id": "98",
+    "Region": "Western Region",
+    "District": "Kasese"
+  },
+  {
+    "country_id": "99",
+    "Region": "Western Region",
+    "District": "Kibaale"
+  },
+  {
+    "country_id": "100",
+    "Region": "Western Region",
+    "District": "Kiruhura"
+  },
+  {
+    "country_id": "101",
+    "Region": "Western Region",
+    "District": "Kiryandongo"
+  },
+  {
+    "country_id": "102",
+    "Region": "Western Region",
+    "District": "Kisoro"
+  },
+  {
+    "country_id": "103",
+    "Region": "Western Region",
+    "District": "Kyegegwa"
+  },
+  {
+    "country_id": "104",
+    "Region": "Western Region",
+    "District": "Kyenjojo"
+  },
+  {
+    "country_id": "105",
+    "Region": "Western Region",
+    "District": "Masindi"
+  },
+  {
+    "country_id": "106",
+    "Region": "Western Region",
+    "District": "Mbarara"
+  },
+  {
+    "country_id": "107",
+    "Region": "Western Region",
+    "District": "Mitooma"
+  },
+  {
+    "country_id": "108",
+    "Region": "Western Region",
+    "District": "Ntoroko"
+  },
+  {
+    "country_id": "109",
+    "Region": "Western Region",
+    "District": "Ntungamo"
+  },
+  {
+    "country_id": "110",
+    "Region": "Western Region",
+    "District": "Rubirizi"
+  },
+  {
+    "country_id": "111",
+    "Region": "Western Region",
+    "District": "Rukungiri"
+  },
+  {
+    "country_id": "112",
+    "Region": "Western Region",
+    "District": "Sheema"
+  }
+]
+
