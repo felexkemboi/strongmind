@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CountryResource;
 use App\Models\ClientDistrict;
+use App\Models\RegionDistrict;
 use App\Models\Country;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -19,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Class CountryController
  * @package App\Http\Controllers
- * @group Shared
+ * @group Countries
  * APIs for managing countries
  */
 class CountryController extends Controller
@@ -180,6 +181,53 @@ class CountryController extends Controller
             return $this->commonResponse(false,$exception->errorInfo[2],'',Response::HTTP_UNPROCESSABLE_ENTITY);
         }catch (Exception $exception){
             Log::critical('Could Not Find Districts By Country. ERROR: '.$exception->getMessage());
+            return $this->commonResponse(false,$exception->getMessage(),'',Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * List All Region-Districts
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function regionsDistricts(): JsonResponse
+    {
+        try{
+            $regionsDistricts = RegionDistrict::all();
+            return $this->commonResponse(true,'Success',$regionsDistricts, Response::HTTP_OK);
+        }catch (ModelNotFoundException $exception){
+            return $this->commonResponse(false,'Error in fetching the records','', Response::HTTP_NOT_FOUND);
+        }
+        catch (QueryException $exception){
+            return $this->commonResponse(false,$exception->errorInfo[2],'',Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (Exception $exception){
+            Log::critical('Could Not Find the records. ERROR: '.$exception->getMessage());
+            return $this->commonResponse(false,$exception->getMessage(),'',Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    /**
+     * List All Region-Districts By Country ID
+     * @param int $id
+     * @urlParam id integer required The ID of the Country.Example:1
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function countryRegionsDistricts(int $id): JsonResponse
+    {
+        try{
+            Log::debug($id);
+            $country = Country::findOrFail($id);
+            $countryRegionsDistricts = $country->regionsDistricts;
+            return $this->commonResponse(true,'Success',$countryRegionsDistricts, Response::HTTP_OK);
+        }catch (ModelNotFoundException $exception){
+            return $this->commonResponse(false,'Error in fetching the records','', Response::HTTP_NOT_FOUND);
+        }
+        catch (QueryException $exception){
+            return $this->commonResponse(false,$exception->errorInfo[2],'',Response::HTTP_UNPROCESSABLE_ENTITY);
+        }catch (Exception $exception){
+            Log::critical('Could Not Find the records. ERROR: '.$exception->getMessage());
             return $this->commonResponse(false,$exception->getMessage(),'',Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

@@ -54,10 +54,12 @@ Route::prefix('country')->group(function () {
     Route::get('all',    [CountryController::class, 'all']);
     Route::get('active', [CountryController::class, 'activeCountries']);
     Route::group(['middleware' => 'auth:sanctum'], function(){
-        Route::put('update',      [CountryController::class, 'toggleStatus']);
-        Route::patch('activate',  [CountryController::class,'activate']);
-        Route::patch('deactivate',[CountryController::class,'deactivate']);
-        Route::get('/{id}/districts',[CountryController::class,'districts']);
+        Route::put('update',                [CountryController::class, 'toggleStatus']);
+        Route::patch('activate',            [CountryController::class,'activate']);
+        Route::patch('deactivate',          [CountryController::class,'deactivate']);
+        Route::get('/{id}/districts',       [CountryController::class,'districts']);
+        Route::get('/regions-district',     [CountryController::class,'regionsDistricts']);
+        Route::get('/{id}/regions-district',[CountryController::class,'countryRegionsDistricts']);
     });
 });
 
