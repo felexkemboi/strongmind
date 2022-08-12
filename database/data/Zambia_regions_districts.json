@@ -1,0 +1,587 @@
+[
+  {
+    "country_id": "1",
+    "Region": "",
+    "District": "Chibombo"
+  },
+  {
+    "country_id": "2",
+    "Region": "",
+    "District": "Chitambo"
+  },
+  {
+    "country_id": "3",
+    "Region": "",
+    "District": "Chitambo"
+  },
+  {
+    "country_id": "4",
+    "Region": "",
+    "District": "Kabwe"
+  },
+  {
+    "country_id": "5",
+    "Region": "",
+    "District": "Gomba"
+  },
+  {
+    "country_id": "6",
+    "Region": "",
+    "District": "Kapiri Mposhi"
+  },
+  {
+    "country_id": "7",
+    "Region": "",
+    "District": "Luano"
+  },
+  {
+    "country_id": "8",
+    "Region": "",
+    "District": "Mkushi"
+  },
+  {
+    "country_id": "9",
+    "Region": "",
+    "District": "Mumbwa"
+  },
+  {
+    "country_id": "10",
+    "Region": "",
+    "District": "Mufulira"
+  },
+  {
+    "country_id": "11",
+    "Region": "",
+    "District": "Ngabwe"
+  },
+  {
+    "country_id": "12",
+    "Region": "",
+    "District": "Serenje"
+  },
+  {
+    "country_id": "13",
+    "Region": "",
+    "District": "Mpongwe"
+  },
+  {
+    "country_id": "14",
+    "Region": "",
+    "District": "Shibuyunji"
+  },
+  {
+    "country_id": "15",
+    "Region": "",
+    "District": "Chililabombwe"
+  },
+  {
+    "country_id": "16",
+    "Region": "",
+    "District": "Chingola"
+  },
+  {
+    "country_id": "17",
+    "Region": "",
+    "District": "Kalulushi"
+  },
+  {
+    "country_id": "18",
+    "Region": "",
+    "District": "Kitwe"
+  },
+  {
+    "country_id": "19",
+    "Region": "",
+    "District": "Luanshya"
+  },
+  {
+    "country_id": "20",
+    "Region": "",
+    "District": "Lufwanyama"
+  },
+  {
+    "country_id": "21",
+    "Region": "",
+    "District": "Masaiti"
+  },
+  {
+    "country_id": "22",
+    "Region": "",
+    "District": "Katete"
+  },
+  {
+    "country_id": "23",
+    "Region": "",
+    "District": "Ndola"
+  },
+  {
+    "country_id": "24",
+    "Region": "",
+    "District": "Chadiza"
+  },
+  {
+    "country_id": "25",
+    "Region": "",
+    "District": "Chama"
+  },
+  {
+    "country_id": "26",
+    "Region": "",
+    "District": "Chasefu"
+  },
+  {
+    "country_id": "27",
+    "Region": "",
+    "District": "Chipangali"
+  },
+  {
+    "country_id": "28",
+    "Region": "",
+    "District": "Chipata"
+  },
+  {
+    "country_id": "29",
+    "Region": "",
+    "District": "Kasenengwa"
+  },
+  {
+    "country_id": "30",
+    "Region": "",
+    "District": "Chifunabuli"
+  },
+  {
+    "country_id": "31",
+    "Region": "Eastern Region",
+    "District": "Bulambuli"
+  },
+  {
+    "country_id": "32",
+    "Region": "",
+    "District": "Lumezi"
+  },
+  {
+    "country_id": "33",
+    "Region": "",
+    "District": "Lundazi"
+  },
+  {
+    "country_id": "34",
+    "Region": "",
+    "District": "Lusangazi"
+  },
+  {
+    "country_id": "35",
+    "Region": "",
+    "District": "Mambwe"
+  },
+  {
+    "country_id": "36",
+    "Region": "",
+    "District": "Nyimba"
+  },
+  {
+    "country_id": "37",
+    "Region": "",
+    "District": "Petauke"
+  },
+  {
+    "country_id": "38",
+    "Region": "",
+    "District": "Sinda"
+  },
+  {
+    "country_id": "39",
+    "Region": "",
+    "District": "Vubwi"
+  },
+  {
+    "country_id": "40",
+    "Region": "",
+    "District": "Chembe"
+  },
+  {
+    "country_id": "41",
+    "Region": "",
+    "District": "Chiengi"
+  },
+  {
+    "country_id": "42",
+    "Region": "",
+    "District": "Lusaka"
+  },
+  {
+    "country_id": "43",
+    "Region": "",
+    "District": "Luangwa"
+  },
+  {
+    "country_id": "44",
+    "Region": "",
+    "District": "Kafue"
+  },
+  {
+    "country_id": "45",
+    "Region": "",
+    "District": "Chongwe"
+  },
+  {
+    "country_id": "46",
+    "Region": "",
+    "District": "Chilanga"
+  },
+  {
+    "country_id": "47",
+    "Region": "",
+    "District": "Samfya"
+  },
+  {
+    "country_id": "48",
+    "Region": "",
+    "District": "Nchelenge"
+  },
+  {
+    "country_id": "49",
+    "Region": "",
+    "District": "Mwense"
+  },
+  {
+    "country_id": "50",
+    "Region": "",
+    "District": "Chipili"
+  },
+  {
+    "country_id": "51",
+    "Region": "",
+    "District": "Kawambwa"
+  },
+  {
+    "country_id": "52",
+    "Region": "",
+    "District": "Lunga"
+  },
+  {
+    "country_id": "53",
+    "Region": "",
+    "District": "Mansa"
+  },
+  {
+    "country_id": "54",
+    "Region": "",
+    "District": "Milenge"
+  },
+  {
+    "country_id": "55",
+    "Region": "",
+    "District": "Mwansabombwe"
+  },
+  {
+    "country_id": "56",
+    "Region": "",
+    "District": "Mporokoso"
+  },
+  {
+    "country_id": "57",
+    "Region": "",
+    "District": "Mbala"
+  },
+  {
+    "country_id": "58",
+    "Region": "",
+    "District": "Luwingu"
+  },
+  {
+    "country_id": "59",
+    "Region": "",
+    "District": "Lupososhi"
+  },
+  {
+    "country_id": "60",
+    "Region": "",
+    "District": "Lunte"
+  },
+  {
+    "country_id": "61",
+    "Region": "",
+    "District": "Kasama"
+  },
+  {
+    "country_id": "62",
+    "Region": "",
+    "District": "Kaputa"
+  },
+  {
+    "country_id": "63",
+    "Region": "",
+    "District": "Chilubi"
+  },
+  {
+    "country_id": "64",
+    "Region": "",
+    "District": "Shiwang’andu"
+  },
+  {
+    "country_id": "65",
+    "Region": "",
+    "District": "Nakonde"
+  },
+  {
+    "country_id": "66",
+    "Region": "",
+    "District": "Mpika"
+  },
+  {
+    "country_id": "67",
+    "Region": "",
+    "District": "Mafinga"
+  },
+  {
+    "country_id": "68",
+    "Region": "",
+    "District": "Lavushimanda"
+  },
+  {
+    "country_id": "69",
+    "Region": "",
+    "District": "Kanchibiya"
+  },
+  {
+    "country_id": "70",
+    "Region": "",
+    "District": "Rufunsa"
+  },
+  {
+    "country_id": "71",
+    "Region": "",
+    "District": "Chinsali"
+  },
+  {
+    "country_id": "72",
+    "Region": "",
+    "District": "Isoka"
+  },
+  {
+    "country_id": "73",
+    "Region": "",
+    "District": "Choma"
+  },
+  {
+    "country_id": "74",
+    "Region": "",
+    "District": "Chirundu"
+  },
+  {
+    "country_id": "75",
+    "Region": "",
+    "District": "Zambezi"
+  },
+  {
+    "country_id": "76",
+    "Region": "",
+    "District": "Solwezi"
+  },
+  {
+    "country_id": "77",
+    "Region": "",
+    "District": "Mwinilunga"
+  },
+  {
+    "country_id": "78",
+    "Region": "",
+    "District": "Mushindamo"
+  },
+  {
+    "country_id": "79",
+    "Region": "",
+    "District": "Mufumbwe"
+  },
+  {
+    "country_id": "80",
+    "Region": "",
+    "District": "Manyinga"
+  },
+  {
+    "country_id": "81",
+    "Region": "",
+    "District": "Kalumbila"
+  },
+  {
+    "country_id": "82",
+    "Region": "",
+    "District": "Kasempa"
+  },
+  {
+    "country_id": "83",
+    "Region": "Kabompo",
+    "District": "Kabompo"
+  },
+  {
+    "country_id": "84",
+    "Region": "",
+    "District": "Ikelenge"
+  },
+  {
+    "country_id": "85",
+    "Region": "",
+    "District": "Chavuma"
+  },
+  {
+    "country_id": "86",
+    "Region": "",
+    "District": "Senga"
+  },
+  {
+    "country_id": "87",
+    "Region": "",
+    "District": "Mpulungu"
+  },
+  {
+    "country_id": "88",
+    "Region": "",
+    "District": "Nsama"
+  },
+  {
+    "country_id": "89",
+    "Region": "",
+    "District": "Mungwi"
+  },
+  {
+    "country_id": "90",
+    "Region": "",
+    "District": "Zimba"
+  },
+  {
+    "country_id": "91",
+    "Region": "",
+    "District": "Sinazongwe"
+  },
+  {
+    "country_id": "92",
+    "Region": "",
+    "District": "Siavonga"
+  },
+  {
+    "country_id": "93",
+    "Region": "",
+    "District": "Pemba"
+  },
+  {
+    "country_id": "94",
+    "Region": "",
+    "District": "Namwala"
+  },
+  {
+    "country_id": "95",
+    "Region": "",
+    "District": "Monze"
+  },
+  {
+    "country_id": "96",
+    "Region": "",
+    "District": "Mazabuka"
+  },
+  {
+    "country_id": "97",
+    "Region": "",
+    "District": "Livingstone"
+  },
+  {
+    "country_id": "98",
+    "Region": "",
+    "District": "Kazungula"
+  },
+  {
+    "country_id": "99",
+    "Region": "",
+    "District": "Gwembe"
+  },
+  {
+    "country_id": "100",
+    "Region": "",
+    "District": "Itezhi-Tezhi"
+  },
+  {
+    "country_id": "101",
+    "Region": "",
+    "District": "Kalomo"
+  },
+  {
+    "country_id": "102",
+    "Region": "",
+    "District": "Sioma"
+  },
+  {
+    "country_id": "103",
+    "Region": "",
+    "District": "Sikongo"
+  },
+  {
+    "country_id": "104",
+    "Region": "",
+    "District": "Shang’ombo"
+  },
+  {
+    "country_id": "105",
+    "Region": "",
+    "District": "Sesheke"
+  },
+  {
+    "country_id": "106",
+    "Region": "",
+    "District": "Senanga"
+  },
+  {
+    "country_id": "107",
+    "Region": "",
+    "District": "Nkeyema"
+  },
+  {
+    "country_id": "108",
+    "Region": "",
+    "District": "Nalolo"
+  },
+  {
+    "country_id": "109",
+    "Region": "",
+    "District": "Mwandi"
+  },
+  {
+    "country_id": "110",
+    "Region": "",
+    "District": "Mulobezi"
+  },
+  {
+    "country_id": "111",
+    "Region": "",
+    "District": "Mongu"
+  },
+  {
+    "country_id": "112",
+    "Region": "",
+    "District": "Mitete"
+  },
+  {
+    "country_id": "106",
+    "Region": "",
+    "District": "Kalabo"
+  },
+  {
+    "country_id": "107",
+    "Region": "",
+    "District": "Kaoma"
+  },
+  {
+    "country_id": "108",
+    "Region": "",
+    "District": "Limulunga"
+  },
+  {
+    "country_id": "109",
+    "Region": "",
+    "District": "Luampa"
+  },
+  {
+    "country_id": "110",
+    "Region": "",
+    "District": "Lukulu"
+  }
+]
