@@ -18,8 +18,9 @@ use App\Helpers\ImportClients;
 use App\Services\ClientService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
+use App\Exports\ClientExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\TransferClient;
 use App\Http\Resources\ClientResource;
 use Illuminate\Database\QueryException;
@@ -186,6 +187,78 @@ class ClientController extends Controller
                 return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         }
+    }
+
+
+    /**
+     * Bulk Add Clients(Phone Numbers)
+     * @group Clients
+     * @param Request $request
+     * @bodyParam phone_numbers file required  The Clients Phone Numbers
+     * @return JsonResponse
+     * @authenticated
+     */
+
+    public function createClientsWithPhoneNumbers(Request $request): JsonResponse
+    {
+
+        // $file = $request->file('file');
+        $numbers = [];
+
+        if (($open = fopen(storage_path() . "/23.csv", "r")) !== FALSE) {
+
+            while (($data = fgetcsv($open, 1000, ",")) !== FALSE) {
+                $numbers[] = $data;
+
+            }
+
+            fclose($open);
+        }
+
+        $user = Auth::user();
+        try {
+            $created = collect([]);
+            $failed = collect([]);
+            foreach ($numbers as $number) {
+                $client = Client::firstWhere('phone_number', $number[0]);
+                if(!$client){
+                    $client = new Client;
+                    $client->phone_number = $number[0];
+                    Log::debug();
+                    $client->staff_id = $user->id;
+                    $client->save();
+                    $created->push($number[0]);
+                }else{
+                    $failed->push($number[0]);
+                }
+            }
+
+            $response = array(
+                "successfully_created" => $created,
+                "creation_failed" => $failed,
+            );
+            return $this->commonResponse(true, 'Clients created successfully!', $response , Response::HTTP_CREATED);
+        } catch (QueryException $ex) {
+            return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $ex) {
+            return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+
+    /**
+     * Download client info
+     * @group Clients
+     * @param Request $request
+     * @return JsonResponse
+     * @authenticated
+     */
+
+    public function downloadClientInformation()
+    {
+
+        $currentTime = Carbon::now();
+        return Excel::download(new ClientExport, $currentTime.'.csv');
     }
 
     /**

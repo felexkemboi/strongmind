@@ -17,6 +17,7 @@ class StatusResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
+            'client_entry_phase' => $this->client_entry_phase,
         ];
     }
 }

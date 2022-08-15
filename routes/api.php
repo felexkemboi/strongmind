@@ -54,10 +54,12 @@ Route::prefix('country')->group(function () {
     Route::get('all',    [CountryController::class, 'all']);
     Route::get('active', [CountryController::class, 'activeCountries']);
     Route::group(['middleware' => 'auth:sanctum'], function(){
-        Route::put('update',      [CountryController::class, 'toggleStatus']);
-        Route::patch('activate',  [CountryController::class,'activate']);
-        Route::patch('deactivate',[CountryController::class,'deactivate']);
-        Route::get('/{id}/districts',[CountryController::class,'districts']);
+        Route::put('update',                 [CountryController::class, 'toggleStatus']);
+        Route::patch('activate',             [CountryController::class,'activate']);
+        Route::patch('deactivate',           [CountryController::class,'deactivate']);
+        Route::get('/{id}/districts',        [CountryController::class,'districts']);
+        Route::get('/regions-district',      [CountryController::class,'regionsDistricts']);
+        Route::get('/{id}/regions-districts',[CountryController::class,'countryRegionsDistricts']);
     });
 });
 
@@ -184,6 +186,8 @@ Route::group(['prefix' => 'projects','middleware' => 'auth:sanctum'], function()
 Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::get('/all',                 [ClientController::class,'index']);
     Route::post('create',              [ClientController::class,'create']);
+    Route::post('upload-clients',       [ClientController::class,'createClientsWithPhoneNumbers']);
+    Route::get('/download-client',     [ClientController::class,'downloadClientInformation']);
     Route::get('/{id}/details',        [ClientController::class,'show']);
     Route::delete('/{id}/delete',      [ClientController::class,'destroy']);
     Route::post('/therapy/activate',   [ClientController::class,'activate']);

@@ -1,6 +1,7 @@
 <?php
 namespace Database\Seeders;
 use App\Models\Country;
+use App\Models\RegionDistrict;
 use File;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -30,6 +31,23 @@ class CountrySeeder extends Seeder
                     'country_code' => $obj->iso2,
                     'long_code' => $obj->iso3,
                 ));
+            }
+
+            $path = 'database/data/'.$obj->name.'_regions_districts.json';
+
+            if(File::exists($path)){
+                $regions_districts = File::get($path);
+                $regions_districts_data = json_decode($regions_districts);
+
+                RegionDistrict::where('country_id', $obj->id)->delete();
+
+                foreach ($regions_districts_data as $record) {
+                    RegionDistrict::create(array(
+                        'country_id' => $obj->id ? $obj->id : '',
+                        'region' => $record->Region ? $record->Region : '',
+                        'district' => $record->District ? $record->District : ''
+                    ));
+                }
             }
         }
     }
