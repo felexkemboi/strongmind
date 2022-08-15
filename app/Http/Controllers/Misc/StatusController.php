@@ -59,6 +59,15 @@ class StatusController extends Controller
                         'slug' => $slug,
                         'client_entry_phase' => $request->get('client_entry_phase'),
                     ]);
+                    if($request->get('client_entry_phase')){
+                        $otherStatuses = Status::whereNotIn('id', [$record->id])->get();
+                        foreach ($otherStatuses as $otherStatus) {
+                            $statusToUpdate = Status::find($otherStatus->id);
+                            if($statusToUpdate){
+                              $statusToUpdate->update(['client_entry_phase' =>  0]);
+                            }
+                        }
+                    }
                     return $this->commonResponse(true, 'Record created successfully!', new StatusResource($record), Response::HTTP_CREATED);
                 }
             } catch (QueryException $ex) {
@@ -76,7 +85,7 @@ class StatusController extends Controller
      * @urlParam id integer required The ID of the status. Example:1
      * @bodyParam client_entry_phase boolean required . Is the status a client phase entry?
      * @return JsonResponse
-     * @bodyParam  name string required Status Name.
+     * @bodyParam  name string  Status Name.
      * @authenticated
      */
     public function update(Request $request, $id): JsonResponse
@@ -99,6 +108,13 @@ class StatusController extends Controller
                         'client_entry_phase' => $request->get('client_entry_phase'),
                     ]);
                     $record->fresh();
+                    $otherStatuses = Status::whereNotIn('id', [$id])->get();
+                    foreach ($otherStatuses as $otherStatus) {
+                        $statusToUpdate = Status::find($otherStatus->id);
+                        if($statusToUpdate){
+                          $statusToUpdate->update(['client_entry_phase' =>  0]);
+                        }
+                    }
                     return $this->commonResponse(true, 'Record updated successfully!', new StatusResource($record), Response::HTTP_CREATED);
                 }
             } catch (QueryException $ex) {
