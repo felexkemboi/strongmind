@@ -108,13 +108,8 @@ class StatusController extends Controller
                         'client_entry_phase' => $request->get('client_entry_phase'),
                     ]);
                     $record->fresh();
-                    $otherStatuses = Status::whereNotIn('id', [$id])->get();
-                    foreach ($otherStatuses as $otherStatus) {
-                        $statusToUpdate = Status::find($otherStatus->id);
-                        if($statusToUpdate){
-                          $statusToUpdate->update(['client_entry_phase' =>  0]);
-                        }
-                    }
+                    $otherStatus = Status::firstWhere('id', [$id]);
+                    $otherStatus->update(['client_entry_phase' =>  0]);
                     return $this->commonResponse(true, 'Record updated successfully!', new StatusResource($record), Response::HTTP_CREATED);
                 }
             } catch (QueryException $ex) {
