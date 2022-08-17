@@ -182,12 +182,13 @@ Route::group(['prefix' => 'projects','middleware' => 'auth:sanctum'], function()
     Route::post('/{id}/activate-membership',[ProgramMemberController::class,'activateMember']);
 });
 
+Route::get('/clients/download-client',     [ClientController::class,'downloadClientInformation']);
+
 //clients
 Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
     Route::get('/all',                 [ClientController::class,'index']);
     Route::post('create',              [ClientController::class,'create']);
-    Route::post('upload-clients',       [ClientController::class,'createClientsWithPhoneNumbers']);
-    Route::get('/download-client',     [ClientController::class,'downloadClientInformation']);
+    Route::post('upload-clients',      [ClientController::class,'createClientsWithPhoneNumbers']);
     Route::get('/{id}/details',        [ClientController::class,'show']);
     Route::delete('/{id}/delete',      [ClientController::class,'destroy']);
     Route::post('/therapy/activate',   [ClientController::class,'activate']);

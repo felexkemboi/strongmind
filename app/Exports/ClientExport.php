@@ -3,27 +3,32 @@
 namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
-use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
-class ClientExport implements FromCollection
+class ClientExport implements FromCollection,WithHeadings
 {
+
+    protected $data;
+
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
+
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
     public function collection()
     {
-
-        return DB::table('clients')
-            ->join('client_bio_data', 'clients.id', '=', 'client_bio_data.client_id')
-            ->join('users', 'clients.staff_id', '=', 'users.id')
-            ->get(array(
-                'client_bio_data.first_name',
-                'client_bio_data.last_name',
-                'clients.patient_id',
-                'clients.phone_number',
-                'users.name',
-                'clients.gender'
-            ));
+        return collect($this->data);
     }
 
     /**
@@ -34,22 +39,22 @@ class ClientExport implements FromCollection
     public function headings() :array
     {
         return [
-            'First Name',
-            'Last Name',
+            'Name',
+            'Gender',
             'Patient ID',
             'Phone Number',
-            'Staff Name',
-            'Gender'
+            'Age',
+            'Staff'
         ];
     }
 
     public function columnWidths(): array
     {
         return [
-            'A' => 10,
-            'B' => 45,
+            'A' => 20,
+            'B' => 15,
             'C' => 20,
-            'D' => 20,
+            'D' => 15,
             'E' => 20,
         ];
     }

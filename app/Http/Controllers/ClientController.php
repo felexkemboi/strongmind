@@ -11,6 +11,7 @@ use Illuminate\Support\Arr;
 use App\Models\Misc\Status;
 use Illuminate\Support\Str;
 use App\Models\Misc\Channel;
+use App\Exports\ClientExport;
 use Illuminate\Http\Request;
 use App\Models\ClientBioData;
 use App\Helpers\CountryHelper;
@@ -18,7 +19,6 @@ use App\Helpers\ImportClients;
 use App\Services\ClientService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use App\Exports\ClientExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\TransferClient;
@@ -189,54 +189,38 @@ class ClientController extends Controller
         }
     }
 
-
     /**
      * Bulk Add Clients(Phone Numbers)
      * @group Clients
      * @param Request $request
-     * @bodyParam phone_numbers file required  The Clients Phone Numbers
+     * @bodyParam clients integer[] required  The Clients Phone Numbers
      * @return JsonResponse
      * @authenticated
-     */
+    */
 
     public function createClientsWithPhoneNumbers(Request $request): JsonResponse
     {
-
-        // $file = $request->file('file');
-        $numbers = [];
-
-        if (($open = fopen(storage_path() . "/23.csv", "r")) !== FALSE) {
-
-            while (($data = fgetcsv($open, 1000, ",")) !== FALSE) {
-                $numbers[] = $data;
-
-            }
-
-            fclose($open);
-        }
-
         $user = Auth::user();
+        $created = collect([]);
+        $failed = collect([]);
         try {
-            $created = collect([]);
-            $failed = collect([]);
-            foreach ($numbers as $number) {
-                $client = Client::firstWhere('phone_number', $number[0]);
+            foreach($request->clients as $number){
+                $client = Client::firstWhere('phone_number', $number);
                 if(!$client){
                     $client = new Client;
-                    $client->phone_number = $number[0];
-                    Log::debug();
+                    $client->phone_number = $number;
                     $client->staff_id = $user->id;
                     $client->save();
-                    $created->push($number[0]);
+                    $created->push($number);
                 }else{
-                    $failed->push($number[0]);
+                    $failed->push($number);
                 }
-            }
 
-            $response = array(
-                "successfully_created" => $created,
-                "creation_failed" => $failed,
-            );
+                $response = array(
+                    "successfully_created" => $created,
+                    "creation_failed" => $failed,
+                );
+            }
             return $this->commonResponse(true, 'Clients created successfully!', $response , Response::HTTP_CREATED);
         } catch (QueryException $ex) {
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -246,19 +230,35 @@ class ClientController extends Controller
     }
 
 
+
     /**
      * Download client info
      * @group Clients
      * @param Request $request
-     * @return JsonResponse
+     * @queryParam clients string required  The Clients IDs E.g 23,54,27,45 or 0(for all)
      * @authenticated
-     */
+    */
 
-    public function downloadClientInformation()
+    public function downloadClientInformation(Request $request)
     {
-
-        $currentTime = Carbon::now();
-        return Excel::download(new ClientExport, $currentTime.'.csv');
+        try {
+            $clientIDs = collect([]);
+            $now = Carbon::today()->toDateString();
+            foreach (explode(',', $request->clients) as $client_id) {
+                $clientIDs->push((int)$client_id);
+            }
+            if($request->clients[0] == 0){
+                $clients = Client::all('name','gender','patient_id','phone_number','age','staff_id')->with('staff')->get();
+                return Excel::download(new ClientExport($clients), 'client-info-'.$now.'.csv');
+            }else{
+                $clients = Client::select('name','gender','patient_id','phone_number','age', 'staff_id')->whereIn('id', $clientIDs)->with('staff')->get();
+                return Excel::download(new ClientExport($clients), 'client-info-'.$now.'.csv');
+            }
+        } catch (QueryException $ex) {
+            return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $ex) {
+            return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
     }
 
     /**
@@ -585,13 +585,13 @@ class ClientController extends Controller
         return $this->commonResponse(true, 'Success', 'Client has no Logs', Response::HTTP_OK);
     }
 
-     /*
+    /**
      * Bulk load Clients
      * @param Request $request
      * @bodyParam file required.
      * @return JsonResponse
      * @authenticated
-     */
+    */
     public function otherSources(Request $request): JsonResponse
     {
         $import = new ImportClients;
@@ -708,8 +708,6 @@ class ClientController extends Controller
             }
             return $this->commonResponse(true,'Channel not changed','', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        //}
-
         return $this->commonResponse(false, 'success', 'Encountered an error during update', Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
