@@ -11,6 +11,7 @@ use Illuminate\Support\Arr;
 use App\Models\Misc\Status;
 use Illuminate\Support\Str;
 use App\Models\Misc\Channel;
+use App\Exports\ClientExport;
 use Illuminate\Http\Request;
 use App\Models\ClientBioData;
 use App\Helpers\CountryHelper;
@@ -234,21 +235,25 @@ class ClientController extends Controller
      * Download client info
      * @group Clients
      * @param Request $request
-     * @bodyParam clients integer[] required  The Clients IDs
-     * @return JsonResponse
+     * @queryParam clients string required  The Clients IDs E.g 23,54,27,45 or 0(for all)
      * @authenticated
     */
 
-    public function downloadClientInformation(Request $request): JsonResponse
+    public function downloadClientInformation(Request $request)
     {
         try {
-            if($request->clients[0] == 0){
-                $clients = Client::all('name','gender','phone_number','country_id','region','city','timezone_id','age','status_id','channel_id','languages');
-            }else{
-                $clients = Client::select('name','gender','phone_number','country_id','region','city','timezone_id','age','status_id','channel_id','languages')->findMany($request->clients);
-
+            $clientIDs = collect([]);
+            $now = Carbon::today()->toDateString();
+            foreach (explode(',', $request->clients) as $client_id) {
+                $clientIDs->push((int)$client_id);
             }
-            return $this->commonResponse(true, '', $clients , Response::HTTP_CREATED);
+            if($request->clients[0] == 0){
+                $clients = Client::all('name','gender','patient_id','phone_number','age','staff_id')->with('staff')->get();
+                return Excel::download(new ClientExport($clients), 'client-info-'.$now.'.csv');
+            }else{
+                $clients = Client::select('name','gender','patient_id','phone_number','age', 'staff_id')->whereIn('id', $clientIDs)->with('staff')->get();
+                return Excel::download(new ClientExport($clients), 'client-info-'.$now.'.csv');
+            }
         } catch (QueryException $ex) {
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $ex) {
@@ -580,7 +585,7 @@ class ClientController extends Controller
         return $this->commonResponse(true, 'Success', 'Client has no Logs', Response::HTTP_OK);
     }
 
-    /** 
+    /**
      * Bulk load Clients
      * @param Request $request
      * @bodyParam file required.
