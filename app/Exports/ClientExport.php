@@ -4,7 +4,6 @@ namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class ClientExport implements FromCollection,WithHeadings
 {
