@@ -100,7 +100,7 @@ class Client extends Model
 
 
     public function getStaffNameAttribute(){
-        return $this->staff->name;
+        return $this->staff ? $this->staff->name : 'Not Assigned';
     }
 
     /**

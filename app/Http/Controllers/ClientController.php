@@ -235,7 +235,7 @@ class ClientController extends Controller
      * Download client info
      * @group Clients
      * @param Request $request
-     * @queryParam clients string required  The Clients IDs E.g 23,54,27,45 or 0(for all)
+     * @queryParam clients string required  The Clients IDs E.g 23,54,27,45 or *(for all)
      * @authenticated
     */
 
@@ -244,13 +244,13 @@ class ClientController extends Controller
         try {
             $clientIDs = collect([]);
             $now = Carbon::today()->toDateString();
-            foreach (explode(',', $request->clients) as $client_id) {
-                $clientIDs->push((int)$client_id);
-            }
-            if($request->clients[0] == 0){
-                $clients = Client::all('name','gender','patient_id','phone_number','age','staff_id')->with('staff')->get();
+            if($request->clients == '*'){
+                $clients = Client::select('name','gender','patient_id','phone_number','age','staff_id')->with('staff')->get();
                 return Excel::download(new ClientExport($clients), 'client-info-'.$now.'.csv');
             }else{
+                foreach (explode(',', $request->clients) as $client_id) {
+                    $clientIDs->push((int)$client_id);
+                }
                 $clients = Client::select('name','gender','patient_id','phone_number','age', 'staff_id')->whereIn('id', $clientIDs)->with('staff')->get();
                 return Excel::download(new ClientExport($clients), 'client-info-'.$now.'.csv');
             }
