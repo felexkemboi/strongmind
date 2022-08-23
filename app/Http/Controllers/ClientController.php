@@ -193,7 +193,6 @@ class ClientController extends Controller
      * Bulk Add Clients(Phone Numbers)
      * @group Clients
      * @param Request $request
-     * @bodyParam clients integer[] required  The Clients Phone Numbers
      * @return JsonResponse
      * @authenticated
     */
@@ -201,35 +200,35 @@ class ClientController extends Controller
     public function createClientsWithPhoneNumbers(Request $request): JsonResponse
     {
         $user = Auth::user();
-        $created = collect([]);
-        $failed = collect([]);
         try {
-            foreach($request->clients as $number){
-                $client = Client::firstWhere('phone_number', $number);
-                if(!$client){
-                    $client = new Client;
-                    $client->phone_number = $number;
-                    $client->staff_id = $user->id;
-                    $client->save();
-                    $created->push($number);
-                }else{
-                    $failed->push($number);
-                }
+            foreach($request->clients as $clientToSave){
+                $channel = Channel::firstWhere('name', $clientToSave['channel']);
+                $client = new Client;
+                $client->phone_number = (int)$clientToSave['phone_number'];
+                $client->channel_id = $channel ? $channel->id : null;
 
-                $response = array(
-                    "successfully_created" => $created,
-                    "creation_failed" => $failed,
-                );
+                $client->staff_id = $user->id;
+                $date = Carbon::createFromFormat('d/m/Y', $clientToSave['date_of_birth']);
+                $client->age =  Carbon::parse($date)->diff(Carbon::now())->y;
+
+                $client->save();
+
+
+                $clientBioData = [
+                    'client_id' => $client->id,
+                    'first_name' => $clientToSave['first_name'],
+                    'last_name' => $clientToSave['last_name'],
+                    'date_of_birth' => $clientToSave['date_of_birth']
+                ];
+                ClientBioData::create($clientBioData);
             }
-            return $this->commonResponse(true, 'Clients created successfully!', $response , Response::HTTP_CREATED);
+            return $this->commonResponse(true, 'Clients created successfully!', '' , Response::HTTP_CREATED);
         } catch (QueryException $ex) {
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $ex) {
             return $this->commonResponse(false, $ex->getMessage(), '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
-
-
 
     /**
      * Download client info
