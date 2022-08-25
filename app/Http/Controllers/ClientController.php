@@ -202,6 +202,7 @@ class ClientController extends Controller
         $user = Auth::user();
         try {
             foreach($request->clients as $clientToSave){
+                $status = Status::firstWhere('client_entry_phase', 1);
                 $channel = Channel::firstWhere('name', $clientToSave['channel'] ? $clientToSave['channel'] : '');
                 $client = new Client;
                 $client->phone_number = $clientToSave['phone_number'];
@@ -214,6 +215,7 @@ class ClientController extends Controller
 
 
                 $clientBioData = [
+                    'status_id'   => $status ? $status->id : null,
                     'client_id' => $client->id,
                     'first_name' => $clientToSave['first_name'],
                     'last_name' => $clientToSave['last_name'],
