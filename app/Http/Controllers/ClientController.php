@@ -202,14 +202,13 @@ class ClientController extends Controller
         $user = Auth::user();
         try {
             foreach($request->clients as $clientToSave){
-                $channel = Channel::firstWhere('name', $clientToSave['channel']);
+                $channel = Channel::firstWhere('name', $clientToSave['channel'] ? $clientToSave['channel'] : '');
                 $client = new Client;
-                $client->phone_number = (int)$clientToSave['phone_number'];
+                $client->phone_number = $clientToSave['phone_number'];
                 $client->channel_id = $channel ? $channel->id : null;
 
                 $client->staff_id = $user->id;
-                $date = Carbon::createFromFormat('d/m/Y', $clientToSave['date_of_birth']);
-                $client->age =  Carbon::parse($date)->diff(Carbon::now())->y;
+                $client->age = Carbon::parse($clientToSave['date_of_birth'])->diff(Carbon::now())->y;
 
                 $client->save();
 
@@ -218,7 +217,7 @@ class ClientController extends Controller
                     'client_id' => $client->id,
                     'first_name' => $clientToSave['first_name'],
                     'last_name' => $clientToSave['last_name'],
-                    'date_of_birth' => $clientToSave['date_of_birth']
+                    'date_of_birth' => Carbon::parse($clientToSave['date_of_birth'])->format('Y-m-d')
                 ];
                 ClientBioData::create($clientBioData);
             }
