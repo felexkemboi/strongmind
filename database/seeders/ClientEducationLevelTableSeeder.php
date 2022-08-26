@@ -23,7 +23,23 @@ class ClientEducationLevelTableSeeder extends Seeder
                 'slug' => ''
             ),
             array(
+                'name' => 'Primary',
+                'slug' => ''
+            ),
+            array(
+                'name' => 'A-Level',
+                'slug' => ''
+            ),
+            array(
+                'name' => 'O-Level',
+                'slug' => ''
+            ),
+            array(
                 'name' => 'High School',
+                'slug' => ''
+            ),
+            array(
+                'name' => 'Tertiary Level',
                 'slug' => ''
             ),
             array(

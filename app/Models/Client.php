@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Misc\Channel;
 use App\Models\Misc\Status;
-use App\Models\Programs\Project;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -42,6 +41,9 @@ class Client extends Model
         'staff_id',
         'active',
     ];
+
+    protected $appends = ['staff_name'];
+    protected $hidden = ['staff','staff_id'];
 
     protected static $logAttributes = ['client_type','staff_id','name','therapy','patient_id','phone_number','city','languages','status_id','channel_id','active'];
 
@@ -91,6 +93,19 @@ class Client extends Model
     /**
      * @return BelongsTo
      */
+    public function staff(): BelongsTo
+    {
+        return $this->belongsTo(User::class,'staff_id','id');
+    }
+
+
+    public function getStaffNameAttribute(){
+        return $this->staff ? $this->staff->name : 'Not Assigned';
+    }
+
+    /**
+     * @return BelongsTo
+     */
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class,'country_id');
@@ -113,14 +128,6 @@ class Client extends Model
     }
 
     /**
-     * @return BelongsTo
-     */
-    public function staff(): BelongsTo
-    {
-        return $this->belongsTo(User::class,'staff_id');
-    }
-
-    /**
      * @return HasMany
      */
     public function notes(): HasMany
@@ -140,11 +147,4 @@ class Client extends Model
     {
         return explode(',', $value);
     }
-
-    // public function delete()
-    // {
-    //     $this->bioData()->delete();
-
-    //     return parent::delete();
-    // }
 }

@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\RegionDistrict;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Country extends Model
 {
@@ -20,4 +21,14 @@ class Country extends Model
     {
         return $query->where('active', 1);
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function regionsDistricts():HasMany
+    {
+        return $this->hasMany(RegionDistrict::class);
+
+    }
+
 }

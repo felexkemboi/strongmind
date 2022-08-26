@@ -33,6 +33,14 @@ class ClientMaritalStatusTableSeeder extends Seeder
             array(
                 'name' => 'Divorced',
                 'slug' => ''
+            ),
+            array(
+                'name' => 'Widow',
+                'slug' => ''
+            ),
+            array(
+                'name' => 'Widower',
+                'slug' => ''
             )
         );
         for($i = 0, $iMax = count($maritalStatuses); $i < $iMax; $i++){
