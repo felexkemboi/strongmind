@@ -5,7 +5,7 @@ ls
 # sudo cp /opt/bitnami/projects/appapi/scripts/appapi-vhost.conf /opt/bitnami/apache2/conf/vhosts/
 sudo chown -R daemon:daemon /opt/bitnami/projects/appapi/storage/**/*
 sudo chmod -R 777 /opt/bitnami/projects/appapi/
-sudo chmod -R 775 /opt/bitnami/projects/appapi/storage/
+sudo chmod -R 777 /opt/bitnami/projects/appapi/storage/
 /opt/bitnami/php/bin/php artisan migrate --force
 /opt/bitnami/php/bin/php artisan db:seed
 /opt/bitnami/php/bin/php artisan update:permissions
