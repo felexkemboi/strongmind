@@ -15,6 +15,7 @@ class AddRefferedByToClientsTable extends Migration
     {
         Schema::table('clients', function (Blueprint $table) {
             $table->string('referredBy')->after('referredThrough');
+            $table->string('referredBy')->nullable();
         });
     }
 
