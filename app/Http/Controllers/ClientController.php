@@ -208,9 +208,11 @@ class ClientController extends Controller
                 $client->phone_number = $clientToSave['phone_number'];
                 $client->channel_id = $channel ? $channel->id : null;
                 $client->status_id = $status->id;
-
+                $client->referredBy = $clientToSave['referred_by'] ? $clientToSave['referred_by'] : null;
+                $client->languages = $clientToSave['language'] ? $clientToSave['language'] : null;
+                $client->gender = $clientToSave['gender'] ? $clientToSave['gender'] : null;
                 $client->staff_id = $user->id;
-                $client->age = Carbon::parse($clientToSave['date_of_birth'])->diff(Carbon::now())->y;
+                $client->age = $clientToSave['age'] ? $clientToSave['age'] : null;
 
                 $client->save();
 
