@@ -212,7 +212,7 @@ class ClientController extends Controller
                 $client->languages = $clientToSave['language'] ? $clientToSave['language'] : null;
                 $client->gender = $clientToSave['gender'] ? $clientToSave['gender'] : null;
                 $client->staff_id = $user->id;
-                $client->age = Carbon::parse($clientToSave['date_of_birth'])->diff(Carbon::now())->y;
+                $client->age = $clientToSave['age'] ? $clientToSave['age'] : null;
 
                 $client->save();
 
