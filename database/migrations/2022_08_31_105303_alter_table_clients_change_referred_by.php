@@ -14,7 +14,7 @@ class AlterTableClientsChangeReferredBy extends Migration
     public function up()
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->string('referredBy')->unsigned()->nullable()->change();
+            $table->string('referredBy')->nullable()->change();
         });
     }
 
