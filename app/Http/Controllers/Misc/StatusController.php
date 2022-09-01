@@ -28,7 +28,7 @@ class StatusController extends Controller
      */
     public function index(): JsonResponse
     {
-        $statuses = Status::query()->select(['id', 'name', 'slug', 'client_entry_phase'])->orderBy('created_at','DESC')->get();
+        $statuses = Status::query()->select(['id', 'name', 'slug', 'client_entry_phase'])->orderBy('created_at','ASC')->get();
         return $this->commonResponse(true, 'success', $statuses, Response::HTTP_OK);
     }
 
