@@ -221,8 +221,7 @@ class ClientController extends Controller
                     'status_id'   => $status ? $status->id : null,
                     'client_id' => $client->id,
                     'first_name' => $clientToSave['first_name'],
-                    'last_name' => $clientToSave['last_name'],
-                    'date_of_birth' => $clientToSave['date_of_birth'] ? Carbon::parse($clientToSave['date_of_birth'])->format('Y-m-d') : null,
+                    'last_name' => $clientToSave['last_name']
                 ];
                 ClientBioData::create($clientBioData);
             }
