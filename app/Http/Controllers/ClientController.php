@@ -201,31 +201,39 @@ class ClientController extends Controller
     {
         $user = Auth::user();
         try {
+            $failed_saved = collect([]);
             foreach($request->clients as $clientToSave){
-                $status = Status::firstWhere('client_entry_phase', 1);
-                $channel = Channel::firstWhere('name', $clientToSave['channel'] ? $clientToSave['channel'] : '');
-                $client = new Client;
-                $client->phone_number = $clientToSave['phone_number'];
-                $client->channel_id = $channel ? $channel->id : null;
-                $client->status_id = $status->id;
-                $client->referredBy = $clientToSave['referred_by'] ? $clientToSave['referred_by'] : null;
-                $client->languages = $clientToSave['language'] ? $clientToSave['language'] : null;
-                $client->gender = $clientToSave['gender'] ? $clientToSave['gender'] : null;
-                $client->staff_id = $user->id;
-                $client->age = $clientToSave['age'] ? $clientToSave['age'] : null;
+                if (array_key_exists("phone_number",$clientToSave) && array_key_exists("channel",$clientToSave) && array_key_exists("language",$clientToSave)){
+                    $status = Status::firstWhere('client_entry_phase', 1);
+                    $channel = Channel::firstWhere('name', $clientToSave['channel']);
+                    $client = new Client;
+                    $client->phone_number = $clientToSave['phone_number'];
+                    $client->channel_id = $channel ? $channel->id : null;
+                    $client->status_id = $status->id;
+                    $client->referredBy = $clientToSave['referred_by'] ? $clientToSave['referred_by'] : null;
+                    $client->languages = $clientToSave['language'];
+                    $client->gender = $clientToSave['gender'] ? $clientToSave['gender'] : null;
+                    $client->staff_id = $user->id;
+                    $client->age = $clientToSave['age'] ? $clientToSave['age'] : null;
 
-                $client->save();
+                    $client->save();
 
 
-                $clientBioData = [
-                    'status_id'   => $status ? $status->id : null,
-                    'client_id' => $client->id,
-                    'first_name' => $clientToSave['first_name'],
-                    'last_name' => $clientToSave['last_name']
-                ];
-                ClientBioData::create($clientBioData);
+                    $clientBioData = [
+                        'status_id'   => $status ? $status->id : null,
+                        'client_id' => $client->id,
+                        'first_name' => $clientToSave['first_name'],
+                        'last_name' => $clientToSave['last_name']
+                    ];
+                    ClientBioData::create($clientBioData);
+                }else{
+                    $failed_saved->push($clientToSave);
+                }
             }
-            return $this->commonResponse(true, 'Clients created successfully!', '' , Response::HTTP_CREATED);
+            $finalArray = array(
+                "failed saved" => $failed_saved
+            );
+            return $this->commonResponse(true, $failed_saved->isEmpty() ? 'Clients created successfully!' : $finalArray, '' , Response::HTTP_CREATED);
         } catch (QueryException $ex) {
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $ex) {
@@ -253,7 +261,7 @@ class ClientController extends Controller
                 foreach (explode(',', $request->clients) as $client_id) {
                     $clientIDs->push((int)$client_id);
                 }
-                $clients = Client::select('name','gender','patient_id','phone_number','age', 'staff_id')->whereIn('id', $clientIDs)->with('staff')->get();
+                $clients = Client::select('name','gender','patient_id','phone_number','age', 'staff_id')->whereIn('id', $clientIDs)->where('status_id', (int)$request->status)->with('staff')->get();
                 return Excel::download(new ClientExport($clients), 'client-info-'.$now.'.csv');
             }
         } catch (QueryException $ex) {
