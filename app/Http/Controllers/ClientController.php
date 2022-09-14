@@ -255,6 +255,10 @@ class ClientController extends Controller
             $clientIDs = collect([]);
             $now = Carbon::today()->toDateString();
             if($request->clients == '*'){
+                if($request->status){
+                    $clients = Client::select('name','gender','patient_id','phone_number','age','staff_id')->where('status_id', (int)$request->status)->with('staff')->get();
+                    return Excel::download(new ClientExport($clients), 'client-info-'.$now.'.csv');
+                }
                 $clients = Client::select('name','gender','patient_id','phone_number','age','staff_id')->with('staff')->get();
                 return Excel::download(new ClientExport($clients), 'client-info-'.$now.'.csv');
             }else{
