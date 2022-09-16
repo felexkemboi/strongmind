@@ -282,10 +282,11 @@ class ClientController extends Controller
                     ->leftjoin('client_bio_data','clients.id','=','client_bio_data.client_id')
                     ->leftjoin('client_marital_statuses','client_bio_data.marital_status_id','=','client_marital_statuses.id')
                     ->leftjoin('client_education_levels','client_education_levels.id','=','client_bio_data.education_level_id')
-                    ->leftjoin('client_form','clients.id','=','client_form.client_id')
-                    ->leftJoin('forms', function ($join) {
-                        $join->on('client_form.form_id', '=', DB::raw('(SELECT form_id FROM client_form WHERE client_form.form_id = form.id LIMIT 1)'));
+                    ->leftJoin('client_form', function ($join) {
+                        $join->on('clients.id', '=', DB::raw('(SELECT client_id FROM client_form WHERE client_form.client_id = clients.id)'))
+                        ->where('client_form.created_at', '=', DB::raw("(select max(`created_at`) from client_form)"));
                     })
+                    ->leftjoin('forms','client_form.form_id','=','forms.id')
                     ->where(function($query) use ($statusID){
                         $query->where('clients.status_id',$statusID);
                     })
@@ -315,10 +316,11 @@ class ClientController extends Controller
                 ->leftjoin('client_bio_data','clients.id','=','client_bio_data.client_id')
                 ->leftjoin('client_marital_statuses','client_bio_data.marital_status_id','=','client_marital_statuses.id')
                 ->leftjoin('client_education_levels','client_education_levels.id','=','client_bio_data.education_level_id')
-                ->leftjoin('client_form','clients.id','=','client_form.client_id')
-                ->leftJoin('forms', function ($join) {
-                    $join->on('client_form.form_id', '=', DB::raw('(SELECT form_id FROM client_form WHERE client_form.form_id = form.id LIMIT 1)'));
+                ->leftJoin('client_form', function ($join) {
+                    $join->on('clients.id', '=', DB::raw('(SELECT client_id FROM client_form WHERE client_form.client_id = clients.id)'))
+                    ->where('client_form.created_at', '=', DB::raw("(select max(`created_at`) from client_form)"));
                 })
+                ->leftjoin('forms','client_form.form_id','=','forms.id')
                 ->get();
                 return Excel::download(new ClientExport($clients), 'client-info-'.$now.'.csv');
             }else{
@@ -350,10 +352,11 @@ class ClientController extends Controller
                 ->leftjoin('client_bio_data','clients.id','=','client_bio_data.client_id')
                 ->leftjoin('client_marital_statuses','client_bio_data.marital_status_id','=','client_marital_statuses.id')
                 ->leftjoin('client_education_levels','client_education_levels.id','=','client_bio_data.education_level_id')
-                ->leftjoin('client_form','clients.id','=','client_form.client_id')
-                ->leftJoin('forms', function ($join) {
-                    $join->on('client_form.form_id', '=', DB::raw('(SELECT form_id FROM client_form WHERE client_form.form_id = form.id LIMIT 1)'));
+                ->leftJoin('client_form', function ($join) {
+                    $join->on('clients.id', '=', DB::raw('(SELECT client_id FROM client_form WHERE client_form.client_id = clients.id)'))
+                    ->where('client_form.created_at', '=', DB::raw("(select max(`created_at`) from client_form)"));
                 })
+                ->leftjoin('forms','client_form.form_id','=','forms.id')
                 ->whereIn('clients.id', $clientIDs)
                 ->where(function($query) use ($statusID){
                     $query->where('clients.status_id',$statusID);

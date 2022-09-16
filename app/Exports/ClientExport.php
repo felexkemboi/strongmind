@@ -42,7 +42,6 @@ class ClientExport implements FromCollection,WithHeadings
     public function headings() :array
     {
         return [
-            'ID',
             'First Name',
             'Last Name',
             'Other Name',
