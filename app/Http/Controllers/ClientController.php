@@ -18,6 +18,7 @@ use App\Helpers\CountryHelper;
 use App\Helpers\ImportClients;
 use App\Services\ClientService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
@@ -256,16 +257,101 @@ class ClientController extends Controller
             $now = Carbon::today()->toDateString();
             if($request->clients == '*'){
                 if($request->status){
-                    $clients = Client::select('name','gender','patient_id','phone_number','age','staff_id')->where('status_id', (int)$request->status)->with('staff')->get();
+                    $status = (int)$request->status;
+                    $clients =  DB::table('clients')
+                    ->select(
+                        'client_bio_data.first_name',
+                        'client_bio_data.last_name',
+                        'client_bio_data.other_name',
+                        'clients.region',
+                        'clients.city',
+                        'clients.languages',
+                        'clients.gender',
+                        'clients.patient_id',
+                        'clients.phone_number',
+                        'clients.age',
+                        'users.name as staff',
+                        'client_bio_data.date_of_birth',
+                        'client_marital_statuses.name as marital status',
+                        'client_education_levels.name as education level',
+                        'client_form.score',
+                        'forms.name as form'
+                    )
+                    ->leftjoin('users','clients.staff_id','=','users.id')
+                    ->leftjoin('client_bio_data','clients.id','=','client_bio_data.client_id')
+                    ->leftjoin('client_marital_statuses','client_bio_data.marital_status_id','=','client_marital_statuses.id')
+                    ->leftjoin('client_education_levels','client_education_levels.id','=','client_bio_data.education_level_id')
+                    ->leftjoin('client_form','clients.id','=','client_form.client_id')
+                    ->leftjoin('forms','client_form.form_id','=','forms.id')
+                    ->where(function($query) use ($status){
+                        $query->where('clients.status_id',$status);
+                    })
+                    ->get();
                     return Excel::download(new ClientExport($clients), 'client-info-'.$now.'.csv');
                 }
-                $clients = Client::select('name','gender','patient_id','phone_number','age','staff_id')->with('staff')->get();
+                $clients =  DB::table('clients')
+                ->select(
+                    'client_bio_data.first_name',
+                    'client_bio_data.last_name',
+                    'client_bio_data.other_name',
+                    'clients.region',
+                    'clients.city',
+                    'clients.languages',
+                    'clients.gender',
+                    'clients.patient_id',
+                    'clients.phone_number',
+                    'clients.age',
+                    'users.name as staff',
+                    'client_bio_data.date_of_birth',
+                    'client_marital_statuses.name as marital status',
+                    'client_education_levels.name as education level',
+                    'client_form.score',
+                    'forms.name as form'
+                )
+                ->leftjoin('users','clients.staff_id','=','users.id')
+                ->leftjoin('client_bio_data','clients.id','=','client_bio_data.client_id')
+                ->leftjoin('client_marital_statuses','client_bio_data.marital_status_id','=','client_marital_statuses.id')
+                ->leftjoin('client_education_levels','client_education_levels.id','=','client_bio_data.education_level_id')
+                ->leftjoin('client_form','clients.id','=','client_form.client_id')
+                ->leftjoin('forms','client_form.form_id','=','forms.id')
+                ->get();
                 return Excel::download(new ClientExport($clients), 'client-info-'.$now.'.csv');
             }else{
                 foreach (explode(',', $request->clients) as $client_id) {
                     $clientIDs->push((int)$client_id);
                 }
-                $clients = Client::select('name','gender','patient_id','phone_number','age', 'staff_id')->whereIn('id', $clientIDs)->where('status_id', (int)$request->status)->with('staff')->get();
+                $status = (int)$request->status;
+                $clients =  DB::table('clients')
+                ->select(
+                    'client_bio_data.first_name',
+                    'client_bio_data.last_name',
+                    'client_bio_data.other_name',
+                    'clients.region',
+                    'clients.city',
+                    'clients.languages',
+                    'clients.gender',
+                    'clients.patient_id',
+                    'clients.phone_number',
+                    'clients.age',
+                    'users.name as staff',
+                    'client_bio_data.date_of_birth',
+                    'client_marital_statuses.name as marital status',
+                    'client_education_levels.name as education level',
+                    'client_form.score',
+                    'forms.name as form'
+                )
+                ->leftjoin('users','clients.staff_id','=','users.id')
+                ->leftjoin('client_bio_data','clients.id','=','client_bio_data.client_id')
+                ->leftjoin('client_marital_statuses','client_bio_data.marital_status_id','=','client_marital_statuses.id')
+                ->leftjoin('client_education_levels','client_education_levels.id','=','client_bio_data.education_level_id')
+                ->leftjoin('client_form','clients.id','=','client_form.client_id')
+                ->leftjoin('forms','client_form.form_id','=','forms.id')
+                ->whereIn('clients.id', $clientIDs)
+                ->where(function($query) use ($status){
+                    $query->where('clients.status_id',$status);
+                })
+                ->get();
+
                 return Excel::download(new ClientExport($clients), 'client-info-'.$now.'.csv');
             }
         } catch (QueryException $ex) {
