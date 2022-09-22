@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\ClientDistrict;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ClientResource extends JsonResource
@@ -24,6 +25,7 @@ class ClientResource extends JsonResource
             'country_id' => $this->country_id,
             'gender' => $this->gender,
             'region' => $this->region,
+            'district' => ClientDistrict::find($this->bioData->district_id),
             'city' => $this->city,
             'timezone_id' => $this->timezone_id,
             'languages' => $this->languages,
