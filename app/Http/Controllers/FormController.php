@@ -79,7 +79,7 @@ class FormController extends Controller
      * @param CreateFormRequest $request
      * @return JsonResponse
      * @bodyParam name string required The Form's Name
-     * @bodyParam assessment boolean required  The Form's status
+     * @bodyParam assessment boolean  The Form's status
      * @bodyParam status_id integer  The Form's status
      * @authenticated
      */
@@ -90,7 +90,7 @@ class FormController extends Controller
             $form = new Form();
             $form->name = $request->name;
             $form->assessment = $request->assessment;
-            $form->status_id = $request->status_id ? $request->status_id : '';
+            $form->status_id = $request->status_id ? $request->status_id : null;
             if ($form->save()) {
                 return $this->commonResponse(true, 'Form created successfully!', $form, Response::HTTP_CREATED);
             }
