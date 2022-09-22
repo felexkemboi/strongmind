@@ -26,7 +26,7 @@ class CreateFormRequest extends FormRequest
         return [
             'name'       => ['required','string','unique:forms,name','min:3','max:30'],
             'assessment' => 'boolean|required',
-            'status_id'  => ['integer','not_in:0','exists:statuses,id'],
+            'status_id'  => ['integer'],
         ];
     }
 }
