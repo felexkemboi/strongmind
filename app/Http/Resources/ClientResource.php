@@ -33,6 +33,7 @@ class ClientResource extends JsonResource
             'status_id' => $this->status_id,
             'channel_id' => $this->channel_id,
             'staff_id' => $this->staff_id,
+            'reffered_by' => $this->referredBy,
             'active' => $this->active === 1 ? true:false,
             'status' => $this->status,
             'channel' => $this->channel,

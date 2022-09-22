@@ -4,9 +4,6 @@ namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-// use Maatwebsite\Excel\Concerns\FromQuery;
-// use Illuminate\Support\Facades\DB;
-// use Maatwebsite\Excel\Concerns\Exportable;
 
 
 class ClientExport implements FromCollection,WithHeadings
@@ -38,28 +35,28 @@ class ClientExport implements FromCollection,WithHeadings
      * Write code on Method
      *
      * @return response()
-     */
+      */
     public function headings() :array
-    {
-        return [
-            'First Name',
-            'Last Name',
-            'Other Name',
-            'Region',
-            'City',
-            'Languages',
-            'Gender',
-            'Patient ID',
-            'Phone Number',
-            'Age',
-            'Staff',
-            'D.O.B',
-            'Marital Status',
-            'Education Level',
-            'Score',
-            'Form'
-        ];
-    }
+     {
+         // Log::debug(collect($this->data));
+         return [
+             'First Name',
+             'Last Name',
+             'Other Name',
+             'Region',
+             'District',
+             'City',
+             'Languages',
+             'Gender',
+             'Patient ID',
+             'Phone Number',
+             'Age',
+             'Staff',
+             'D.O.B',
+             'Marital Status',
+             'Education Level'
+         ];
+     }
 
     public function columnWidths(): array
     {
