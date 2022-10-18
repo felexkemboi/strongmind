@@ -14,6 +14,7 @@ use App\Models\QuestionOptions;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\QueryException;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Resources\FormResource;
 use App\Http\Requests\CreateFormRequest;
 use App\Http\Requests\EditFormRequest;
 
@@ -57,7 +58,7 @@ class FormController extends Controller
                     return $query->where('status_id', '=', $status);
                 })
                 ->get();
-        return $this->commonResponse(true, 'success', $forms, Response::HTTP_OK);
+        return $this->commonResponse(true, 'success', FormResource::collection($forms), Response::HTTP_OK);
     }
 
     /**

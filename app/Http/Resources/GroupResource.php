@@ -3,10 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Group;
-use App\Models\User;
 use App\Services\GroupService;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
