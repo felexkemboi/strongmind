@@ -14,7 +14,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Postmark\PostmarkClient;
-//use Silber\Bouncer\Database\Role;
 use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\SetPasswordRequest;
