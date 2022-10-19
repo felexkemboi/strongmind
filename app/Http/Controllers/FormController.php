@@ -76,7 +76,7 @@ class FormController extends Controller
 
 
     /**
-     * Create  Form
+     * Create  a Form
      * @param CreateFormRequest $request
      * @return JsonResponse
      * @bodyParam name string required The Form's Name
@@ -140,7 +140,7 @@ class FormController extends Controller
     }
 
     /**
-     * Get Questions
+     * Get All Form Questions
      * @param  Form  $form
      * @return JsonResponse
      * @urlParam id integer required The ID of the Form Example:1
