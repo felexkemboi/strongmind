@@ -96,6 +96,7 @@ class GroupController extends Controller
      * @bodyParam name string required
      * @bodyParam group_type_id integer
      * @bodyParam office_id integer. The Group's Office ID . Example: 1
+     * @bodyParam staff_id integer. The Group's Staff ID . Example: 1
      * @bodyParam project_id integer. The Group's Project ID . Example: 1
      * @bodyParam cycle_id integer. The Group's Cycle ID . Example: 1
      * @bodyParam fascilitator_id integer. The Group's Fascilitator ID . Example: 1

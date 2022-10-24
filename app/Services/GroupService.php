@@ -5,7 +5,6 @@ namespace App\Services;
 
 
 use App\Http\Resources\GroupTypeResource;
-use App\Models\Client;
 use App\Models\ClientBioData;
 use App\Models\Group;
 use App\Models\GroupClient;
@@ -107,6 +106,8 @@ class GroupService
                         ];
                     }),
                 ],
+            'facilitator' => User::find($group->fascilitator_id) ? User::find($group->fascilitator_id) : 'No facilitor',
+            'supervisor' => User::find($group->supervisor_id) ? User::find($group->supervisor_id) : 'No Supervisor'
         ];
     }
 

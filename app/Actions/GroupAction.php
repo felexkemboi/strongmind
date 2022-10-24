@@ -204,6 +204,7 @@ class GroupAction
                 'cycle_id' => $request->cycle_id ?? $group->cycle_id,
                 'fascilitator_id' => $request->fascilitator_id ?? $group->fascilitator_id,
                 'supervisor_id' => $request->supervisor_id ?? $group->supervisor_id,
+                'staff_id' => $request->staff_id ?? $group->staff_id,
                 'therapy_mode_id' => $request->therapy_mode_id ?? $group->therapy_mode_id,
                 'mode_of_delivery_id' => $request->mode_of_delivery_id ?? $group->mode_of_delivery_id,
                 'group_allocation_date' => $request->group_allocation_date !== null ? Carbon::parse($request->group_allocation_date)->format('d M Y') : $group->group_allocation_date,

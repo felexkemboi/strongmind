@@ -32,6 +32,7 @@ class GroupUpdateRequest extends FormRequest
             'cycle_id'  => ['integer','nullable','not_in:0','exists:cycle,id'],
             'fascilitator_id' => ['integer','nullable','not_in:0','exists:users,id'],
             'supervisor_id' => ['integer','nullable','not_in:0','exists:users,id'],
+            'staff_id' => ['integer','nullable','not_in:0','exists:users,id'],
             'therapy_mode_id' => ['integer','nullable','not_in:0','exists:therapy_mode,id'],
             'mode_of_delivery_id' => ['integer','nullable','not_in:0','exists:modes_of_delivery,id'],
             'group_allocation_date' => ['nullable','date']
