@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\Form;
 use App\Models\Question;
+use App\Exports\ResponseExport;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
+use App\Models\QuestionResponses;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\QueryException;
 use Symfony\Component\HttpFoundation\Response;
-use App\Http\Requests\CreateQuestionResponseRequest;
 use App\Http\Requests\EditQuestionResponseRequest;
-use App\Models\QuestionResponses;
-use App\Models\Form;
-use Exception;
+use App\Http\Requests\CreateQuestionResponseRequest;
 
 /**
  * Class QuestionResponsesController
@@ -31,6 +34,37 @@ class QuestionResponsesController extends Controller
     {
         $options = QuestionResponses::all();
         return $this->commonResponse(true, 'success', $options, Response::HTTP_OK);
+    }
+
+    /**
+     * Download Question Responses
+     * @authenticated
+     * @return JsonResponse
+    */
+
+    public function downloadResponses()
+    {
+        $responses =  DB::table('questionresponses')
+        ->leftjoin('questions',       'questionresponses.question_id','=', 'questions.id')
+        ->leftjoin('clients',         'questionresponses.client_id','=',   'clients.id')
+        ->leftjoin('groups',          'questionresponses.group_id','=',    'groups.id')
+        ->leftjoin('questionsoptions','questionresponses.option_id','=',   'questionsoptions.id')
+        ->leftjoin('forms',           'questionresponses.form_id','=',     'forms.id')
+        ->leftjoin('group_sessions',  'questionresponses.session_id','=',  'group_sessions.id')
+        ->leftjoin('statuses',        'questionresponses.status_id','=',   'statuses.id')
+        ->select(
+            DB::raw('
+                questions.description,
+                clients.name,
+                groups.name,
+                forms.name,
+                questionsoptions.value,
+                statuses.name,
+                questionsoptions.score
+            ')
+        )
+        ->get();
+        return Excel::download(new ResponseExport($responses), 'responses.csv');
     }
 
     /**

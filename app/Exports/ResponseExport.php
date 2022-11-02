@@ -6,7 +6,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
 
-class ClientExport implements FromCollection,WithHeadings
+class ResponseExport implements FromCollection,WithHeadings
 {
 
     protected $data;
@@ -38,23 +38,15 @@ class ClientExport implements FromCollection,WithHeadings
       */
     public function headings() :array
      {
-         return [
-             'First Name',
-             'Last Name',
-             'Other Name',
-             'Region',
-             'District',
-             'City',
-             'Languages',
-             'Gender',
-             'Patient ID',
-             'Phone Number',
-             'Age',
-             'Staff',
-             'D.O.B',
-             'Marital Status',
-             'Education Level'
-         ];
+        return [
+            'Question',
+            'Client',
+            'Group',
+            'Form',
+            'Value',
+            'Status',
+            'Score'
+        ];
      }
 
     public function columnWidths(): array
