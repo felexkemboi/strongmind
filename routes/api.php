@@ -248,6 +248,7 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'groups'], function(){
         Route::delete('/{id}/delete',     [GroupSessionController::class,'destroy']);
         Route::post('/{id}/attendance',   [GroupAttendanceController::class,'index']);
         Route::get('/{id}/attendance',    [GroupAttendanceController::class,'show']);
+        Route::get('/download',           [GroupSessionController::class,'download']);
     });
 });
 

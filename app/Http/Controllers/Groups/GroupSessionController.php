@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers\Groups;
 
+use App\Models\Group;
+use Illuminate\Http\Request;
+use App\Exports\SessionExport;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use App\Actions\GroupSessionAction;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\GroupSessionRequest;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Services\PermissionRoleService;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use App\Http\Requests\GroupSessionRequest;
+
+
 
 /**
  * Manage Group Sessions
@@ -109,5 +115,36 @@ class GroupSessionController extends Controller
     {
         $this->permissionRoleService->verifyUserHasPermissionTo('view session attendance');
         return $this->groupSessionAction->listSessionAttendance($id);
+    }
+
+    /**
+     * Download sessions
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function download()
+    {
+
+        $group_sessions =  DB::table('group_sessions')
+                                ->groupBy('group_id')
+                                ->get()
+                                ->pluck('group_id');
+
+        $groups = Group::select('name','id')
+                            ->whereIn('id', $group_sessions)
+                            ->with('sessions')
+                            ->get();
+
+        $formattedGroups = collect([]);
+        foreach ($groups as $group) {
+            $sessions = '';
+            foreach($group['sessions'] as $session){
+                $sessions = $sessions.$session['session_date'].',';
+            }
+            $formattedGroup = ['group' => $group->name, 'sessions' => $sessions];
+            $formattedGroups->push($formattedGroup);
+        }
+
+        return Excel::download(new SessionExport($formattedGroups), 'sessions.csv');
     }
 }

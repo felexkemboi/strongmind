@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers\Groups;
 
-use App\Actions\GroupAction;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\GroupClientRequest;
-use App\Http\Requests\GroupRequest;
-use App\Http\Requests\GroupUpdateRequest;
-use App\Services\PermissionRoleService;
-use Illuminate\Http\JsonResponse;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Actions\GroupAction;
+use Illuminate\Http\JsonResponse;
+use App\Http\Requests\GroupRequest;
+use App\Http\Controllers\Controller;
+use App\Services\PermissionRoleService;
+use App\Http\Requests\GroupClientRequest;
+use App\Http\Requests\GroupUpdateRequest;
 use Spatie\Activitylog\Models\Activity as ActivityLog;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\User;
-
 
 /**
  * Groups Endpoints
