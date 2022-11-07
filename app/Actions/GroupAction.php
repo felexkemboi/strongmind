@@ -71,15 +71,11 @@ class GroupAction
                 });
             }
 
-            //search by staff name
+            //filter by project
             if($request->has('staff') && $request->filled('staff')){
-                if($user){
-                    $groups =  $groups->where(function(Builder $query) use($user){
-                        $query->where('staff_id','=',$user->id);
-                    });
-                }else{
-                    return $this->commonResponse(false,'Staff Not Found','', Response::HTTP_NOT_FOUND);
-                }
+                $groups =  $groups->where(function(Builder $query) use($staff){
+                    $query->where('staff_id','=',$staff);
+                });
             }
 
             if($request->has('sort') && $request->filled('sort')){
