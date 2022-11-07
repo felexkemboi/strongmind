@@ -249,6 +249,7 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'groups'], function(){
         Route::post('/{id}/attendance',   [GroupAttendanceController::class,'index']);
         Route::get('/{id}/attendance',    [GroupAttendanceController::class,'show']);
         Route::get('/download',           [GroupSessionController::class,'download']);
+        Route::get('/download-attendance/{id}',[GroupSessionController::class,'downloadSessionAttendance']);
     });
 });
 

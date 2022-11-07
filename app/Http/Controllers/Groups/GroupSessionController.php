@@ -3,21 +3,24 @@
 namespace App\Http\Controllers\Groups;
 
 use App\Models\Group;
+use App\Models\Client;
 use Illuminate\Http\Request;
 use App\Exports\SessionExport;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 use App\Actions\GroupSessionAction;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Services\PermissionRoleService;
+use App\Exports\SessionAttendanceExport;
 use App\Http\Requests\GroupSessionRequest;
-
-
+use App\Models\GroupSession;
+use App\Models\SessionAttendance;
 
 /**
  * Manage Group Sessions
+ *
  * Class GroupSessionController
+ *
  * @package App\Http\Controllers\Groups
  * @group Groups
  */
@@ -124,27 +127,49 @@ class GroupSessionController extends Controller
      */
     public function download()
     {
+        return Excel::download(new SessionExport, 'sessions.csv');
+    }
 
-        $group_sessions =  DB::table('group_sessions')
-                                ->groupBy('group_id')
-                                ->get()
-                                ->pluck('group_id');
+    /**
+     * Download group session attendance
+     *
+     * @param int $id
+     * @param Group $group
+     * @urlParam id integer required . The group ID
+     * @return JsonResponse
+     * @authenticated
+     */
+    public function downloadSessionAttendance(int $id)
+    {
+        $group = Group::findOrFail($id);
 
-        $groups = Group::select('name','id')
-                            ->whereIn('id', $group_sessions)
-                            ->with('sessions')
-                            ->get();
+        $heads = array('Client Name');
+        $sessionIDs = collect([]);
+        $clientAttendance = collect([]);
 
-        $formattedGroups = collect([]);
-        foreach ($groups as $group) {
-            $sessions = '';
-            foreach($group['sessions'] as $session){
-                $sessions = $sessions.$session['session_date'].',';
-            }
-            $formattedGroup = ['group' => $group->name, 'sessions' => $sessions];
-            $formattedGroups->push($formattedGroup);
+        $groupSessions = GroupSession::select('id','session_date')->where('group_id', $id)->get();
+
+        foreach($groupSessions as $groupSession){
+            array_push($heads,date_format(date_create($groupSession['session_date']),"Y-m-d"));
+            $sessionIDs->push($groupSession['id']);
         }
 
-        return Excel::download(new SessionExport($formattedGroups), 'sessions.csv');
+        $sessionAttendances = SessionAttendance::select('client_id','attended')->whereIn('session_id', $sessionIDs)->get();
+
+
+        foreach($sessionAttendances as $sessionAttendance){
+            $client = Client::find($sessionAttendance['client_id']);
+            $attendance = '';
+            foreach($sessionIDs as $sessionID){
+                $attended = SessionAttendance::select('attended')->where('session_id', $sessionID)->where('client_id', $client->id)->get();
+                $ifAttended = $attended->count() > 0 ? ($attended[0]['attended'] == 1 ? "Attended" : "Not Attended") : "Not Recorded";
+                $attendance = $attendance."'".$ifAttended."',";
+            }
+            $record = array('client' => $client->name , 'sessions' => rtrim($attendance, ","));
+            $clientAttendance->push($record);
+        }
+        $data = ['headings' => $heads, 'data' => $clientAttendance];
+
+        return Excel::download(new SessionAttendanceExport($data), $group->name.'-sessions.csv');
     }
 }
