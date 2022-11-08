@@ -182,7 +182,10 @@ Route::group(['prefix' => 'projects','middleware' => 'auth:sanctum'], function()
     Route::post('/{id}/activate-membership',[ProgramMemberController::class,'activateMember']);
 });
 
-Route::get('/clients/download-client',     [ClientController::class,'downloadClientInformation']);
+Route::get('/clients/download-client',                     [ClientController::class,'downloadClientInformation']);
+Route::get('/groups/sessions/download',                    [GroupSessionController::class,'download']);
+Route::get('/groups/sessions/download-attendance/{id}',    [GroupSessionController::class,'downloadSessionAttendance']);
+Route::get('/question-responses/download',                 [QuestionResponsesController::class, 'downloadResponses']);
 
 //clients
 Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){
@@ -248,8 +251,6 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'groups'], function(){
         Route::delete('/{id}/delete',     [GroupSessionController::class,'destroy']);
         Route::post('/{id}/attendance',   [GroupAttendanceController::class,'index']);
         Route::get('/{id}/attendance',    [GroupAttendanceController::class,'show']);
-        Route::get('/download',           [GroupSessionController::class,'download']);
-        Route::get('/download-attendance/{id}',[GroupSessionController::class,'downloadSessionAttendance']);
     });
 });
 
@@ -333,7 +334,6 @@ Route::group(['prefix' => 'questions-options','middleware' => 'auth:sanctum'], f
 //Question Responses
 Route::group(['prefix' => 'questions-responses','middleware' => 'auth:sanctum'], function(){
     Route::get('/all',                 [QuestionResponsesController::class, 'index']);
-    Route::get('/download',            [QuestionResponsesController::class, 'downloadResponses']);
     Route::post('/create',             [QuestionResponsesController::class, 'create']);
     Route::put('{id}/update',          [QuestionResponsesController::class, 'update']);
     Route::delete('{id}/delete',       [QuestionResponsesController::class, 'destroy']);
