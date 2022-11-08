@@ -159,13 +159,12 @@ class GroupSessionController extends Controller
 
         foreach($sessionAttendances as $sessionAttendance){
             $client = Client::find($sessionAttendance['client_id']);
-            $attendance = '';
+            $record = array('client' => $client->name);
             foreach($sessionIDs as $sessionID){
                 $attended = SessionAttendance::select('attended')->where('session_id', $sessionID)->where('client_id', $client->id)->get();
                 $ifAttended = $attended->count() > 0 ? ($attended[0]['attended'] == 1 ? "Attended" : "Not Attended") : "Not Recorded";
-                $attendance = $attendance."'".$ifAttended."',";
+                array_push($record, $ifAttended);
             }
-            $record = array('client' => $client->name , 'sessions' => rtrim($attendance, ","));
             $clientAttendance->push($record);
         }
         $data = ['headings' => $heads, 'data' => $clientAttendance];

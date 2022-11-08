@@ -32,15 +32,7 @@ class SessionAttendanceExport implements FromCollection,WithHeadings
      * @return response()
       */
     public function headings() :array
-     {
-        return $this->headings;
-     }
-
-    public function columnWidths(): array
     {
-        return [
-            'A' => 20,
-            'B' => 50,
-        ];
+        return $this->headings;
     }
 }
