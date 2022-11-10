@@ -25,6 +25,7 @@ class EditQuestionResponseRequest extends FormRequest
     {
         return [
             'value'          => 'string|required',
+            'score'          => 'integer',
             'question_id'    => 'integer|not_in:0|exists:questions,id',
             'client_id'      => 'integer|not_in:0|exists:clients,id',
             'option_id'      => 'integer|not_in:0|exists:questionsoptions,id',

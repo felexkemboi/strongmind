@@ -25,6 +25,7 @@ class CreateQuestionResponseRequest extends FormRequest
     {
         return [
             'value'                   => 'string|required',
+            'score'                   => 'integer',
             'question_id'             => 'required|integer|not_in:0|exists:questions,id',
             'client_id'               => 'required|integer|not_in:0|exists:clients,id',
             'question_option_id'      => 'not_in:0|exists:questionsoptions,id',

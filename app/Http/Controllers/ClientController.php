@@ -458,6 +458,13 @@ class ClientController extends Controller
                 return $this->commonResponse(false,'Client Not Found','', Response::HTTP_NOT_FOUND);
             }
 
+            $patientID = '';
+            if($request->country_id){
+                $countryCode = CountryHelper::getCountryCode($request->country_id);
+                $yearVal = Carbon::now()->format('y');
+                $patientID = $countryCode->long_code.'-'.$yearVal.'-'.'0000'.$client->id;
+            }
+
             $clientData = [
                 'name' => $request->name ?? $client->name,
                 'gender' => $request->gender ?? $client->gender,
@@ -465,6 +472,7 @@ class ClientController extends Controller
                 'phone_number' => $request->phone_number ?? $client->phone_number,
                 'country_id' => $request->country_id ?? $client->country_id,
                 'city'=> $request->city ?? $client->city,
+                'patient_id' => $request->country_id ?? $patientID,
                 'region' => $request->region ?? $client->region,
                 'timezone_id' => $request->timezone_id ?? $client->timezone_id,
                 'status_id'   => $request->status_id ?? $client->status_id,
@@ -478,6 +486,7 @@ class ClientController extends Controller
                 $clientBioData = ClientBioData::where(function(Builder $query) use($client){
                     $query->where('client_id', $client->id);
                 })->first();
+
                 if($clientBioData){
                     $clientBioData->update([
                         'first_name'            => $request->first_name ?? $clientBioData->first_name,

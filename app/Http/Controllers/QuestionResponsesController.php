@@ -77,6 +77,7 @@ class QuestionResponsesController extends Controller
      * @param CreateQuestionResponseRequest $request
      * @return JsonResponse
      * @bodyParam value string required The Response value
+     * @bodyParam score  integer The score of the response
      * @bodyParam question_id  integer required If the form of the question
      * @bodyParam client_id  integer  required The client
      * @authenticated
@@ -91,6 +92,7 @@ class QuestionResponsesController extends Controller
 
             $response = new QuestionResponses();
             $response->value = $request->value;
+            $response->score = $request->score;
             $response->question_id = $request->question_id;
             $response->client_id = $request->client_id;
             $response->form_id = $form->id;
@@ -115,6 +117,7 @@ class QuestionResponsesController extends Controller
         }
     }
 
+
     /**
      * Edit  EditQuestionResponse
      * @param EditQuestionResponseRequest $questionResponseId
@@ -131,6 +134,7 @@ class QuestionResponsesController extends Controller
             $questionResponse = QuestionResponses::findorFail($questionResponseId);
             if($questionResponse){
                 $questionResponse->value = $request->value;
+                $questionResponse->score = $request->score;
                 $questionResponse->option_id = $request->option_id;
                 $questionResponse->question_id = $request->question_id;
                 $questionResponse->client_id = $request->client_id;
