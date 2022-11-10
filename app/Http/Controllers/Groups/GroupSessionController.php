@@ -5,16 +5,17 @@ namespace App\Http\Controllers\Groups;
 use App\Models\Group;
 use App\Models\Client;
 use Illuminate\Http\Request;
+use App\Models\GroupSession;
 use App\Exports\SessionExport;
+use App\Models\Programs\Project;
 use Illuminate\Http\JsonResponse;
+use App\Models\SessionAttendance;
 use App\Actions\GroupSessionAction;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Services\PermissionRoleService;
 use App\Exports\SessionAttendanceExport;
 use App\Http\Requests\GroupSessionRequest;
-use App\Models\GroupSession;
-use App\Models\SessionAttendance;
 
 /**
  * Manage Group Sessions
@@ -122,12 +123,14 @@ class GroupSessionController extends Controller
 
     /**
      * Download sessions
+     * @urlParam id integer required . The Project ID
      * @return JsonResponse
      * @authenticated
      */
-    public function download()
+    public function downloadSessions($id)
     {
-        return Excel::download(new SessionExport, 'sessions.csv');
+        $project = Project::findOrFail($id);
+        return Excel::download(new SessionExport($project), $project->name.'_Sessions.csv');
     }
 
     /**

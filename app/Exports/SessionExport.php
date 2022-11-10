@@ -2,13 +2,23 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Illuminate\Support\Facades\DB;
 use App\Models\Group;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\FromCollection;
 
 class SessionExport implements FromCollection,WithHeadings
 {
+    protected $project;
+
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public function __construct($project)
+    {
+        $this->project = $project;
+    }
 
     /**
      * Write code on Method
@@ -18,13 +28,8 @@ class SessionExport implements FromCollection,WithHeadings
     public function collection()
     {
 
-        $group_sessions =  DB::table('group_sessions')
-                ->groupBy('group_id')
-                ->get()
-                ->pluck('group_id');
-
         $groups = Group::select('name','id')
-            ->whereIn('id', $group_sessions)
+            ->where('project_id', $this->project->id)
             ->with('sessions')
             ->get();
 
@@ -33,7 +38,6 @@ class SessionExport implements FromCollection,WithHeadings
         foreach ($groups as $group) {
             $sessions = '';
             foreach($group['sessions'] as $session){
-
                 $sessions = $sessions.date_format(date_create($session['session_date']),"Y-m-d").',';
             }
             $formattedGroup = ['group' => $group->name, 'sessions' => rtrim($sessions, ",")];
@@ -48,22 +52,10 @@ class SessionExport implements FromCollection,WithHeadings
      * @return response()
       */
     public function headings() :array
-     {
-        \Log::debug([
-            'Group',
-            'Sessions',
-        ]);
-        return [
-            'Group',
-            'Sessions',
-        ];
-     }
-
-    public function columnWidths(): array
     {
         return [
-            'A' => 20,
-            'B' => 100,
+            'Group',
+            'Sessions',
         ];
     }
 }

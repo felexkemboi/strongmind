@@ -183,7 +183,7 @@ Route::group(['prefix' => 'projects','middleware' => 'auth:sanctum'], function()
 });
 
 Route::get('/clients/download-client',                     [ClientController::class,'downloadClientInformation']);
-Route::get('/groups/sessions/download',                    [GroupSessionController::class,'download']);
+Route::get('/groups/sessions/download/{project_id}',       [GroupSessionController::class,'downloadSessions']);
 Route::get('/groups/sessions/download-attendance/{id}',    [GroupSessionController::class,'downloadSessionAttendance']);
 Route::get('/question-responses/download',                 [QuestionResponsesController::class, 'downloadResponses']);
 
@@ -246,6 +246,7 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'groups'], function(){
     Route::get('/{id}/sessions',          [GroupSessionController::class,'index']);
     Route::post('/{id}/sessions/create',  [GroupSessionController::class,'store']);
     Route::group(['prefix' => 'sessions'], function(){
+        Route::get('/download-attendances/{id}',    [GroupSessionController::class,'downloadSessionAttendance']);
         Route::get('/{id}/details',       [GroupSessionController::class,'show']);
         Route::patch('/{id}/update',      [GroupSessionController::class,'update']);
         Route::delete('/{id}/delete',     [GroupSessionController::class,'destroy']);
