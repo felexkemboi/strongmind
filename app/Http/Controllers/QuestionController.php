@@ -28,7 +28,7 @@ class QuestionController extends Controller
 
     public function index(): JsonResponse
     {
-        $questions = Question::all()->sortByDesc("created_at");
+        $questions = Question::all()->sortBy("created_at");
         return $this->commonResponse(true, 'success', $questions, Response::HTTP_OK);
     }
 
