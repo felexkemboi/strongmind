@@ -185,7 +185,7 @@ Route::group(['prefix' => 'projects','middleware' => 'auth:sanctum'], function()
 Route::get('/clients/download-client',                     [ClientController::class,'downloadClientInformation']);
 Route::get('/groups/sessions/download/{project_id}',       [GroupSessionController::class,'downloadSessions']);
 Route::get('/groups/sessions/download-attendance/{id}',    [GroupSessionController::class,'downloadSessionAttendance']);
-Route::get('/question-responses/download',                 [QuestionResponsesController::class, 'downloadResponses']);
+Route::get('/forms/{form_id}/question-responses/download', [QuestionResponsesController::class, 'downloadResponses']);
 
 //clients
 Route::group(['prefix' => 'clients','middleware' => 'auth:sanctum'], function(){

@@ -38,12 +38,14 @@ class QuestionResponsesController extends Controller
 
     /**
      * Download Question Responses
+     * @urlParam id integer required The ID of the Form. Example:1
      * @authenticated
      * @return JsonResponse
     */
 
-    public function downloadResponses()
+    public function downloadResponses($formId)
     {
+        $form = Form::findorFail($formId);
         $responses =  DB::table('questionresponses')
         ->leftjoin('questions',       'questionresponses.question_id','=', 'questions.id')
         ->leftjoin('clients',         'questionresponses.client_id','=',   'clients.id')
@@ -63,8 +65,11 @@ class QuestionResponsesController extends Controller
                 questionsoptions.score
             ')
         )
+        ->where(function($query) use ($form){
+            $query->where('questionresponses.form_id',$form->id);
+        })
         ->get();
-        return Excel::download(new ResponseExport($responses), 'responses.csv');
+        return Excel::download(new ResponseExport($responses), $form->name.' Responses.csv');
     }
 
     /**
