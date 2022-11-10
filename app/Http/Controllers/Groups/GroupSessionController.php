@@ -130,7 +130,7 @@ class GroupSessionController extends Controller
     public function downloadSessions($id)
     {
         $project = Project::findOrFail($id);
-        return Excel::download(new SessionExport($project), $project->name.'_Sessions.csv');
+        return Excel::download(new SessionExport($project), $project->name.' Sessions.csv');
     }
 
     /**
@@ -159,12 +159,11 @@ class GroupSessionController extends Controller
 
         $sessionAttendances = SessionAttendance::select('client_id','attended')->whereIn('session_id', $sessionIDs)->get();
 
-
         foreach($sessionAttendances as $sessionAttendance){
             $client = Client::find($sessionAttendance['client_id']);
-            $record = array('client' => $client->name);
+            $record = array('client' => $client ? $client->name : 'No Name');
             foreach($sessionIDs as $sessionID){
-                $attended = SessionAttendance::select('attended')->where('session_id', $sessionID)->where('client_id', $client->id)->get();
+                $attended = SessionAttendance::select('attended')->where('session_id', $sessionID)->where('client_id', $client ? $client->id : '')->get();
                 $ifAttended = $attended->count() > 0 ? ($attended[0]['attended'] == 1 ? "Attended" : "Not Attended") : "Not Recorded";
                 array_push($record, $ifAttended);
             }
@@ -172,6 +171,6 @@ class GroupSessionController extends Controller
         }
         $data = ['headings' => $heads, 'data' => $clientAttendance];
 
-        return Excel::download(new SessionAttendanceExport($data), $group->name.'-sessions.csv');
+        return Excel::download(new SessionAttendanceExport($data), $group->name.' Sessions.csv');
     }
 }
