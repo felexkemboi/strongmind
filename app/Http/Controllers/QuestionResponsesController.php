@@ -50,7 +50,7 @@ class QuestionResponsesController extends Controller
         ->leftjoin('questions',       'questionresponses.question_id','=', 'questions.id')
         ->leftjoin('clients',         'questionresponses.client_id','=',   'clients.id')
         ->leftjoin('groups',          'questionresponses.group_id','=',    'groups.id')
-        ->leftjoin('questionsoptions','questionresponses.option_id','=',   'questionsoptions.id')
+        ->leftjoin('questionsoptions', DB::raw("CAST('questionresponses.option_id' AS UNSIGNED)"),'=',   'questionsoptions.id')
         ->leftjoin('forms',           'questionresponses.form_id','=',     'forms.id')
         ->leftjoin('group_sessions',  'questionresponses.session_id','=',  'group_sessions.id')
         ->leftjoin('statuses',        'questionresponses.status_id','=',   'statuses.id')
