@@ -41,6 +41,7 @@ class ResponseExport implements FromCollection,WithHeadings
         return [
             'Question',
             'Client',
+            'Patient ID',
             'Group',
             'Form',
             'Value',

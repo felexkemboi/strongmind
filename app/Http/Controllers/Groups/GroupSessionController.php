@@ -146,7 +146,7 @@ class GroupSessionController extends Controller
     {
         $group = Group::findOrFail($id);
 
-        $heads = array('Client Name');
+        $heads = array('Client Name', 'Patient ID');
         $sessionIDs = collect([]);
         $clientAttendance = collect([]);
 
@@ -161,7 +161,7 @@ class GroupSessionController extends Controller
 
         foreach($sessionAttendances as $sessionAttendance){
             $client = Client::find($sessionAttendance['client_id']);
-            $record = array('client' => $client ? $client->name : 'No Name');
+            $record = array('client' => $client ? $client->name : 'No Name', 'patient_id' => $client ? $client->patient_id : '');
             foreach($sessionIDs as $sessionID){
                 $attended = SessionAttendance::select('attended')->where('session_id', $sessionID)->where('client_id', $client ? $client->id : '')->get();
                 $ifAttended = $attended->count() > 0 ? ($attended[0]['attended'] == 1 ? "Attended" : "Not Attended") : "Not Recorded";

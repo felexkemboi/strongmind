@@ -58,6 +58,7 @@ class QuestionResponsesController extends Controller
             DB::raw('
                 questions.description,
                 clients.name,
+                clients.patient_id,
                 groups.name,
                 forms.name,
                 questionsoptions.value,
