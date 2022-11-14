@@ -16,6 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Services\PermissionRoleService;
 use App\Exports\SessionAttendanceExport;
 use App\Http\Requests\GroupSessionRequest;
+use App\Models\ClientBioData;
 
 /**
  * Manage Group Sessions
@@ -160,8 +161,9 @@ class GroupSessionController extends Controller
         $sessionAttendances = SessionAttendance::select('client_id','attended')->whereIn('session_id', $sessionIDs)->get();
 
         foreach($sessionAttendances as $sessionAttendance){
+            $bioData = ClientBioData::where('client_id', '=', $sessionAttendance['client_id'])->first();
             $client = Client::find($sessionAttendance['client_id']);
-            $record = array('client' => $client ? $client->name : 'No Name', 'patient_id' => $client ? $client->patient_id : '');
+            $record = array('client' => $client->name ? $client->name : ($bioData ? $bioData->first_name.' '.$bioData->last_name : 'No Name'), 'patient_id' => $client ? $client->patient_id : '');
             foreach($sessionIDs as $sessionID){
                 $attended = SessionAttendance::select('attended')->where('session_id', $sessionID)->where('client_id', $client ? $client->id : '')->get();
                 $ifAttended = $attended->count() > 0 ? ($attended[0]['attended'] == 1 ? "Attended" : "Not Attended") : "Not Recorded";
