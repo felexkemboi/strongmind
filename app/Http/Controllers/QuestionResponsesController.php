@@ -48,20 +48,20 @@ class QuestionResponsesController extends Controller
         $form = Form::findorFail($formId);
         $responses =  DB::table('questionresponses')
         ->leftjoin('questions',       'questionresponses.question_id','=', 'questions.id')
-        ->leftjoin('clients',         'questionresponses.client_id','=',   'clients.id')
-        ->leftjoin('groups',          'questionresponses.group_id','=',    'groups.id')
-        // ->leftjoin('questionsoptions', DB::raw("CAST('questionresponses.option_id' AS INTEGER)"),'=',   'questionsoptions.id')                           questionsoptions.score      questionsoptions.value,
-        ->leftjoin('forms',           'questionresponses.form_id','=',     'forms.id')
-        ->leftjoin('group_sessions',  'questionresponses.session_id','=',  'group_sessions.id')
-        ->leftjoin('statuses',        'questionresponses.status_id','=',   'statuses.id')
+        ->leftjoin('clients',         'questionresponses.client_id',  '=', 'clients.id')
+        ->leftjoin('groups',          'questionresponses.group_id',   '=', 'groups.id')
+        ->leftjoin('group_sessions',  'questionresponses.session_id', '=', 'group_sessions.id')
+        ->leftjoin('statuses',        'questionresponses.status_id',  '=',  'statuses.id')
         ->select(
             DB::raw('
+                questionresponses.value,
                 questions.description,
-                clients.name,
+                questionresponses.score,
+                clients.name as client,
                 clients.patient_id,
-                groups.name,
-                forms.name,
-                statuses.name
+                group_sessions.session_date as session,
+                groups.name as group_name,
+                statuses.name as status
             ')
         )
         ->where(function($query) use ($form){

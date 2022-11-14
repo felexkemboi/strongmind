@@ -37,27 +37,16 @@ class ResponseExport implements FromCollection,WithHeadings
      * @return response()
       */
     public function headings() :array
-     {
-        return [
-            'Question',
-            'Client',
-            'Patient ID',
-            'Group',
-            'Form',
-            'Value',
-            'Status',
-            'Score'
-        ];
-     }
-
-    public function columnWidths(): array
     {
         return [
-            'A' => 20,
-            'B' => 15,
-            'C' => 20,
-            'D' => 15,
-            'E' => 20,
+            'Value',
+            'Question',
+            'Score',
+            'Client',
+            'Patient ID',
+            'Session',
+            'Group',
+            'Status',
         ];
     }
 }
