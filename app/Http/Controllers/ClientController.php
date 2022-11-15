@@ -472,7 +472,7 @@ class ClientController extends Controller
                 'phone_number' => $request->phone_number ?? $client->phone_number,
                 'country_id' => $request->country_id ?? $client->country_id,
                 'city'=> $request->city ?? $client->city,
-                'patient_id' => $request->country_id ?? $patientID,
+                'patient_id' =>  $patientID,
                 'region' => $request->region ?? $client->region,
                 'timezone_id' => $request->timezone_id ?? $client->timezone_id,
                 'status_id'   => $request->status_id ?? $client->status_id,
