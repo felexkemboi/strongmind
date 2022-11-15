@@ -72,7 +72,7 @@ class QuestionResponsesController extends Controller
 
                 array_push($clientResponses,$response ? $response->value : 'No Response');
             }
-            array_push($clientResponses,$clientForm->score);
+            array_push($clientResponses,$clientForm->score ? $clientForm->score : 0);
             array_push($responses,$clientResponses);
         }
 
