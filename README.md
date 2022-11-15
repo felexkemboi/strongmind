@@ -1,7 +1,7 @@
 
 ## StrongMinds API
 
-Servers both Data Collection App and Datahub on the web
+Serves both Data Collection App and Datahub on the web
 
 ## Setting up
 - Clone the project to your machine by ```git clone git@github.com:made-by-people/strongminds-api.git```
@@ -12,5 +12,5 @@ Servers both Data Collection App and Datahub on the web
 - Seed the database ```php artisan db:seed```
 - Setup scribe ```php artisan scribe:generate```
 - Now serve your application ```php artisan serve```
-- Head over to ```localhost:8000/docs```` to start engaging the API endpoints
+- Head over to ```localhost:8000/docs``` to start engaging the API endpoints
 
