@@ -33,7 +33,7 @@ class Form extends Model
      */
     public function questions(): HasMany
     {
-        return $this->hasMany(Question::class,'form_id','id')->sortBy('created_at');
+        return $this->hasMany(Question::class,'form_id','id')->orderBy('created_at');
     }
 
     /**
