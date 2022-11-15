@@ -56,8 +56,8 @@ class QuestionResponsesController extends Controller
             array_push($heads,$question->description);
         }
         array_push($heads,'Score');
-        
-        $clientForms = ClientForm::select('client_id','score')->where('form_id', $form->id)->groupBy('client_id')->get();
+
+        $clientForms = ClientForm::select('client_id','score')->where('form_id', $form->id)->get();
 
         $responses = array();
 
