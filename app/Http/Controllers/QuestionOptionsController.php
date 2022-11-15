@@ -27,7 +27,7 @@ class QuestionOptionsController extends Controller
 
     public function index(): JsonResponse
     {
-        $questionOptions = QuestionOptions::all()->sortBy("created_at");;
+        $questionOptions = QuestionOptions::all()->sortBy("created_at");
         return $this->commonResponse(true, 'success', $questionOptions, Response::HTTP_OK);
     }
 
