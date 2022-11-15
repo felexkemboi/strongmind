@@ -10,6 +10,7 @@ class ResponseExport implements FromCollection,WithHeadings
 {
 
     protected $data;
+    protected $heads;
 
     /**
      * Write code on Method
@@ -18,7 +19,8 @@ class ResponseExport implements FromCollection,WithHeadings
      */
     public function __construct($data)
     {
-        $this->data = $data;
+        $this->data = $data['data'];
+        $this->heads = $data['heads'];
     }
 
     /**
@@ -38,15 +40,6 @@ class ResponseExport implements FromCollection,WithHeadings
       */
     public function headings() :array
     {
-        return [
-            'Value',
-            'Question',
-            'Score',
-            'Client',
-            'Patient ID',
-            'Session',
-            'Group',
-            'Status',
-        ];
+        return $this->heads;
     }
 }

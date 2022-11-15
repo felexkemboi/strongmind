@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\Form;
+use App\Models\Client;
 use App\Models\Question;
+use App\Models\ClientForm;
 use App\Exports\ResponseExport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
@@ -46,29 +48,35 @@ class QuestionResponsesController extends Controller
     public function downloadResponses($formId)
     {
         $form = Form::findorFail($formId);
-        $responses =  DB::table('questionresponses')
-        ->leftjoin('questions',       'questionresponses.question_id','=', 'questions.id')
-        ->leftjoin('clients',         'questionresponses.client_id',  '=', 'clients.id')
-        ->leftjoin('groups',          'questionresponses.group_id',   '=', 'groups.id')
-        ->leftjoin('group_sessions',  'questionresponses.session_id', '=', 'group_sessions.id')
-        ->leftjoin('statuses',        'questionresponses.status_id',  '=',  'statuses.id')
-        ->select(
-            DB::raw('
-                questionresponses.value,
-                questions.description,
-                questionresponses.score,
-                clients.name as client,
-                clients.patient_id,
-                group_sessions.session_date as session,
-                groups.name as group_name,
-                statuses.name as status
-            ')
-        )
-        ->where(function($query) use ($form){
-            $query->where('questionresponses.form_id',$form->id);
-        })
-        ->get();
-        return Excel::download(new ResponseExport($responses), $form->name.' Responses.csv');
+
+        $questions = Question::select('id','description')->where('form_id', $form->id)->get();
+
+        $heads = array('Client');
+        foreach($questions as $question){
+            array_push($heads,$question->description);
+        }
+        array_push($heads,'Score');
+        
+        $clientForms = ClientForm::select('client_id','score')->where('form_id', $form->id)->groupBy('client_id')->get();
+
+        $responses = array();
+
+        foreach($clientForms as $clientForm){
+            $client = Client::find($clientForm->client_id);
+            $clientResponses = array($client ? ($client->name ? $client->name : 'No Name') : 'No Name');
+            foreach($questions as $question){
+                $response = QuestionResponses::select('value')
+                                ->where('question_id', $question->id)
+                                ->where('client_id',$clientForm->client_id)
+                                ->first();
+
+                array_push($clientResponses,$response ? $response->value : 'No Response');
+            }
+            array_push($clientResponses,$clientForm->score);
+            array_push($responses,$clientResponses);
+        }
+
+        return Excel::download(new ResponseExport(['data' => $responses, 'heads' => $heads]), $form->name.' Responses.csv');
     }
 
     /**
