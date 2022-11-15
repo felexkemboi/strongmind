@@ -17,6 +17,12 @@ class Question extends Model
 {
     use HasFactory;
 
+
+    protected static function booted()
+    {
+        static::addGlobalScope(fn ($query) => $query->orderBy('created_at'));
+    }
+
     protected $table = 'questions';
     protected $with = ['fieldType','responses', 'questionOptions'];
 
