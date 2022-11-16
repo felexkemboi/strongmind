@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,10 +17,10 @@ class Question extends Model
     use HasFactory;
 
 
-    // protected static function booted()
-    // {
-    //     static::addGlobalScope(fn ($query) => $query->orderBy('created_at'));
-    // }
+    protected static function booted()
+    {
+        static::addGlobalScope(fn ($query) => $query->orderBy('created_at'));
+    }
 
     protected $table = 'questions';
     protected $with = ['fieldType','responses', 'questionOptions'];

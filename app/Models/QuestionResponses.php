@@ -14,6 +14,11 @@ class QuestionResponses extends Model
 
     protected $table = 'questionresponses';
 
+    protected static function booted()
+    {
+        static::addGlobalScope(fn ($query) => $query->orderBy('created_at'));
+    }
+    
     protected $fillable = [
         'value',
         'question_id',
