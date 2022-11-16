@@ -63,7 +63,7 @@ class QuestionResponsesController extends Controller
 
         foreach($clientForms as $clientForm){
             $client = Client::find($clientForm->client_id);
-            $clientResponses = array($client ? ($client->name ? $client->name : 'No Name') : 'No Name');
+            $clientResponses = array($client ? ($client->name ? $client->name : ($client->patient_id ? $client->patient_id : 'N/A')) : 'N/A');
             foreach($questions as $question){
                 $response = QuestionResponses::select('value')
                                 ->where('question_id', $question->id)
