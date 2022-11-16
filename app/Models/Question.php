@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,7 +16,6 @@ use App\Models\QuestionResponses;
 class Question extends Model
 {
     use HasFactory;
-
 
     protected $table = 'questions';
     protected $with = ['fieldType','responses', 'questionOptions'];
