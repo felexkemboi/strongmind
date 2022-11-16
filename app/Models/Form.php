@@ -41,7 +41,7 @@ class Form extends Model
      */
     public function questionResponses(): HasMany
     {
-        return $this->hasMany(QuestionResponses::class);
+        return $this->hasMany(QuestionResponses::class)->orderBy('created_at');
     }
     /**
      * @return BelongsTo

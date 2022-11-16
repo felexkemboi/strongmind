@@ -149,7 +149,7 @@ class QuestionController extends Controller
      */
     public function questionOptions(int $id): JsonResponse
     {
-        $options = QuestionOptions::where('question_id', $id)->get();
+        $options = QuestionOptions::where('question_id', $id)->orderBy('created_at')->get();
         if ($options) {
             return $this->commonResponse(true, 'success', $options, Response::HTTP_OK);
         } else {
