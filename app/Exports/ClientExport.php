@@ -43,8 +43,6 @@ class ClientExport implements FromCollection,WithHeadings
              'Last Name',
              'Other Name',
              'Region',
-             'District',
-             'City',
              'Languages',
              'Gender',
              'Patient ID',
@@ -53,7 +51,8 @@ class ClientExport implements FromCollection,WithHeadings
              'Staff',
              'D.O.B',
              'Marital Status',
-             'Education Level'
+             'Education Level',
+             'District/City'
          ];
      }
 

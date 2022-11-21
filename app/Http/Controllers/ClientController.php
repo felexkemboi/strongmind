@@ -260,70 +260,88 @@ class ClientController extends Controller
                     $statusID = (int)$request->status;
                     $status = Status::find($statusID);
                     $clients =  DB::table('clients')
-                    ->select(
-                        'client_bio_data.first_name',
-                        'client_bio_data.last_name',
-                        'client_bio_data.other_name',
-                        'clients.region',
-                        'client_districts.name',
-                        'clients.city',
-                        'clients.languages',
-                        'clients.gender',
-                        'clients.patient_id',
-                        'clients.phone_number',
-                        'clients.age',
-                        'users.name as staff',
-                        'client_bio_data.date_of_birth',
-                        'client_marital_statuses.name as marital status',
-                        'client_education_levels.name as education level'
-                    )
+                        ->leftjoin('users','clients.staff_id','=','users.id')
+                        ->leftjoin('client_bio_data','clients.id','=','client_bio_data.client_id')
+                        ->leftjoin('client_marital_statuses','client_bio_data.marital_status_id','=','client_marital_statuses.id')
+                        ->leftjoin('client_education_levels','client_education_levels.id','=','client_bio_data.education_level_id')
+                        ->leftjoin('client_districts','client_districts.id','=','client_bio_data.district_id')
+                        ->select(
+                            'clients.id',
+                            'client_bio_data.first_name',
+                            'client_bio_data.last_name',
+                            'client_bio_data.other_name',
+                            'clients.region',
+                            'client_districts.name',
+                            'clients.languages',
+                            'clients.gender',
+                            'clients.patient_id',
+                            'clients.phone_number',
+                            'clients.age',
+                            'users.name as staff',
+                            'client_bio_data.date_of_birth',
+                            'client_marital_statuses.name as marital status',
+                            'client_education_levels.name as education level',
+                            'clients.city'
+                        );
+
+                    $clients->where(function($query) use ($statusID){
+                        $query->where('clients.status_id',$statusID);
+                    });
+
+                    $clients->get();
+
+                    foreach($clients as $client){
+                        if(!$client->city){
+                            $bioData = ClientBioData::where('client_id', $client->id)->first();
+                            $client->city = $bioData->district ? $bioData->district->name : 'N/A';
+                        }
+                        unset($client->id);
+                    }
+                    return Excel::download(new ClientExport($clients), 'client-info-'.$now.'-'.$status->name.'.csv');
+                }
+                $clients =  DB::table('clients')
                     ->leftjoin('users','clients.staff_id','=','users.id')
                     ->leftjoin('client_bio_data','clients.id','=','client_bio_data.client_id')
                     ->leftjoin('client_marital_statuses','client_bio_data.marital_status_id','=','client_marital_statuses.id')
                     ->leftjoin('client_education_levels','client_education_levels.id','=','client_bio_data.education_level_id')
                     ->leftjoin('client_districts','client_districts.id','=','client_bio_data.district_id')
-                    ->where(function($query) use ($statusID){
-                        $query->where('clients.status_id',$statusID);
-                    })
-                    ->get();
-                    return Excel::download(new ClientExport($clients), 'client-info-'.$now.'-'.$status->name.'.csv');
-                }
-                $clients =  DB::table('clients')
-                ->leftjoin('users','clients.staff_id','=','users.id')
-                ->leftjoin('client_bio_data','clients.id','=','client_bio_data.client_id')
-                ->leftjoin('client_marital_statuses','client_bio_data.marital_status_id','=','client_marital_statuses.id')
-                ->leftjoin('client_education_levels','client_education_levels.id','=','client_bio_data.education_level_id')
-                ->leftjoin('client_districts','client_districts.id','=','client_bio_data.district_id')
-                ->select(
-                    DB::raw('
-                        client_bio_data.first_name,
-                        client_bio_data.last_name,
-                        client_bio_data.other_name,
-                        clients.region,
-                        client_districts.name,
-                        clients.city,
-                        clients.languages,
-                        clients.gender,
-                        clients.patient_id,
-                        clients.phone_number,
-                        clients.age,
-                        users.name as staff,
-                        client_bio_data.date_of_birth,
-                        client_marital_statuses.name as marital_status,
-                        client_education_levels.name as education_level'
-                    )
-                )
-                ->get();
+                    ->select(
+                        DB::raw('
+                            clients.id,
+                            client_bio_data.first_name,
+                            client_bio_data.last_name,
+                            client_bio_data.other_name,
+                            clients.region,
+                            clients.languages,
+                            clients.gender,
+                            clients.patient_id,
+                            clients.phone_number,
+                            clients.age,
+                            users.name as staff,
+                            client_bio_data.date_of_birth,
+                            client_marital_statuses.name as marital_status,
+                            client_education_levels.name as education_level,
+                            clients.city
+                        ')
+                    )->get();
+                    foreach($clients as $client){
+                        if(!$client->city){
+                            $bioData = ClientBioData::where('client_id', $client->id)->first();
+                            $client->city = $bioData->district ? $bioData->district->name : 'N/A';
+                        }
+                        unset($client->id);
+                    }
+
                 return Excel::download(new ClientExport($clients), 'client-info-'.$now.'.csv');
             }else{
                 foreach (explode(',', $request->clients) as $client_id) {
                     $clientIDs->push((int)$client_id);
                 }
                 $status = Status::find((int)$request->status);
-                Log::debug($status);
                 if($status){
                     $clients =  DB::table('clients')
                     ->select(
+                        'clients.id',
                         'client_bio_data.first_name',
                         'client_bio_data.last_name',
                         'client_bio_data.other_name',
@@ -350,11 +368,19 @@ class ClientController extends Controller
                         $query->where('clients.status_id',$status->id);
                     })
                     ->get();
+                    foreach($clients as $client){
+                        if(!$client->city){
+                            $bioData = ClientBioData::where('client_id', $client->id)->first();
+                            $client->city = $bioData->district ? $bioData->district->name : 'N/A';
+                        }
+                        unset($client->id);
+                    }
                     return Excel::download(new ClientExport($clients), 'client-info-'.$now.'-'.$status->name.'.csv');
                 }
 
                 $clients =  DB::table('clients')
                     ->select(
+                        'clients.id',
                         'client_bio_data.first_name',
                         'client_bio_data.last_name',
                         'client_bio_data.other_name',
@@ -378,6 +404,13 @@ class ClientController extends Controller
                     ->leftjoin('client_districts','client_districts.id','=','client_bio_data.district_id')
                     ->whereIn('clients.id', $clientIDs)
                     ->get();
+                    foreach($clients as $client){
+                        if(!$client->city){
+                            $bioData = ClientBioData::where('client_id', $client->id)->first();
+                            $client->city = $bioData->district ? $bioData->district->name : 'N/A';
+                        }
+                        unset($client->id);
+                    }
                 return Excel::download(new ClientExport($clients), 'client-info-'.$now.'-.csv');
             }
         } catch (QueryException $ex) {
