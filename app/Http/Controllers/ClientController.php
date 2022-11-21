@@ -293,8 +293,11 @@ class ClientController extends Controller
                     foreach($clients as $client){
                         if(!$client->city){
                             $bioData = ClientBioData::where('client_id', $client->id)->first();
-                            $client->city = $bioData->district ? $bioData->district->name : 'N/A';
-                        }
+                            if($bioData){
+                                $client->city = $bioData->district ? $bioData->district->name : 'N/A';
+                            }else{
+                                $client->city = "N/A";
+                            }                        }
                         unset($client->id);
                     }
                     return Excel::download(new ClientExport($clients), 'client-info-'.$now.'-'.$status->name.'.csv');
@@ -327,8 +330,11 @@ class ClientController extends Controller
                     foreach($clients as $client){
                         if(!$client->city){
                             $bioData = ClientBioData::where('client_id', $client->id)->first();
-                            $client->city = $bioData->district ? $bioData->district->name : 'N/A';
-                        }
+                            if($bioData){
+                                $client->city = $bioData->district ? $bioData->district->name : 'N/A';
+                            }else{
+                                $client->city = "N/A";
+                            }                        }
                         unset($client->id);
                     }
 
@@ -371,8 +377,11 @@ class ClientController extends Controller
                     foreach($clients as $client){
                         if(!$client->city){
                             $bioData = ClientBioData::where('client_id', $client->id)->first();
-                            $client->city = $bioData->district ? $bioData->district->name : 'N/A';
-                        }
+                            if($bioData){
+                                $client->city = $bioData->district ? $bioData->district->name : 'N/A';
+                            }else{
+                                $client->city = "N/A";
+                            }                        }
                         unset($client->id);
                     }
                     return Excel::download(new ClientExport($clients), 'client-info-'.$now.'-'.$status->name.'.csv');
@@ -407,7 +416,11 @@ class ClientController extends Controller
                     foreach($clients as $client){
                         if(!$client->city){
                             $bioData = ClientBioData::where('client_id', $client->id)->first();
-                            $client->city = $bioData->district ? $bioData->district->name : 'N/A';
+                            if($bioData){
+                                $client->city = $bioData->district ? $bioData->district->name : 'N/A';
+                            }else{
+                                $client->city = "N/A";
+                            }
                         }
                         unset($client->id);
                     }
