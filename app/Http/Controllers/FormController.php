@@ -330,8 +330,6 @@ class FormController extends Controller
         return $this->commonResponse(false, 'Form Not Found!', '', Response::HTTP_NOT_FOUND);
     }
 
-
-
     /**
      * Get Client Forms
      * @param  Form  $form

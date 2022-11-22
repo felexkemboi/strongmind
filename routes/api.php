@@ -8,9 +8,7 @@ use App\Http\Controllers\Misc\GroupTypeController;
 use App\Http\Controllers\Misc\ProgramTypeController;
 use App\Http\Controllers\Misc\StatusController;
 use App\Http\Controllers\OfficeController;
-use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ResetPasswordController;
-use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TimezoneController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -83,6 +81,10 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::resource('roles',SpatieRoleController::class);
 });
 
+
+###############################################################################################################
+##  Move the log in and profile controller logic to the User Controller (remove the Login Controller)  ########
+###############################################################################################################
 //Authentication
 Route::prefix('auth')->group(function () {
     Route::post('login',             [LoginController::class,'loginUser']);
@@ -168,7 +170,7 @@ Route::group(['prefix' => 'projects','middleware' => 'auth:sanctum'], function()
     Route::post('/{id}/activate-membership',[ProgramMemberController::class,'activateMember']);
 });
 
-Route::get('/clients/download-client',                     [ClientController::class,'downloadClientInformation']);
+Route::get('/clients/download',                            [ClientController::class,'downloadClientInformation']);
 Route::get('/groups/sessions/download/{project_id}',       [GroupSessionController::class,'downloadSessions']);
 Route::get('/groups/sessions/download-attendance/{id}',    [GroupSessionController::class,'downloadSessionAttendance']);
 Route::get('/forms/{form_id}/question-responses/download', [QuestionResponsesController::class, 'downloadResponses']);
