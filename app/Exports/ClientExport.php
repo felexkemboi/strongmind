@@ -55,15 +55,4 @@ class ClientExport implements FromCollection,WithHeadings
              'District/City'
          ];
      }
-
-    public function columnWidths(): array
-    {
-        return [
-            'A' => 20,
-            'B' => 15,
-            'C' => 20,
-            'D' => 15,
-            'E' => 20,
-        ];
-    }
 }

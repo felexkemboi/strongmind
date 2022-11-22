@@ -7,7 +7,6 @@ use Exception;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Client;
-use Illuminate\Support\Arr;
 use App\Models\Misc\Status;
 use Illuminate\Support\Str;
 use App\Models\Misc\Channel;
@@ -148,7 +147,7 @@ class ClientController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->commonResponse(false,'The request body is not valid', '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             try {
                 $user = Auth::user();
@@ -160,7 +159,7 @@ class ClientController extends Controller
                 $client->region = $request->region;
                 $client->city = $request->city;
                 $client->timezone_id = $request->timezone_id;
-                $client->languages = $request->input('languages'); //TODO comma separate these if multiple languages are provided
+                $client->languages = $request->input('languages');
                 $client->status_id = $request->status_id;
                 $client->channel_id = $request->channel_id;
                 $client->referredThrough = $request->influence;
@@ -177,7 +176,7 @@ class ClientController extends Controller
                     $yearVal = Carbon::now()->format('y');
                     if($request->country_id){
                         $patient_id = $countryCode->long_code.'-'.$yearVal.'-'.'0000'.$client->id; //random_int(0,4).$client->id;
-                        $client->update(['patient_id' => $patient_id]); //TODO change format to CountryCode-ProgramCode-Year-Cycle-Number
+                        $client->update(['patient_id' => $patient_id]);
                     }
                     return $this->commonResponse(true, 'Client created successfully!', new ClientResource($client), Response::HTTP_CREATED);
                 }
@@ -253,179 +252,31 @@ class ClientController extends Controller
     public function downloadClientInformation(Request $request)
     {
         try {
-            $clientIDs = collect([]);
-            $now = Carbon::today()->toDateString();
-            if($request->clients == '*'){
-                if($request->status){
-                    $statusID = (int)$request->status;
-                    $status = Status::find($statusID);
-                    $clients =  DB::table('clients')
-                        ->leftjoin('users','clients.staff_id','=','users.id')
-                        ->leftjoin('client_bio_data','clients.id','=','client_bio_data.client_id')
-                        ->leftjoin('client_marital_statuses','client_bio_data.marital_status_id','=','client_marital_statuses.id')
-                        ->leftjoin('client_education_levels','client_education_levels.id','=','client_bio_data.education_level_id')
-                        ->leftjoin('client_districts','client_districts.id','=','client_bio_data.district_id')
-                        ->select(
-                            'clients.id',
-                            'client_bio_data.first_name',
-                            'client_bio_data.last_name',
-                            'client_bio_data.other_name',
-                            'clients.region',
-                            'client_districts.name',
-                            'clients.languages',
-                            'clients.gender',
-                            'clients.patient_id',
-                            'clients.phone_number',
-                            'clients.age',
-                            'users.name as staff',
-                            'client_bio_data.date_of_birth',
-                            'client_marital_statuses.name as marital status',
-                            'client_education_levels.name as education level',
-                            'clients.city'
-                        );
 
-                    $clients->where(function($query) use ($statusID){
-                        $query->where('clients.status_id',$statusID);
-                    });
+            $clients = $this->queryClients();
 
-                    $clients->get();
+            if($request->status){
 
-                    foreach($clients as $client){
-                        if(!$client->city){
-                            $bioData = ClientBioData::where('client_id', $client->id)->first();
-                            if($bioData){
-                                $client->city = $bioData->district ? $bioData->district->name : 'N/A';
-                            }else{
-                                $client->city = "N/A";
-                            }                        }
-                        unset($client->id);
-                    }
-                    return Excel::download(new ClientExport($clients), 'client-info-'.$now.'-'.$status->name.'.csv');
-                }
-                $clients =  DB::table('clients')
-                    ->leftjoin('users','clients.staff_id','=','users.id')
-                    ->leftjoin('client_bio_data','clients.id','=','client_bio_data.client_id')
-                    ->leftjoin('client_marital_statuses','client_bio_data.marital_status_id','=','client_marital_statuses.id')
-                    ->leftjoin('client_education_levels','client_education_levels.id','=','client_bio_data.education_level_id')
-                    ->leftjoin('client_districts','client_districts.id','=','client_bio_data.district_id')
-                    ->select(
-                        DB::raw('
-                            clients.id,
-                            client_bio_data.first_name,
-                            client_bio_data.last_name,
-                            client_bio_data.other_name,
-                            clients.region,
-                            clients.languages,
-                            clients.gender,
-                            clients.patient_id,
-                            clients.phone_number,
-                            clients.age,
-                            users.name as staff,
-                            client_bio_data.date_of_birth,
-                            client_marital_statuses.name as marital_status,
-                            client_education_levels.name as education_level,
-                            clients.city
-                        ')
-                    )->get();
-                    foreach($clients as $client){
-                        if(!$client->city){
-                            $bioData = ClientBioData::where('client_id', $client->id)->first();
-                            if($bioData){
-                                $client->city = $bioData->district ? $bioData->district->name : 'N/A';
-                            }else{
-                                $client->city = "N/A";
-                            }                        }
-                        unset($client->id);
-                    }
+                $status = Status::find((int)$request->status);
 
-                return Excel::download(new ClientExport($clients), 'client-info-'.$now.'.csv');
-            }else{
+                $clients = $clients->where(function($query) use ($status){
+                    $query->where('clients.status_id',$status->id);
+                });
+            }
+
+            if($request->clients){
+                // Extract the client IDs
+                $clientIDs = collect([]);
+
                 foreach (explode(',', $request->clients) as $client_id) {
                     $clientIDs->push((int)$client_id);
                 }
-                $status = Status::find((int)$request->status);
-                if($status){
-                    $clients =  DB::table('clients')
-                    ->select(
-                        'clients.id',
-                        'client_bio_data.first_name',
-                        'client_bio_data.last_name',
-                        'client_bio_data.other_name',
-                        'client_districts.name',
-                        'clients.region',
-                        'clients.city',
-                        'clients.languages',
-                        'clients.gender',
-                        'clients.patient_id',
-                        'clients.phone_number',
-                        'clients.age',
-                        'users.name as staff',
-                        'client_bio_data.date_of_birth',
-                        'client_marital_statuses.name as marital status',
-                        'client_education_levels.name as education level'
-                    )
-                    ->leftjoin('users','clients.staff_id','=','users.id')
-                    ->leftjoin('client_bio_data','clients.id','=','client_bio_data.client_id')
-                    ->leftjoin('client_marital_statuses','client_bio_data.marital_status_id','=','client_marital_statuses.id')
-                    ->leftjoin('client_education_levels','client_education_levels.id','=','client_bio_data.education_level_id')
-                    ->leftjoin('client_districts','client_districts.id','=','client_bio_data.district_id')
-                    ->whereIn('clients.id', $clientIDs)
-                    ->where(function($query) use ($status){
-                        $query->where('clients.status_id',$status->id);
-                    })
-                    ->get();
-                    foreach($clients as $client){
-                        if(!$client->city){
-                            $bioData = ClientBioData::where('client_id', $client->id)->first();
-                            if($bioData){
-                                $client->city = $bioData->district ? $bioData->district->name : 'N/A';
-                            }else{
-                                $client->city = "N/A";
-                            }                        }
-                        unset($client->id);
-                    }
-                    return Excel::download(new ClientExport($clients), 'client-info-'.$now.'-'.$status->name.'.csv');
-                }
 
-                $clients =  DB::table('clients')
-                    ->select(
-                        'clients.id',
-                        'client_bio_data.first_name',
-                        'client_bio_data.last_name',
-                        'client_bio_data.other_name',
-                        'client_districts.name',
-                        'clients.region',
-                        'clients.city',
-                        'clients.languages',
-                        'clients.gender',
-                        'clients.patient_id',
-                        'clients.phone_number',
-                        'clients.age',
-                        'users.name as staff',
-                        'client_bio_data.date_of_birth',
-                        'client_marital_statuses.name as marital status',
-                        'client_education_levels.name as education level'
-                    )
-                    ->leftjoin('users','clients.staff_id','=','users.id')
-                    ->leftjoin('client_bio_data','clients.id','=','client_bio_data.client_id')
-                    ->leftjoin('client_marital_statuses','client_bio_data.marital_status_id','=','client_marital_statuses.id')
-                    ->leftjoin('client_education_levels','client_education_levels.id','=','client_bio_data.education_level_id')
-                    ->leftjoin('client_districts','client_districts.id','=','client_bio_data.district_id')
-                    ->whereIn('clients.id', $clientIDs)
-                    ->get();
-                    foreach($clients as $client){
-                        if(!$client->city){
-                            $bioData = ClientBioData::where('client_id', $client->id)->first();
-                            if($bioData){
-                                $client->city = $bioData->district ? $bioData->district->name : 'N/A';
-                            }else{
-                                $client->city = "N/A";
-                            }
-                        }
-                        unset($client->id);
-                    }
-                return Excel::download(new ClientExport($clients), 'client-info-'.$now.'-.csv');
+                $clients = $clients->whereIn('clients.id', $clientIDs);
             }
+
+            return Excel::download(new ClientExport($this->formatClients($clients->get())), 'client-info-'.Carbon::today()->toDateString().'.csv');
+
         } catch (QueryException $ex) {
             return $this->commonResponse(false, $ex->errorInfo[2], '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $ex) {
@@ -660,7 +511,7 @@ class ClientController extends Controller
             'gender'  => 'nullable|string|in:Male,Female'
         ]);
         if($validator->fails()){
-            return $this->commonResponse(false,Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->commonResponse(false, 'Validation of the data failed', '', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $clientIds = explode(',', $request->client_id);
@@ -706,7 +557,7 @@ class ClientController extends Controller
             'clients.*' => 'integer|exists:clients,id'
         ]);
         if ($validator->fails()) {
-            return $this->commonResponse(false, Arr::flatten($validator->messages()->get('*')), '', Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->commonResponse(false, 'Validation of the data failed', '', Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             try {
 
@@ -924,7 +775,55 @@ class ClientController extends Controller
         ClientBioData::create($clientBioData);
     }
 
+    /**
+     * Format the clients
+     */
+    public function formatClients($clients)
+    {
+        foreach($clients as $client){
+            if(!$client->city){
+                $bioData = ClientBioData::where('client_id', $client->id)->first();
+                if($bioData){
+                    $client->city = $bioData->district ? $bioData->district->name : 'N/A';
+                }else{
+                    $client->city = "N/A";
+                }
+            }
+            unset($client->id);
+        }
+        return $clients;
+    }
 
+    /**
+     * Query to get client records
+     */
+    private function queryClients(){
+        return   DB::table('clients')
+                    ->leftjoin('users','clients.staff_id','=','users.id')
+                    ->leftjoin('client_bio_data','clients.id','=','client_bio_data.client_id')
+                    ->leftjoin('client_marital_statuses','client_bio_data.marital_status_id','=','client_marital_statuses.id')
+                    ->leftjoin('client_education_levels','client_education_levels.id','=','client_bio_data.education_level_id')
+                    ->leftjoin('client_districts','client_districts.id','=','client_bio_data.district_id')
+                    ->select(
+                        DB::raw('
+                            clients.id,
+                            client_bio_data.first_name,
+                            client_bio_data.last_name,
+                            client_bio_data.other_name,
+                            clients.region,
+                            clients.languages,
+                            clients.gender,
+                            clients.patient_id,
+                            clients.phone_number,
+                            clients.age,
+                            users.name as staff,
+                            client_bio_data.date_of_birth,
+                            client_marital_statuses.name as marital_status,
+                            client_education_levels.name as education_level,
+                            clients.city
+                        ')
+                    );
+    }
     /**
      * Delete Client
      * @group Clients
