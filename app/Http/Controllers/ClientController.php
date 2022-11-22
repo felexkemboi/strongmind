@@ -257,11 +257,12 @@ class ClientController extends Controller
 
             if($request->status){
 
-                $status = Status::find((int)$request->status);
+                $status = Status::findorFail((int)$request->status);
 
                 $clients = $clients->where(function($query) use ($status){
                     $query->where('clients.status_id',$status->id);
                 });
+                return Excel::download(new ClientExport($this->formatClients($clients->get())), 'client-info-'.$status->name.Carbon::today()->toDateString().'.csv');
             }
 
             if($request->clients){
@@ -273,6 +274,9 @@ class ClientController extends Controller
                 }
 
                 $clients = $clients->whereIn('clients.id', $clientIDs);
+
+                return Excel::download(new ClientExport($this->formatClients($clients->get())), 'client-info-'.Carbon::today()->toDateString().'.csv');
+
             }
 
             return Excel::download(new ClientExport($this->formatClients($clients->get())), 'client-info-'.Carbon::today()->toDateString().'.csv');
