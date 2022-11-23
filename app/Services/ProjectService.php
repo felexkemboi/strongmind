@@ -212,6 +212,7 @@ class ProjectService
                 return $this->commonResponse(false, 'Membership already active, no action needed', '', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($existingMember->update(['status' => ProgramMember::MEMBERSHIP_ACTIVE])) {
+                $this->notifyMember($user, $project);
                 return $this->commonResponse(true, 'Membership activated Successfully', '', Response::HTTP_OK);
             }
             return $this->commonResponse(false, 'Failed to activate membership', '', Response::HTTP_EXPECTATION_FAILED);
